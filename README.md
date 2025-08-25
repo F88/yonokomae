@@ -4,7 +4,7 @@
 
 Yono Komae War
 
-This game is a thought-provoking game that examines from multiple angles what happened to two countries that experienced "The World Merger Battle of the Heisei era" ("平成の大合併大戦")'
+This game is a thought-provoking game that examines from multiple angles what happened to two countries that experienced "The World Merger Battle of the Heisei era" ("平成の大合併大戦")
 
 ```text
 Note: This game is full of humorous jokes and is not a deepfake or fake.
@@ -75,32 +75,6 @@ npm run deploy
 - **Linting**: [ESLint](https://eslint.org/) v9.33.0 with TypeScript support
 - **Data Generation**: [@faker-js/faker](https://fakerjs.dev/) v10.0.0
 - **Deployment**: [GitHub Pages](https://pages.github.com/) via [gh-pages](https://github.com/tschaub/gh-pages)
-
-## Architecture (CSR-only)
-
-This app is a client-side rendered SPA. All UI is composed and rendered in the browser; there is no server-side rendering or server API.
-
-- Entrypoints
-    - `index.html` mounts the app at `#root`.
-    - `src/main.tsx` bootstraps React and imports the root `index.css`.
-    - `src/App.tsx` composes page sections; no router is used.
-- Rendering & state
-    - UI is built from feature components under `src/components/**`.
-    - State is local to components and custom hooks. Cross-feature global state is not used.
-    - Async flow: `useJudgement(judgeName, battle)` handles loading/error/success states and is consumed by `JudgeCard`.
-- Data & randomness
-    - No network calls; data is derived from local domain logic under `src/yk/**` and generated content via `@faker-js/faker`.
-    - Random values during render are acceptable in CSR. Tests mock randomness for determinism.
-- Styling & theming
-    - Tailwind CSS v4 with a single root `index.css`; dark mode toggled via the `.dark` class.
-- Performance
-    - Built with Vite for static hosting (GitHub Pages). Code splitting is minimal; consider `React.lazy` if heavy sections are added later.
-- Environment & security
-    - No secrets/tokens are embedded. If environment variables are introduced, they must be prefixed with `VITE_` to be exposed to the client.
-- Implications of CSR-only
-    - Accessing `window`/`document` in components is fine.
-    - Hydration mismatch issues do not apply.
-    - Without JavaScript, only the bare HTML shell is visible; the game requires JS enabled.
 
 ## Project notes
 
