@@ -26,11 +26,11 @@ export class Judge {
     await sleep(delayMs);
 
     if (yono.power > komae.power) {
-      return 'YONO wins!';
+      return 'YONO';
     } else if (yono.power < komae.power) {
-      return 'KOMAE wins!';
+      return 'KOMAE';
     } else {
-      return "It's a tie!";
+      return 'DRAW';
     }
   }
 }
