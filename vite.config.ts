@@ -8,12 +8,12 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          react: ["react", "react-dom", "react-icons"],
-          radix: ["@radix-ui/react-separator", "@radix-ui/react-slot"],
-          shadcn: ["clsx", "tailwind-merge", "class-variance-authority"],
+          // react: ["react", "react-dom", "react-icons"],
+          // radix: ["@radix-ui/react-separator", "@radix-ui/react-slot"],
+          // shadcn: ["clsx", "tailwind-merge", "class-variance-authority"],
           faker: ["@faker-js/faker"],
         },
       },
     },
   },
-})
+});
