@@ -31,7 +31,7 @@ export const Controller: FC<ControllerProps> = ({
       className="gap-2"
     >
       <GiInvertedDice3 className="h-5 w-5" />
-      Next
+      BATTLE
     </Button>
   </div>
 );
