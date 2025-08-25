@@ -25,31 +25,31 @@ describe('Judge', () => {
       subtitle: '',
       description: '',
     });
-    it('should return "YONO wins!" when yonoPower is greater than komaePower', async () => {
+    it('should return "YONO" when yonoPower is greater than komaePower', async () => {
       const judge = new Judge('T');
       const result = await judge.determineWinner({
         yono: dummyNeta(100),
         komae: dummyNeta(50),
       });
-      expect(result).toBe('YONO wins!');
+      expect(result).toBe('YONO');
     });
 
-    it('should return "KOMAE wins!" when komaePower is greater than yonoPower', async () => {
+    it('should return "KOMAE" when komaePower is greater than yonoPower', async () => {
       const judge = new Judge('T');
       const result = await judge.determineWinner({
         yono: dummyNeta(30),
         komae: dummyNeta(80),
       });
-      expect(result).toBe('KOMAE wins!');
+      expect(result).toBe('KOMAE');
     });
 
-    it('should return "It\'s a tie!" when powers are equal', async () => {
+    it('should return "DRAWI" when powers are equal', async () => {
       const judge = new Judge('T');
       const result = await judge.determineWinner({
         yono: dummyNeta(50),
         komae: dummyNeta(50),
       });
-      expect(result).toBe("It's a tie!");
+      expect(result).toBe('DRAW');
     });
 
     it('should handle edge case with zero powers', async () => {
@@ -58,7 +58,7 @@ describe('Judge', () => {
         yono: dummyNeta(0),
         komae: dummyNeta(0),
       });
-      expect(result).toBe("It's a tie!");
+      expect(result).toBe('DRAW');
     });
 
     it('should handle edge case with negative powers', async () => {
@@ -67,19 +67,19 @@ describe('Judge', () => {
         yono: dummyNeta(-10),
         komae: dummyNeta(-5),
       });
-      expect(result1).toBe('KOMAE wins!');
+      expect(result1).toBe('KOMAE');
 
       const result2 = await judge.determineWinner({
         yono: dummyNeta(-5),
         komae: dummyNeta(-10),
       });
-      expect(result2).toBe('YONO wins!');
+      expect(result2).toBe('YONO');
 
       const result3 = await judge.determineWinner({
         yono: dummyNeta(-5),
         komae: dummyNeta(-5),
       });
-      expect(result3).toBe("It's a tie!");
+      expect(result3).toBe('DRAW');
     });
 
     it('should handle decimal powers', async () => {
@@ -88,19 +88,19 @@ describe('Judge', () => {
         yono: dummyNeta(50.5),
         komae: dummyNeta(50.4),
       });
-      expect(result1).toBe('YONO wins!');
+      expect(result1).toBe('YONO');
 
       const result2 = await judge.determineWinner({
         yono: dummyNeta(50.4),
         komae: dummyNeta(50.5),
       });
-      expect(result2).toBe('KOMAE wins!');
+      expect(result2).toBe('KOMAE');
 
       const result3 = await judge.determineWinner({
         yono: dummyNeta(50.5),
         komae: dummyNeta(50.5),
       });
-      expect(result3).toBe("It's a tie!");
+      expect(result3).toBe('DRAW');
     });
 
     it('should be an instance async method now', () => {
@@ -114,19 +114,19 @@ describe('Judge', () => {
         yono: dummyNeta(Number.MAX_SAFE_INTEGER),
         komae: dummyNeta(Number.MAX_SAFE_INTEGER - 1),
       });
-      expect(result1).toBe('YONO wins!');
+      expect(result1).toBe('YONO');
 
       const result2 = await judge.determineWinner({
         yono: dummyNeta(Number.MAX_SAFE_INTEGER - 1),
         komae: dummyNeta(Number.MAX_SAFE_INTEGER),
       });
-      expect(result2).toBe('KOMAE wins!');
+      expect(result2).toBe('KOMAE');
 
       const result3 = await judge.determineWinner({
         yono: dummyNeta(Number.MAX_SAFE_INTEGER),
         komae: dummyNeta(Number.MAX_SAFE_INTEGER),
       });
-      expect(result3).toBe("It's a tie!");
+      expect(result3).toBe('DRAW');
     });
   });
 });

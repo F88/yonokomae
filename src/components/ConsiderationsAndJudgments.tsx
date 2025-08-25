@@ -39,9 +39,11 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
         <div className="mb-4">
           <h3 className="text-lg font-semibold">{battle.title}</h3>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-row flex-nowrap items-stretch gap-4">
           {todaysJudges.map((judge) => (
-            <JudgeCard key={judge} nameOfJudge={judge} battle={battle} />
+            <div key={judge} className="flex-1 basis-0 min-w-0">
+              <JudgeCard nameOfJudge={judge} battle={battle} />
+            </div>
           ))}
         </div>
       </CardContent>
