@@ -26,7 +26,10 @@
     "paths": {
       "@/components/*": ["src/components/*"],
       "@/lib/*": ["src/lib/*"]
-    }
+    },
+
+    /* Interop Constraints */
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src", "src/types"]
 }

@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d build -m \"Updates --skip-ci\"",
+    "deploy": "npm run build && gh-pages -d dist -m \"Updates --skip-ci\"",
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage"
