@@ -1,21 +1,12 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
-      "@/components/*": ["src/components/*"],
-      "@/lib/*": ["src/lib/*"]
+      "@/*": ["./src/*"]
     },
-    /* Interop Constraints */
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-
-    /* Emit */
-    "noEmit": true,
-    /* Type Checking */
     "strict": true,
-    /* Completeness */
-    "skipLibCheck": true
+    /* Interop Constraints */
+    "forceConsistentCasingInFileNames": true
   },
   "files": [],
   "references": [

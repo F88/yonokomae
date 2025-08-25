@@ -29,26 +29,26 @@ describe('FrontlineJournalist', () => {
   });
 
   describe('report', () => {
-    it('should generate a battle report with correct structure', () => {
-      const journalist = new FrontlineJournalist('Reporter');
-      
+    it("should generate a battle report with correct structure", () => {
+      const journalist = new FrontlineJournalist("Reporter");
+
       vi.mocked(faker.number.int)
         .mockReturnValueOnce(85)
         .mockReturnValueOnce(72);
 
       const battle = journalist.report();
 
-      expect(battle).toHaveProperty('title');
-      expect(battle).toHaveProperty('subtitle');
-      expect(battle).toHaveProperty('overview');
-      expect(battle).toHaveProperty('scenario');
-      expect(battle).toHaveProperty('komae');
-      expect(battle).toHaveProperty('yono');
+      expect(battle).toHaveProperty("title");
+      expect(battle).toHaveProperty("subtitle");
+      expect(battle).toHaveProperty("overview");
+      expect(battle).toHaveProperty("scenario");
+      expect(battle).toHaveProperty("komae");
+      expect(battle).toHaveProperty("yono");
     });
 
-    it('should generate a battle with correct default values', () => {
+    it("should generate a battle with correct default values", () => {
       const journalist = new FrontlineJournalist();
-      
+
       vi.mocked(faker.number.int)
         .mockReturnValueOnce(50)
         .mockReturnValueOnce(60);
@@ -57,13 +57,15 @@ describe('FrontlineJournalist', () => {
 
       expect(battle.title).toBe("The Great Battle of 1945");
       expect(battle.subtitle).toBe("A Clash of Titans");
-      expect(battle.overview).toBe("An epic battle that changed the course of history.");
+      expect(battle.overview).toBe(
+        "An epic battle that changed the course of history."
+      );
       expect(battle.scenario).toContain("In the final days of World War II");
     });
 
     it('should generate Komae with correct placeholder data and random power', () => {
       const journalist = new FrontlineJournalist();
-      
+
       const expectedPower = 75;
       vi.mocked(faker.number.int)
         .mockReturnValueOnce(expectedPower)
@@ -71,7 +73,7 @@ describe('FrontlineJournalist', () => {
 
       const battle = journalist.report();
 
-      expect(battle.komae.imageUrl).toBe("https://placehold.co/400x200?text=K");
+      expect(battle.komae.imageUrl).toBe("https://placehold.co/200x100?text=K");
       expect(battle.komae.title).toBe("Komae the Brave");
       expect(battle.komae.subtitle).toBe("Hero of the East");
       expect(battle.komae.description).toBe("A placeholder for Komae. Replace with real data.");
@@ -80,7 +82,7 @@ describe('FrontlineJournalist', () => {
 
     it('should generate Yono with correct placeholder data and random power', () => {
       const journalist = new FrontlineJournalist();
-      
+
       const expectedPower = 90;
       vi.mocked(faker.number.int)
         .mockReturnValueOnce(50)
@@ -88,16 +90,16 @@ describe('FrontlineJournalist', () => {
 
       const battle = journalist.report();
 
-      expect(battle.yono.imageUrl).toBe("https://placehold.co/400x200?text=Y");
+      expect(battle.yono.imageUrl).toBe("https://placehold.co/200x100?text=Y");
       expect(battle.yono.title).toBe("Yono the Mighty");
       expect(battle.yono.subtitle).toBe("Defender of the West");
       expect(battle.yono.description).toBe("A placeholder for Yono. Replace with real data.");
       expect(battle.yono.power).toBe(expectedPower);
     });
 
-    it('should call faker.number.int with correct parameters', () => {
+    it("should call faker.number.int with correct parameters", () => {
       const journalist = new FrontlineJournalist();
-      
+
       vi.mocked(faker.number.int).mockClear();
       vi.mocked(faker.number.int).mockReturnValue(50);
 
@@ -107,9 +109,9 @@ describe('FrontlineJournalist', () => {
       expect(faker.number.int).toHaveBeenCalledWith({ min: 0, max: 100 });
     });
 
-    it('should generate different power values for komae and yono', () => {
+    it("should generate different power values for komae and yono", () => {
       const journalist = new FrontlineJournalist();
-      
+
       vi.mocked(faker.number.int)
         .mockReturnValueOnce(30)
         .mockReturnValueOnce(80);
