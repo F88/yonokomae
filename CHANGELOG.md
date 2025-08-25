@@ -4,4 +4,4 @@
 
 ### chore
 
-* add @changesets/cli as a dev dependency ([d0b3d61](https://github.com/F88/yonokomae/commit/d0b3d61238a71adc27061451a0eda31f22b8cc90))
+- add @changesets/cli as a dev dependency ([d0b3d61](https://github.com/F88/yonokomae/commit/d0b3d61238a71adc27061451a0eda31f22b8cc90))

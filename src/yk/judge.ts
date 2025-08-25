@@ -2,7 +2,7 @@
  * Judge class for determining the winner between two fighters.
  */
 
-import type { Neta } from "src/types/types";
+import type { Neta } from 'src/types/types';
 
 export class Judge {
   name: string;
@@ -21,14 +21,14 @@ export class Judge {
   }): Promise<string> {
     const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
     const isTest =
-      typeof process !== "undefined" && process?.env?.NODE_ENV === "test";
+      typeof process !== 'undefined' && process?.env?.NODE_ENV === 'test';
     const delayMs = isTest ? 0 : Math.floor(Math.random() * 5001);
     await sleep(delayMs);
 
     if (yono.power > komae.power) {
-      return "YONO wins!";
+      return 'YONO wins!';
     } else if (yono.power < komae.power) {
-      return "KOMAE wins!";
+      return 'KOMAE wins!';
     } else {
       return "It's a tie!";
     }

@@ -20,31 +20,31 @@ describe('Judge', () => {
   describe('determineWinner', () => {
     const dummyNeta = (power: number) => ({
       power,
-      imageUrl: "",
-      title: "",
-      subtitle: "",
-      description: "",
+      imageUrl: '',
+      title: '',
+      subtitle: '',
+      description: '',
     });
     it('should return "YONO wins!" when yonoPower is greater than komaePower', async () => {
-      const judge = new Judge("T");
+      const judge = new Judge('T');
       const result = await judge.determineWinner({
         yono: dummyNeta(100),
         komae: dummyNeta(50),
       });
-      expect(result).toBe("YONO wins!");
+      expect(result).toBe('YONO wins!');
     });
 
     it('should return "KOMAE wins!" when komaePower is greater than yonoPower', async () => {
-      const judge = new Judge("T");
+      const judge = new Judge('T');
       const result = await judge.determineWinner({
         yono: dummyNeta(30),
         komae: dummyNeta(80),
       });
-      expect(result).toBe("KOMAE wins!");
+      expect(result).toBe('KOMAE wins!');
     });
 
     it('should return "It\'s a tie!" when powers are equal', async () => {
-      const judge = new Judge("T");
+      const judge = new Judge('T');
       const result = await judge.determineWinner({
         yono: dummyNeta(50),
         komae: dummyNeta(50),
@@ -52,8 +52,8 @@ describe('Judge', () => {
       expect(result).toBe("It's a tie!");
     });
 
-    it("should handle edge case with zero powers", async () => {
-      const judge = new Judge("T");
+    it('should handle edge case with zero powers', async () => {
+      const judge = new Judge('T');
       const result = await judge.determineWinner({
         yono: dummyNeta(0),
         komae: dummyNeta(0),
@@ -61,19 +61,19 @@ describe('Judge', () => {
       expect(result).toBe("It's a tie!");
     });
 
-    it("should handle edge case with negative powers", async () => {
-      const judge = new Judge("T");
+    it('should handle edge case with negative powers', async () => {
+      const judge = new Judge('T');
       const result1 = await judge.determineWinner({
         yono: dummyNeta(-10),
         komae: dummyNeta(-5),
       });
-      expect(result1).toBe("KOMAE wins!");
+      expect(result1).toBe('KOMAE wins!');
 
       const result2 = await judge.determineWinner({
         yono: dummyNeta(-5),
         komae: dummyNeta(-10),
       });
-      expect(result2).toBe("YONO wins!");
+      expect(result2).toBe('YONO wins!');
 
       const result3 = await judge.determineWinner({
         yono: dummyNeta(-5),
@@ -82,19 +82,19 @@ describe('Judge', () => {
       expect(result3).toBe("It's a tie!");
     });
 
-    it("should handle decimal powers", async () => {
-      const judge = new Judge("T");
+    it('should handle decimal powers', async () => {
+      const judge = new Judge('T');
       const result1 = await judge.determineWinner({
         yono: dummyNeta(50.5),
         komae: dummyNeta(50.4),
       });
-      expect(result1).toBe("YONO wins!");
+      expect(result1).toBe('YONO wins!');
 
       const result2 = await judge.determineWinner({
         yono: dummyNeta(50.4),
         komae: dummyNeta(50.5),
       });
-      expect(result2).toBe("KOMAE wins!");
+      expect(result2).toBe('KOMAE wins!');
 
       const result3 = await judge.determineWinner({
         yono: dummyNeta(50.5),
@@ -103,24 +103,24 @@ describe('Judge', () => {
       expect(result3).toBe("It's a tie!");
     });
 
-    it("should be an instance async method now", () => {
-      const judge = new Judge("Test Judge");
-      expect(typeof judge.determineWinner).toBe("function");
+    it('should be an instance async method now', () => {
+      const judge = new Judge('Test Judge');
+      expect(typeof judge.determineWinner).toBe('function');
     });
 
-    it("should work with maximum safe integer values", async () => {
-      const judge = new Judge("T");
+    it('should work with maximum safe integer values', async () => {
+      const judge = new Judge('T');
       const result1 = await judge.determineWinner({
         yono: dummyNeta(Number.MAX_SAFE_INTEGER),
         komae: dummyNeta(Number.MAX_SAFE_INTEGER - 1),
       });
-      expect(result1).toBe("YONO wins!");
+      expect(result1).toBe('YONO wins!');
 
       const result2 = await judge.determineWinner({
         yono: dummyNeta(Number.MAX_SAFE_INTEGER - 1),
         komae: dummyNeta(Number.MAX_SAFE_INTEGER),
       });
-      expect(result2).toBe("KOMAE wins!");
+      expect(result2).toBe('KOMAE wins!');
 
       const result3 = await judge.determineWinner({
         yono: dummyNeta(Number.MAX_SAFE_INTEGER),

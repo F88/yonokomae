@@ -1,6 +1,5 @@
-const title = "How to play";
-const desc =
-  `Experience legendary battles. Roll the dice and see what's next`;
+const title = 'How to play';
+const desc = `Experience legendary battles. Roll the dice and see what's next`;
 
 export const TheStartOfTheWar = () => {
   return (

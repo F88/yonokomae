@@ -1,13 +1,13 @@
-import { type FC } from "react";
-import type { Battle } from "@/types/types";
-import { JudgeCard } from "@/components/Judge";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { type FC } from 'react';
+import type { Battle } from '@/types/types';
+import { JudgeCard } from '@/components/Judge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 export type Props = {
   battle?: Battle;
 };
 
-const judgesName: string[] = ["O", "U", "S", "C"];
+const judgesName: string[] = ['O', 'U', 'S', 'C'];
 
 export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
   if (battle === undefined) {

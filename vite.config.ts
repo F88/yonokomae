@@ -1,14 +1,14 @@
-import path from "path";
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import path from 'path';
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   build: {
@@ -18,7 +18,7 @@ export default defineConfig({
           // react: ["react", "react-dom", "react-icons"],
           // radix: ["@radix-ui/react-separator", "@radix-ui/react-slot"],
           // shadcn: ["clsx", "tailwind-merge", "class-variance-authority"],
-          faker: ["@faker-js/faker"],
+          faker: ['@faker-js/faker'],
         },
       },
     },

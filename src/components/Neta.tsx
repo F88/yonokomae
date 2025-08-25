@@ -1,7 +1,7 @@
-import type { FC } from "react";
-import type { Neta } from "@/types/types";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import type { FC } from 'react';
+import type { Neta } from '@/types/types';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export type Props = Neta;
 

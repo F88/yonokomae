@@ -140,4 +140,3 @@ npm run deploy
     ```
 
 詳細は [changesets documentation](https://github.com/changesets/changesets) を参照してください。
-

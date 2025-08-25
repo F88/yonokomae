@@ -46,7 +46,7 @@ export interface Battle {
   /** The Neta entity representing Yono. */
   yono: Neta;
   /** Optional status for UI flow control */
-  status?: "loading" | "success" | "error";
+  status?: 'loading' | 'success' | 'error';
 }
 
 export type BattleReport = Partial<Battle> & {

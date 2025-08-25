@@ -1,6 +1,6 @@
-import type { FC } from "react";
-import type { Battle } from "@/types/types";
-import { useJudgement } from "@/hooks/use-judgement";
+import type { FC } from 'react';
+import type { Battle } from '@/types/types';
+import { useJudgement } from '@/hooks/use-judgement';
 
 export type JudgeCardProps = {
   nameOfJudge: string;
@@ -16,11 +16,11 @@ export const JudgeCard: FC<JudgeCardProps> = ({ nameOfJudge, battle }) => {
         Judge {nameOfJudge}
       </div>
       <div className="font-semibold">
-        {judgement.status === "loading" && "…"}
-        {judgement.status === "error" && (
+        {judgement.status === 'loading' && '…'}
+        {judgement.status === 'error' && (
           <span className="text-destructive">Failed</span>
         )}
-        {judgement.status === "success" && judgement.data}
+        {judgement.status === 'success' && judgement.data}
       </div>
     </div>
   );

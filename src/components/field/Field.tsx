@@ -1,7 +1,7 @@
-import type { FC } from "react";
-import type { Neta } from "@/types/types";
-import { NetaView } from "@/components/Neta";
-import { Skeleton } from "@/components/ui/skeleton";
+import type { FC } from 'react';
+import type { Neta } from '@/types/types';
+import { NetaView } from '@/components/Neta';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export type FieldProps = {
   yono?: Neta;

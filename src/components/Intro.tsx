@@ -1,4 +1,4 @@
-const title = "Yono vs Komae Battle Simulator";
+const title = 'Yono vs Komae Battle Simulator';
 const desc =
   'This game is a thought-provoking game that examines from multiple angles what happened to two countries that experienced "The World Merger Battle of the Heisei era" ("平成の大合併大戦")';
 

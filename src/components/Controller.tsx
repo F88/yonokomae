@@ -1,7 +1,7 @@
-import { GiInvertedDice3 } from "react-icons/gi";
-import { Trash2 } from "lucide-react";
-import type { FC } from "react";
-import { Button } from "@/components/ui/button";
+import { GiInvertedDice3 } from 'react-icons/gi';
+import { Trash2 } from 'lucide-react';
+import type { FC } from 'react';
+import { Button } from '@/components/ui/button';
 
 interface ControllerProps {
   onGenerateReport: () => void | Promise<void>;

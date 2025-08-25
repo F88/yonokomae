@@ -1,14 +1,14 @@
-import type { FC } from "react";
-import { Field } from "@/components/field/Field";
-import type { Battle } from "@/types/types";
+import type { FC } from 'react';
+import { Field } from '@/components/field/Field';
+import type { Battle } from '@/types/types';
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 
 export type Props = {
   battle: Battle;

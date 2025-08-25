@@ -1,13 +1,13 @@
-import { BattleContainer } from "@/components/BattleContainer";
-import { Controller } from "@/components/Controller";
-import { TheStartOfTheWar } from "@/components/TheStartOfTheWar";
-import { Intro } from "@/components/Intro";
-import { useGenerateReport } from "@/hooks/use-generate-report";
-import { Placeholders } from "@/yk/placeholder";
-import { useEffect, useRef, useState } from "react";
-import { uid } from "@/lib/id";
-import { Header } from "./components/Header";
-import type { Battle } from "./types/types";
+import { BattleContainer } from '@/components/BattleContainer';
+import { Controller } from '@/components/Controller';
+import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
+import { Intro } from '@/components/Intro';
+import { useGenerateReport } from '@/hooks/use-generate-report';
+import { Placeholders } from '@/yk/placeholder';
+import { useEffect, useRef, useState } from 'react';
+import { uid } from '@/lib/id';
+import { Header } from './components/Header';
+import type { Battle } from './types/types';
 
 function App() {
   const [reports, setReports] = useState<Battle[]>([]);
@@ -19,7 +19,7 @@ function App() {
   const scrollToBottom = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
-      behavior: "smooth",
+      behavior: 'smooth',
     });
   };
 
@@ -38,14 +38,14 @@ function App() {
     // Insert a loading placeholder immediately
     let insertedIndex = -1;
     const loadingBattle: Battle = {
-      id: uid("battle"),
-      title: "Generating report...",
-      subtitle: "Please wait",
-      overview: "Preparing a new battle report.",
-      scenario: "Loading...",
+      id: uid('battle'),
+      title: 'Generating report...',
+      subtitle: 'Please wait',
+      overview: 'Preparing a new battle report.',
+      scenario: 'Loading...',
       komae: { ...Placeholders.Komae },
       yono: { ...Placeholders.Yono },
-      status: "loading",
+      status: 'loading',
     };
 
     shouldScrollAfterAppendRef.current = true;
@@ -56,25 +56,25 @@ function App() {
     // Scrolling will occur in the effect after DOM updates
 
     try {
-      const next = await generateReport("John Doe");
+      const next = await generateReport('John Doe');
       // Replace the placeholder at the captured index
       setReports((prev) =>
-        prev.map((b, i) => (i === insertedIndex ? next : b))
+        prev.map((b, i) => (i === insertedIndex ? next : b)),
       );
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       const errorBattle: Battle = {
-        id: uid("battle"),
-        title: "Failed to generate report",
-        subtitle: "Error",
-        overview: "An error occurred while generating the report.",
+        id: uid('battle'),
+        title: 'Failed to generate report',
+        subtitle: 'Error',
+        overview: 'An error occurred while generating the report.',
         scenario: message,
         komae: { ...Placeholders.Komae },
         yono: { ...Placeholders.Yono },
-        status: "error",
+        status: 'error',
       };
       setReports((prev) =>
-        prev.map((b, i) => (i === insertedIndex ? errorBattle : b))
+        prev.map((b, i) => (i === insertedIndex ? errorBattle : b)),
       );
     }
   };
