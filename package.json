@@ -23,7 +23,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist -m \"Updates --skip-ci\"",
+    "deploy": "npm run build -- --base=/yonokomae/ && gh-pages -d dist -m \"Updates --skip-ci\"",
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage"
