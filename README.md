@@ -46,3 +46,8 @@ Yono vs Komae Battle Simulator
 
 - **@faker-js/faker** (v10.0.0) - Test data generation
 
+## Contributing
+
+### Pull Request Guidelines
+For better collaboration and code review, please follow our [PR Title Guidelines](./docs/PR_TITLE_GUIDELINES.md) when submitting pull requests.
+
