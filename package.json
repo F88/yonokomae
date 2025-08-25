@@ -1,8 +1,20 @@
 {
   "name": "yonokomae",
-  "private": true,
+  "description": "A playground for generating and decoding UUIDs.",
   "version": "0.0.1",
+  "private": true,
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/F88/yonokomae.git"
+  },
+  "keywords": [],
+  "author": "F88",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/F88/yonokomae/issues"
+  },
+  "homepage": "https://github.com/F88/yonokomae#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
