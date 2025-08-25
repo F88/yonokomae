@@ -31,12 +31,12 @@ export const Field: FC<FieldProps> = ({ yono, komae }) => {
   return (
     <div className="w-full space-y-8">
       <div className="flex flex-row items-start justify-center gap-8 md:gap-12">
+        {/* YONO */}
         <div className="flex flex-col items-center space-y-4">
-          <h3 className="text-lg font-semibold">Yono</h3>
           {yono ? <NetaView {...yono} /> : <Placeholder />}
         </div>
+        {/* KOMAE */}
         <div className="flex flex-col items-center space-y-4">
-          <h3 className="text-lg font-semibold">Komae</h3>
           {komae ? <NetaView {...komae} /> : <Placeholder />}
         </div>
       </div>
