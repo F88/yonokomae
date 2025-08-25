@@ -31,6 +31,8 @@ export interface Neta {
  * @property yono - The Neta entity representing Yono.
  */
 export interface Battle {
+  /** Stable unique id for list keys and tracking */
+  id: string;
   /** The main title of the battle scenario. */
   title: string;
   /** A short subtitle for the scenario. */
@@ -43,4 +45,16 @@ export interface Battle {
   komae: Neta;
   /** The Neta entity representing Yono. */
   yono: Neta;
+  /** Optional status for UI flow control */
+  status?: 'loading' | 'success' | 'error';
+}
+
+export type BattleReport = Partial<Battle> & {
+  reporter?: string;
+  reportDate?: string;
+};
+
+export interface JudgesComment {
+  judgeName: string;
+  comment: string;
 }

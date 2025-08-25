@@ -1,28 +1,45 @@
-import type { FC } from "react";
-import "./Field.css";
-import type { Neta } from "../../types/types";
-import { NetaView } from "../Neta";
-import { Separator } from "../ui/separator";
+import type { FC } from 'react';
+import type { Neta } from '@/types/types';
+import { NetaView } from '@/components/Neta';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export type FieldProps = {
-  yono: Neta;
-  komae: Neta;
+  yono?: Neta;
+  komae?: Neta;
 };
 
 export const Field: FC<FieldProps> = ({ yono, komae }) => {
-  return (
-    <>
-      <div className="flex flex-row items-center justify-center gap-10 py-8 w-full">
-        {/* YONO  */}
-        <div className="flex-1 min-w-[280px] max-w-[360px] flex flex-col items-center bg-gray-50 rounded-lg shadow p-4">
-          <NetaView {...yono} />
+  // Loading placeholder using shadcn/ui Skeleton
+  const Placeholder: FC = () => (
+    <div className="flex min-w-72 max-w-80 flex-1 flex-col items-center rounded-lg border bg-card p-6">
+      <div className="w-full space-y-4">
+        <div className="text-center">
+          <Skeleton className="mx-auto h-6 w-32" />
+          <Skeleton className="mx-auto mt-2 h-4 w-24" />
         </div>
-        {/* KOMAE  */}
-        <div className="flex-1 min-w-[280px] max-w-[360px] flex flex-col items-center bg-gray-50 rounded-lg shadow p-4">
-          <NetaView {...komae} />
+        <div className="aspect-square w-full overflow-hidden rounded-lg">
+          <Skeleton className="h-full w-full" />
         </div>
-        <Separator className="my-6" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-3/4" />
+        </div>
       </div>
-    </>
+    </div>
+  );
+
+  return (
+    <div className="w-full space-y-8">
+      <div className="flex flex-row items-start justify-center gap-8 md:gap-12">
+        <div className="flex flex-col items-center space-y-4">
+          <h3 className="text-lg font-semibold">Yono</h3>
+          {yono ? <NetaView {...yono} /> : <Placeholder />}
+        </div>
+        <div className="flex flex-col items-center space-y-4">
+          <h3 className="text-lg font-semibold">Komae</h3>
+          {komae ? <NetaView {...komae} /> : <Placeholder />}
+        </div>
+      </div>
+    </div>
   );
 };

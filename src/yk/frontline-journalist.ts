@@ -2,15 +2,16 @@
  * Frontline Journalist
  */
 
-import { faker } from "@faker-js/faker";
-import { Placeholders } from "./placeholder";
-import type { Battle, Neta } from "src/types/types";
+import { faker } from '@faker-js/faker';
+import { Placeholders } from './placeholder';
+import { uid } from '@/lib/id';
+import type { Battle, Neta } from 'src/types/types';
 
 export class FrontlineJournalist {
-  name: string = "";
+  name: string = '';
 
   constructor(name?: string) {
-    this.name = name || "no-name";
+    this.name = name || 'no-name';
   }
 
   /**
@@ -59,13 +60,15 @@ export class FrontlineJournalist {
     };
 
     return {
-      title: "The Great Battle of 1945",
-      subtitle: "A Clash of Titans",
-      overview: "An epic battle that changed the course of history.",
-      scenario:
-        "In the final days of World War II, two legendary figures faced off in a decisive battle that would determine the fate of nations.",
+      id: uid('battle'),
+      title:
+        'The Great Battle of ' + faker.number.int({ min: 1990, max: 2050 }),
+      subtitle: faker.lorem.words({ min: 2, max: 5 }),
+      overview: 'An epic battle that changed the course of history.',
+      scenario: faker.lorem.paragraph(),
       komae: komae,
       yono: yono,
+      status: 'success',
     };
   }
 }
