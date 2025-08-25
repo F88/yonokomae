@@ -43,7 +43,7 @@ describe('Judge', () => {
       expect(result).toBe('KOMAE');
     });
 
-    it('should return "DRAWI" when powers are equal', async () => {
+    it('should return "DRAW" when powers are equal', async () => {
       const judge = new Judge('T');
       const result = await judge.determineWinner({
         yono: dummyNeta(50),
