@@ -23,14 +23,12 @@ dist-ssr
 *.sln
 *.sw?
 
-### ---
+/.vite/
 
-### ---
-
+# Private seeds
+seeds/
 .vite/
 
 
-### Private seeds
-seeds/
 
 
