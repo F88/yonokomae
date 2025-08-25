@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { type FC } from "react";
 import type { Battle } from "@/types/types";
 import { JudgeCard } from "@/components/Judge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -7,11 +7,11 @@ export type Props = {
   battle?: Battle;
 };
 
-export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
-  // Create a judge instance
-  const judgesName: string[] = ["O", "U", "S", "C"];
+const judgesName: string[] = ["O", "U", "S", "C"];
 
-  const filteredJudges = useMemo(() => judgesName.filter(() => Math.random() > 0.1), []);
+export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
+  // Filter judges based on a random condition
+  const filteredJudges = judgesName.filter(() => Math.random() > 0.1);
 
   if (battle === undefined) {
     return null;
