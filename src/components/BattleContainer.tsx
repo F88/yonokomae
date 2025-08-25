@@ -8,10 +8,16 @@ export type BattleContainerProps = {
 };
 
 export const BattleContainer: FC<BattleContainerProps> = ({ battle }) => {
+
+  const isBattleReportLoading = battle.title === "Generating report...";
   return (
     <div className="space-y-6">
       <HistoricalScene battle={battle} />
-      <ConsiderationsAndJudgments battle={battle} />
+      {isBattleReportLoading ? (
+        <ConsiderationsAndJudgments battle={undefined} />
+      ) : (
+        <ConsiderationsAndJudgments battle={battle} />
+      )}
     </div>
   );
 };

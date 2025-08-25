@@ -4,9 +4,9 @@ import { TheStartOfTheWar } from "@/components/TheStartOfTheWar";
 import { Intro } from "@/components/Intro";
 import { useGenerateReport } from "@/hooks/use-generate-report";
 import { Placeholders } from "@/yk/placeholder";
-import type { Battle } from "@/types/types";
 import { useEffect, useRef, useState } from "react";
 import { Header } from "./components/Header";
+import type { Battle } from "./types/types";
 
 function App() {
   const [reports, setReports] = useState<Battle[]>([]);
@@ -77,7 +77,6 @@ function App() {
   const handleClearReports = () => {
     setReports([]);
   };
-
 
   return (
     <main className="min-h-screen bg-background">

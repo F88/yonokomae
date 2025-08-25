@@ -1,43 +1,38 @@
 import type { FC } from "react";
 import type { Battle } from "@/types/types";
-import { Judge } from "@/yk/judge";
+import { JudgeCard } from "@/components/Judge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export type Props = {
-  battle: Battle;
+  battle?: Battle;
 };
 
 export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
   // Create a judge instance
-  const judges = [
-    new Judge("O"),
-    new Judge("U"),
-    new Judge("S"),
-    new Judge("C"),
-  ];
+  const judgesName: string[] = ["O", "U", "S", "C"];
+
+  const filteredJudges = judgesName.filter(() => Math.random() > 0.1);
+
+  if (battle === undefined) {
+    return null;
+  }
 
   return (
     <Card className="w-full">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-semibold">Judge's Comments</CardTitle>
+        <CardTitle className="text-2xl font-semibold">
+          Judge's Comments
+        </CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="mb-4">
+          <h3 className="text-lg font-semibold">Scenario</h3>
+          <p>{battle.overview}</p>
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {judges.map((judge) => (
-            <div
-              key={judge.name}
-              className="rounded-lg border p-4 text-center"
-            >
-              <div className="text-sm font-medium text-muted-foreground mb-2">
-                Judge {judge.name}
-              </div>
-              <div className="font-semibold">
-                {Judge.determineWinner({
-                  yono: battle.yono,
-                  komae: battle.komae,
-                })}
-              </div>
-            </div>
+          {filteredJudges.map((judge) => (
+            <JudgeCard key={judge} nameOfJudge={judge} battle={battle} />
           ))}
         </div>
       </CardContent>

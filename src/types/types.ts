@@ -44,3 +44,13 @@ export interface Battle {
   /** The Neta entity representing Yono. */
   yono: Neta;
 }
+
+export type BattleReport = Partial<Battle> & {
+  reporter?: string;
+  reportDate?: string;
+};
+
+export interface JudgesComment {
+  judgeName: string;
+  comment: string;
+}

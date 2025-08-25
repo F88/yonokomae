@@ -2,12 +2,16 @@ import { describe, it, expect, vi } from 'vitest';
 import { FrontlineJournalist } from './frontline-journalist';
 import { faker } from '@faker-js/faker';
 
-vi.mock('@faker-js/faker', () => ({
+vi.mock("@faker-js/faker", () => ({
   faker: {
     number: {
-      int: vi.fn()
-    }
-  }
+      int: vi.fn(),
+    },
+    lorem: {
+      words: vi.fn(() => "A Clash of Titans"),
+      paragraph: vi.fn(() => "In the final days of World War II, ..."),
+    },
+  },
 }));
 
 describe('FrontlineJournalist', () => {
@@ -49,9 +53,11 @@ describe('FrontlineJournalist', () => {
     it("should generate a battle with correct default values", () => {
       const journalist = new FrontlineJournalist();
 
+      // Two power rolls then the title year
       vi.mocked(faker.number.int)
         .mockReturnValueOnce(50)
-        .mockReturnValueOnce(60);
+        .mockReturnValueOnce(60)
+        .mockReturnValueOnce(1945);
 
       const battle = journalist.report();
 
@@ -63,7 +69,7 @@ describe('FrontlineJournalist', () => {
       expect(battle.scenario).toContain("In the final days of World War II");
     });
 
-    it('should generate Komae with correct placeholder data and random power', () => {
+    it("should generate Komae with correct placeholder data and random power", () => {
       const journalist = new FrontlineJournalist();
 
       const expectedPower = 75;
@@ -76,11 +82,13 @@ describe('FrontlineJournalist', () => {
       expect(battle.komae.imageUrl).toBe("https://placehold.co/200x100?text=K");
       expect(battle.komae.title).toBe("Komae the Brave");
       expect(battle.komae.subtitle).toBe("Hero of the East");
-      expect(battle.komae.description).toBe("A placeholder for Komae. Replace with real data.");
+      expect(battle.komae.description).toBe(
+        "A placeholder for Komae. Replace with real data."
+      );
       expect(battle.komae.power).toBe(expectedPower);
     });
 
-    it('should generate Yono with correct placeholder data and random power', () => {
+    it("should generate Yono with correct placeholder data and random power", () => {
       const journalist = new FrontlineJournalist();
 
       const expectedPower = 90;
@@ -93,7 +101,9 @@ describe('FrontlineJournalist', () => {
       expect(battle.yono.imageUrl).toBe("https://placehold.co/200x100?text=Y");
       expect(battle.yono.title).toBe("Yono the Mighty");
       expect(battle.yono.subtitle).toBe("Defender of the West");
-      expect(battle.yono.description).toBe("A placeholder for Yono. Replace with real data.");
+      expect(battle.yono.description).toBe(
+        "A placeholder for Yono. Replace with real data."
+      );
       expect(battle.yono.power).toBe(expectedPower);
     });
 
@@ -101,12 +111,23 @@ describe('FrontlineJournalist', () => {
       const journalist = new FrontlineJournalist();
 
       vi.mocked(faker.number.int).mockClear();
-      vi.mocked(faker.number.int).mockReturnValue(50);
+      // Ensure deterministic values for all possible calls
+      vi.mocked(faker.number.int)
+        .mockReturnValueOnce(10) // komae power
+        .mockReturnValueOnce(20) // yono power
+        .mockReturnValueOnce(2000); // title year
 
       journalist.report();
 
-      expect(faker.number.int).toHaveBeenCalledTimes(2);
-      expect(faker.number.int).toHaveBeenCalledWith({ min: 0, max: 100 });
+      expect(faker.number.int).toHaveBeenCalledTimes(3);
+      const calls = vi.mocked(faker.number.int).mock.calls;
+      expect(calls).toEqual(
+        expect.arrayContaining([
+          [{ min: 0, max: 100 }],
+          [{ min: 0, max: 100 }],
+          [{ min: 1990, max: 2050 }],
+        ])
+      );
     });
 
     it("should generate different power values for komae and yono", () => {
