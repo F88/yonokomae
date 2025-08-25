@@ -10,9 +10,6 @@ export type Props = {
 const judgesName: string[] = ["O", "U", "S", "C"];
 
 export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
-  // Filter judges based on a random condition
-  const filteredJudges = judgesName.filter(() => Math.random() > 0.1);
-
   if (battle === undefined) {
     return null;
   }
@@ -31,7 +28,7 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {filteredJudges.map((judge) => (
+          {judgesName.map((judge) => (
             <JudgeCard key={judge} nameOfJudge={judge} battle={battle} />
           ))}
         </div>

@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
 
 export const ThemeToggle: React.FC = () => {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState<string>(() => {
+    const saved =
+      typeof window !== "undefined" ? localStorage.getItem("theme") : null;
+    return saved === "dark" || saved === "light" ? saved : "light";
+  });
 
   useEffect(() => {
     document.documentElement.classList.remove("dark", "light");
     document.documentElement.classList.add(theme);
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {
+      // ignore storage errors
+    }
   }, [theme]);
 
   return (

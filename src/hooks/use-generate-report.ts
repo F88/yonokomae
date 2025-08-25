@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { FrontlineJournalist } from "@/yk/frontline-journalist";
 import type { Battle } from "@/types/types";
 
 /**
@@ -17,6 +16,8 @@ export function useGenerateReport() {
       const delayMs = 1000 + Math.floor(Math.random() * 2000); // 1..3s
       // Wait 1 .. 3 secs before resolving
       await sleep(delayMs);
+      // Lazy-load the journalist (and heavy faker dep) only when needed
+      const { FrontlineJournalist } = await import("@/yk/frontline-journalist");
       const j = new FrontlineJournalist(name);
       // Keep it async-friendly for future API integration.
       return j.report();
