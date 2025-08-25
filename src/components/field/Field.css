@@ -1,0 +1,38 @@
+.neta-wrapper {
+  flex: 1 1 0;
+  min-width: 280px;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.field-section {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+.vs-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 16px;
+  color: #374151;
+}
+.field-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+.field-scenario {
+  margin-bottom: 24px;
+  color: #c4cbd7;
+}
+.field-neta-list {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
