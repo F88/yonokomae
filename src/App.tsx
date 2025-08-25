@@ -78,6 +78,7 @@ function App() {
     setReports([]);
   };
 
+
   return (
     <main className="min-h-screen bg-background">
       {/* Header */}
