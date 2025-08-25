@@ -5,6 +5,7 @@ import { Intro } from "@/components/Intro";
 import { useGenerateReport } from "@/hooks/use-generate-report";
 import { Placeholders } from "@/yk/placeholder";
 import { useEffect, useRef, useState } from "react";
+import { uid } from "@/lib/id";
 import { Header } from "./components/Header";
 import type { Battle } from "./types/types";
 
@@ -37,12 +38,14 @@ function App() {
     // Insert a loading placeholder immediately
     let insertedIndex = -1;
     const loadingBattle: Battle = {
+      id: uid("battle"),
       title: "Generating report...",
       subtitle: "Please wait",
       overview: "Preparing a new battle report.",
       scenario: "Loading...",
       komae: { ...Placeholders.Komae },
       yono: { ...Placeholders.Yono },
+      status: "loading",
     };
 
     shouldScrollAfterAppendRef.current = true;
@@ -61,12 +64,14 @@ function App() {
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       const errorBattle: Battle = {
+        id: uid("battle"),
         title: "Failed to generate report",
         subtitle: "Error",
         overview: "An error occurred while generating the report.",
         scenario: message,
         komae: { ...Placeholders.Komae },
         yono: { ...Placeholders.Yono },
+        status: "error",
       };
       setReports((prev) =>
         prev.map((b, i) => (i === insertedIndex ? errorBattle : b))
@@ -98,8 +103,8 @@ function App() {
         {/* Battle Reports */}
         {reports.length > 0 && (
           <section className="mx-auto w-full max-w-6xl space-y-8">
-            {reports.map((battle: Battle, idx: number) => (
-              <BattleContainer key={idx} battle={battle} />
+            {reports.map((battle: Battle) => (
+              <BattleContainer key={battle.id} battle={battle} />
             ))}
           </section>
         )}

@@ -4,6 +4,7 @@
 
 import { faker } from "@faker-js/faker";
 import { Placeholders } from "./placeholder";
+import { uid } from "@/lib/id";
 import type { Battle, Neta } from "src/types/types";
 
 export class FrontlineJournalist {
@@ -59,6 +60,7 @@ export class FrontlineJournalist {
     };
 
     return {
+      id: uid("battle"),
       title:
         "The Great Battle of " + faker.number.int({ min: 1990, max: 2050 }),
       subtitle: faker.lorem.words({ min: 2, max: 5 }),
@@ -66,6 +68,7 @@ export class FrontlineJournalist {
       scenario: faker.lorem.paragraph(),
       komae: komae,
       yono: yono,
+      status: "success",
     };
   }
 }

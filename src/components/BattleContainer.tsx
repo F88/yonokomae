@@ -8,8 +8,7 @@ export type BattleContainerProps = {
 };
 
 export const BattleContainer: FC<BattleContainerProps> = ({ battle }) => {
-
-  const isBattleReportLoading = battle.title === "Generating report...";
+  const isBattleReportLoading = battle.status === "loading";
   return (
     <div className="space-y-6">
       <HistoricalScene battle={battle} />
