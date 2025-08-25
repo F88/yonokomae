@@ -11,7 +11,7 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
   // Create a judge instance
   const judgesName: string[] = ["O", "U", "S", "C"];
 
-  const filteredJudges = judgesName.filter(() => Math.random() > 0.1);
+  const filteredJudges = useMemo(() => judgesName.filter(() => Math.random() > 0.1), []);
 
   if (battle === undefined) {
     return null;
