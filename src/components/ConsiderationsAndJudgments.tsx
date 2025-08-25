@@ -25,6 +25,8 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
   if (battle === undefined) {
     return null;
   }
+  // 週休2日
+  const todaysJudges = judgesName.filter(() => Math.random() < 5 / 7);
 
   return (
     <Card className="w-full">
@@ -35,12 +37,10 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
       </CardHeader>
       <CardContent>
         <div className="mb-4">
-          <h3 className="text-lg font-semibold">Scenario</h3>
-          <p>{battle.overview}</p>
+          <h3 className="text-lg font-semibold">{battle.title}</h3>
         </div>
-
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {judgesName.map((judge) => (
+          {todaysJudges.map((judge) => (
             <JudgeCard key={judge} nameOfJudge={judge} battle={battle} />
           ))}
         </div>
