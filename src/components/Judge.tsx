@@ -13,12 +13,12 @@ export const JudgeCard: FC<JudgeCardProps> = ({ nameOfJudge, battle }) => {
 
   return (
     <Card className="h-full min-w-0 text-center gap-2 py-2">
-      <CardHeader className="py-0 border-2">
+      <CardHeader className="py-0">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           Judge {nameOfJudge}
         </CardTitle>
       </CardHeader>
-      <CardContent className="min-w-0 border-2">
+      <CardContent className="min-w-0">
         <div className="font-semibold break-words whitespace-normal min-w-0">
           {judgement.status === 'loading' && '…'}
           {judgement.status === 'error' && (
