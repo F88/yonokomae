@@ -17,7 +17,7 @@ const config = {
         useTabs: false,
       },
     },
-  ]
+  ],
 };
 
 export default config;
