@@ -18,46 +18,83 @@ describe('Judge', () => {
   });
 
   describe('determineWinner', () => {
+    const dummyNeta = (power: number) => ({
+      power,
+      imageUrl: "",
+      title: "",
+      subtitle: "",
+      description: "",
+    });
     it('should return "YONO wins!" when yonoPower is greater than komaePower', () => {
-      const result = Judge.determineWinner(100, 50);
+  const result = Judge.determineWinner({
+    yono: dummyNeta(100),
+    komae: dummyNeta(50),
+  });
       expect(result).toBe('YONO wins!');
     });
 
     it('should return "KOMAE wins!" when komaePower is greater than yonoPower', () => {
-      const result = Judge.determineWinner(30, 80);
+  const result = Judge.determineWinner({
+    yono: dummyNeta(30),
+    komae: dummyNeta(80),
+  });
       expect(result).toBe('KOMAE wins!');
     });
 
     it('should return "It\'s a tie!" when powers are equal', () => {
-      const result = Judge.determineWinner(50, 50);
+  const result = Judge.determineWinner({
+    yono: dummyNeta(50),
+    komae: dummyNeta(50),
+  });
       expect(result).toBe("It's a tie!");
     });
 
     it('should handle edge case with zero powers', () => {
-      const result = Judge.determineWinner(0, 0);
+  const result = Judge.determineWinner({
+    yono: dummyNeta(0),
+    komae: dummyNeta(0),
+  });
       expect(result).toBe("It's a tie!");
     });
 
     it('should handle edge case with negative powers', () => {
-      const result1 = Judge.determineWinner(-10, -5);
-      expect(result1).toBe('KOMAE wins!');
+  const result1 = Judge.determineWinner({
+    yono: dummyNeta(-10),
+    komae: dummyNeta(-5),
+  });
+  expect(result1).toBe("KOMAE wins!");
 
-      const result2 = Judge.determineWinner(-5, -10);
-      expect(result2).toBe('YONO wins!');
+  const result2 = Judge.determineWinner({
+    yono: dummyNeta(-5),
+    komae: dummyNeta(-10),
+  });
+  expect(result2).toBe("YONO wins!");
 
-      const result3 = Judge.determineWinner(-5, -5);
-      expect(result3).toBe("It's a tie!");
+  const result3 = Judge.determineWinner({
+    yono: dummyNeta(-5),
+    komae: dummyNeta(-5),
+  });
+  expect(result3).toBe("It's a tie!");
     });
 
     it('should handle decimal powers', () => {
-      const result1 = Judge.determineWinner(50.5, 50.4);
-      expect(result1).toBe('YONO wins!');
+  const result1 = Judge.determineWinner({
+    yono: dummyNeta(50.5),
+    komae: dummyNeta(50.4),
+  });
+  expect(result1).toBe("YONO wins!");
 
-      const result2 = Judge.determineWinner(50.4, 50.5);
-      expect(result2).toBe('KOMAE wins!');
+  const result2 = Judge.determineWinner({
+    yono: dummyNeta(50.4),
+    komae: dummyNeta(50.5),
+  });
+  expect(result2).toBe("KOMAE wins!");
 
-      const result3 = Judge.determineWinner(50.5, 50.5);
-      expect(result3).toBe("It's a tie!");
+  const result3 = Judge.determineWinner({
+    yono: dummyNeta(50.5),
+    komae: dummyNeta(50.5),
+  });
+  expect(result3).toBe("It's a tie!");
     });
 
     it('should be a static method', () => {
@@ -65,18 +102,27 @@ describe('Judge', () => {
       expect(typeof Judge.determineWinner).toBe('function');
 
       const judge = new Judge('Test Judge');
-      expect((judge as any).determineWinner).toBeUndefined();
+  expect("determineWinner" in judge).toBe(false);
     });
 
     it('should work with maximum safe integer values', () => {
-      const result1 = Judge.determineWinner(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER - 1);
-      expect(result1).toBe('YONO wins!');
+  const result1 = Judge.determineWinner({
+    yono: dummyNeta(Number.MAX_SAFE_INTEGER),
+    komae: dummyNeta(Number.MAX_SAFE_INTEGER - 1),
+  });
+  expect(result1).toBe("YONO wins!");
 
-      const result2 = Judge.determineWinner(Number.MAX_SAFE_INTEGER - 1, Number.MAX_SAFE_INTEGER);
-      expect(result2).toBe('KOMAE wins!');
+  const result2 = Judge.determineWinner({
+    yono: dummyNeta(Number.MAX_SAFE_INTEGER - 1),
+    komae: dummyNeta(Number.MAX_SAFE_INTEGER),
+  });
+  expect(result2).toBe("KOMAE wins!");
 
-      const result3 = Judge.determineWinner(Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
-      expect(result3).toBe("It's a tie!");
+  const result3 = Judge.determineWinner({
+    yono: dummyNeta(Number.MAX_SAFE_INTEGER),
+    komae: dummyNeta(Number.MAX_SAFE_INTEGER),
+  });
+  expect(result3).toBe("It's a tie!");
     });
   });
 });
