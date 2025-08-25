@@ -14,7 +14,7 @@ Note: This game is full of humorous jokes and is not a deepfake or fake.
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v18 or higher, recommended v20)
 - npm or yarn
 
 ### Installation
@@ -75,6 +75,37 @@ npm run deploy
 - **Linting**: [ESLint](https://eslint.org/) v9.33.0 with TypeScript support
 - **Data Generation**: [@faker-js/faker](https://fakerjs.dev/) v10.0.0
 - **Deployment**: [GitHub Pages](https://pages.github.com/) via [gh-pages](https://github.com/tschaub/gh-pages)
+
+## Project notes
+
+### Styling (Tailwind CSS v4)
+
+- Tailwind v4 is used. The single CSS entry is the project root `index.css`.
+    - `src/main.tsx` imports `../index.css`.
+    - Tailwind plugin is wired via Vite (`@tailwindcss/vite`), not PostCSS config files.
+    - `index.css` registers `@plugin "tailwindcss-animate"` and uses `@theme inline`.
+- Dark mode uses the `.dark` class on `document.documentElement` (toggled in `ThemeToggle`).
+
+### shadcn/ui
+
+- Config: see `components.json` (style: `new-york`, aliases for `@/components`, etc.).
+- Components live under `src/components/ui`.
+- You can add more via shadcn CLI (optional), following the Vite guide.
+
+### Async judgement flow
+
+- `Judge.determineWinner` is async and waits 0..5 seconds before resolving (0 ms in tests).
+- Use `useJudgement(nameOfJudge, battle)` to fetch and render results with `loading/error/success` states.
+- UI component: `JudgeCard` consumes `useJudgement` and handles the states.
+
+### Path aliases
+
+- `@` maps to `src/` (configured in `tsconfig` and `vite.config.ts`).
+
+### Testing notes
+
+- Tests mock `@faker-js/faker` string generators (`lorem.words`, `lorem.paragraph`) to keep assertions deterministic.
+- `faker.number.int` is called three times in `FrontlineJournalist.report`: `komae.power`, `yono.power`, and title year.
 
 ## Release Notes (Changelog) Generation
 
