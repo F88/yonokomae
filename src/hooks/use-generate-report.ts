@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { FrontlineJournalist } from "@/libs/frontline-journalist";
+import { FrontlineJournalist } from "@/yk/frontline-journalist";
 import type { Battle } from "@/types/types";
 
 /**
@@ -15,6 +15,7 @@ export function useGenerateReport() {
       const sleep = (ms: number) =>
         new Promise<void>((resolve) => setTimeout(resolve, ms));
       const delayMs = 1000 + Math.floor(Math.random() * 2000); // 1..3s
+      // Wait 1 .. 3 secs before resolving
       await sleep(delayMs);
       const j = new FrontlineJournalist(name);
       // Keep it async-friendly for future API integration.
@@ -23,6 +24,5 @@ export function useGenerateReport() {
     []
   );
 
-  // Wait 1 .. 3 secs before resolving
   return { generateReport };
 }

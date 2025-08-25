@@ -14,7 +14,7 @@ export const NetaView: FC<Props> = ({
 }) => {
   return (
     <Card className="w-full max-w-sm overflow-hidden">
-      <div className="aspect-square w-full overflow-hidden">
+      <div className="w-full overflow-hidden">
         <img
           src={imageUrl}
           alt={title}
@@ -27,11 +27,11 @@ export const NetaView: FC<Props> = ({
             <h3 className="text-xl font-bold">{title}</h3>
             <p className="text-sm text-muted-foreground italic">{subtitle}</p>
           </div>
-          
+
           <p className="text-sm text-center text-muted-foreground">
             {description}
           </p>
-          
+
           <div className="flex justify-center">
             <Badge variant="secondary" className="gap-1 px-3 py-1">
               <span className="text-lg">💥</span>

@@ -2,16 +2,36 @@ import { BattleContainer } from "@/components/BattleContainer";
 import { Controller } from "@/components/Controller";
 import { TheStartOfTheWar } from "@/components/TheStartOfTheWar";
 import { Intro } from "@/components/Intro";
-import { useGenerateReport } from "@/libs/use-generate-report";
-import { Placeholders } from "@/libs/placeholder";
+import { useGenerateReport } from "@/hooks/use-generate-report";
+import { Placeholders } from "@/yk/placeholder";
 import type { Battle } from "@/types/types";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Header } from "./components/Header";
 
 function App() {
   const [reports, setReports] = useState<Battle[]>([]);
+  const shouldScrollAfterAppendRef = useRef(false);
 
   const { generateReport } = useGenerateReport();
+
+  // Smoothly scroll to the bottom of the page after the DOM updates
+  const scrollToBottom = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+
+  // After the list grows (i.e., a new report is appended), scroll to the bottom once
+  useEffect(() => {
+    if (shouldScrollAfterAppendRef.current) {
+      // Defer to next frame to ensure DOM is painted
+      requestAnimationFrame(() => {
+        scrollToBottom();
+        shouldScrollAfterAppendRef.current = false;
+      });
+    }
+  }, [reports.length]);
 
   const handleGenerateReport = async () => {
     // Insert a loading placeholder immediately
@@ -25,10 +45,12 @@ function App() {
       yono: { ...Placeholders.Yono },
     };
 
+    shouldScrollAfterAppendRef.current = true;
     setReports((prev) => {
       insertedIndex = prev.length;
       return [...prev, loadingBattle];
     });
+    // Scrolling will occur in the effect after DOM updates
 
     try {
       const next = await generateReport("John Doe");

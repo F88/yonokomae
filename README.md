@@ -10,43 +10,71 @@ This game is a thought-provoking game that examines from multiple angles what ha
 Note: This game is full of humorous jokes and is not a deepfake or fake.
 ```
 
+## Getting Started
 
-## Tech Stack (en)
+### Prerequisites
 
-### Core Technologies
+- Node.js (v16 or higher)
+- npm or yarn
 
-- **React** (v19.1.1) - UI library
-- **TypeScript** (v5.8.3) - Type-safe JavaScript
-- **Vite** (v7.1.2) - Fast build tool
+### Installation
 
-### Styling
+```bash
+# Clone the repository
+git clone https://github.com/F88/yonokomae.git
+cd yonokomae
 
-- **Tailwind CSS** (v4.1.12) - Utility-first CSS framework
-- **tailwind-merge** - Tailwind class merging
-- **class-variance-authority** (CVA) - Component variant management
-- **tw-animate-css** - Animations for Tailwind
+# Install dependencies
+npm install
+```
 
-### UI Components
+### Development
 
-- **Radix UI** - Accessible headless UI components
-    - @radix-ui/react-separator
-    - @radix-ui/react-slot
-- **lucide-react** - Icon library
-- **react-icons** - Additional icon sets
+```bash
+# Start development server
+npm run dev
 
-### Testing
+# Run tests
+npm test
 
-- **Vitest** (v3.2.4) - Vite-native test framework
-- **@testing-library/react** - React component testing
-- **@testing-library/jest-dom** - DOM assertions
-- **jsdom** - DOM implementation for Node.js
+# Run tests with coverage
+npm run test:coverage
 
-### Development Tools
+# Run tests in UI mode
+npm run test:ui
 
-- **ESLint** (v9.33.0) - Linter
-- **PostCSS** & **Autoprefixer** - CSS processing
-- **gh-pages** - GitHub Pages deployment
-- **changesets/cli** - Release note and changelog management
+# Lint code
+npm run lint
+
+# Auto-fix linting issues
+npm run lint:fix
+```
+
+### Build & Deployment
+
+```bash
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Deploy to GitHub Pages
+npm run deploy
+```
+
+## Tech Stack
+
+- **Framework**: [React](https://react.dev/) v19.1.1
+- **Build Tool**: [Vite](https://vitejs.dev/) v7.1.2
+- **Language**: [TypeScript](https://www.typescriptlang.org/) v5.8.3
+- **UI Framework**: [shadcn/ui](https://ui.shadcn.com/) (New York style)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) v4.1.12 with [tailwindcss-animate](https://github.com/jamiebuilds/tailwindcss-animate)
+- **Icons**: [Lucide React](https://lucide.dev/guide/packages/lucide-react) & [React Icons](https://react-icons.github.io/react-icons/)
+- **Testing**: [Vitest](https://vitest.dev/) v3.2.4 & [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) v16.3.0
+- **Linting**: [ESLint](https://eslint.org/) v9.33.0 with TypeScript support
+- **Data Generation**: [@faker-js/faker](https://fakerjs.dev/) v10.0.0
+- **Deployment**: [GitHub Pages](https://pages.github.com/) via [gh-pages](https://github.com/tschaub/gh-pages)
 
 ## Release Notes (Changelog) Generation
 

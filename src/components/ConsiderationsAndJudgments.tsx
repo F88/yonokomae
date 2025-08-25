@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import type { Battle } from "@/types/types";
-import { Judge } from "@/libs/judge";
+import { Judge } from "@/yk/judge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export type Props = {

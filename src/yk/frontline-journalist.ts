@@ -59,11 +59,11 @@ export class FrontlineJournalist {
     };
 
     return {
-      title: "The Great Battle of 1945",
-      subtitle: "A Clash of Titans",
+      title:
+        "The Great Battle of " + faker.number.int({ min: 1990, max: 2050 }),
+      subtitle: faker.lorem.words({ min: 2, max: 5 }),
       overview: "An epic battle that changed the course of history.",
-      scenario:
-        "In the final days of World War II, two legendary figures faced off in a decisive battle that would determine the fate of nations.",
+      scenario: faker.lorem.paragraph(),
       komae: komae,
       yono: yono,
     };
