@@ -97,9 +97,9 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <div className="container flex flex-col gap-8 py-8 pb-32">
+      <div className="container flex flex-col gap-0 py-0 pb-32">
         {/* Intro Section */}
-        <section className="flex flex-col items-center text-center">
+        <section className="flex flex-col items-center text-center m-2">
           <Intro />
           <TheStartOfTheWar />
         </section>

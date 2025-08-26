@@ -36,7 +36,7 @@ export const Controller: FC<ControllerProps> = ({
       if (key === 'Enter' || key === ' ' || key === 'b' || key === 'B') {
         e.preventDefault();
         handleGenerate();
-      } else if (key === 'r' || key === 'R' || key === 'Escape') {
+      } else if (key === 'r' || key === 'R') {
         e.preventDefault();
         handleReset();
       }
@@ -54,13 +54,13 @@ export const Controller: FC<ControllerProps> = ({
           variant="destructive"
           onClick={handleReset}
           className="gap-2"
-          title="Reset (R or Esc)"
-          aria-label="Reset (R or Esc)"
+          title="Reset (R)"
+          aria-label="Reset (R)"
         >
           <Square className="h-4 w-4" />
           RESET
         </Button>
-        <div className="text-xs text-muted-foreground">[Esc / R]</div>
+        <div className="text-xs text-muted-foreground">[R]</div>
       </div>
 
       {/* Battle block */}
@@ -74,7 +74,7 @@ export const Controller: FC<ControllerProps> = ({
           <GiInvertedDice3 className="h-5 w-5" />
           BATTLE
         </Button>
-        <div className="text-xs text-muted-foreground">[Enter / Space / B]</div>
+        <div className="text-xs text-muted-foreground">[B/Enter/Space]</div>
       </div>
     </div>
   );

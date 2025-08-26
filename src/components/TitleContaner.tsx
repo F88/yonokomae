@@ -170,8 +170,8 @@ export function TitleContaner({
 
   return (
     <div className="flex w-full justify-center p-6">
-      <Card className="w-full max-w-xl text-center">
-        <CardHeader className="gap-2 py-4">
+      <Card className="w-full max-w-2xl text-center">
+        <CardHeader className="gap-2 pt-2">
           <CardTitle className="text-3xl font-bold tracking-wide">
             {title}
           </CardTitle>
@@ -183,7 +183,7 @@ export function TitleContaner({
             aria-label="Play modes"
             tabIndex={0}
             onKeyDown={handleKeyDown}
-            className="mx-auto flex w-full max-w-md flex-col gap-2"
+            className="mx-auto flex w-full flex-col gap-2"
           >
             {options.map((m, i) => {
               const selected = i === index;
