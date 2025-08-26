@@ -244,10 +244,10 @@ function MyComponent() {
 
 ### Historical リポジトリ実装
 
-`HistoricalBattleReportRepository` はシード消費の例を示します:
+`BattleReportRandomDataRepository` はシード消費の例を示します:
 
 ```ts
-export class HistoricalBattleReportRepository
+export class BattleReportRandomDataRepository
     implements BattleReportRepository
 {
     private readonly seedFile?: string;
