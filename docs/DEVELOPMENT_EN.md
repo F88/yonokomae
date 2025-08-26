@@ -340,11 +340,17 @@ See [TESTING.md](./TESTING.md) for testing guidance.
 - README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper
   steps here).
 
-## Historical Evidence Data Ownership
+## Modes and Data Ownership
 
-In HISTORICAL EVIDENCE mode, data is static at build time and owned entirely by seed files.
+Note about seeds and modes:
 
-- Primary source (seeds):
+- Random Data (current): demo-style "Joke Random Data" used for prototyping and examples.
+  Seeds live under `src/seeds/random-data/**` (TS preferred) and `seeds/random-data/**` (JSON optional).
+- Historical Evidence (future): reserved. When introduced, it will use a separate folder and
+  stricter provenance rules. Current random-data seeds are not historical data.
+
+
+- Primary source (Random Data seeds):
     - JSON: `seeds/random-data/scenario/*.json`
     - TS modules: `src/seeds/random-data/scenario/*.ts` exporting
       `export default {...} satisfies HistoricalSeed;`

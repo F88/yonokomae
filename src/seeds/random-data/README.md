@@ -1,6 +1,7 @@
-# Random Data Seeds (Historical Evidence)
+# Random Data Seeds (Joke Random Data)
 
-This folder hosts type-safe seed modules used by the Historical Evidence mode.
+This folder hosts type-safe seed modules used by the Joke Random Data repository
+and related prototyping flows. These are non-historical, demo-style seeds.
 Seeds are discovered at build time using static, eager imports via `import.meta.glob`.
 
 - TS modules are preferred for authoring and live under:
