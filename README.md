@@ -48,6 +48,12 @@ npm run lint
 
 # Auto-fix linting issues
 npm run lint:fix
+
+# Format code
+npm run format
+
+# Check formatting only
+npm run format:check
 ```
 
 ### Build & Deployment
@@ -62,6 +68,12 @@ npm run preview
 # Deploy to GitHub Pages
 npm run deploy
 ```
+
+Notes:
+
+- Deployment uses GitHub Pages with a repository base path (`/yonokomae/`).
+    The `deploy` script passes `--base=/yonokomae/` to Vite so assets resolve correctly
+    under the Pages site. The published site will be available at: <https://f88.github.io/yonokomae/>
 
 ## Tech Stack
 
@@ -117,8 +129,15 @@ npm run deploy
 
 ### Testing notes
 
-- Tests mock `@faker-js/faker` string generators (`lorem.words`, `lorem.paragraph`) to keep assertions deterministic.
-- `faker.number.int` is called three times in `FrontlineJournalist.report`: `komae.power`, `yono.power`, and title year.
+- Tests avoid asserting on random values. If you need deterministic behavior for
+    `@faker-js/faker`, mock the specific generators within the test case.
+    For example, spy on `faker.lorem.words` or `faker.number.int` as needed.
+- `faker.number.int` is called three times in `FrontlineJournalist.report`:
+    `komae.power`, `yono.power`, and title year.
+- For UI tests around the battle field, placeholders and slots expose test IDs
+    to make assertions robust:
+    - `data-testid="slot-yono"`, `data-testid="slot-komae"`
+    - `data-testid="placeholder"`
 
 ### SSR
 
