@@ -35,8 +35,8 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 
 ## Documentation
 
-- [Developer guide (EN)](./DEVELOPMENT_EN.md)
-- [開発ガイド (JA)](./DEVELOPMENT_JA.md)
+- [Developer guide (EN)](./docs/DEVELOPMENT_EN.md)
+- [開発ガイド (JA)](./docs/DEVELOPMENT_JA.md)
 
 ## Roadmap / TODO
 

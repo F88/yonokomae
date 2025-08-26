@@ -6,8 +6,8 @@ lang: en
 notes-ja:
     - この文書はAI可読性を優先して英語で記述されています.
 related:
-    - DEVELOPMENT_EN.md - Written in English
-    - DEVELOPMENT_JA.md - Written in Japanese
+    - DEVELOPMENT_EN.md has been translated into Japanese as DEVELOPMENT_JA.md.
+    - DEVELOPMENT_JA.md is a Japanese translation of DEVELOPMENT_EN.md.
 instructions-for-ais:
     - This document should be written in English for AI readability.
     - Content within code fences may be written in languages other than English.
