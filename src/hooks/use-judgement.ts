@@ -57,7 +57,7 @@ export function useJudgement(
     return () => {
       cancelled = true;
     };
-  }, [inputs]);
+  }, [inputs, mode]);
 
   return state;
 }

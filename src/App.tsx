@@ -8,8 +8,8 @@ import { useEffect, useRef, useState } from 'react';
 import { uid } from '@/lib/id';
 import { Header } from './components/Header';
 import type { Battle } from './types/types';
-import TitleContainer from './components/TitleContainer';
 import { playMode, type PlayMode } from './yk/play-mode';
+import { TitleContainer } from './components/TitleContainer';
 
 function App() {
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
