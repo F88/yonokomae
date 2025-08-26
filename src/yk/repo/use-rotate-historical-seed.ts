@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useHistoricalSeedSelection } from './use-historical-seed-selection';
+import { useHistoricalSeedSelection } from '@/yk/repo/seed-system';
 
 /**
  * Hook to rotate the historical seed selection to the next available seed.
