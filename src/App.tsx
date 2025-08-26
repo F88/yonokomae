@@ -84,6 +84,7 @@ function App() {
 
   const handleClearReports = () => {
     setReports([]);
+    setMode(undefined);
   };
 
   return (
@@ -103,8 +104,10 @@ function App() {
           <TheStartOfTheWar />
         </section>
 
-        {/* Title Container */}
-        <TitleContaner modes={playMode} onSelect={(mode) => setMode(mode)} />
+        {/* Title Container (shown only before a mode is selected) */}
+        {mode == null ? (
+          <TitleContaner modes={playMode} onSelect={(mode) => setMode(mode)} />
+        ) : null}
 
         {/* Battle Reports */}
         {mode != null && reports.length > 0 && (
