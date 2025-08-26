@@ -30,8 +30,8 @@ export async function loadSeedByFile(
   file: string,
 ): Promise<{ default: HistoricalSeed }> {
   // Use Vite's import.meta.glob for predictable dynamic imports
-  const modules = import.meta.glob('../../seeds/historical/*.json');
-  const key = `../../seeds/historical/${file}`;
+  const modules = import.meta.glob('/seeds/historical/*.json');
+  const key = `/seeds/historical/${file}`;
   const loader = modules[key] as
     | (() => Promise<{ default: HistoricalSeed }>)
     | undefined;
