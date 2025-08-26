@@ -7,7 +7,9 @@ export type HistoricalSeedMeta = {
 // Discover seed modules at build time (random-data only)
 const discoveredSeedModules = {
   ...import.meta.glob('/seeds/random-data/scenario/*.json', { eager: true }),
-  ...import.meta.glob('/src/seeds/random-data/scenario/*.ts', { eager: true }),
+  ...import.meta.glob('/src/seeds/random-data/scenario/*.{en,ja}.ts', {
+    eager: true,
+  }),
 };
 
 function basename(path: string): string {
@@ -69,7 +71,7 @@ export async function loadSeedByFile(
   // Static-only resolution (no dynamic import) to avoid mixed static/dynamic warnings
   const modules = {
     ...import.meta.glob('/seeds/random-data/scenario/*.json', { eager: true }),
-    ...import.meta.glob('/src/seeds/random-data/scenario/*.ts', {
+    ...import.meta.glob('/src/seeds/random-data/scenario/*.{en,ja}.ts', {
       eager: true,
     }),
   } as Record<string, unknown>;

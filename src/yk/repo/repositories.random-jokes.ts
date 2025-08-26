@@ -152,7 +152,8 @@ type NetaBase = Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>;
 
 async function loadNetaOptions(kind: 'komae' | 'yono'): Promise<NetaBase[]> {
   const jsonKeyNew = `/seeds/random-data/neta/${kind}.json`;
-  const tsKeyNew = `/src/seeds/random-data/neta/${kind}.ts`;
+  const tsKeyNew = `/src/seeds/random-data/neta/${kind}.en.ts`;
+  const tsKeyOld = `/src/seeds/random-data/neta/${kind}.ts`;
   type NetaModule = {
     default?: { options?: NetaBase[] };
     options?: NetaBase[];
@@ -161,7 +162,7 @@ async function loadNetaOptions(kind: 'komae' | 'yono'): Promise<NetaBase[]> {
     ...import.meta.glob('/seeds/random-data/neta/*.json', { eager: true }),
     ...import.meta.glob('/src/seeds/random-data/neta/*.ts', { eager: true }),
   } as Record<string, NetaModule>;
-  const mod = mods[jsonKeyNew] ?? mods[tsKeyNew];
+  const mod = mods[jsonKeyNew] ?? mods[tsKeyNew] ?? mods[tsKeyOld];
   const options: NetaBase[] = mod?.default?.options ?? mod?.options ?? [];
   if (options.length > 0) return options;
   // Minimal default to avoid empty options
@@ -178,13 +179,14 @@ async function loadNetaOptions(kind: 'komae' | 'yono'): Promise<NetaBase[]> {
 type ReportConfig = { attribution: string; defaultPower: number };
 async function loadReportConfig(): Promise<ReportConfig> {
   const jsonKeyNew = '/seeds/random-data/report/config.json';
-  const tsKeyNew = '/src/seeds/random-data/report/config.ts';
+  const tsKeyNew = '/src/seeds/random-data/report/config.en.ts';
+  const tsKeyOld = '/src/seeds/random-data/report/config.ts';
   type CfgModule = { default?: Partial<ReportConfig> } | Partial<ReportConfig>;
   const mods = {
     ...import.meta.glob('/seeds/random-data/report/*', { eager: true }),
     ...import.meta.glob('/src/seeds/random-data/report/*', { eager: true }),
   } as Record<string, CfgModule>;
-  const mod = mods[jsonKeyNew] ?? mods[tsKeyNew];
+  const mod = mods[jsonKeyNew] ?? mods[tsKeyNew] ?? mods[tsKeyOld];
   let cfgObj: Partial<ReportConfig> = {};
   if (mod != null) {
     const maybeDefault = mod as { default?: Partial<ReportConfig> };

@@ -1,8 +1,2 @@
-export type {
-  HistoricalSeedMeta,
-  HistoricalSeed,
-} from './seed-system/historical-seeds';
-export {
-  historicalSeeds,
-  loadSeedByFile,
-} from './seed-system/historical-seeds';
+// REMOVED: Prefer importing from '@/yk/repo/seed-system/historical-seeds'.
+export {};
