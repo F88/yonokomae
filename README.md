@@ -221,6 +221,164 @@ classDiagram
     HistoricalNetaRepository ..|> NetaRepository
 ```
 
+### Adding a new Repository or Play Mode (step-by-step)
+
+This guide shows how to add a new repository implementation (e.g., DEMO-2) or
+an API-backed repo, while keeping the system flexible and easy to extend.
+
+1. Pick a Play Mode ID and register it
+
+- File: `src/yk/play-mode.ts`
+- Add a new item to `playMode` with a unique `id` (e.g., `demo-2` or `api`),
+    `title`, `description`, and `enabled` flag.
+- Keep `id` stable; it is used to select implementations in the provider.
+
+1. Implement the repository (or repositories)
+
+- File suggestion: `src/yk/repo/repositories.demo2.ts` or `repositories.api.ts`.
+- Implement the relevant interfaces from `src/yk/repo/repositories.ts`.
+- Keep responsibilities focused; if needed, add new small interfaces (e.g.,
+    `IdProvider`, `Clock`) to avoid bloated repos.
+
+Example (DEMO-2 variant):
+
+```ts
+// src/yk/repo/repositories.demo2.ts
+import type {
+    BattleReportRepository,
+    JudgementRepository,
+} from '@/yk/repo/repositories';
+
+export class Demo2BattleReportRepository implements BattleReportRepository {
+    constructor(private readonly opts?: { delay?: number | { min: number; max: number } }) {}
+    async generateReport() {
+        // ...produce a slightly different flavor of Battle
+        // Use your own seeded random or constants for determinism in tests
+        return {
+            id: crypto.randomUUID(),
+            yono: { /* ... */ },
+            komae: { /* ... */ },
+            // ...other fields
+        } as any;
+    }
+}
+
+export class Demo2JudgementRepository implements JudgementRepository {
+    constructor(private readonly opts?: { delay?: number | { min: number; max: number } }) {}
+    async determineWinner(input) {
+        // ...alternative rule set
+        return 'DRAW';
+    }
+}
+```
+
+Example (API-backed skeleton):
+
+```ts
+// src/yk/repo/repositories.api.ts
+import type {
+    BattleReportRepository,
+    JudgementRepository,
+} from '@/yk/repo/repositories';
+
+export class ApiClient {
+    constructor(private readonly baseUrl: string, private readonly token?: string) {}
+    async get<T>(path: string, signal?: AbortSignal): Promise<T> {
+        const res = await fetch(`${this.baseUrl}${path}`, { headers: this.token ? { Authorization: `Bearer ${this.token}` } : undefined, signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json() as Promise<T>;
+    }
+}
+
+export class ApiBattleReportRepository implements BattleReportRepository {
+    constructor(private readonly api: ApiClient) {}
+    async generateReport(opts?: { signal?: AbortSignal }) {
+        return this.api.get('/battle/report', opts?.signal);
+    }
+}
+
+export class ApiJudgementRepository implements JudgementRepository {
+    constructor(private readonly api: ApiClient) {}
+    async determineWinner(input, opts?: { signal?: AbortSignal }) {
+        return this.api.get(`/battle/judgement?mode=${encodeURIComponent(input.mode.id)}`, opts?.signal);
+    }
+}
+```
+
+1. Wire it in the provider factories
+
+- File: `src/yk/repo/repository-provider.ts`
+- Add a branch for your new `mode.id` to return the new implementations.
+- Keep default delays or introduce mode-specific timing.
+
+Example:
+
+```ts
+// inside getBattleReportRepository
+if (mode?.id === 'demo-2') {
+    const { Demo2BattleReportRepository } = await import('@/yk/repo/repositories.demo2');
+    return new Demo2BattleReportRepository({ delay });
+}
+
+// inside getJudgementRepository
+if (mode?.id === 'demo-2') {
+    const { Demo2JudgementRepository } = await import('@/yk/repo/repositories.demo2');
+    return new Demo2JudgementRepository({ delay });
+}
+```
+
+API-backed example:
+
+```ts
+if (mode?.id === 'api') {
+    const { ApiClient, ApiBattleReportRepository, ApiJudgementRepository } = await import('@/yk/repo/repositories.api');
+    const api = new ApiClient(import.meta.env.VITE_API_BASE_URL as string);
+    return new ApiBattleReportRepository(api);
+}
+```
+
+1. Create or extend a hook (optional)
+
+- Hooks live under `src/hooks/`.
+- Prefer taking dependencies via Context (Provider present) or explicit
+    parameters (constructor-style injection) rather than recreating repos inside
+    the hook.
+- Keep timeouts and `AbortSignal` handling consistent (10s cap already used).
+
+1. Decide Provider vs. explicit injection
+
+- App runtime: prefer `RepositoryProvider` (or `RepositoryProviderSuspense` for
+    async init). This centralizes configuration.
+- Tests/stories: either wrap with the Provider or pass repo instances into the
+    hook/component explicitly.
+
+1. Async initialization (API)
+
+- Use `RepositoryProviderSuspense` and wrap in `<Suspense>` to block until
+    repos are ready.
+- If only one repo needs async init, you can still resolve both up-front for a
+    consistent DI story.
+
+1. Testing checklist
+
+- Unit tests next to the implementation (e.g., `repositories.demo2.test.ts`).
+- Cover edge cases: delay capping, abort behavior, error mapping.
+- For API repos: mock `fetch` and assert request paths/headers; keep responses
+    deterministic.
+- UI tests should assert on states and interactions, not random values.
+
+1. Optional: Feature flags and env config
+
+- Use `enabled` in `playMode` to hide WIP modes.
+- Read `import.meta.env.*` for API base URLs, tokens, or flags. Avoid baking
+    secrets into the codebase.
+
+1. Minimal acceptance criteria (green gates)
+
+- TypeScript passes (no new errors).
+- Unit tests pass locally (`npm test`).
+- README updated with the new mode and any notable behavior.
+
 ### Styling (Tailwind CSS v4)
 
 - Tailwind v4 is used. The single CSS entry is the project root `index.css`.
