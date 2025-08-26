@@ -1,7 +1,7 @@
 import type {
   BattleReportRepository,
   JudgementRepository,
-} from './repositories';
+} from './core/repositories';
 import type { PlayMode } from '@/yk/play-mode';
 
 export async function getBattleReportRepository(
@@ -9,7 +9,7 @@ export async function getBattleReportRepository(
   seedFile?: string,
 ): Promise<BattleReportRepository> {
   const { FakeBattleReportRepository } = await import(
-    '@/yk/repo/repositories.fake'
+    '@/yk/repo/fake/repositories.fake'
   );
   const delay = defaultDelayForMode(mode);
   // Tip: add new branches per mode here (e.g., 'demo-2', 'api')
@@ -19,7 +19,7 @@ export async function getBattleReportRepository(
   // }
   if (mode?.id === 'api') {
     const { ApiClient, ApiBattleReportRepository } = await import(
-      '@/yk/repo/repositories.api'
+      '@/yk/repo/api/repositories.api'
     );
     const base: string = getApiBaseUrl();
     const api = new ApiClient(base);
@@ -27,14 +27,14 @@ export async function getBattleReportRepository(
   }
   if (mode?.id === 'historical-evidence') {
     const { BattleReportRandomDataRepository } = await import(
-      '@/yk/repo/repositories.random-jokes'
+      '@/yk/repo/random-jokes/repositories.random-jokes'
     );
     // Selected seed is provided via context; callers pass it here.
     return new BattleReportRandomDataRepository({ seedFile });
   }
   if (mode?.id === 'mixed-nuts') {
     const { BattleReportRandomDataRepository } = await import(
-      '@/yk/repo/repositories.random-jokes'
+      '@/yk/repo/random-jokes/repositories.random-jokes'
     );
     return new BattleReportRandomDataRepository({ seedFile });
   }
@@ -45,7 +45,7 @@ export async function getJudgementRepository(
   mode?: PlayMode,
 ): Promise<JudgementRepository> {
   const { FakeJudgementRepository } = await import(
-    '@/yk/repo/repositories.fake'
+    '@/yk/repo/fake/repositories.fake'
   );
   const delay = defaultDelayForMode(mode, 'judgement');
   // Tip: add new branches per mode here (e.g., 'demo-2', 'api')
@@ -55,7 +55,7 @@ export async function getJudgementRepository(
   // }
   if (mode?.id === 'api') {
     const { ApiClient, ApiJudgementRepository } = await import(
-      '@/yk/repo/repositories.api'
+      '@/yk/repo/api/repositories.api'
     );
     const base: string = getApiBaseUrl();
     const api = new ApiClient(base);

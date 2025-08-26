@@ -1,4 +1,4 @@
-import type { HistoricalSeed } from '@/yk/repo/historical-seeds';
+import type { HistoricalSeed } from '@/yk/repo/seed-system';
 
 export default {
   id: 'teapot-standoff-009',

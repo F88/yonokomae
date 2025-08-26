@@ -1,1 +1,1 @@
-export { HistoricalSeedProvider } from './historical-seed-provider';
+export { HistoricalSeedProvider } from './seed-system/historical-seed-provider';

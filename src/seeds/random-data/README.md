@@ -21,7 +21,7 @@ Seeds are discovered at build time using static, eager imports via `import.meta.
 1. Export a default object that satisfies the `HistoricalSeed` type:
 
 ```ts
-import type { HistoricalSeed } from '@/yk/repo/historical-seeds';
+import type { HistoricalSeed } from '@/yk/repo/seed-system';
 
 export default {
   id: 'tama-river-001',

@@ -1,4 +1,4 @@
-import type { HistoricalSeed } from '@/yk/repo/historical-seeds';
+import type { HistoricalSeed } from '@/yk/repo/seed-system';
 
 const seed = {
   id: 'bridge-skirmish-002',

@@ -4,8 +4,8 @@ import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyChip } from '@/components/ui/key-chip';
 import { isEditable } from '@/lib/dom-utils';
-import { historicalSeeds } from '@/yk/repo/historical-seeds';
-import { useHistoricalSeedSelection } from '@/yk/repo/historical-seed-store';
+import { historicalSeeds } from '@/yk/repo/seed-system';
+import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/historical-seed-store';
 
 export type TitleContainerProps = {
   modes?: PlayMode[];

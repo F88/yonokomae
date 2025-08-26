@@ -3,13 +3,13 @@ import type { PlayMode } from '../play-mode';
 import type {
   BattleReportRepository,
   JudgementRepository,
-} from './repositories';
+} from './core/repositories';
 import {
   getBattleReportRepository,
   getJudgementRepository,
 } from './repository-provider';
 import { RepoContext, type RepoContextValue } from './repository-context';
-import { useHistoricalSeedSelection } from './historical-seed-store';
+import { useHistoricalSeedSelection } from './seed-system/historical-seed-store';
 
 export function RepositoryProvider({
   mode,
