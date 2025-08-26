@@ -53,7 +53,7 @@ The application will consume seeds via static imports from the data package inst
     - package.json (name: @f88/data-historical-evidence)
     - tsconfig.json
     - src/
-        - scenario/*.ts
+        - scenario/\*.ts
         - neta/{komae.ts,yono.ts}
         - report/config.ts
         - index.ts (exports: historicalSeeds, netaKomae, netaYono, reportConfig)
@@ -76,9 +76,9 @@ The application will consume seeds via static imports from the data package inst
     - peerDeps: none (no React dependency)
 - @f88/app
     - deps: react, react-dom, vite, etc.
-    - deps: @f88/types-historical, @f88/data-historical-evidence (workspace:*)
+    - deps: @f88/types-historical, @f88/data-historical-evidence (workspace:\*)
 
-Guideline: React should exist only in the app package to avoid duplicate instances. Use workspace:* where appropriate.
+Guideline: React should exist only in the app package to avoid duplicate instances. Use workspace:\* where appropriate.
 
 ## Loader changes (app)
 
@@ -111,18 +111,18 @@ Guideline: React should exist only in the app package to avoid duplicate instanc
 
 ## Migration plan (phased)
 
-1) Extract shared types/schemas
+1. Extract shared types/schemas
 
 - Create @f88/types-historical and move HistoricalSeed + Zod schema there.
 - Update current code to import types/schemas from the new package (no behavior change).
 
-2) Create the data package
+2. Create the data package
 
 - Move current seeds under data/historical-evidence/src.
 - Export historicalSeeds, netaKomae, netaYono, reportConfig from index.ts.
 - Update the app loader to import from the data package.
 
-3) Remove legacy discovery
+3. Remove legacy discovery
 
 - Delete import.meta.glob discovery and old paths.
 - Update docs and CI to reflect the new layout.
@@ -144,8 +144,8 @@ Guideline: React should exist only in the app package to avoid duplicate instanc
 - Vite server.fs.allow to keep import.meta.glob across directories:
     - Not recommended for production builds and consistency.
 - Manifest auto-generation in data:
-    - A script scans scenario/** and generates src/__manifest__.ts.
-    - src/index.ts re-exports from __manifest__.
+    - A script scans scenario/\*\* and generates src/**manifest**.ts.
+    - src/index.ts re-exports from **manifest**.
     - Reduces manual maintenance at the cost of a generation step.
 - Keep current single-package layout:
     - Lowest change but worse contributor ergonomics for data authors.
