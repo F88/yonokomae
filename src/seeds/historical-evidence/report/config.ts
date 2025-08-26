@@ -1,4 +1,1 @@
-export default {
-  attribution: 'Images: placeholders (https://placehold.co/)',
-  defaultPower: 50,
-};
+// removed: migrated to src/seeds/random-data/report/config.ts

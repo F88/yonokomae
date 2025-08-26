@@ -167,7 +167,7 @@ Historical Evidence モードは、再現可能な結果と歴史的イベント
 
 Historical Seed システムは以下で構成されています:
 
-- **シードファイル**: JSON は `seeds/historical-evidence/scenario/*.json`、TS は `src/seeds/historical-evidence/scenario/*.ts`
+- **シードファイル**: JSON は `seeds/random-data/scenario/*.json`、TS は `src/seeds/random-data/scenario/*.ts`
 - **HistoricalSeedProvider**: シード選択状態を管理する React コンテキストプロバイダ
 - **シード選択フック**: シードへのアクセスと回転のためのカスタムフック
 - **Historical リポジトリ**: シードデータを消費するリポジトリ実装
@@ -179,14 +179,14 @@ seedに対して動的 import は使いません。これにより、ビルド�
 参照の混在に関するバンドル警告を回避します。
 
 - 具体的な意味 - 発見と読み込みの両方で `import.meta.glob(..., { eager: true })` を使用し、
-  `src/seeds/historical-evidence/...`(TS) と `seeds/...`(JSON、存在する場合) を対象とします。- `loadSeedByFile(file)` は eager なモジュールマップから解決し、実行時に
+  `src/seeds/random-data/...`(TS) と `seeds/...`(JSON、存在する場合) を対象とします。- `loadSeedByFile(file)` は eager なモジュールマップから解決し、実行時に
   `import()` は使用しません。
 
 - 採用理由 - シンプル: モジュールエクスポートへ同期アクセスができ、不必要な非同期境界を持たない。- 予測可能なバンドル: 「同一モジュールを動的かつ静的に参照」という Vite/Rollup の警告を避けられる。- 早期失敗: スキーマ/型エラーがビルド/テスト時点で顕在化する。
 
 - トレードオフ - 初期バンドルがやや大きくなります(すべてのseedが含まれるため)。現状のseed量では許容範囲です。将来的に大幅に増える場合は、seedのコード分割を再検討します。
 
-- 著者向けガイダンス - 型安全性のため `src/seeds/historical-evidence/...` への TypeScript seed を推奨します。`seeds/...` の JSON もサポートはしますが推奨ではありません。- ID は全seedで一意である必要があります。CI と実行時の両方で一意性を検証します。- 手動登録は不要です。ファイルは自動検出されます。
+- 著者向けガイダンス - 型安全性のため `src/seeds/random-data/...` への TypeScript seed を推奨します。`seeds/...` の JSON もサポートはしますが推奨ではありません。- ID は全seedで一意である必要があります。CI と実行時の両方で一意性を検証します。- 手動登録は不要です。ファイルは自動検出されます。
 
 ### シードファイル構造
 
@@ -212,7 +212,7 @@ Historical seed は以下の構造を持つ JSON ファイルです:
 
 1. **新しい historical seed の追加**:
 
-- 型安全性のため `src/seeds/historical-evidence/scenario/` に TS モジュールを追加、または `seeds/historical-evidence/scenario/` に JSON を追加
+- 型安全性のため `src/seeds/random-data/scenario/` に TS モジュールを追加、または `seeds/random-data/scenario/` に JSON を追加
 - 登録は不要です。`import.meta.glob` により自動検出されます。
 
 1. **シード回転の実装**:
