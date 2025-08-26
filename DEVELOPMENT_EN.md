@@ -270,7 +270,7 @@ it('renders with provider', () => {
 - TypeScript compiles with no new errors.
 - Unit tests pass locally.
 - Provider factory branches implemented for the new mode if applicable.
-- README/DEVELOPENT_EN updated as needed (high-level overview in README; deeper
+- README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper
   steps here).
 
 ## Suggested Commit Messages
@@ -278,3 +278,83 @@ it('renders with provider', () => {
 - feat(repo): add ExampleRepo repositories and provider wiring
 - docs(dev): add developer guide for ExampleMode and ExampleRepo
 - test(repo): add unit tests for ExampleRepo behavior
+
+## Architecture diagrams (Mermaid)
+
+High-level flow of data and DI:
+
+```mermaid
+flowchart TD
+  A["Components / App"]
+  B["RepositoryProvider (Context)"]
+  C["Hooks: use-generate-report / use-judgement"]
+  D["Repos from Context"]
+  E["Factories: get*Repository(mode)"]
+  F["Implementation: Fake / Historical / Future API"]
+  G["Domain Data: Battle / Winner"]
+
+  A --> B
+  A --> C
+  C -->|provided?| D
+  C -->|fallback| E
+  E --> F
+  F --> G
+  G --> C
+  C --> A
+```
+
+Sequence for generating a battle report:
+
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant UI as UI (Button)
+  participant H as use-generate-report
+  participant X as Repo Context (optional)
+  participant F as Factory (getBattleReportRepository)
+  participant R as Repo Impl (Fake/Historical)
+
+  U->>UI: Click "Battle"
+  UI->>H: generateReport()
+  H->>X: useRepositoriesOptional()
+  alt Provider present
+    H->>R: battleReport.generateReport({ signal })
+  else No provider
+    H->>F: getBattleReportRepository(mode)
+    F-->>H: Repo instance
+    H->>R: generateReport({ signal })
+  end
+  R-->>H: Battle
+  H-->>UI: setState(success)
+```
+
+Interfaces and implementations:
+
+```mermaid
+classDiagram
+  class BattleReportRepository {
+    +generateReport(options) Promise<Battle>
+  }
+  class JudgementRepository {
+    +determineWinner(input, options) Promise<Winner>
+  }
+  class ScenarioRepository {
+    +generateTitle() Promise<string>
+    +generateSubtitle() Promise<string>
+    +generateOverview() Promise<string>
+    +generateNarrative() Promise<string>
+  }
+  class NetaRepository {
+    +getKomaeBase() Promise<...>
+    +getYonoBase() Promise<...>
+  }
+  class FakeBattleReportRepository
+  class FakeJudgementRepository
+  class HistoricalScenarioRepository
+  class HistoricalNetaRepository
+
+  FakeBattleReportRepository ..|> BattleReportRepository
+  FakeJudgementRepository ..|> JudgementRepository
+  HistoricalScenarioRepository ..|> ScenarioRepository
+  HistoricalNetaRepository ..|> NetaRepository
+```
