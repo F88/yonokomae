@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { PlayMode } from '@/yk/play-mode';
 import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -42,10 +42,10 @@ export function TitleContaner({
     }
   }, [options, index]);
 
-  const handleConfirm = () => {
+  const handleConfirm = useCallback(() => {
     const chosen = options[index];
     if (chosen && chosen.enabled !== false) onSelect(chosen);
-  };
+  }, [index, onSelect, options]);
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
     if (
@@ -100,6 +100,76 @@ export function TitleContaner({
     }
   };
 
+  // Global keydown support (works without focusing the component)
+  useEffect(() => {
+    const isEditable = (el: EventTarget | null) => {
+      if (!(el instanceof HTMLElement)) return false;
+      const tag = el.tagName.toLowerCase();
+      if (el.isContentEditable) return true;
+      return tag === 'input' || tag === 'textarea' || tag === 'select';
+    };
+
+    const onGlobalKeyDown = (e: KeyboardEvent) => {
+      if (isEditable(e.target)) return; // ignore typing in inputs
+      if (e.metaKey || e.ctrlKey || e.altKey) return; // ignore modified keys
+
+      // Mirror the same logic as handleKeyDown
+      if (
+        e.key === 'ArrowUp' ||
+        e.key === 'k' ||
+        e.key === 'K' ||
+        e.key === 'w' ||
+        e.key === 'W'
+      ) {
+        e.preventDefault();
+        setIndex((i) => {
+          let next = i;
+          for (let step = 0; step < options.length; step++) {
+            next = (next - 1 + options.length) % options.length;
+            if (options[next]?.enabled !== false) return next;
+          }
+          return i;
+        });
+      } else if (
+        e.key === 'ArrowDown' ||
+        e.key === 'j' ||
+        e.key === 'J' ||
+        e.key === 's' ||
+        e.key === 'S'
+      ) {
+        e.preventDefault();
+        setIndex((i) => {
+          let next = i;
+          for (let step = 0; step < options.length; step++) {
+            next = (next + 1) % options.length;
+            if (options[next]?.enabled !== false) return next;
+          }
+          return i;
+        });
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        setIndex(() => {
+          const idx = options.findIndex((o) => o.enabled !== false);
+          return idx >= 0 ? idx : 0;
+        });
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        setIndex(() => {
+          for (let i = options.length - 1; i >= 0; i--) {
+            if (options[i]?.enabled !== false) return i;
+          }
+          return 0;
+        });
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleConfirm();
+      }
+    };
+
+    window.addEventListener('keydown', onGlobalKeyDown);
+    return () => window.removeEventListener('keydown', onGlobalKeyDown);
+  }, [options, handleConfirm]);
+
   return (
     <div className="flex min-h-[60vh] w-full items-center justify-center p-6">
       <Card className="w-full max-w-xl text-center">
@@ -127,6 +197,13 @@ export function TitleContaner({
                   onMouseEnter={() => {
                     if (m.enabled !== false) setIndex(i);
                   }}
+                  onClick={() => {
+                    if (m.enabled !== false) {
+                      // Confirm immediately on mouse click
+                      setIndex(i);
+                      onSelect(m);
+                    }
+                  }}
                   title={`${m.title} — ${m.description}${m.enabled === false ? ' (disabled)' : ''}`}
                   className={[
                     'flex cursor-pointer items-center justify-start gap-3 rounded-md border px-4 py-3 text-left transition-colors',
@@ -144,8 +221,8 @@ export function TitleContaner({
                     checked={selected}
                     onChange={() => {
                       if (m.enabled !== false) {
+                        // Only update selection; click handler confirms to avoid double firing
                         setIndex(i);
-                        handleConfirm();
                       }
                     }}
                   />
