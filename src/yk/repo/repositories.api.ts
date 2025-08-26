@@ -1,8 +1,9 @@
 import type {
   BattleReportRepository,
   JudgementRepository,
+  Winner,
 } from '@/yk/repo/repositories';
-import type { Battle } from '@/types/types';
+import type { Battle, Neta } from '@/types/types';
 
 /** Lightweight fetch wrapper. Adapt as needed. */
 export class ApiClient {
@@ -43,13 +44,13 @@ export class ApiJudgementRepository implements JudgementRepository {
   async determineWinner(
     input: {
       mode: { id: string };
-      yono: import('@/types/types').Neta;
-      komae: import('@/types/types').Neta;
+      yono: Neta;
+      komae: Neta;
     },
     opts?: { signal?: AbortSignal },
-  ): Promise<import('@/yk/repo/repositories').Winner> {
+  ): Promise<Winner> {
     // This is a placeholder; adapt path and payload to your API
-    return this.api.get<import('@/yk/repo/repositories').Winner>(
+    return this.api.get<Winner>(
       `/battle/judgement?mode=${encodeURIComponent(input.mode.id)}`,
       opts?.signal,
     );
