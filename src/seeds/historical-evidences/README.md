@@ -6,11 +6,9 @@ random demo seeds, and are discovered at build/test time using eager
 `import.meta.glob`.
 
 - TS modules (preferred) live under:
-
     - `src/seeds/historical-evidences/battle/*.ts`
 
 - Optional JSON files are supported under a project-root mirror path:
-
     - `seeds/historical-evidences/battle/*.json`
 
 Both TS and JSON must expose a Battle-compatible object as the module default export.
@@ -18,34 +16,35 @@ Both TS and JSON must expose a Battle-compatible object as the module default ex
 ## How to add a new Battle (TS recommended)
 
 1. Create a new file in `src/seeds/historical-evidences/battle/`:
-   - Example: `src/seeds/historical-evidences/battle/demo.ts`
+    - Example: `src/seeds/historical-evidences/battle/demo.ts`
 1. Export a default object that satisfies the `Battle` type:
 
 ```ts
 import type { Battle } from '@/types/types';
 
 const battle: Battle = {
-  id: 'demo-battle-001',
-  title: 'Demo Historical Battle',
-  subtitle: 'File-based sample',
-  overview: 'A sample battle loaded from a TS file.',
-  scenario: 'Two forces met at the river crossing and exchanged pleasantries.',
-  komae: {
-    imageUrl: 'about:blank',
-    title: 'Komae Demo',
-    subtitle: 'Sample',
-    description: 'Demo neta from file',
-    power: 42,
-  },
-  yono: {
-    imageUrl: 'about:blank',
-    title: 'Yono Demo',
-    subtitle: 'Sample',
-    description: 'Demo neta from file',
-    power: 58,
-  },
-  provenance: [{ label: 'Demo Source', note: 'File-based test fixture' }],
-  status: 'success',
+    id: 'demo-battle-001',
+    title: 'Demo Historical Battle',
+    subtitle: 'File-based sample',
+    overview: 'A sample battle loaded from a TS file.',
+    scenario:
+        'Two forces met at the river crossing and exchanged pleasantries.',
+    komae: {
+        imageUrl: 'about:blank',
+        title: 'Komae Demo',
+        subtitle: 'Sample',
+        description: 'Demo neta from file',
+        power: 42,
+    },
+    yono: {
+        imageUrl: 'about:blank',
+        title: 'Yono Demo',
+        subtitle: 'Sample',
+        description: 'Demo neta from file',
+        power: 58,
+    },
+    provenance: [{ label: 'Demo Source', note: 'File-based test fixture' }],
+    status: 'success',
 };
 
 export default battle;
@@ -62,29 +61,27 @@ compatible shape. Vite will expose the parsed object as the module `default`.
 
 ```json
 {
-  "id": "your-battle-001",
-  "title": "Your Historical Battle",
-  "subtitle": "An example JSON entry",
-  "overview": "Brief context.",
-  "scenario": "Narrative goes here.",
-  "komae": {
-    "imageUrl": "about:blank",
-    "title": "Komae",
-    "subtitle": "Base",
-    "description": "JSON profile",
-    "power": 50
-  },
-  "yono": {
-    "imageUrl": "about:blank",
-    "title": "Yono",
-    "subtitle": "Base",
-    "description": "JSON profile",
-    "power": 50
-  },
-  "provenance": [
-    { "label": "Archive", "url": "https://example.org" }
-  ],
-  "status": "success"
+    "id": "your-battle-001",
+    "title": "Your Historical Battle",
+    "subtitle": "An example JSON entry",
+    "overview": "Brief context.",
+    "scenario": "Narrative goes here.",
+    "komae": {
+        "imageUrl": "about:blank",
+        "title": "Komae",
+        "subtitle": "Base",
+        "description": "JSON profile",
+        "power": 50
+    },
+    "yono": {
+        "imageUrl": "about:blank",
+        "title": "Yono",
+        "subtitle": "Base",
+        "description": "JSON profile",
+        "power": 50
+    },
+    "provenance": [{ "label": "Archive", "url": "https://example.org" }],
+    "status": "success"
 }
 ```
 
@@ -102,27 +99,27 @@ sensible defaults, but providing full data is recommended.
 
 ```ts
 interface Battle {
-  id: string;
-  title: string;
-  subtitle: string;
-  overview: string;
-  scenario: string;
-  komae: {
-    imageUrl: string;
+    id: string;
     title: string;
     subtitle: string;
-    description: string;
-    power: number;
-  };
-  yono: {
-    imageUrl: string;
-    title: string;
-    subtitle: string;
-    description: string;
-    power: number;
-  };
-  provenance?: Array<{ label: string; url?: string; note?: string }>;
-  status?: 'loading' | 'success' | 'error';
+    overview: string;
+    scenario: string;
+    komae: {
+        imageUrl: string;
+        title: string;
+        subtitle: string;
+        description: string;
+        power: number;
+    };
+    yono: {
+        imageUrl: string;
+        title: string;
+        subtitle: string;
+        description: string;
+        power: number;
+    };
+    provenance?: Array<{ label: string; url?: string; note?: string }>;
+    status?: 'loading' | 'success' | 'error';
 }
 ```
 
@@ -135,7 +132,6 @@ Notes:
 ## Troubleshooting
 
 - If a new file is not loaded:
-
     - Ensure the file path matches one of the supported glob patterns
     - Ensure the object is the module `default` export
 
