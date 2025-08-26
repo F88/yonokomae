@@ -54,7 +54,9 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
                   extraGapSmall: 12,
                 });
                 // update hash without default jump
-                history.replaceState(null, '', `#${battle.id}`);
+                if (typeof window !== 'undefined' && window.history && typeof window.history.replaceState === 'function') {
+                  window.history.replaceState(null, '', `#${battle.id}`);
+                }
               }}
               title="Scroll to the top of this battle"
             >
