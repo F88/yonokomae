@@ -7,7 +7,6 @@ export type TitleContanerProps = {
   modes?: PlayMode[];
   onSelect: (mode: PlayMode) => void;
   title?: string;
-  subtitle?: string;
 };
 
 /**
@@ -20,7 +19,6 @@ export function TitleContaner({
   modes,
   onSelect,
   title = 'SELECT MODE',
-  subtitle = 'Select a play mode',
 }: TitleContanerProps) {
   const options = useMemo(() => modes ?? defaultPlayModes, [modes]);
   const [index, setIndex] = useState(0);
@@ -171,7 +169,7 @@ export function TitleContaner({
   }, [options, handleConfirm]);
 
   return (
-    <div className="flex min-h-[60vh] w-full items-center justify-center p-6">
+    <div className="flex w-full justify-center p-6">
       <Card className="w-full max-w-xl text-center">
         <CardHeader className="gap-2 py-4">
           <CardTitle className="text-3xl font-bold tracking-wide">

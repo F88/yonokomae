@@ -4,7 +4,7 @@ const desc =
 
 export const Intro = () => {
   return (
-    <div className="space-y-6 py-12">
+    <div className="space-y-6 pt-8 pb-2">
       <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
         {title}
       </h1>
