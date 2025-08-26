@@ -51,46 +51,7 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 - Battle UX polish
     - Add progress indicator for async judgement (per-step animation)
 
-  ## Project notes
+## Project notes
 
-    For deeper technical details (architecture, repository pattern, wiring, and diagrams), see the developer guides linked above.
+For deeper technical details (architecture, repository pattern, wiring, and diagrams), see the developer guides linked above.
 
-- Title screen component allows selecting a play mode using both mouse and keyboard.
-- Keyboard on the title screen (global and focused):
-    - Navigate: ArrowUp/ArrowDown, J/K, W/S
-    - Confirm: Enter or Space
-    - Jump to first/last enabled: Home/End
-- Controller shortcuts (global):
-    - Battle: B, Enter, or Space
-    - Reset: R
-- Key hints are rendered using the shared `<KeyChip />` component (`src/components/ui/key-chip.tsx`).
-
-### Path aliases
-
-- `@` maps to `src/` (configured in `tsconfig` and `vite.config.ts`).
-
-### Testing notes
-
-- Tests avoid asserting on random values. If you need deterministic behavior for
-  `@faker-js/faker`, mock the specific generators within the test case.
-  For example, spy on `faker.lorem.words` or `faker.number.int` as needed.
-- `faker.number.int` is called three times in `FrontlineJournalist.report`:
-  `komae.power`, `yono.power`, and title year.
-- For UI tests around the battle field, placeholders and slots expose test IDs
-  to make assertions robust:
-    - `data-testid="slot-yono"`, `data-testid="slot-komae"`
-    - `data-testid="placeholder"`
-
-### SSR
-
-- Server-Side Rendering (SSR) is not used. This app is a client-side rendered SPA.
-- Accessing `window`/`document` in components is acceptable.
-- Hydration mismatch concerns for random values (e.g., `Math.random()` during render) do not apply in the current setup.
-
-## Keyboard Shortcuts
-
-- Title screen navigation: ArrowUp/ArrowDown, J/K, W/S
-- Confirm: Enter or Space
-- Jump to first/last enabled: Home/End
-- Battle: B, Enter, or Space
-- Reset: R
