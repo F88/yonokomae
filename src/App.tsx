@@ -1,4 +1,4 @@
-import { BattleContainer } from '@/components/BattleContainer';
+import { BattleContainer } from '@/components/battle/BattleContainer';
 import { Controller } from '@/components/Controller';
 import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
 import { Intro } from '@/components/Intro';
@@ -8,28 +8,52 @@ import { useEffect, useRef, useState } from 'react';
 import { uid } from '@/lib/id';
 import { Header } from './components/Header';
 import type { Battle } from './types/types';
+import { playMode, type PlayMode } from './yk/play-mode';
+import { TitleContainer } from './components/TitleContainer';
 
 function App() {
+  const [mode, setMode] = useState<PlayMode | undefined>(undefined);
   const [reports, setReports] = useState<Battle[]>([]);
   const shouldScrollAfterAppendRef = useRef(false);
+  const scrollTargetIdRef = useRef<string | null>(null);
 
   const { generateReport } = useGenerateReport();
 
-  // Smoothly scroll to the bottom of the page after the DOM updates
-  const scrollToBottom = () => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth',
-    });
+  // Removed dynamic CSS variable; using static responsive scroll margins instead.
+
+  // Smoothly scroll the newly inserted report to the top of the viewport
+  const scrollInsertedToTop = () => {
+    const id = scrollTargetIdRef.current;
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    // Measure sticky header and scroll to exact offset to avoid overlap
+    const header = document.querySelector(
+      'header.sticky',
+    ) as HTMLElement | null;
+    const headerRect = header?.getBoundingClientRect();
+    const headerBottom = headerRect ? headerRect.bottom : 0;
+    const isWide = window.matchMedia('(min-width: 1024px)').matches;
+    const extraGap = isWide ? 20 : 12; // breathing space under header
+    const rect = el.getBoundingClientRect();
+    // Scroll by the difference between the element's top and the header's bottom
+    const delta = rect.top - headerBottom - extraGap;
+    if (Math.abs(delta) > 1) {
+      window.scrollBy({ top: delta, behavior: 'smooth' });
+    }
   };
 
-  // After the list grows (i.e., a new report is appended), scroll to the bottom once
+  // After the list grows (i.e., a new report is appended), scroll the new item to the top once
   useEffect(() => {
     if (shouldScrollAfterAppendRef.current) {
       // Defer to next frame to ensure DOM is painted
       requestAnimationFrame(() => {
-        scrollToBottom();
-        shouldScrollAfterAppendRef.current = false;
+        // Defer one more frame to ensure layout settles (sticky header, fonts, etc.)
+        requestAnimationFrame(() => {
+          scrollInsertedToTop();
+          shouldScrollAfterAppendRef.current = false;
+          scrollTargetIdRef.current = null;
+        });
       });
     }
   }, [reports.length]);
@@ -49,6 +73,7 @@ function App() {
     };
 
     shouldScrollAfterAppendRef.current = true;
+    scrollTargetIdRef.current = loadingBattle.id;
     setReports((prev) => {
       insertedIndex = prev.length;
       return [...prev, loadingBattle];
@@ -81,6 +106,7 @@ function App() {
 
   const handleClearReports = () => {
     setReports([]);
+    setMode(undefined);
   };
 
   return (
@@ -88,37 +114,50 @@ function App() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
-          <Header />
+          <Header mode={mode} />
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="container flex flex-col gap-8 py-8 pb-32">
+      <div className="container flex flex-col gap-0 py-0 pb-32">
         {/* Intro Section */}
-        <section className="flex flex-col items-center text-center">
+        <section className="flex flex-col items-center text-center m-2">
           <Intro />
           <TheStartOfTheWar />
         </section>
 
+        {/* Title Container (shown only before a mode is selected) */}
+        {!mode && (
+          <TitleContainer modes={playMode} onSelect={(mode) => setMode(mode)} />
+        )}
+
         {/* Battle Reports */}
-        {reports.length > 0 && (
+        {mode != null && reports.length > 0 && (
           <section className="mx-auto w-full max-w-6xl space-y-8">
             {reports.map((battle: Battle) => (
-              <BattleContainer key={battle.id} battle={battle} />
+              <div
+                key={battle.id}
+                id={battle.id}
+                className="scroll-mt-[72px] lg:scroll-mt-[96px]"
+              >
+                <BattleContainer battle={battle} mode={mode} />
+              </div>
             ))}
           </section>
         )}
       </div>
 
       {/* Fixed Controller */}
-      <footer className="sticky bottom-0 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container py-4">
-          <Controller
-            onGenerateReport={handleGenerateReport}
-            onClearReports={handleClearReports}
-          />
-        </div>
-      </footer>
+      {mode && (
+        <footer className="sticky bottom-0 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container py-4">
+            <Controller
+              onGenerateReport={handleGenerateReport}
+              onClearReports={handleClearReports}
+            />
+          </div>
+        </footer>
+      )}
     </main>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Battle } from '@/types/types';
 import { Judge as JudgeClass } from '@/yk/judge';
+import type { PlayMode } from '@/yk/play-mode';
 
 export type JudgementState =
   | { status: 'idle'; data: null; error: null }
@@ -8,7 +9,11 @@ export type JudgementState =
   | { status: 'success'; data: string; error: null }
   | { status: 'error'; data: null; error: Error };
 
-export function useJudgement(nameOfJudge: string, battle: Battle) {
+export function useJudgement(
+  nameOfJudge: string,
+  battle: Battle,
+  mode: PlayMode,
+): JudgementState {
   const [state, setState] = useState<JudgementState>({
     status: 'idle',
     data: null,
@@ -28,12 +33,13 @@ export function useJudgement(nameOfJudge: string, battle: Battle) {
         // In the future this can be a fetch to an API endpoint.
         // Simulate async to keep API shape stable.
         await Promise.resolve();
-        const result = await new JudgeClass(inputs.nameOfJudge).determineWinner(
-          {
-            yono: inputs.yono,
-            komae: inputs.komae,
-          },
-        );
+        const result = await new JudgeClass(
+          inputs.nameOfJudge,
+          mode,
+        ).determineWinner({
+          yono: inputs.yono,
+          komae: inputs.komae,
+        });
         if (!cancelled) {
           setState({ status: 'success', data: result, error: null });
         }
@@ -51,7 +57,7 @@ export function useJudgement(nameOfJudge: string, battle: Battle) {
     return () => {
       cancelled = true;
     };
-  }, [inputs]);
+  }, [inputs, mode]);
 
   return state;
 }

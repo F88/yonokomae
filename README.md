@@ -10,58 +10,59 @@ This game is a thought-provoking game that examines from multiple angles what ha
 Note: This game is full of humorous jokes and is not a deepfake or fake.
 ```
 
-## Getting Started
+![ykwar.png](imgs/ykwar.png)
 
-### Prerequisites
+## Key Features
 
-- Node.js (v18 or higher, recommended v20)
-- npm or yarn
+- Multiple play modes with clear status
+    - DEMO: quick demonstration with placeholder data (enabled)
+    - HISTORICAL EVIDENCE: WIP mode based on events (enabled)
+    - AI MODE: planned, AI-generated scenarios (disabled)
+- One-click battle report generation with smooth auto-scroll to latest
+- Robust loading and error states
+    - Async judgement with simulated latency
+    - Shadcn skeleton placeholders on the battle field
+- Title screen selection with full keyboard support
+    - Navigate: ArrowUp/ArrowDown, J/K, W/S; Confirm: Enter/Space; Home/End
+- Global controller shortcuts
+    - Battle: B / Enter / Space; Reset: R
+- Modern UI stack
+    - React + Vite + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
+    - Dark mode toggle via class-based theme
+- Testing-first setup with Vitest + React Testing Library
+- Zero-SSR SPA optimized for client-side rendering
+- GitHub Pages deployment with base path configured
 
-### Installation
+## Roadmap / TODO
 
-```bash
-# Clone the repository
-git clone https://github.com/F88/yonokomae.git
-cd yonokomae
-
-# Install dependencies
-npm install
-```
-
-### Development
-
-```bash
-# Start development server
-npm run dev
-
-# Run tests
-npm test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run tests in UI mode
-npm run test:ui
-
-# Lint code
-npm run lint
-
-# Auto-fix linting issues
-npm run lint:fix
-```
-
-### Build & Deployment
-
-```bash
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Deploy to GitHub Pages
-npm run deploy
-```
+- Historical Evidence mode
+    - Implement data sources and generation rules for historical events
+    - Surface provenance/notes in the UI (citations, links, disclaimers)
+    - Tests for deterministic generation paths
+- AI Mode (later)
+    - Evaluate model/provider and on-device vs API trade-offs
+    - Add safety guardrails and content filters
+    - Provide offline mock for tests and local dev
+- Battle UX polish
+    - Add progress indicator for async judgement (per-step animation)
+    - Improve error surfaces with retry
+    - Persist last N battle reports in localStorage with clear button
+- Accessibility
+    - Ensure keyboard traps are eliminated in dialogs/menus
+    - Add aria attributes to interactive elements and list updates
+    - High-contrast focus rings consistent with theme
+- Internationalization
+    - Prepare copy for i18n; externalize strings, English/日本語
+    - RTL-friendly layout checks
+- Performance
+    - Virtualize long battle lists
+    - Avoid unnecessary re-renders in `BattleContainer` and children
+- Tooling
+    - Add pre-commit hooks (lint, typecheck, test) via simple Git hook or Husky
+    - Add CI workflow: lint, typecheck, test, build
+- Docs
+    - Expand developer guide for adding new play modes
+    - Document keyboard map and customization
 
 ## Tech Stack
 
@@ -95,8 +96,21 @@ npm run deploy
 ### Async judgement flow
 
 - `Judge.determineWinner` is async and waits 0..5 seconds before resolving (0 ms in tests).
-- Use `useJudgement(nameOfJudge, battle)` to fetch and render results with `loading/error/success` states.
+- Use `useJudgement(nameOfJudge, battle, mode)` to fetch and render results with `loading/error/success` states.
+- `mode` must be a `PlayMode` from `@/yk/play-mode`.
 - UI component: `JudgeCard` consumes `useJudgement` and handles the states.
+
+### Play mode selection & keyboard shortcuts
+
+- Title screen component allows selecting a play mode using both mouse and keyboard.
+- Keyboard on the title screen (global and focused):
+    - Navigate: ArrowUp/ArrowDown, J/K, W/S
+    - Confirm: Enter or Space
+    - Jump to first/last enabled: Home/End
+- Controller shortcuts (global):
+    - Battle: B, Enter, or Space
+    - Reset: R
+- Key hints are rendered using the shared `<KeyChip />` component (`src/components/ui/key-chip.tsx`).
 
 ### Path aliases
 
@@ -104,8 +118,15 @@ npm run deploy
 
 ### Testing notes
 
-- Tests mock `@faker-js/faker` string generators (`lorem.words`, `lorem.paragraph`) to keep assertions deterministic.
-- `faker.number.int` is called three times in `FrontlineJournalist.report`: `komae.power`, `yono.power`, and title year.
+- Tests avoid asserting on random values. If you need deterministic behavior for
+  `@faker-js/faker`, mock the specific generators within the test case.
+  For example, spy on `faker.lorem.words` or `faker.number.int` as needed.
+- `faker.number.int` is called three times in `FrontlineJournalist.report`:
+  `komae.power`, `yono.power`, and title year.
+- For UI tests around the battle field, placeholders and slots expose test IDs
+  to make assertions robust:
+    - `data-testid="slot-yono"`, `data-testid="slot-komae"`
+    - `data-testid="placeholder"`
 
 ### SSR
 
