@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type FC } from 'react';
 import type { PlayMode } from '@/yk/play-mode';
 import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export type TitleContanerProps = {
   modes?: PlayMode[];
@@ -178,6 +179,37 @@ export function TitleContaner({
           {/* <div className="text-sm text-muted-foreground">{subtitle}</div> */}
         </CardHeader>
         <CardContent>
+          {/** Key hint chips (>= sm) */}
+          {(() => {
+            const KeyChip: FC<{ label: string }> = ({ label }) => (
+              <Badge
+                variant="outline"
+                className="px-1.5 py-0.5 text-[10px] sm:text-xs font-mono tracking-tight"
+                aria-label={`Shortcut key ${label}`}
+              >
+                {label}
+              </Badge>
+            );
+            return (
+              <div className="mb-4 hidden flex-col items-center gap-1 text-xs text-muted-foreground sm:flex">
+                <div className="flex items-center gap-1">
+                  <KeyChip label="↓" />
+                  <KeyChip label="↑" />
+                  <KeyChip label="J" />
+                  <KeyChip label="K" />
+                  <KeyChip label="S" />
+                  <KeyChip label="W" />
+                  <KeyChip label="Space" />
+                  <KeyChip label="Enter" />
+                </div>
+              </div>
+            );
+          })()}
+
+          {/** Compact hint (< sm) */}
+          <div className="mb-2 text-[10px] text-muted-foreground sm:hidden">
+            Use ↓/↑ to choose, Enter to start (or j/k, s/w)
+          </div>
           <div
             role="radiogroup"
             aria-label="Play modes"
@@ -245,9 +277,7 @@ export function TitleContaner({
               );
             })}
           </div>
-          <div className="mt-4 text-xs text-muted-foreground">
-            Use ↓/↑ to choose, Enter to start (or j/k, s/w)
-          </div>
+          {/* trailing spacing kept minimal; chips/text shown above */}
         </CardContent>
       </Card>
     </div>

@@ -71,7 +71,8 @@ export const Controller: FC<ControllerProps> = ({
           <Square className="h-4 w-4" />
           RESET
         </Button>
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+        {/* Chips on >= sm, compact text on small screens */}
+        <div className="hidden items-center gap-1 text-xs text-muted-foreground sm:flex">
           <KeyChip label="R" />
         </div>
       </div>
@@ -87,12 +88,10 @@ export const Controller: FC<ControllerProps> = ({
           <GiInvertedDice3 className="h-5 w-5" />
           BATTLE
         </Button>
-        {/* <div className="text-xs text-muted-foreground">[B/Enter/Space]</div> */}
-
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+        <div className="hidden items-center gap-1 text-xs text-muted-foreground sm:flex">
           <KeyChip label="B" />
-          <KeyChip label="Ent" />
-          <KeyChip label="Sp" />
+          <KeyChip label="Enter" />
+          <KeyChip label="Space" />
         </div>
       </div>
     </div>
