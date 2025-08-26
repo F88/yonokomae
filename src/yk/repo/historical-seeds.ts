@@ -29,8 +29,16 @@ export type HistoricalSeed = {
 export async function loadSeedByFile(
   file: string,
 ): Promise<{ default: HistoricalSeed }> {
-  // Use relative up-level import because seeds live outside src
-  return import(`@/../seeds/historical/${file}`);
+  // Use Vite's import.meta.glob for predictable dynamic imports
+  const modules = import.meta.glob('../../seeds/historical/*.json');
+  const key = `../../seeds/historical/${file}`;
+  const loader = modules[key] as
+    | (() => Promise<{ default: HistoricalSeed }>)
+    | undefined;
+  if (!loader) {
+    throw new Error(`Seed not found: ${file}`);
+  }
+  return loader();
 }
 
 let selectedSeedFile: string | undefined;
