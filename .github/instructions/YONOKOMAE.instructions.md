@@ -6,6 +6,9 @@ applyTo: '**'
 
 This repository uses bilingual documentation with English as the single source of truth.
 
+- Keyboard shortcuts within an application should not be documented; they should be represented on the screen.
+
+
 ## DEVELOPMENT_EN.md / DEVELOPMENT_JA.md
 
 ### Source of truth
