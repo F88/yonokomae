@@ -159,7 +159,7 @@ Suspense 対応 Provider(非同期初期化):
 
 注意(モードとデータ所有):
 
-- Random Data(現在): 試作/デモ向けの "Joke Random Data"。`src/seeds/random-data/**`(TS 推奨)、`seeds/random-data/**`(JSON 任意)。
+- Random Data(現在): 試作/デモ向けの "Random Joke Data"。`src/seeds/random-data/**`(TS 推奨)、`seeds/random-data/**`(JSON 任意)。
 - Historical Evidence(将来): 予約済み。導入時は別フォルダと厳格な provenance ルールを採用します。現在の random-data は歴史資料ではありません。
 
 Historical Evidence モードは、再現可能な結果と歴史的イベントの適切な帰属を保証するために、シードベースの決定論的生成システムを使用します。

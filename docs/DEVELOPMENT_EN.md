@@ -344,7 +344,7 @@ See [TESTING.md](./TESTING.md) for testing guidance.
 
 Note about seeds and modes:
 
-- Random Data (current): demo-style "Joke Random Data" used for prototyping and examples.
+- Random Data (current): demo-style "Random Joke Data" used for prototyping and examples.
   Seeds live under `src/seeds/random-data/**` (TS preferred) and `seeds/random-data/**` (JSON optional).
 - Historical Evidence (future): reserved. When introduced, it will use a separate folder and
   stricter provenance rules. Current random-data seeds are not historical data.
