@@ -45,9 +45,11 @@ export class FakeNetaRepository implements NetaRepository {
 type DelayOption = number | { min: number; max: number };
 
 function isTestEnv(): boolean {
-  const env = (
-    typeof process !== 'undefined' ? (process as any).env : undefined
-  ) as { NODE_ENV?: string } | undefined;
+  type Env = { NODE_ENV?: string };
+  const env: Env | undefined =
+    typeof process !== 'undefined'
+      ? (process as unknown as { env?: Env }).env
+      : undefined;
   return env?.NODE_ENV === 'test';
 }
 
