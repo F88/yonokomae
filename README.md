@@ -95,8 +95,24 @@ npm run deploy
 ### Async judgement flow
 
 - `Judge.determineWinner` is async and waits 0..5 seconds before resolving (0 ms in tests).
-- Use `useJudgement(nameOfJudge, battle)` to fetch and render results with `loading/error/success` states.
+- Use `useJudgement(nameOfJudge, battle, mode)` to fetch and render results with
+    `loading/error/success` states.
+- `mode` must be a `PlayMode` from `@/yk/play-mode`.
 - UI component: `JudgeCard` consumes `useJudgement` and handles the states.
+
+### Play mode selection & keyboard shortcuts
+
+- Title screen component allows selecting a play mode using both mouse and
+    keyboard.
+- Keyboard on the title screen (global and focused):
+    - Navigate: ArrowUp/ArrowDown, J/K, W/S
+    - Confirm: Enter or Space
+    - Jump to first/last enabled: Home/End
+- Controller shortcuts (global):
+    - Battle: B, Enter, or Space
+    - Reset: R
+- Key hints are rendered using the shared `<KeyChip />` component
+    (`src/components/ui/key-chip.tsx`).
 
 ### Path aliases
 
