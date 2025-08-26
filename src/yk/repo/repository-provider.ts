@@ -21,9 +21,7 @@ export async function getBattleReportRepository(
     const { ApiClient, ApiBattleReportRepository } = await import(
       '@/yk/repo/repositories.api'
     );
-    const base: string =
-      (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env
-        ?.VITE_API_BASE_URL ?? '/api';
+    const base: string = getApiBaseUrl();
     const api = new ApiClient(base);
     return new ApiBattleReportRepository(api);
   }
