@@ -262,6 +262,8 @@ export class BattleReportRandomDataRepository
     }
 
     async generateReport(): Promise<Battle> {
+    // 選択シードを優先し、未指定時は検出済みシードから選択します。
+    // 完全な挙動とレポート設定の適用は `repositories.random-jokes.ts` を参照してください。
         const chosen = this.seedFile ?? historicalSeeds[0]?.file;
         const seed = await loadSeedByFile(chosen);
         // シードデータを使ってバトルレポートを生成

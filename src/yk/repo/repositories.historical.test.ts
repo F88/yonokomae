@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { BattleReportRandomDataRepository } from './repositories.historical';
+import { BattleReportRandomDataRepository } from './repositories.random-jokes';
 
 // Tiny test to assert deterministic seed-backed output shape
 

@@ -54,7 +54,7 @@ Override per test by calling `server.use(...)` with additional handlers.
 ## Repositories testing
 
 - Fake repos (`repositories.fake.ts`): test deterministic logic; avoid actual delays (code already skips delays under `NODE_ENV=test`).
-- Historical repos (`repositories.historical.ts`): seed-backed deterministic generation. Assert structure and `provenance` presence.
+- Random Joke repos (`repositories.random-jokes.ts`): seed-backed deterministic generation. Assert structure and `provenance` presence.
 - API repos (`repositories.api.ts`): prefer provider-level tests with MSW (see `repository-provider.api.test.ts`).
 
 ### Testing Historical Seed System

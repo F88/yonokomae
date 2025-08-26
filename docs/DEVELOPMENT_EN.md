@@ -509,7 +509,7 @@ export class BattleReportRandomDataRepository
     }
 
     async generateReport(): Promise<Battle> {
-    // Prefer a chosen seed; else pick a discovered one. See repositories.historical.ts
+  // Prefer a chosen seed; else pick a discovered one. See repositories.random-jokes.ts
         // for the complete behavior and report config application.
         // Returns a fully-formed Battle with provenance.
     }

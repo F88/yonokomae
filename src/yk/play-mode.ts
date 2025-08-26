@@ -17,7 +17,7 @@ export interface PlayMode {
  *
  * HISTORICAL EVIDENCE (Not implemented)
  * - A mode that generates battles based on historical events.
- * - repo: `repositories.historical-evidences.ts` (Not implemented)
+ * - repo: (reserved; will be separate from Random Joke Data)
  *
  * RANDOM JOKES
  * - A mode that generates random, humorous battle scenarios.

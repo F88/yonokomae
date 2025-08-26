@@ -27,14 +27,14 @@ export async function getBattleReportRepository(
   }
   if (mode?.id === 'historical-evidence') {
     const { BattleReportRandomDataRepository } = await import(
-      '@/yk/repo/repositories.historical'
+      '@/yk/repo/repositories.random-jokes'
     );
     // Selected seed is provided via context; callers pass it here.
     return new BattleReportRandomDataRepository({ seedFile });
   }
   if (mode?.id === 'mixed-nuts') {
     const { BattleReportRandomDataRepository } = await import(
-      '@/yk/repo/repositories.historical'
+      '@/yk/repo/repositories.random-jokes'
     );
     return new BattleReportRandomDataRepository({ seedFile });
   }
