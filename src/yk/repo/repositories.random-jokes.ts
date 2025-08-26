@@ -5,7 +5,7 @@ import type {
 } from './repositories';
 import type { Battle, Neta } from '@/types/types';
 // Seed loaders
-import { historicalSeeds, loadSeedByFile } from './historical-seeds';
+import { historicalSeeds, loadSeedByFile } from './seed-system';
 import { uid } from '@/lib/id';
 
 export class HistoricalScenarioRepository implements ScenarioRepository {
