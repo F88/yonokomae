@@ -17,6 +17,8 @@ export class Demo2BattleReportRepository implements BattleReportRepository {
   constructor() {}
 
   async generateReport(_opts?: { signal?: AbortSignal }): Promise<Battle> {
+    // touch _opts to satisfy lint until real use is added
+    void _opts?.signal;
     // NOTE: Replace with your own deterministic/randomized logic as needed.
     // This is a placeholder to be adapted when DEMO-2 is implemented.
     const makeNeta = (title: string): Neta => ({

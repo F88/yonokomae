@@ -83,7 +83,7 @@ The project is configured for GitHub Actions CI/CD, though workflow files are no
     - Manual deployment via `npm run deploy`
     - Builds the project with proper base path (`/yonokomae/`)
     - Uses `gh-pages` package to push to GitHub Pages branch
-    
+
 To set up automated CI/CD, create workflow files in `.github/workflows/` directory.
 
 ### Running CI Checks Locally

@@ -12,15 +12,18 @@ export const NetaView: FC<Props> = ({
   description,
   power,
 }) => {
+  const hasImage = typeof imageUrl === 'string' && imageUrl.trim() !== '';
   return (
     <Card className="w-full max-w-sm overflow-hidden">
-      <div className="w-full overflow-hidden">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="h-full w-full object-cover transition-transform hover:scale-105"
-        />
-      </div>
+      {hasImage && (
+        <div className="w-full overflow-hidden">
+          <img
+            src={imageUrl}
+            alt={title}
+            className="h-full w-full object-cover transition-transform hover:scale-105"
+          />
+        </div>
+      )}
       <CardContent className="p-6">
         <div className="space-y-3">
           <div className="text-center">
