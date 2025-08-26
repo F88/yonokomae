@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { HistoricalBattleReportRepository } from './repositories.historical';
+import { BattleReportRandomDataRepository } from './repositories.historical';
 
 // Tiny test to assert deterministic seed-backed output shape
 
-describe('HistoricalBattleReportRepository', () => {
+describe('BattleReportRandomDataRepository', () => {
   it('returns a battle with provenance from seed', async () => {
-    const repo = new HistoricalBattleReportRepository();
+  const repo = new BattleReportRandomDataRepository();
     const battle = await repo.generateReport();
     expect(battle.title).toBeTruthy();
     expect(Array.isArray(battle.provenance)).toBe(true);

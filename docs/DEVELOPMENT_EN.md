@@ -345,13 +345,13 @@ See [TESTING.md](./TESTING.md) for testing guidance.
 In HISTORICAL EVIDENCE mode, data is static at build time and owned entirely by seed files.
 
 - Primary source (seeds):
-    - JSON: `seeds/historical-evidence/scenario/*.json`
-    - TS modules: `src/seeds/historical-evidence/scenario/*.ts` exporting
+    - JSON: `seeds/random-data/scenario/*.json`
+    - TS modules: `src/seeds/random-data/scenario/*.ts` exporting
       `export default {...} satisfies HistoricalSeed;`
 
 - Neta base profiles and report config are also seeds:
-    - Neta: `seeds/historical-evidence/neta/{komae,yono}.json` (or TS under `src/seeds/historical-evidence/neta/`)
-    - Report config: `seeds/historical-evidence/report/config.json` (or TS under `src/seeds/historical-evidence/report/`)
+    - Neta: `seeds/random-data/neta/{komae,yono}.json` (or TS under `src/seeds/random-data/neta/`)
+    - Report config: `seeds/random-data/report/config.json` (or TS under `src/seeds/random-data/report/`)
 
 - Repositories:
     - Load from seeds discovered at build-time via `import.meta.glob`. If none are present, use minimal built-in stubs to avoid breaking UI.
@@ -367,8 +367,8 @@ scenarios or curate demos, with seeds as the single source of truth.
 
 The Historical Seed System consists of:
 
-- **Seed Files**: either JSON under `seeds/historical-evidence/scenario/*.json` or TS modules
-  under `src/seeds/historical-evidence/scenario/*.ts` (recommended for type-safety)
+- **Seed Files**: either JSON under `seeds/random-data/scenario/*.json` or TS modules
+  under `src/seeds/random-data/scenario/*.ts` (recommended for type-safety)
 - **HistoricalSeedProvider**: React context provider managing seed selection
   state (file path string)
 - **Seed Selection Hooks**: Custom hooks to access and rotate seeds
@@ -382,7 +382,7 @@ references and the related bundling warnings during build.
 
 - What this means
     - Discovery and loading both use `import.meta.glob(..., { eager: true })` for
-      `/src/seeds/historical-evidence/...` (TS) and `/seeds/...` (JSON, if any).
+  `/src/seeds/random-data/...` (TS) and `/seeds/...` (JSON, if any).
     - `loadSeedByFile(file)` resolves from the eager module map and does not use
       `import()` at runtime.
 
@@ -399,8 +399,10 @@ references and the related bundling warnings during build.
       can revisit code-splitting for seeds.
 
 - Authoring guidance
-    - Prefer TypeScript seeds under `src/seeds/historical-evidence/...` for
+    - Prefer TypeScript seeds under `src/seeds/random-data/...` for
       type-safety. JSON under `seeds/...` remains supported but not preferred.
+    - IDs must be unique across all seeds. CI and runtime enforce uniqueness.
+    - No manual registration is required; files are discovered automatically.
     - IDs must be unique across all seeds. CI and runtime enforce uniqueness.
     - No manual registration is required; files are discovered automatically.
 
@@ -408,7 +410,7 @@ references and the related bundling warnings during build.
 
 Historical seeds use the `HistoricalSeed` shape. Examples:
 
-JSON (`seeds/historical-evidence/scenario/tama-river.json`):
+JSON (`seeds/random-data/scenario/tama-river.json`):
 
 ```json
 {
@@ -427,7 +429,7 @@ JSON (`seeds/historical-evidence/scenario/tama-river.json`):
 }
 ```
 
-TypeScript (`src/seeds/historical-evidence/scenario/tama-river.ts`):
+TypeScript (`src/seeds/random-data/scenario/tama-river.ts`):
 
 ```ts
 import type { HistoricalSeed } from '@/yk/repo/historical-seeds';
@@ -453,8 +455,8 @@ export default {
 
 1. **Adding a new historical seed**:
 
-- Prefer TS modules in `src/seeds/historical-evidence/scenario/` for type-safety
-- Or add JSON under `seeds/historical-evidence/scenario/`
+- Prefer TS modules in `src/seeds/random-data/scenario/` for type-safety
+- Or add JSON under `seeds/random-data/scenario/`
 - No manual registration is needed: seeds are auto-discovered via `import.meta.glob`
 
 1. **Implementing seed rotation**:

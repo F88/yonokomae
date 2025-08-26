@@ -45,12 +45,6 @@ function getDefault<T>(mod: unknown): T | undefined {
 describe('Seed schemas', () => {
   it('validates all scenario seeds', async () => {
     const modules = {
-      ...import.meta.glob('/seeds/historical-evidence/scenario/*', {
-        eager: true,
-      }),
-      ...import.meta.glob('/src/seeds/historical-evidence/scenario/*', {
-        eager: true,
-      }),
       ...import.meta.glob('/seeds/random-data/scenario/*', { eager: true }),
       ...import.meta.glob('/src/seeds/random-data/scenario/*', {
         eager: true,
@@ -84,55 +78,27 @@ describe('Seed schemas', () => {
 
   it('validates neta seeds for komae and yono', async () => {
     const modules = {
-      ...import.meta.glob('/seeds/historical-evidence/neta/*', { eager: true }),
-      ...import.meta.glob('/src/seeds/historical-evidence/neta/*', {
-        eager: true,
-      }),
       ...import.meta.glob('/seeds/random-data/neta/*', { eager: true }),
       ...import.meta.glob('/src/seeds/random-data/neta/*', { eager: true }),
     } as Record<string, unknown>;
     const komae =
-      getDefault<unknown>(
-        modules['/seeds/historical-evidence/neta/komae.json'] ??
-          modules['/seeds/random-data/neta/komae.json'],
-      ) ??
-      getDefault<unknown>(
-        modules['/src/seeds/historical-evidence/neta/komae.ts'] ??
-          modules['/src/seeds/random-data/neta/komae.ts'],
-      );
+      getDefault<unknown>(modules['/seeds/random-data/neta/komae.json']) ??
+      getDefault<unknown>(modules['/src/seeds/random-data/neta/komae.ts']);
     const yono =
-      getDefault<unknown>(
-        modules['/seeds/historical-evidence/neta/yono.json'] ??
-          modules['/seeds/random-data/neta/yono.json'],
-      ) ??
-      getDefault<unknown>(
-        modules['/src/seeds/historical-evidence/neta/yono.ts'] ??
-          modules['/src/seeds/random-data/neta/yono.ts'],
-      );
+      getDefault<unknown>(modules['/seeds/random-data/neta/yono.json']) ??
+      getDefault<unknown>(modules['/src/seeds/random-data/neta/yono.ts']);
     expect(() => netaOptionsSchema.parse(komae)).not.toThrow();
     expect(() => netaOptionsSchema.parse(yono)).not.toThrow();
   });
 
   it('validates report config seed', async () => {
     const modules = {
-      ...import.meta.glob('/seeds/historical-evidence/report/*', {
-        eager: true,
-      }),
-      ...import.meta.glob('/src/seeds/historical-evidence/report/*', {
-        eager: true,
-      }),
       ...import.meta.glob('/seeds/random-data/report/*', { eager: true }),
       ...import.meta.glob('/src/seeds/random-data/report/*', { eager: true }),
     } as Record<string, unknown>;
     const cfg =
-      getDefault<unknown>(
-        modules['/seeds/historical-evidence/report/config.json'] ??
-          modules['/seeds/random-data/report/config.json'],
-      ) ??
-      getDefault<unknown>(
-        modules['/src/seeds/historical-evidence/report/config.ts'] ??
-          modules['/src/seeds/random-data/report/config.ts'],
-      );
+      getDefault<unknown>(modules['/seeds/random-data/report/config.json']) ??
+      getDefault<unknown>(modules['/src/seeds/random-data/report/config.ts']);
     expect(() => reportConfigSchema.parse(cfg)).not.toThrow();
   });
 });

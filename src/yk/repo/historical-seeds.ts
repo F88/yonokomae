@@ -1,23 +1,17 @@
 export type HistoricalSeedMeta = {
   id: string;
   title: string;
-  file: string; // relative path under seeds/historical-evidence/scenario
+  file: string; // relative path under seeds/random-data/scenario
 };
 
-// Discover seed modules at build time (support legacy and new paths during migration)
+// Discover seed modules at build time (random-data only)
 const discoveredSeedModules = {
-  ...import.meta.glob('/seeds/historical-evidence/scenario/*.json', {
-    eager: true,
-  }),
-  ...import.meta.glob('/src/seeds/historical-evidence/scenario/*.ts', {
-    eager: true,
-  }),
   ...import.meta.glob('/seeds/random-data/scenario/*.json', { eager: true }),
   ...import.meta.glob('/src/seeds/random-data/scenario/*.ts', { eager: true }),
 };
 
 function basename(path: string): string {
-  const m = path.match(/([^/]+)\.json$/);
+  const m = path.match(/([^/]+)\.(json|ts)$/);
   return m ? m[1] : path;
 }
 
@@ -27,16 +21,10 @@ const metas: HistoricalSeedMeta[] = Object.keys(discoveredSeedModules)
   .sort()
   .map((absPath) => {
     const mod = discoveredSeedModules[absPath] as unknown as SeedModule;
-    const isSrcTs =
-      absPath.startsWith('/src/seeds/historical-evidence/scenario/') ||
-      absPath.startsWith('/src/seeds/random-data/scenario/');
+    const isSrcTs = absPath.startsWith('/src/seeds/random-data/scenario/');
     const file = isSrcTs
-      ? absPath
-          .replace('/src/seeds/historical-evidence/scenario/', '')
-          .replace('/src/seeds/random-data/scenario/', '')
-      : absPath
-          .replace('/seeds/historical-evidence/scenario/', '')
-          .replace('/seeds/random-data/scenario/', '');
+      ? absPath.replace('/src/seeds/random-data/scenario/', '')
+      : absPath.replace('/seeds/random-data/scenario/', '');
     const id = mod?.default?.id || basename(file);
     const title = mod?.default?.title || basename(file);
     return { id, title, file } satisfies HistoricalSeedMeta;
@@ -80,25 +68,14 @@ export async function loadSeedByFile(
 ): Promise<{ default: HistoricalSeed }> {
   // Static-only resolution (no dynamic import) to avoid mixed static/dynamic warnings
   const modules = {
-    ...import.meta.glob('/seeds/historical-evidence/scenario/*.json', {
-      eager: true,
-    }),
-    ...import.meta.glob('/src/seeds/historical-evidence/scenario/*.ts', {
-      eager: true,
-    }),
     ...import.meta.glob('/seeds/random-data/scenario/*.json', { eager: true }),
     ...import.meta.glob('/src/seeds/random-data/scenario/*.ts', {
       eager: true,
     }),
   } as Record<string, unknown>;
-  const keyJsonLegacy = `/seeds/historical-evidence/scenario/${file}`;
-  const keyTsLegacy = `/src/seeds/historical-evidence/scenario/${file}`;
   const keyJsonNew = `/seeds/random-data/scenario/${file}`;
   const keyTsNew = `/src/seeds/random-data/scenario/${file}`;
-  const mod = (modules[keyJsonLegacy] ??
-    modules[keyTsLegacy] ??
-    modules[keyJsonNew] ??
-    modules[keyTsNew]) as
+  const mod = (modules[keyJsonNew] ?? modules[keyTsNew]) as
     | { default?: HistoricalSeed }
     | HistoricalSeed
     | undefined;

@@ -130,11 +130,7 @@ export class BattleReportRandomDataRepository
   }
 }
 
-// Temporary alias for backward compatibility during rename rollout.
-// Remove after all references are migrated.
-export {
-  BattleReportRandomDataRepository as HistoricalBattleReportRepository,
-};
+// Alias removed after migration completion.
 
 // Helpers
 type HistoricalSeed = {
@@ -157,8 +153,6 @@ async function pickAnySeed(): Promise<HistoricalSeed | undefined> {
 type NetaBase = Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>;
 
 async function loadNetaOptions(kind: 'komae' | 'yono'): Promise<NetaBase[]> {
-  const jsonKeyLegacy = `/seeds/historical-evidence/neta/${kind}.json`;
-  const tsKeyLegacy = `/src/seeds/historical-evidence/neta/${kind}.ts`;
   const jsonKeyNew = `/seeds/random-data/neta/${kind}.json`;
   const tsKeyNew = `/src/seeds/random-data/neta/${kind}.ts`;
   type NetaModule = {
@@ -166,20 +160,10 @@ async function loadNetaOptions(kind: 'komae' | 'yono'): Promise<NetaBase[]> {
     options?: NetaBase[];
   };
   const mods = {
-    ...import.meta.glob('/seeds/historical-evidence/neta/*.json', {
-      eager: true,
-    }),
-    ...import.meta.glob('/src/seeds/historical-evidence/neta/*.ts', {
-      eager: true,
-    }),
     ...import.meta.glob('/seeds/random-data/neta/*.json', { eager: true }),
     ...import.meta.glob('/src/seeds/random-data/neta/*.ts', { eager: true }),
   } as Record<string, NetaModule>;
-  const mod =
-    mods[jsonKeyLegacy] ??
-    mods[tsKeyLegacy] ??
-    mods[jsonKeyNew] ??
-    mods[tsKeyNew];
+  const mod = mods[jsonKeyNew] ?? mods[tsKeyNew];
   const options: NetaBase[] = mod?.default?.options ?? mod?.options ?? [];
   if (options.length > 0) return options;
   // Minimal default to avoid empty options
@@ -195,24 +179,14 @@ async function loadNetaOptions(kind: 'komae' | 'yono'): Promise<NetaBase[]> {
 
 type ReportConfig = { attribution: string; defaultPower: number };
 async function loadReportConfig(): Promise<ReportConfig> {
-  const jsonKeyLegacy = '/seeds/historical-evidence/report/config.json';
-  const tsKeyLegacy = '/src/seeds/historical-evidence/report/config.ts';
   const jsonKeyNew = '/seeds/random-data/report/config.json';
   const tsKeyNew = '/src/seeds/random-data/report/config.ts';
   type CfgModule = { default?: Partial<ReportConfig> } | Partial<ReportConfig>;
   const mods = {
-    ...import.meta.glob('/seeds/historical-evidence/report/*', { eager: true }),
-    ...import.meta.glob('/src/seeds/historical-evidence/report/*', {
-      eager: true,
-    }),
     ...import.meta.glob('/seeds/random-data/report/*', { eager: true }),
     ...import.meta.glob('/src/seeds/random-data/report/*', { eager: true }),
   } as Record<string, CfgModule>;
-  const mod =
-    mods[jsonKeyLegacy] ??
-    mods[tsKeyLegacy] ??
-    mods[jsonKeyNew] ??
-    mods[tsKeyNew];
+  const mod = mods[jsonKeyNew] ?? mods[tsKeyNew];
   // Normalize the module shape: JSON/TS seeds may export the config either as
   // a default export or as the module object itself. Avoid nested ternaries for clarity.
   let cfgObj: Partial<ReportConfig> = {};

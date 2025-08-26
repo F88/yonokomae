@@ -1,11 +1,1 @@
-import type { HistoricalSeed } from '@/yk/repo/historical-seeds';
-
-export default {
-  id: 'lantern-recon-008',
-  title: 'Lantern Reconnaissance',
-  subtitle: 'Illuminating confusion',
-  overview:
-    'Lanterns drew every moth in the region. Unexpected reinforcements.',
-  narrative: 'The glow overwhelmed strategy; beauty overwhelmed resistance.',
-  provenance: [{ label: 'Moth journal', note: 'Attracted to success.' }],
-} satisfies HistoricalSeed;
+// migrated to src/seeds/random-data/scenario/lantern-recon.ts

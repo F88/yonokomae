@@ -152,7 +152,7 @@ it('renders with provider', () => {
 ## Determinism & delays
 
 - Delays are computed but skipped in test environment. Avoid `sleep` in tests.
-- Historical seeds live under `seeds/historical-evidence/scenario/*.json` for reproducibility.
+- Historical seeds live under `seeds/random-data/scenario/*.json` for reproducibility.
 - Provider `defaultDelayForMode` returns ranges for UX, but tests shouldn’t wait because repo code bypasses delays under `NODE_ENV=test`.
 
 ## Environment & config

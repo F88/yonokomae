@@ -26,11 +26,11 @@ export async function getBattleReportRepository(
     return new ApiBattleReportRepository(api);
   }
   if (mode?.id === 'historical-evidence') {
-    const { HistoricalBattleReportRepository } = await import(
+    const { BattleReportRandomDataRepository } = await import(
       '@/yk/repo/repositories.historical'
     );
     // Selected seed is provided via context; callers pass it here.
-    return new HistoricalBattleReportRepository({ seedFile });
+    return new BattleReportRandomDataRepository({ seedFile });
   }
   if (mode?.id === 'mixed-nuts') {
     const { BattleReportRandomDataRepository } = await import(
