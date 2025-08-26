@@ -35,21 +35,42 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 
 ## Documentation
 
-- Developer guide (EN): see DEVELOPMENT_EN.md
-- 開発ガイド (JA): DEVELOPMENT_JA.md
+- [Developer guide (EN)](./DEVELOPMENT_EN.md)
+- [開発ガイド (JA)](./DEVELOPMENT_JA.md)
 
 ## Roadmap / TODO
 
 - Historical Evidence mode
-    - Implement data sources and generation rules for historical events
+    - Expand repositories with curated event data (JSON/seed files) and
+      deterministic generation rules
     - Surface provenance/notes in the UI (citations, links, disclaimers)
-    - Tests for deterministic generation paths
+    - Replace placeholder images with licensed assets and show attribution
+    - Add unit tests for deterministic historical paths
 - AI Mode (later)
     - Evaluate model/provider and on-device vs API trade-offs
     - Add safety guardrails and content filters
-    - Provide offline mock for tests and local dev
+    - Provide offline mock/stub for tests and local dev
+- API-backed mode (optional)
+    - Wire Api repositories under a dedicated mode (e.g., `api`) using
+      `VITE_API_BASE_URL`
+    - Provide a mock server and integration tests
+    - Add provider branching and a feature flag
 - Battle UX polish
     - Add progress indicator for async judgement (per-step animation)
+    - Make judgement cancellable with user feedback
+    - Respect reduced-motion preferences for scroll/animation
+- Accessibility and i18n
+    - A11y audit (labels, focus management, contrast)
+    - Improve keyboard flow after generating a report (focus return/announce)
+    - Localize UI strings (EN/JA alignment with docs)
+- Testing and CI/CD
+    - Add E2E tests (e.g., Playwright) for key flows
+    - GitHub Actions: lint, typecheck, test, build on PRs
+    - Optional visual regression for core components
+- Deployment
+    - Configure Vite base for GitHub Pages and add a deploy workflow
+    - Document required env vars and deployment steps in README
+
 
 ## Project notes
 
