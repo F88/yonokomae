@@ -23,7 +23,12 @@ export const Header = ({ mode }: { mode?: PlayMode }) => {
       </div>
       <div className="flex items-center gap-2">
         {mode ? (
-          <Badge variant="secondary" className="hidden sm:inline-flex">
+          <Badge
+            variant="secondary"
+            className="inline-flex max-w-[45vw] truncate sm:max-w-none"
+            title={mode.title}
+            aria-label={`Mode: ${mode.title}`}
+          >
             {mode.title}
           </Badge>
         ) : null}
