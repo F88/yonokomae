@@ -1,9 +1,9 @@
-import { type FC, useEffect } from 'react';
-import type { Battle } from '@/types/types';
 import { JudgeCard } from '@/components/battle/Judge';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { Battle } from '@/types/types';
 import type { PlayMode } from '@/yk/play-mode';
-
+import { ScrollText } from 'lucide-react';
+import { type FC, useEffect } from 'react';
 export type Props = {
   battle?: Battle;
   mode: PlayMode;
@@ -39,7 +39,35 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
       </CardHeader>
       <CardContent>
         <div className="mb-4">
-          <h3 className="text-lg font-semibold">{battle.title}</h3>
+          <h3 className="text-lg font-semibold">
+            <a
+              href={`#${battle.id}`}
+              className="inline-flex items-center gap-1.5 underline decoration-dotted underline-offset-2 hover:decoration-solid"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.getElementById(battle.id);
+                if (!target) return;
+                const header = document.querySelector(
+                  'header.sticky',
+                ) as HTMLElement | null;
+                const headerBottom =
+                  header?.getBoundingClientRect().bottom ?? 0;
+                const isWide = window.matchMedia('(min-width: 1024px)').matches;
+                const extraGap = isWide ? 20 : 12;
+                const rect = target.getBoundingClientRect();
+                const delta = rect.top - headerBottom - extraGap;
+                if (Math.abs(delta) > 1) {
+                  window.scrollBy({ top: delta, behavior: 'smooth' });
+                }
+                // update hash without default jump
+                history.replaceState(null, '', `#${battle.id}`);
+              }}
+              title="Scroll to the top of this battle"
+            >
+              <ScrollText className="h-4 w-4" aria-hidden="true" />
+              {battle.title}
+            </a>
+          </h3>
         </div>
         <div className="flex flex-row flex-nowrap items-stretch gap-4">
           {todaysJudges.map((judge) => (
