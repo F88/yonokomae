@@ -1,7 +1,9 @@
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Swords } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import type { PlayMode } from '@/yk/play-mode';
 
-export const Header = () => {
+export const Header = ({ mode }: { mode?: PlayMode }) => {
   const handleScrollTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -20,6 +22,11 @@ export const Header = () => {
         <h1 className="text-lg font-semibold">yonokomae</h1>
       </div>
       <div className="flex items-center gap-2">
+        {mode ? (
+          <Badge variant="secondary" className="hidden sm:inline-flex">
+            {mode.title}
+          </Badge>
+        ) : null}
         <ThemeToggle />
       </div>
     </div>

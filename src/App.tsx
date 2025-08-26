@@ -8,8 +8,11 @@ import { useEffect, useRef, useState } from 'react';
 import { uid } from '@/lib/id';
 import { Header } from './components/Header';
 import type { Battle } from './types/types';
+import TitleContaner from './components/TitleContaner';
+import { playMode, type PlayMode } from './yk/play-mode';
 
 function App() {
+  const [mode, setMode] = useState<PlayMode | undefined>(undefined);
   const [reports, setReports] = useState<Battle[]>([]);
   const shouldScrollAfterAppendRef = useRef(false);
 
@@ -88,7 +91,7 @@ function App() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center">
-          <Header />
+          <Header mode={mode} />
         </div>
       </header>
 
@@ -99,6 +102,9 @@ function App() {
           <Intro />
           <TheStartOfTheWar />
         </section>
+
+        {/* Title Container */}
+        <TitleContaner modes={playMode} onSelect={(mode) => setMode(mode)} />
 
         {/* Battle Reports */}
         {reports.length > 0 && (
@@ -111,14 +117,16 @@ function App() {
       </div>
 
       {/* Fixed Controller */}
-      <footer className="sticky bottom-0 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container py-4">
-          <Controller
-            onGenerateReport={handleGenerateReport}
-            onClearReports={handleClearReports}
-          />
-        </div>
-      </footer>
+      {mode == null ? null : (
+        <footer className="sticky bottom-0 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container py-4">
+            <Controller
+              onGenerateReport={handleGenerateReport}
+              onClearReports={handleClearReports}
+            />
+          </div>
+        </footer>
+      )}
     </main>
   );
 }
