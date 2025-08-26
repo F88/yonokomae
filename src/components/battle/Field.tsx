@@ -11,7 +11,10 @@ export type FieldProps = {
 export const Field: FC<FieldProps> = ({ yono, komae }) => {
   // Loading placeholder using shadcn/ui Skeleton
   const Placeholder: FC = () => (
-    <div className="flex min-w-72 max-w-80 flex-1 flex-col items-center rounded-lg border bg-card p-6">
+    <div
+      data-testid="placeholder"
+      className="flex min-w-72 max-w-80 flex-1 flex-col items-center rounded-lg border bg-card p-6"
+    >
       <div className="w-full space-y-4">
         <div className="text-center">
           <Skeleton className="mx-auto h-6 w-32" />
@@ -32,11 +35,17 @@ export const Field: FC<FieldProps> = ({ yono, komae }) => {
     <div className="w-full space-y-8">
       <div className="flex flex-row items-start justify-center gap-8 md:gap-12">
         {/* YONO */}
-        <div className="flex flex-col items-center space-y-4">
+        <div
+          data-testid="slot-yono"
+          className="flex flex-col items-center space-y-4"
+        >
           {yono ? <NetaView {...yono} /> : <Placeholder />}
         </div>
         {/* KOMAE */}
-        <div className="flex flex-col items-center space-y-4">
+        <div
+          data-testid="slot-komae"
+          className="flex flex-col items-center space-y-4"
+        >
           {komae ? <NetaView {...komae} /> : <Placeholder />}
         </div>
       </div>
