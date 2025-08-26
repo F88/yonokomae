@@ -3,7 +3,7 @@ import type { Battle } from '@/types/types';
 import { useJudgement } from '@/hooks/use-judgement';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import type { Winner } from '@/yk/repositories';
+import type { Winner } from '@/yk/repo/repositories';
 import type { PlayMode } from '@/yk/play-mode';
 
 export type JudgeCardProps = {

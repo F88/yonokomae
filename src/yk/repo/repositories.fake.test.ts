@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   FakeBattleReportRepository,
   FakeJudgementRepository,
-} from '@/yk/repositories.fake';
+} from './repositories.fake';
 import { playMode } from '@/yk/play-mode';
 
 describe('Fake repositories - delay capping', () => {

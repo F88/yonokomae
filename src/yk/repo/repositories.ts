@@ -17,7 +17,7 @@ export interface BattleReportRepository {
    * Generate or fetch a battle report.
    * Always returns a complete Battle with a stable id.
    */
-  generateReport(): Promise<Battle>;
+  generateReport(options?: { signal?: AbortSignal }): Promise<Battle>;
 }
 
 /**
@@ -29,11 +29,10 @@ export interface BattleReportRepository {
  * This replaces the current Judge.determineWinner() logic.
  */
 export interface JudgementRepository {
-  determineWinner(input: {
-    mode: PlayMode;
-    yono: Neta;
-    komae: Neta;
-  }): Promise<Winner>;
+  determineWinner(
+    input: { mode: PlayMode; yono: Neta; komae: Neta },
+    options?: { signal?: AbortSignal },
+  ): Promise<Winner>;
 }
 
 /**
@@ -55,8 +54,12 @@ export interface ScenarioRepository {
  * the report generator, so this returns profile fields only.
  */
 export interface NetaRepository {
-  getKomaeBase(): Promise<Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>>;
-  getYonoBase(): Promise<Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>>;
+  getKomaeBase(): Promise<
+    Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>
+  >;
+  getYonoBase(): Promise<
+    Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>
+  >;
 }
 
 /**

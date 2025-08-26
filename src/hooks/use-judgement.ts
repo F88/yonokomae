@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Battle } from '@/types/types';
 import type { PlayMode } from '@/yk/play-mode';
-import { getJudgementRepository } from '@/yk/repository-provider';
-import type { Winner } from '@/yk/repositories';
+import { getJudgementRepository } from '@/yk/repo/repository-provider';
+import type { Winner } from '@/yk/repo/repositories';
+import { useRepositoriesOptional } from '@/yk/repo/repository-context';
 
 export type JudgementState =
   | { status: 'idle'; data: null; error: null }
@@ -15,6 +16,7 @@ export function useJudgement(
   battle: Battle,
   mode: PlayMode,
 ): JudgementState {
+  const provided = useRepositoriesOptional();
   const [state, setState] = useState<JudgementState>({
     status: 'idle',
     data: null,
@@ -31,15 +33,19 @@ export function useJudgement(
     async function run() {
       try {
         setState({ status: 'loading', data: null, error: null });
-        // In the future this can be a fetch to an API endpoint.
-        // Simulate async to keep API shape stable.
-        await Promise.resolve();
-  const repo = await getJudgementRepository(mode);
-  const result = await repo.determineWinner({
-          mode,
-          yono: inputs.yono,
-          komae: inputs.komae,
-        });
+        const repo =
+          provided?.judgement ?? (await getJudgementRepository(mode));
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 10_000);
+        const result = await repo.determineWinner(
+          {
+            mode,
+            yono: inputs.yono,
+            komae: inputs.komae,
+          },
+          { signal: controller.signal },
+        );
+        clearTimeout(timer);
         if (!cancelled) {
           setState({ status: 'success', data: result, error: null });
         }
@@ -57,7 +63,7 @@ export function useJudgement(
     return () => {
       cancelled = true;
     };
-  }, [inputs, mode]);
+  }, [inputs, mode, provided]);
 
   return state;
 }
