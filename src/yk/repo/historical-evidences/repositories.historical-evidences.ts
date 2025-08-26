@@ -1,6 +1,7 @@
 import { uid } from '@/lib/id';
 import type { Battle, Neta } from '@/types/types';
 import type { BattleReportRepository } from '@/yk/repo/core/repositories';
+import { z } from 'zod';
 
 /**
  * HistoricalEvidencesBattleReportRepository
@@ -33,7 +34,17 @@ export class HistoricalEvidencesBattleReportRepository
     const file = this.file ?? all[Math.floor(Math.random() * all.length)];
     const mod = await loadBattleModule(file);
     const data = normalizeBattle(mod);
-    return data;
+    // Validate with Zod to enforce minimum shape; surface helpful errors.
+    const result = BattleSchema.safeParse(data);
+    if (!result.success) {
+      throw new Error(
+        'Invalid Battle data: ' +
+          result.error.issues
+            .map((i) => `${i.path.join('.')}: ${i.message}`)
+            .join('; '),
+      );
+    }
+    return result.data;
   }
 }
 
@@ -118,3 +129,32 @@ function hasDefault(x: unknown): x is { default?: Partial<Battle> } {
     !!x && typeof x === 'object' && 'default' in (x as Record<string, unknown>)
   );
 }
+
+// Zod schema for Battle
+const NetaSchema = z.object({
+  imageUrl: z.string().min(1),
+  title: z.string(),
+  subtitle: z.string(),
+  description: z.string(),
+  power: z.number(),
+});
+
+const BattleSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  subtitle: z.string(),
+  overview: z.string(),
+  scenario: z.string(),
+  komae: NetaSchema,
+  yono: NetaSchema,
+  provenance: z
+    .array(
+      z.object({
+        label: z.string().min(1),
+        url: z.string().url().optional(),
+        note: z.string().optional(),
+      }),
+    )
+    .optional(),
+  status: z.enum(['loading', 'success', 'error']).optional(),
+});
