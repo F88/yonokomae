@@ -438,7 +438,7 @@ JSON (`seeds/random-data/scenario/tama-river.json`):
 TypeScript (`src/seeds/random-data/scenario/tama-river.ts`):
 
 ```ts
-import type { HistoricalSeed } from '@/yk/repo/historical-seeds';
+import type { HistoricalSeed } from '@/yk/repo/seed-system/historical-seeds';
 
 export default {
     id: 'tama-river-001',
@@ -486,7 +486,7 @@ function MyComponent() {
 - Use `useHistoricalSeedSelection` to access the current seed:
 
 ```tsx
-import { useHistoricalSeedSelection } from '@/yk/repo/use-historical-seed-selection';
+import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/use-historical-seed-selection';
 
 function MyComponent() {
     const seedSelection = useHistoricalSeedSelection();

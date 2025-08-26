@@ -239,7 +239,7 @@ function MyComponent() {
     - `useHistoricalSeedSelection` を使って現在のシードにアクセス:
 
 ```tsx
-import { useHistoricalSeedSelection } from '@/yk/repo/use-historical-seed-selection';
+import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/use-historical-seed-selection';
 
 function MyComponent() {
     const seedSelection = useHistoricalSeedSelection();
