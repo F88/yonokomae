@@ -28,7 +28,10 @@ export async function getBattleReportRepository(
     const { HistoricalBattleReportRepository } = await import(
       '@/yk/repo/repositories.historical'
     );
-    return new HistoricalBattleReportRepository();
+    const { getSelectedSeedFile } = await import('@/yk/repo/historical-seeds');
+    return new HistoricalBattleReportRepository({
+      seedFile: getSelectedSeedFile(),
+    });
   }
   return new FakeBattleReportRepository(undefined, undefined, { delay });
 }

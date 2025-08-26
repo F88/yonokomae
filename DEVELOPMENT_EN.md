@@ -246,24 +246,9 @@ export function Root({ mode }: { mode: PlayMode }) {
 
 ## Testing Helpers and Tips
 
-- Use `renderWithProviders` test helper to wrap UI with the provider during
-  tests: `src/test/renderWithProviders.tsx`.
-
-```ts
-import { renderWithProviders } from '@/test/renderWithProviders';
-import { screen } from '@testing-library/react';
-import React from 'react';
-
-it('renders with provider', () => {
-  renderWithProviders(<div>hello</div>, { mode: { id: 'demo', title: 'DEMO', description: '', enabled: true } });
-  expect(screen.getByText('hello')).toBeInTheDocument();
-});
-```
-
-- Repository unit tests belong next to the implementation (e.g.,
-  `src/yk/repo/repositories.example.test.ts`).
-- Prefer deterministic inputs. Mock `fetch` for API-backed repos and assert
-  on request paths/headers.
+Testing guidance has moved to TESTING.md. See that document for the test
+stack, layout/conventions, helpers (including `renderWithProviders`), examples,
+and troubleshooting.
 
 ## Acceptance Checklist
 
@@ -272,6 +257,7 @@ it('renders with provider', () => {
 - Provider factory branches implemented for the new mode if applicable.
 - README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper
   steps here).
+  See TESTING.md for testing conventions and guidance.
 
 ## Suggested Commit Messages
 

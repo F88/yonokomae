@@ -1,6 +1,7 @@
 import type { ScenarioRepository, NetaRepository, BattleReportRepository } from './repositories';
 import type { Battle, Neta } from '@/types/types';
 import { uid } from '@/lib/id';
+import { historicalSeeds, loadSeedByFile } from './historical-seeds';
 
 export class HistoricalScenarioRepository implements ScenarioRepository {
   async generateTitle(): Promise<string> {
@@ -45,23 +46,38 @@ export class HistoricalNetaRepository implements NetaRepository {
  * Minimal seed-backed implementation that produces a Battle with provenance.
  */
 export class HistoricalBattleReportRepository implements BattleReportRepository {
+  private readonly seedFile?: string;
+  constructor(opts?: { seedFile?: string }) {
+    this.seedFile = opts?.seedFile;
+  }
   async generateReport(): Promise<Battle> {
-    // Static import of local seed (keeps deterministic output)
-    const seed = await import('@/../seeds/historical/tama-river.json');
+    // Load selected or default seed
+    const chosen = this.seedFile ?? historicalSeeds[0]?.file;
+    const seed = await loadSeedByFile(chosen);
     // Build basic Netas using historical base repos (titles/images can remain placeholders)
     const netaRepo = new HistoricalNetaRepository();
     const [komaeBase, yonoBase] = await Promise.all([
       netaRepo.getKomaeBase(),
       netaRepo.getYonoBase(),
     ]);
+    // Strengthen attribution: include a short note in descriptions
+    const attribution = 'Images: placeholders (https://placehold.co/)';
     return {
       id: uid('battle'),
       title: seed.default.title,
       subtitle: seed.default.subtitle,
       overview: seed.default.overview,
       scenario: seed.default.narrative,
-      komae: { ...komaeBase, power: 50 },
-      yono: { ...yonoBase, power: 50 },
+      komae: {
+        ...komaeBase,
+        description: `${komaeBase.description} — ${attribution}`,
+        power: 50,
+      },
+      yono: {
+        ...yonoBase,
+        description: `${yonoBase.description} — ${attribution}`,
+        power: 50,
+      },
       provenance: seed.default.provenance,
       status: 'success',
     } satisfies Battle;
