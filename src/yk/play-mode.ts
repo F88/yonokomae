@@ -45,4 +45,10 @@ export const playMode: PlayMode[] = [
       'A mode that uses AI to generate unique battle scenarios. (Maybe later)',
     enabled: false,
   },
+  {
+    id: 'api',
+    title: 'API MODE',
+    description: 'Backed by a remote API (mockable in dev/test).',
+    enabled: false,
+  },
 ];

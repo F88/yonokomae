@@ -49,6 +49,36 @@ export const HistoricalScene: FC<Props> = ({ battle }) => {
               {battle.scenario}
             </CardDescription>
           </div>
+
+          {battle.provenance && battle.provenance.length > 0 && (
+            <>
+              <Separator />
+              <div className="space-y-2 text-left">
+                <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground text-center">
+                  Sources / Provenance
+                </div>
+                <ul className="list-disc list-inside space-y-1">
+                  {battle.provenance.map((p, i) => (
+                    <li key={i} className="text-sm">
+                      {p.url ? (
+                        <a
+                          href={p.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline hover:no-underline"
+                        >
+                          {p.label}
+                        </a>
+                      ) : (
+                        <span>{p.label}</span>
+                      )}
+                      {p.note ? <span className="text-muted-foreground"> — {p.note}</span> : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          )}
         </div>
       </CardHeader>
 

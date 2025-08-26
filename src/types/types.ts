@@ -47,6 +47,12 @@ export interface Battle {
   yono: Neta;
   /** Optional status for UI flow control */
   status?: 'loading' | 'success' | 'error';
+  /** Optional provenance/citations for historical evidence */
+  provenance?: Array<{
+    label: string;
+    url?: string;
+    note?: string;
+  }>;
 }
 
 export type BattleReport = Partial<Battle> & {

@@ -1,5 +1,6 @@
-import type { ScenarioRepository, NetaRepository } from './repositories';
-import type { Neta } from '@/types/types';
+import type { ScenarioRepository, NetaRepository, BattleReportRepository } from './repositories';
+import type { Battle, Neta } from '@/types/types';
+import { uid } from '@/lib/id';
 
 export class HistoricalScenarioRepository implements ScenarioRepository {
   async generateTitle(): Promise<string> {
@@ -36,5 +37,33 @@ export class HistoricalNetaRepository implements NetaRepository {
       subtitle: 'Defenders of the West',
       description: 'Organized unit trained in river crossing maneuvers.',
     };
+  }
+}
+
+/**
+ * HistoricalBattleReportRepository
+ * Minimal seed-backed implementation that produces a Battle with provenance.
+ */
+export class HistoricalBattleReportRepository implements BattleReportRepository {
+  async generateReport(): Promise<Battle> {
+    // Static import of local seed (keeps deterministic output)
+    const seed = await import('@/../seeds/historical/tama-river.json');
+    // Build basic Netas using historical base repos (titles/images can remain placeholders)
+    const netaRepo = new HistoricalNetaRepository();
+    const [komaeBase, yonoBase] = await Promise.all([
+      netaRepo.getKomaeBase(),
+      netaRepo.getYonoBase(),
+    ]);
+    return {
+      id: uid('battle'),
+      title: seed.default.title,
+      subtitle: seed.default.subtitle,
+      overview: seed.default.overview,
+      scenario: seed.default.narrative,
+      komae: { ...komaeBase, power: 50 },
+      yono: { ...yonoBase, power: 50 },
+      provenance: seed.default.provenance,
+      status: 'success',
+    } satisfies Battle;
   }
 }
