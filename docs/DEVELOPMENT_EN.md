@@ -490,11 +490,11 @@ function MyComponent() {
 
 ### Historical Repository Implementation
 
-The `HistoricalBattleReportRepository` demonstrates seed consumption:
+The `BattleReportRandomDataRepository` demonstrates seed consumption:
 
 ```ts
-export class HistoricalBattleReportRepository
-    implements BattleReportRepository
+export class BattleReportRandomDataRepository
+  implements BattleReportRepository
 {
     private readonly seedFile?: string;
 
@@ -503,7 +503,7 @@ export class HistoricalBattleReportRepository
     }
 
     async generateReport(): Promise<Battle> {
-        // Prefer a chosen seed; else pick a discovered one. See repositories.historical.ts
+    // Prefer a chosen seed; else pick a discovered one. See repositories.historical.ts
         // for the complete behavior and report config application.
         // Returns a fully-formed Battle with provenance.
     }

@@ -99,7 +99,7 @@ it('uses historical repository in historical mode', () => {
         },
     });
 
-    // Component will receive HistoricalBattleReportRepository
+  // Component will receive BattleReportRandomDataRepository
     // Assert on historical-specific behavior
 });
 ```
