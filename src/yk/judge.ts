@@ -3,12 +3,17 @@
  */
 
 import type { Neta } from 'src/types/types';
+import type { PlayMode } from './play-mode';
 
 export class Judge {
   name: string;
 
-  constructor(name: string) {
+  // Play mode (e.g. single-player, multiplayer)
+  mode: PlayMode;
+
+  constructor(name: string, mode: PlayMode) {
     this.name = name;
+    this.mode = mode;
   }
 
   // Async to allow future API calls; waits 0..5s (0ms in tests)

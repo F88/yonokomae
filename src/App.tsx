@@ -107,10 +107,10 @@ function App() {
         <TitleContaner modes={playMode} onSelect={(mode) => setMode(mode)} />
 
         {/* Battle Reports */}
-        {reports.length > 0 && (
+        {mode != null && reports.length > 0 && (
           <section className="mx-auto w-full max-w-6xl space-y-8">
             {reports.map((battle: Battle) => (
-              <BattleContainer key={battle.id} battle={battle} />
+              <BattleContainer key={battle.id} battle={battle} mode={mode} />
             ))}
           </section>
         )}

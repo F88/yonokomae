@@ -2,14 +2,20 @@ import type { FC } from 'react';
 import type { Battle } from '@/types/types';
 import { useJudgement } from '@/hooks/use-judgement';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import type { PlayMode } from '@/yk/play-mode';
 
 export type JudgeCardProps = {
   nameOfJudge: string;
   battle: Battle;
+  mode: PlayMode;
 };
 
-export const JudgeCard: FC<JudgeCardProps> = ({ nameOfJudge, battle }) => {
-  const judgement = useJudgement(nameOfJudge, battle);
+export const JudgeCard: FC<JudgeCardProps> = ({
+  nameOfJudge,
+  battle,
+  mode,
+}) => {
+  const judgement = useJudgement(nameOfJudge, battle, mode);
 
   return (
     <Card className="h-full min-w-0 text-center gap-2 py-2">

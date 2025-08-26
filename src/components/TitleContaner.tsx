@@ -74,8 +74,8 @@ export function TitleContaner({
                   type="button"
                   key={m.id}
                   role="radio"
-                  disabled={!m.enabled}
-                  aria-checked={selected ? 'true' : 'false'}
+                  disabled={!m.enabled} // This is correct, no change needed.
+                  aria-checked={selected}
                   onMouseEnter={() => setIndex(i)}
                   onClick={() => {
                     setIndex(i);
@@ -112,7 +112,7 @@ export function TitleContaner({
             })}
           </div>
           <div className="mt-4 text-xs text-muted-foreground">
-            Use ↑/↓ to choose, Enter to start
+            Use ↓/↑ to choose, Enter to start (or j/k, s/w)
           </div>
         </CardContent>
       </Card>

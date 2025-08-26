@@ -2,14 +2,16 @@ import { type FC, useEffect } from 'react';
 import type { Battle } from '@/types/types';
 import { JudgeCard } from '@/components/Judge';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import type { PlayMode } from '@/yk/play-mode';
 
 export type Props = {
   battle?: Battle;
+  mode: PlayMode;
 };
 
 const judgesName: string[] = ['O', 'U', 'S', 'C'];
 
-export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
+export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
   // 画面最下部までスクロール（新しい Battle が表示されたタイミング）
   useEffect(() => {
     // Defer until layout is painted so height is correct
@@ -42,7 +44,7 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle }) => {
         <div className="flex flex-row flex-nowrap items-stretch gap-4">
           {todaysJudges.map((judge) => (
             <div key={judge} className="flex-1 basis-0 min-w-0">
-              <JudgeCard nameOfJudge={judge} battle={battle} />
+              <JudgeCard nameOfJudge={judge} battle={battle} mode={mode} />
             </div>
           ))}
         </div>

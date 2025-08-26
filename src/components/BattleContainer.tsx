@@ -2,20 +2,22 @@ import type { FC } from 'react';
 import type { Battle } from '@/types/types';
 import { HistoricalScene } from '@/components/HistoricalScene';
 import { ConsiderationsAndJudgments } from '@/components/ConsiderationsAndJudgments';
+import type { PlayMode } from '@/yk/play-mode';
 
 export type BattleContainerProps = {
   battle: Battle;
+  mode: PlayMode;
 };
 
-export const BattleContainer: FC<BattleContainerProps> = ({ battle }) => {
+export const BattleContainer: FC<BattleContainerProps> = ({ battle, mode }) => {
   const isBattleReportLoading = battle.status === 'loading';
   return (
     <div className="space-y-6">
       <HistoricalScene battle={battle} />
       {isBattleReportLoading ? (
-        <ConsiderationsAndJudgments battle={undefined} />
+        <ConsiderationsAndJudgments battle={undefined} mode={mode} />
       ) : (
-        <ConsiderationsAndJudgments battle={battle} />
+        <ConsiderationsAndJudgments battle={battle} mode={mode} />
       )}
     </div>
   );
