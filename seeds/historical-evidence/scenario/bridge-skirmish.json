@@ -1,0 +1,10 @@
+{
+  "id": "bridge-skirmish-000",
+  "title": "Bridge Skirmish",
+  "subtitle": "Test seed",
+  "overview": "A test scenario near the bridge.",
+  "narrative": "Two sides gathered near the bridge; a small skirmish ensued.",
+  "provenance": [
+    { "label": "Archive", "note": "Auto migrated from seeds/historical." }
+  ]
+}
