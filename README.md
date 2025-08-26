@@ -79,6 +79,148 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 
 ## Project notes
 
+### Architecture: Repository Pattern
+
+This project adopts the Repository Pattern to decouple data generation/fetching
+from UI and domain logic. It allows swapping implementations per play mode, and
+enables clean dependency injection and testing.
+
+Key goals:
+
+- Clear contracts for data access (interfaces) decoupled from UI
+- Pluggable implementations (fake, historical, future API)
+- Mode-based selection with optional latency emulation
+- Simple DI for components and hooks; easy unit testing
+
+Directory layout (under `src/yk/repo/`):
+
+- `repositories.ts`: Core interfaces and shared types
+    - `BattleReportRepository`, `JudgementRepository`, `ScenarioRepository`, `NetaRepository`
+- `repositories.fake.ts`: Default fake implementations
+    - Deterministic shapes; uses `@faker-js/faker` for titles/narratives
+    - Optional delay with abort support; delay is capped to 10s and disabled in tests
+- `repositories.historical.ts`: Historical mode data providers (seeded/static for now)
+- `repository-provider.ts`: Async factories to get repositories by `PlayMode`
+    - `getBattleReportRepository(mode?)`, `getJudgementRepository(mode?)`
+    - Applies sensible default delays per mode (e.g., DEMO vs HISTORICAL)
+- `repository-context.ts`: React Context + hooks for DI
+- `RepositoryProvider.tsx`: Thin provider that lazily creates repos via factories
+
+Usage in hooks:
+
+- `use-generate-report(mode?)`
+    - Resolves a `BattleReportRepository` from provider (if present) or factories
+    - Adds a 10s timeout and passes `AbortSignal` down to the repo
+- `use-judgement(nameOfJudge, battle, mode)`
+    - Resolves a `JudgementRepository` similarly; exposes `idle/loading/success/error`
+    - Adds a 10s timeout and passes `AbortSignal`
+
+Latency emulation (fake repos):
+
+- Accepts `delay` as a number or `{ min, max }`
+- Negative values clamp to 0
+- Values above 10_000ms are capped with a console warning
+- Delays are skipped when `NODE_ENV === 'test'`
+
+Testing:
+
+- Unit tests live beside implementations, e.g. `src/yk/repo/repositories.fake.test.ts`
+- Tests cover delay capping and basic behavior of fake repositories
+- UI tests focus on states (`loading/error/success`) rather than random values
+
+How to add a new implementation (e.g., API-backed):
+
+1. Implement the relevant interface(s) in `src/yk/repo/*` (e.g., `ApiJudgementRepository`)
+2. Add a branch in `repository-provider.ts` to return the new repo for certain `PlayMode`
+3. If you need configuration, pass it through the provider or Context
+4. Add tests for the new repo; prefer deterministic inputs and mock network
+5. Optionally document the mode and behavior in this README
+
+Migration note:
+
+- Legacy files under `src/yk/` that re-exported `yk/repo/*` have been removed to
+    avoid ambiguity. Consumers should import from `@/yk/repo/...`.
+
+#### Diagrams (Mermaid)
+
+High-level flow of data and DI:
+
+```mermaid
+flowchart TD
+    A["Components / App"]
+    B["RepositoryProvider (Context)"]
+    C["Hooks: use-generate-report / use-judgement"]
+    D["Repos from Context"]
+    E["Factories: get*Repository(mode)"]
+    F["Implementation: Fake / Historical / Future API"]
+    G["Domain Data: Battle / Winner"]
+
+    A --> B
+    A --> C
+    C -->|provided?| D
+    C -->|fallback| E
+    E --> F
+    F --> G
+    G --> C
+    C --> A
+```
+
+Sequence for generating a battle report:
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant UI as UI (Button)
+    participant H as use-generate-report
+    participant X as Repo Context (optional)
+    participant F as Factory (getBattleReportRepository)
+    participant R as Repo Impl (Fake/Historical)
+
+    U->>UI: Click "Battle"
+    UI->>H: generateReport()
+    H->>X: useRepositoriesOptional()
+    alt Provider present
+        H->>R: battleReport.generateReport({ signal })
+    else No provider
+        H->>F: getBattleReportRepository(mode)
+        F-->>H: Repo instance
+        H->>R: generateReport({ signal })
+    end
+    R-->>H: Battle
+    H-->>UI: setState(success)
+```
+
+Interfaces and implementations:
+
+```mermaid
+classDiagram
+    class BattleReportRepository {
+        +generateReport(options) Promise<Battle>
+    }
+    class JudgementRepository {
+        +determineWinner(input, options) Promise<Winner>
+    }
+    class ScenarioRepository {
+        +generateTitle() Promise<string>
+        +generateSubtitle() Promise<string>
+        +generateOverview() Promise<string>
+        +generateNarrative() Promise<string>
+    }
+    class NetaRepository {
+        +getKomaeBase() Promise<...>
+        +getYonoBase() Promise<...>
+    }
+    class FakeBattleReportRepository
+    class FakeJudgementRepository
+    class HistoricalScenarioRepository
+    class HistoricalNetaRepository
+
+    FakeBattleReportRepository ..|> BattleReportRepository
+    FakeJudgementRepository ..|> JudgementRepository
+    HistoricalScenarioRepository ..|> ScenarioRepository
+    HistoricalNetaRepository ..|> NetaRepository
+```
+
 ### Styling (Tailwind CSS v4)
 
 - Tailwind v4 is used. The single CSS entry is the project root `index.css`.
