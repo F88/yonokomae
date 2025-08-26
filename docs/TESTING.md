@@ -57,6 +57,67 @@ Override per test by calling `server.use(...)` with additional handlers.
 - Historical repos (`repositories.historical.ts`): seed-backed deterministic generation. Assert structure and `provenance` presence.
 - API repos (`repositories.api.ts`): prefer provider-level tests with MSW (see `repository-provider.api.test.ts`).
 
+### Testing Historical Seed System
+
+When testing components that use the Historical Seed System:
+
+```tsx
+import { HistoricalSeedProvider } from '@/yk/repo/historical-seed-provider';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+it('rotates seeds on Tab key', async () => {
+  const user = userEvent.setup();
+  render(
+    <HistoricalSeedProvider>
+      <YourComponent />
+    </HistoricalSeedProvider>
+  );
+  
+  // Press Tab to rotate seed
+  await user.keyboard('[Tab]');
+  
+  // Assert on expected behavior after rotation
+});
+```
+
+### Provider Testing Patterns
+
+The `renderWithProviders` helper simplifies testing with repository providers:
+
+```tsx
+import { renderWithProviders } from '@/test/renderWithProviders';
+import { screen } from '@testing-library/react';
+
+it('uses historical repository in historical mode', () => {
+  renderWithProviders(<YourComponent />, {
+    mode: { id: 'historical', title: 'HISTORICAL', description: '', enabled: true },
+  });
+  
+  // Component will receive HistoricalBattleReportRepository
+  // Assert on historical-specific behavior
+});
+```
+
+For testing async provider initialization:
+
+```tsx
+import { Suspense } from 'react';
+import { RepositoryProviderSuspense } from '@/yk/repo/RepositoryProvider';
+
+it('handles async provider setup', async () => {
+  render(
+    <Suspense fallback={<div>Loading...</div>}>
+      <RepositoryProviderSuspense mode={mode}>
+        <YourComponent />
+      </RepositoryProviderSuspense>
+    </Suspense>
+  );
+  
+  // Wait for suspension to resolve
+  await screen.findByText('Expected content');
+});
+
 ## UI testing
 
 - `HistoricalScene` renders provenance list when `battle.provenance` is provided.

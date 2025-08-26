@@ -154,3 +154,141 @@ Suspense 対応 Provider(非同期初期化):
 ## リリース/Changelog の運用
 
 リリースワークフローと変更履歴管理については [CONTRIBUTING.md](../CONTRIBUTING.md) を参照してください。
+
+## Historical Seed システム
+
+Historical Evidence モードは、再現可能な結果と歴史的イベントの適切な帰属を保証するために、シードベースの決定論的生成システムを使用します。
+
+### アーキテクチャ概要
+
+Historical Seed システムは以下で構成されています:
+
+- **シードファイル**: `seeds/historical/*.json` に配置された歴史イベントデータを含む JSON ファイル
+- **HistoricalSeedProvider**: シード選択状態を管理する React コンテキストプロバイダ
+- **シード選択フック**: シードへのアクセスと回転のためのカスタムフック
+- **Historical リポジトリ**: シードデータを消費するリポジトリ実装
+
+### シードファイル構造
+
+Historical seed は以下の構造を持つ JSON ファイルです:
+
+```json
+{
+  "default": {
+    "title": "Battle of Tama River",
+    "subtitle": "A Turning Point in Regional History",
+    "overview": "Based on documented events and testimonies.",
+    "narrative": "Eyewitness accounts describe...",
+    "provenance": [
+      "Source: Historical Archives",
+      "Date: 1185",
+      "Location: Tama River banks"
+    ]
+  }
+}
+```
+
+### Historical Seed システムの使用
+
+1. **新しい historical seed の追加**:
+   - `seeds/historical/` に新しい JSON ファイルを作成
+   - 上記の構造に従って適切な歴史データを記述
+   - `src/yk/repo/historical-seeds.ts` にシードを登録
+
+2. **シード回転の実装**:
+   - UI で Tab キーを押すと利用可能なシードを循環
+   - `useRotateHistoricalSeed` フックを使ってプログラムでシードを回転:
+
+```tsx
+import { useRotateHistoricalSeed } from '@/yk/repo/use-rotate-historical-seed';
+
+function MyComponent() {
+  const rotateSeed = useRotateHistoricalSeed();
+  
+  // 次のシードへ回転
+  const handleRotate = () => rotateSeed();
+}
+```
+
+3. **現在のシード選択へのアクセス**:
+   - `useHistoricalSeedSelection` を使って現在のシードにアクセス:
+
+```tsx
+import { useHistoricalSeedSelection } from '@/yk/repo/use-historical-seed-selection';
+
+function MyComponent() {
+  const seedSelection = useHistoricalSeedSelection();
+  const currentSeedFile = seedSelection?.seedFile;
+}
+```
+
+### Historical リポジトリ実装
+
+`HistoricalBattleReportRepository` はシード消費の例を示します:
+
+```ts
+export class HistoricalBattleReportRepository implements BattleReportRepository {
+  private readonly seedFile?: string;
+  
+  constructor(opts?: { seedFile?: string }) {
+    this.seedFile = opts?.seedFile;
+  }
+  
+  async generateReport(): Promise<Battle> {
+    const chosen = this.seedFile ?? historicalSeeds[0]?.file;
+    const seed = await loadSeedByFile(chosen);
+    // シードデータを使ってバトルレポートを生成
+    return {
+      title: seed.default.title,
+      provenance: seed.default.provenance,
+      // ... その他のフィールド
+    };
+  }
+}
+```
+
+## UI ユーティリティ
+
+### useBreakpoint によるレスポンシブデザイン
+
+`useBreakpoint` フックは、レスポンシブデザインを扱うためのリアクティブな方法を提供します:
+
+```tsx
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+
+function ResponsiveComponent() {
+  const isLarge = useBreakpoint('lg'); // viewport >= 1024px の時 true
+  
+  return (
+    <div>
+      {isLarge ? <DesktopLayout /> : <MobileLayout />}
+    </div>
+  );
+}
+```
+
+ブレークポイント値は `src/hooks/use-breakpoint.ts` で定義され、Tailwind の設定と一致する必要があります。
+
+### scrollToAnchor によるスムーススクロール
+
+`scrollToAnchor` ユーティリティは、sticky ヘッダーの補正を伴うスムーススクロールを処理します:
+
+```tsx
+import { scrollToAnchor } from '@/lib/scroll';
+
+// 基本的な使用法
+scrollToAnchor('battle-report-section');
+
+// オプション付き
+scrollToAnchor('battle-report-section', {
+  stickyHeaderSelector: 'header',
+  extraGapSmall: 12,  // モバイルでのギャップ
+  extraGapLarge: 20,  // デスクトップでのギャップ
+  largeMinWidth: 1024 // 大画面のブレークポイント
+});
+```
+
+このユーティリティは以下の場合に特に有用です:
+- 生成後のバトルレポートへの自動スクロール
+- キーボードショートカットによる特定セクションへのナビゲーション
+- sticky ヘッダー下での適切な間隔の維持

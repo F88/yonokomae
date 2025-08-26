@@ -16,15 +16,23 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 
 - Multiple play modes with clear status
     - DEMO: quick demonstration with placeholder data (enabled)
-    - HISTORICAL EVIDENCE: WIP mode based on events (enabled)
+    - HISTORICAL EVIDENCE: deterministic mode based on historical seeds (enabled)
+        - Seed-based reproducible generation
+        - Tab key to rotate through available seeds
+        - Provenance tracking and display
     - AI MODE: planned, AI-generated scenarios (disabled)
 - One-click battle report generation with smooth auto-scroll to latest
+- Keyboard shortcuts for improved accessibility
+    - Enter/Space/B: Generate battle report
+    - R: Reset battle state
+    - Tab: Rotate historical seed (in Historical Evidence mode)
 - Robust loading and error states
     - Async judgement with simulated latency
     - Shadcn skeleton placeholders on the battle field
 - Modern UI stack
     - React + Vite + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
     - Dark mode toggle via class-based theme
+    - Responsive design with breakpoint-aware layouts
 - Zero-SSR SPA optimized for client-side rendering
 - GitHub Pages deployment with base path configured
 

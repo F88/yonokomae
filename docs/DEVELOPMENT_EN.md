@@ -340,3 +340,141 @@ See [TESTING.md](./TESTING.md) for testing guidance.
 - README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper
   steps here).
 
+## Historical Seed System
+
+The Historical Evidence mode uses a seed-based deterministic generation system to ensure reproducible results and proper attribution of historical events.
+
+### Architecture Overview
+
+The Historical Seed System consists of:
+
+- **Seed Files**: JSON files located in `seeds/historical/*.json` containing historical event data
+- **HistoricalSeedProvider**: React context provider managing seed selection state
+- **Seed Selection Hooks**: Custom hooks for accessing and rotating seeds
+- **Historical Repositories**: Repository implementations that consume seed data
+
+### Seed File Structure
+
+Historical seeds are JSON files with the following structure:
+
+```json
+{
+  "default": {
+    "title": "Battle of Tama River",
+    "subtitle": "A Turning Point in Regional History",
+    "overview": "Based on documented events and testimonies.",
+    "narrative": "Eyewitness accounts describe...",
+    "provenance": [
+      "Source: Historical Archives",
+      "Date: 1185",
+      "Location: Tama River banks"
+    ]
+  }
+}
+```
+
+### Using the Historical Seed System
+
+1. **Adding a new historical seed**:
+   - Create a new JSON file in `seeds/historical/`
+   - Follow the structure above with appropriate historical data
+   - Register the seed in `src/yk/repo/historical-seeds.ts`
+
+2. **Implementing seed rotation**:
+   - The Tab key rotates through available seeds in the UI
+   - Use the `useRotateHistoricalSeed` hook to programmatically rotate seeds:
+
+```tsx
+import { useRotateHistoricalSeed } from '@/yk/repo/use-rotate-historical-seed';
+
+function MyComponent() {
+  const rotateSeed = useRotateHistoricalSeed();
+  
+  // Rotate to next seed
+  const handleRotate = () => rotateSeed();
+}
+```
+
+3. **Accessing current seed selection**:
+   - Use `useHistoricalSeedSelection` to access the current seed:
+
+```tsx
+import { useHistoricalSeedSelection } from '@/yk/repo/use-historical-seed-selection';
+
+function MyComponent() {
+  const seedSelection = useHistoricalSeedSelection();
+  const currentSeedFile = seedSelection?.seedFile;
+}
+```
+
+### Historical Repository Implementation
+
+The `HistoricalBattleReportRepository` demonstrates seed consumption:
+
+```ts
+export class HistoricalBattleReportRepository implements BattleReportRepository {
+  private readonly seedFile?: string;
+  
+  constructor(opts?: { seedFile?: string }) {
+    this.seedFile = opts?.seedFile;
+  }
+  
+  async generateReport(): Promise<Battle> {
+    const chosen = this.seedFile ?? historicalSeeds[0]?.file;
+    const seed = await loadSeedByFile(chosen);
+    // Generate battle report using seed data
+    return {
+      title: seed.default.title,
+      provenance: seed.default.provenance,
+      // ... other fields
+    };
+  }
+}
+```
+
+## UI Utilities
+
+### Responsive Design with useBreakpoint
+
+The `useBreakpoint` hook provides a reactive way to handle responsive design:
+
+```tsx
+import { useBreakpoint } from '@/hooks/use-breakpoint';
+
+function ResponsiveComponent() {
+  const isLarge = useBreakpoint('lg'); // true when viewport >= 1024px
+  
+  return (
+    <div>
+      {isLarge ? <DesktopLayout /> : <MobileLayout />}
+    </div>
+  );
+}
+```
+
+Breakpoint values are defined in `src/hooks/use-breakpoint.ts` and should match Tailwind configuration.
+
+### Smooth Scrolling with scrollToAnchor
+
+The `scrollToAnchor` utility handles smooth scrolling with sticky header compensation:
+
+```tsx
+import { scrollToAnchor } from '@/lib/scroll';
+
+// Basic usage
+scrollToAnchor('battle-report-section');
+
+// With options
+scrollToAnchor('battle-report-section', {
+  stickyHeaderSelector: 'header',
+  extraGapSmall: 12,  // gap on mobile
+  extraGapLarge: 20,  // gap on desktop
+  largeMinWidth: 1024 // breakpoint for large screens
+});
+```
+
+This utility is particularly useful for:
+- Auto-scrolling to battle reports after generation
+- Navigating to specific sections with keyboard shortcuts
+- Maintaining proper spacing below sticky headers
+

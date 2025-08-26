@@ -68,21 +68,23 @@ Examples:
 
 ### GitHub Actions Workflow
 
-The project uses GitHub Actions for continuous integration and deployment.
+The project is configured for GitHub Actions CI/CD, though workflow files are not yet present in `.github/workflows/`.
 
-#### CI Pipeline (on PRs)
+#### Planned CI Pipeline (on PRs)
 
 1. **Lint Check**: Ensures code follows project style guidelines
 2. **Type Check**: Verifies TypeScript compilation without errors
 3. **Unit Tests**: Runs the test suite with coverage reporting
 4. **Build Verification**: Ensures the project builds successfully
 
-#### CD Pipeline (on main branch)
+#### Current Deployment Process
 
 1. **GitHub Pages Deployment**:
-    - Triggered on push to main branch
-    - Builds the project with proper base path
-    - Deploys to GitHub Pages
+    - Manual deployment via `npm run deploy`
+    - Builds the project with proper base path (`/yonokomae/`)
+    - Uses `gh-pages` package to push to GitHub Pages branch
+    
+To set up automated CI/CD, create workflow files in `.github/workflows/` directory.
 
 ### Running CI Checks Locally
 
@@ -92,7 +94,7 @@ Before submitting a PR, run these commands locally:
 # Lint check
 npm run lint
 
-# Type check
+# Type check (TypeScript compilation)
 npm run typecheck
 
 # Run tests
@@ -101,6 +103,8 @@ npm test
 # Build project
 npm run build
 ```
+
+Note: The `typecheck` script runs TypeScript compiler in check mode without emitting files, ensuring type safety across the codebase.
 
 ### Environment Variables
 
