@@ -51,15 +51,19 @@ export async function getJudgementRepository(
     const { ApiClient, ApiJudgementRepository } = await import(
       '@/yk/repo/repositories.api'
     );
-    const base: string =
-      (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env
-        ?.VITE_API_BASE_URL ?? '/api';
+    const base: string = getApiBaseUrl();
     const api = new ApiClient(base);
     return new ApiJudgementRepository(api);
   }
   return new FakeJudgementRepository({ delay });
 }
 
+function getApiBaseUrl(): string {
+  return (
+    (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env
+      ?.VITE_API_BASE_URL ?? '/api'
+  );
+}
 type DelayKind = 'report' | 'judgement';
 function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
   if (!mode) return 0;
