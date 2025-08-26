@@ -2,7 +2,8 @@ import { GiInvertedDice3 } from 'react-icons/gi';
 import { Square } from 'lucide-react';
 import { useCallback, useEffect, type FC } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { KeyChip } from '@/components/ui/key-chip';
+import { isEditable } from '@/lib/dom-utils';
 
 interface ControllerProps {
   onGenerateReport: () => void | Promise<void>;
@@ -17,28 +18,13 @@ export const Controller: FC<ControllerProps> = ({
     void onGenerateReport();
   }, [onGenerateReport]);
 
-  const KeyChip: FC<{ label: string }> = ({ label }) => (
-    <Badge
-      variant="outline"
-      className="px-1.5 py-0.5 text-[10px] sm:text-xs font-mono tracking-tight"
-      aria-label={`Shortcut key ${label}`}
-    >
-      {label}
-    </Badge>
-  );
+  // Using shared <KeyChip /> from ui and shared isEditable util
 
   const handleReset = useCallback(() => {
     void onClearReports();
   }, [onClearReports]);
 
   useEffect(() => {
-    const isEditable = (el: EventTarget | null) => {
-      if (!(el instanceof HTMLElement)) return false;
-      const tag = el.tagName.toLowerCase();
-      if (el.isContentEditable) return true;
-      return tag === 'input' || tag === 'textarea' || tag === 'select';
-    };
-
     const onKeyDown = (e: KeyboardEvent) => {
       if (isEditable(e.target)) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
