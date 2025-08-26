@@ -54,7 +54,11 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
                   extraGapSmall: 12,
                 });
                 // update hash without default jump
-                if (typeof window !== 'undefined' && window.history && typeof window.history.replaceState === 'function') {
+                if (
+                  typeof window !== 'undefined' &&
+                  window.history &&
+                  typeof window.history.replaceState === 'function'
+                ) {
                   window.history.replaceState(null, '', `#${battle.id}`);
                 }
               }}

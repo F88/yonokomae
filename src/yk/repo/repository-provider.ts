@@ -62,7 +62,9 @@ export async function getJudgementRepository(
 function getViteEnvVar(key: string): string | undefined {
   // Vite injects env variables into import.meta.env
   // Type assertion is encapsulated here for maintainability
-  const env = (import.meta as unknown as { env?: Record<string, string | undefined> }).env;
+  const env = (
+    import.meta as unknown as { env?: Record<string, string | undefined> }
+  ).env;
   return env?.[key];
 }
 
