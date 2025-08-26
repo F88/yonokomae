@@ -39,18 +39,70 @@ export class FakeNetaRepository implements NetaRepository {
   }
 }
 
+type DelayOption = number | { min: number; max: number };
+
+function isTestEnv(): boolean {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const env = (typeof process !== 'undefined' ? (process as any).env : undefined) as
+    | { NODE_ENV?: string }
+    | undefined;
+  return env?.NODE_ENV === 'test';
+}
+
+async function sleep(ms: number): Promise<void> {
+  await new Promise<void>((resolve) => setTimeout(resolve, ms));
+}
+
+const MAX_DELAY_MS = 10_000; // 10 seconds
+
+function computeDelayMs(option?: DelayOption): number {
+  if (!option) return 0;
+  if (typeof option === 'number') {
+    let v = Math.max(0, Math.floor(option));
+    if (v > MAX_DELAY_MS) {
+      console.warn(
+        `[FakeRepo] Delay capped at ${MAX_DELAY_MS}ms (requested: ${v}ms)`,
+      );
+      v = MAX_DELAY_MS;
+    }
+    return v;
+  }
+  // Object form { min, max }
+  let min = Math.max(0, Math.floor(option.min));
+  let max = Math.max(min, Math.floor(option.max));
+  const needCap = min > MAX_DELAY_MS || max > MAX_DELAY_MS;
+  if (needCap) {
+    const original = { min, max };
+    min = Math.min(min, MAX_DELAY_MS);
+    max = Math.min(Math.max(min, max), MAX_DELAY_MS);
+    console.warn(
+      `[FakeRepo] Delay range capped to <= ${MAX_DELAY_MS}ms (requested: min=${original.min}ms, max=${original.max}ms; capped: min=${min}ms, max=${max}ms)`,
+    );
+  }
+  const span = max - min;
+  if (span <= 0) return min;
+  return min + Math.floor(Math.random() * (span + 1)); // inclusive of max
+}
+
 export class FakeBattleReportRepository implements BattleReportRepository {
   private scenarioRepo: ScenarioRepository;
   private netaRepo: NetaRepository;
+  private delay?: DelayOption;
   constructor(
     scenarioRepo?: ScenarioRepository,
     netaRepo?: NetaRepository,
+    options?: { delay?: DelayOption },
   ) {
     this.scenarioRepo = scenarioRepo ?? new FakeScenarioRepository();
     this.netaRepo = netaRepo ?? new FakeNetaRepository();
+    this.delay = options?.delay;
   }
 
   async generateReport(): Promise<Battle> {
+    const ms = computeDelayMs(this.delay);
+    if (ms > 0 && !isTestEnv()) {
+      await sleep(ms);
+    }
     const [title, subtitle, overview, narrative, komaeBase, yonoBase] = await Promise.all([
       this.scenarioRepo.generateTitle(),
       this.scenarioRepo.generateSubtitle(),
@@ -77,7 +129,15 @@ export class FakeBattleReportRepository implements BattleReportRepository {
 }
 
 export class FakeJudgementRepository implements JudgementRepository {
+  private delay?: DelayOption;
+  constructor(options?: { delay?: DelayOption }) {
+    this.delay = options?.delay;
+  }
   async determineWinner(input: { mode: PlayMode; yono: Neta; komae: Neta }): Promise<Winner> {
+    const ms = computeDelayMs(this.delay);
+    if (ms > 0 && !isTestEnv()) {
+      await sleep(ms);
+    }
     const { yono, komae } = input;
     if (yono.power > komae.power) return 'YONO';
     if (yono.power < komae.power) return 'KOMAE';

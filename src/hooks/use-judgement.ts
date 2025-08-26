@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Battle } from '@/types/types';
 import type { PlayMode } from '@/yk/play-mode';
-import { FakeJudgementRepository } from '@/yk/repositories.fake';
+import { getJudgementRepository } from '@/yk/repository-provider';
 
 export type JudgementState =
   | { status: 'idle'; data: null; error: null }
@@ -33,7 +33,8 @@ export function useJudgement(
         // In the future this can be a fetch to an API endpoint.
         // Simulate async to keep API shape stable.
         await Promise.resolve();
-        const result = await new FakeJudgementRepository().determineWinner({
+  const repo = await getJudgementRepository(mode);
+  const result = await repo.determineWinner({
           mode,
           yono: inputs.yono,
           komae: inputs.komae,

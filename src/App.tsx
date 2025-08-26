@@ -17,7 +17,7 @@ function App() {
   const shouldScrollAfterAppendRef = useRef(false);
   const scrollTargetIdRef = useRef<string | null>(null);
 
-  const { generateReport } = useGenerateReport();
+  const { generateReport } = useGenerateReport(mode);
 
   // Removed dynamic CSS variable; using static responsive scroll margins instead.
 
@@ -81,7 +81,7 @@ function App() {
     // Scrolling will occur in the effect after DOM updates
 
     try {
-      const next = await generateReport('John Doe');
+  const next = await generateReport();
       // Replace the placeholder at the captured index
       setReports((prev) =>
         prev.map((b, i) => (i === insertedIndex ? next : b)),
