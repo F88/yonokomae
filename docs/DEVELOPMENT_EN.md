@@ -23,7 +23,18 @@ Content within code fences may be written in languages other than English.
 
 # Development Guide (for Developers)
 
-This document is intended for developers. It explains how to add a new
+## Architecture overview
+
+The architecture is based on a modular design, with a clear separation of concerns between components, repositories, and play modes. The main building blocks are:
+
+- **Components**: The UI components that interact with the user.
+- **RepositoryProvider**: A context provider that supplies the appropriate repository implementations to the components.
+- **Hooks**: Custom hooks that encapsulate the logic for interacting with the repositories.
+- **Repositories**: The data access layer that abstracts the underlying data sources.
+
+## How to add a new Play Mode or Repository
+
+This section is intended for developers. It explains how to add a new
 Repository implementation and how to add a new Play Mode, using
 ExampleRepo and ExampleMode as illustrative samples. All code examples are in
 TypeScript with TSDoc comments.
@@ -31,18 +42,7 @@ TypeScript with TSDoc comments.
 Note: The app is a CSR SPA (no SSR). Dependency injection (DI) is provided via
 `RepositoryProvider` (and `RepositoryProviderSuspense` for async init).
 
-## Table of Contents
-
-- Goals and Contracts
-- Add a new Repository for an existing Play Mode
-- Add a new Play Mode with its Repositories
-- Wiring in the Provider Factories
-- Using the Provider in the App (and Suspense)
-- Testing Helpers and Tips
-- Acceptance Checklist
-- Suggested Commit Messages
-
-## Goals and Contracts
+### Goals and Contracts
 
 - Clear repository contracts are defined in `src/yk/repo/repositories.ts`.
 - Implementations live under `src/yk/repo/*`.
@@ -57,7 +57,87 @@ Core interfaces:
 - `ScenarioRepository`
 - `NetaRepository`
 
-## Add a new Repository for an existing Play Mode
+### Architecture diagrams (Mermaid)
+
+High-level flow of data and DI:
+
+```mermaid
+flowchart TD
+  A["Components / App"]
+  B["RepositoryProvider (Context)"]
+  C["Hooks: use-generate-report / use-judgement"]
+  D["Repos from Context"]
+  E["Factories: get*Repository(mode)"]
+  F["Implementation: Fake / Historical / Future API"]
+  G["Domain Data: Battle / Winner"]
+
+  A --> B
+  A --> C
+  C -->|provided?| D
+  C -->|fallback| E
+  E --> F
+  F --> G
+  G --> C
+  C --> A
+```
+
+Sequence for generating a battle report:
+
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant UI as UI (Button)
+  participant H as use-generate-report
+  participant X as Repo Context (optional)
+  participant F as Factory (getBattleReportRepository)
+  participant R as Repo Impl (Fake/Historical)
+
+  U->>UI: Click "Battle"
+  UI->>H: generateReport()
+  H->>X: useRepositoriesOptional()
+  alt Provider present
+    H->>R: battleReport.generateReport({ signal })
+  else No provider
+    H->>F: getBattleReportRepository(mode)
+    F-->>H: Repo instance
+    H->>R: generateReport({ signal })
+  end
+  R-->>H: Battle
+  H-->>UI: setState(success)
+```
+
+Interfaces and implementations:
+
+```mermaid
+classDiagram
+  class BattleReportRepository {
+    +generateReport(options) Promise<Battle>
+  }
+  class JudgementRepository {
+    +determineWinner(input, options) Promise<Winner>
+  }
+  class ScenarioRepository {
+    +generateTitle() Promise<string>
+    +generateSubtitle() Promise<string>
+    +generateOverview() Promise<string>
+    +generateNarrative() Promise<string>
+  }
+  class NetaRepository {
+    +getKomaeBase() Promise<...>
+    +getYonoBase() Promise<...>
+  }
+  class FakeBattleReportRepository
+  class FakeJudgementRepository
+  class HistoricalScenarioRepository
+  class HistoricalNetaRepository
+
+  FakeBattleReportRepository ..|> BattleReportRepository
+  FakeJudgementRepository ..|> JudgementRepository
+  HistoricalScenarioRepository ..|> ScenarioRepository
+  HistoricalNetaRepository ..|> NetaRepository
+```
+
+### Add a new Repository for an existing Play Mode
 
 Use this path when you want to add a new repository (ExampleRepo) and consume
 it under an existing mode (e.g., `demo`).
@@ -155,7 +235,7 @@ export class ExampleJudgementRepository implements JudgementRepository {
 - Mock timers/random if needed; assert on states and interactions, not random
   values.
 
-## Add a new Play Mode with its Repositories
+### Add a new Play Mode with its Repositories
 
 Use this path when you introduce a brand-new `ExampleMode` and new repositories.
 
@@ -209,13 +289,13 @@ if (mode?.id === 'example-mode') {
 - If your ExampleRepo needs async setup (API warm-up, metadata fetch), use
   `RepositoryProviderSuspense` and wrap with `<Suspense>` in the app shell.
 
-## Wiring in the Provider Factories
+### Wiring in the Provider Factories
 
 - Provider factories live in `src/yk/repo/repository-provider.ts`.
 - Add a branch per `mode.id` to instantiate the correct implementation.
 - Keep factories lightweight and avoid side effects; prefer async imports.
 
-## Using the Provider in the App (and Suspense)
+### Using the Provider in the App (and Suspense)
 
 Basic provider (sync or lazy creation):
 
@@ -248,11 +328,11 @@ export function Root({ mode }: { mode: PlayMode }) {
 }
 ```
 
-## Testing Helpers and Tips
+### Testing Helpers and Tips
 
 See [TESTING.md](./TESTING.md) for testing guidance.
 
-## Acceptance Checklist
+### Acceptance Checklist
 
 - TypeScript compiles with no new errors.
 - Unit tests pass locally.
@@ -260,92 +340,3 @@ See [TESTING.md](./TESTING.md) for testing guidance.
 - README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper
   steps here).
 
-## Suggested Commit Messages
-
-- feat(repo): add ExampleRepo repositories and provider wiring
-- docs(dev): add developer guide for ExampleMode and ExampleRepo
-- test(repo): add unit tests for ExampleRepo behavior
-
-## Release & Changelog
-
-See [CONTRIBUTING.md](../CONTRIBUTING.md) for release workflow and changelog management.
-
-## Architecture diagrams (Mermaid)
-
-High-level flow of data and DI:
-
-```mermaid
-flowchart TD
-  A["Components / App"]
-  B["RepositoryProvider (Context)"]
-  C["Hooks: use-generate-report / use-judgement"]
-  D["Repos from Context"]
-  E["Factories: get*Repository(mode)"]
-  F["Implementation: Fake / Historical / Future API"]
-  G["Domain Data: Battle / Winner"]
-
-  A --> B
-  A --> C
-  C -->|provided?| D
-  C -->|fallback| E
-  E --> F
-  F --> G
-  G --> C
-  C --> A
-```
-
-Sequence for generating a battle report:
-
-```mermaid
-sequenceDiagram
-  participant U as User
-  participant UI as UI (Button)
-  participant H as use-generate-report
-  participant X as Repo Context (optional)
-  participant F as Factory (getBattleReportRepository)
-  participant R as Repo Impl (Fake/Historical)
-
-  U->>UI: Click "Battle"
-  UI->>H: generateReport()
-  H->>X: useRepositoriesOptional()
-  alt Provider present
-    H->>R: battleReport.generateReport({ signal })
-  else No provider
-    H->>F: getBattleReportRepository(mode)
-    F-->>H: Repo instance
-    H->>R: generateReport({ signal })
-  end
-  R-->>H: Battle
-  H-->>UI: setState(success)
-```
-
-Interfaces and implementations:
-
-```mermaid
-classDiagram
-  class BattleReportRepository {
-    +generateReport(options) Promise<Battle>
-  }
-  class JudgementRepository {
-    +determineWinner(input, options) Promise<Winner>
-  }
-  class ScenarioRepository {
-    +generateTitle() Promise<string>
-    +generateSubtitle() Promise<string>
-    +generateOverview() Promise<string>
-    +generateNarrative() Promise<string>
-  }
-  class NetaRepository {
-    +getKomaeBase() Promise<...>
-    +getYonoBase() Promise<...>
-  }
-  class FakeBattleReportRepository
-  class FakeJudgementRepository
-  class HistoricalScenarioRepository
-  class HistoricalNetaRepository
-
-  FakeBattleReportRepository ..|> BattleReportRepository
-  FakeJudgementRepository ..|> JudgementRepository
-  HistoricalScenarioRepository ..|> ScenarioRepository
-  HistoricalNetaRepository ..|> NetaRepository
-```
