@@ -2,6 +2,7 @@ import { GiInvertedDice3 } from 'react-icons/gi';
 import { Square } from 'lucide-react';
 import { useCallback, useEffect, type FC } from 'react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface ControllerProps {
   onGenerateReport: () => void | Promise<void>;
@@ -15,6 +16,16 @@ export const Controller: FC<ControllerProps> = ({
   const handleGenerate = useCallback(() => {
     void onGenerateReport();
   }, [onGenerateReport]);
+
+  const KeyChip: FC<{ label: string }> = ({ label }) => (
+    <Badge
+      variant="outline"
+      className="px-1.5 py-0.5 text-[10px] sm:text-xs font-mono tracking-tight"
+      aria-label={`Shortcut key ${label}`}
+    >
+      {label}
+    </Badge>
+  );
 
   const handleReset = useCallback(() => {
     void onClearReports();
@@ -60,7 +71,9 @@ export const Controller: FC<ControllerProps> = ({
           <Square className="h-4 w-4" />
           RESET
         </Button>
-        <div className="text-xs text-muted-foreground">[R]</div>
+        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+          <KeyChip label="R" />
+        </div>
       </div>
 
       {/* Battle block */}
@@ -74,7 +87,13 @@ export const Controller: FC<ControllerProps> = ({
           <GiInvertedDice3 className="h-5 w-5" />
           BATTLE
         </Button>
-        <div className="text-xs text-muted-foreground">[B/Enter/Space]</div>
+        {/* <div className="text-xs text-muted-foreground">[B/Enter/Space]</div> */}
+
+        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+          <KeyChip label="B" />
+          <KeyChip label="Ent" />
+          <KeyChip label="Sp" />
+        </div>
       </div>
     </div>
   );
