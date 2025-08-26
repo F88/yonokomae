@@ -11,6 +11,16 @@ export async function getBattleReportRepository(
     '@/yk/repo/repositories.fake'
   );
   const delay = defaultDelayForMode(mode);
+  // Tip: add new branches per mode here (e.g., 'demo-2', 'api')
+  // if (mode?.id === 'demo-2') {
+  //   const { Demo2BattleReportRepository } = await import('@/yk/repo/repositories.demo2');
+  //   return new Demo2BattleReportRepository();
+  // }
+  // if (mode?.id === 'api') {
+  //   const { ApiClient, ApiBattleReportRepository } = await import('@/yk/repo/repositories.api');
+  //   const api = new ApiClient(import.meta.env.VITE_API_BASE_URL as string);
+  //   return new ApiBattleReportRepository(api);
+  // }
   if (mode?.id === 'historical-evidence') {
     const { HistoricalNetaRepository, HistoricalScenarioRepository } =
       await import('@/yk/repo/repositories.historical');
@@ -30,6 +40,16 @@ export async function getJudgementRepository(
     '@/yk/repo/repositories.fake'
   );
   const delay = defaultDelayForMode(mode, 'judgement');
+  // Tip: add new branches per mode here (e.g., 'demo-2', 'api')
+  // if (mode?.id === 'demo-2') {
+  //   const { Demo2JudgementRepository } = await import('@/yk/repo/repositories.demo2');
+  //   return new Demo2JudgementRepository();
+  // }
+  // if (mode?.id === 'api') {
+  //   const { ApiClient, ApiJudgementRepository } = await import('@/yk/repo/repositories.api');
+  //   const api = new ApiClient(import.meta.env.VITE_API_BASE_URL as string);
+  //   return new ApiJudgementRepository(api);
+  // }
   return new FakeJudgementRepository({ delay });
 }
 
