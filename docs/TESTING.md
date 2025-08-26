@@ -2,10 +2,10 @@
 title: Testing Guide
 lang: en
 notes-ja:
-  - この文書はテスト運用の整理用ドキュメントです(英語)。
+    - この文書はテスト運用の整理用ドキュメントです(英語)。
 instructions-for-ais:
-  - This document is written in English for AI readability.
-  - Code fences may contain TypeScript/TSX/JSON.
+    - This document is written in English for AI readability.
+    - Code fences may contain TypeScript/TSX/JSON.
 ---
 
 # Testing Guide
@@ -98,10 +98,9 @@ it('renders with provider', () => {
 
 - Run `npm run test:coverage` to generate coverage reports.
 
-## CI suggestions (optional)
+## CI/CD
 
-- GitHub Actions: run lint, typecheck, unit tests on PRs. Cache npm and vite deps.
-- Consider adding Playwright for a few critical E2E flows (mode select → battle → judgement).
+See [CONTRIBUTING.md](../CONTRIBUTING.md) for CI/CD pipeline configuration and deployment details.
 
 ## Troubleshooting
 

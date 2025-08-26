@@ -136,14 +136,14 @@ Suspense 対応 Provider(非同期初期化):
 
 ## テストヘルパと Tips
 
-テストガイドは TESTING.md に移動しました。テストスタック、レイアウト/規約、ヘルパ(`renderWithProviders` を含む)、例、トラブルシューティングは TESTING.md を参照してください。
+テストガイドは [TESTING.md](./TESTING.md) を参照してください。
 
 ## 受け入れ基準
 
 - TypeScript のビルドに新しいエラーがない。
 - ローカルでユニットテストが通る。
 - 新モードがある場合は Provider ファクトリの分岐が実装されている。
-- README/DEVELOPMENT_EN に必要な更新が反映されている(README は概要、詳細は本ドキュメント)。テスト規約は TESTING.md を参照。
+- README/DEVELOPMENT_EN に必要な更新が反映されている(README は概要、詳細は本ドキュメント)。
 
 ## 推奨コミットメッセージ
 
@@ -153,22 +153,4 @@ Suspense 対応 Provider(非同期初期化):
 
 ## リリース/Changelog の運用
 
-このプロジェクトは Changesets を用いてバージョニングと変更履歴を管理します。
-
-1. 変更をコミットしたら、変更内容を記述する changeset を作成します。
-
-```bash
-npx changeset
-```
-
-1. CHANGELOG.md を生成/更新するときは次を実行します。
-
-```bash
-npx changeset-changelog
-```
-
-既存の CHANGELOG.md を Conventional Changelog で更新することもできます。
-
-```bash
-npx conventional-changelog --infile CHANGELOG.md -r 0 --same-file --preset eslint
-```
+リリースワークフローと変更履歴管理については [CONTRIBUTING.md](../CONTRIBUTING.md) を参照してください。

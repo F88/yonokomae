@@ -22,14 +22,9 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 - Robust loading and error states
     - Async judgement with simulated latency
     - Shadcn skeleton placeholders on the battle field
-- Title screen selection with full keyboard support
-    - Navigate: ArrowUp/ArrowDown, J/K, W/S; Confirm: Enter/Space; Home/End
-- Global controller shortcuts
-    - Battle: B / Enter / Space; Reset: R
 - Modern UI stack
     - React + Vite + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
     - Dark mode toggle via class-based theme
-- Testing-first setup with Vitest + React Testing Library
 - Zero-SSR SPA optimized for client-side rendering
 - GitHub Pages deployment with base path configured
 
@@ -37,6 +32,8 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 
 - [Developer guide (EN)](./docs/DEVELOPMENT_EN.md)
 - [開発ガイド (JA)](./docs/DEVELOPMENT_JA.md)
+- [Testing guide (EN)](./docs/TESTING.md)
+- [Contributing guide](./CONTRIBUTING.md)
 
 ## Roadmap / TODO
 
@@ -63,16 +60,10 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
     - A11y audit (labels, focus management, contrast)
     - Improve keyboard flow after generating a report (focus return/announce)
     - Localize UI strings (EN/JA alignment with docs)
-- Testing and CI/CD
+- Testing
     - Add E2E tests (e.g., Playwright) for key flows
-    - GitHub Actions: lint, typecheck, test, build on PRs
     - Optional visual regression for core components
-- Deployment
-    - Configure Vite base for GitHub Pages and add a deploy workflow
-    - Document required env vars and deployment steps in README
-
 
 ## Project notes
 
-For deeper technical details (architecture, repository pattern, wiring, and diagrams), see the developer guides linked above.
-
+See the developer guides linked above for technical implementation details.
