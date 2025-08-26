@@ -31,12 +31,13 @@ export function useJudgement(
   useEffect(() => {
     let cancelled = false;
     async function run() {
+      const controller = new AbortController();
+      let timer: ReturnType<typeof setTimeout> | null = null;
       try {
         setState({ status: 'loading', data: null, error: null });
         const repo =
           provided?.judgement ?? (await getJudgementRepository(mode));
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 10_000);
+        timer = setTimeout(() => controller.abort(), 10_000);
         const result = await repo.determineWinner(
           {
             mode,
@@ -45,7 +46,8 @@ export function useJudgement(
           },
           { signal: controller.signal },
         );
-        clearTimeout(timer);
+        if (timer) clearTimeout(timer);
+        timer = null;
         if (!cancelled) {
           setState({ status: 'success', data: result, error: null });
         }
@@ -57,6 +59,8 @@ export function useJudgement(
             error: e instanceof Error ? e : new Error(String(e)),
           });
         }
+      } finally {
+        if (timer) clearTimeout(timer);
       }
     }
     run();

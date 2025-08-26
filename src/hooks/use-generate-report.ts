@@ -18,11 +18,15 @@ export function useGenerateReport(mode?: PlayMode) {
     const repo =
       provided?.battleReport ?? (await getBattleReportRepository(mode));
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    let timer: ReturnType<typeof setTimeout> | null = null;
     try {
-      return await repo.generateReport({ signal: controller.signal });
+      timer = setTimeout(() => controller.abort(), timeoutMs);
+      const result = await repo.generateReport({ signal: controller.signal });
+      if (timer) clearTimeout(timer);
+      timer = null;
+      return result;
     } finally {
-      clearTimeout(timer);
+      if (timer) clearTimeout(timer);
     }
   }, [mode, provided, timeoutMs]);
 
