@@ -15,24 +15,47 @@ function App() {
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
   const [reports, setReports] = useState<Battle[]>([]);
   const shouldScrollAfterAppendRef = useRef(false);
+  const scrollTargetIdRef = useRef<string | null>(null);
 
   const { generateReport } = useGenerateReport();
 
-  // Smoothly scroll to the bottom of the page after the DOM updates
-  const scrollToBottom = () => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth',
+  // Removed dynamic CSS variable; using static responsive scroll margins instead.
+
+  // Smoothly scroll the newly inserted report to the top of the viewport
+  const scrollInsertedToTop = () => {
+    const id = scrollTargetIdRef.current;
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+    // Measure sticky header and set a precise scroll margin inline for this scroll
+    const header = document.querySelector(
+      'header.sticky',
+    ) as HTMLElement | null;
+    const headerHeight = header ? header.getBoundingClientRect().height : 0;
+    const borderBottom = header
+      ? parseFloat(getComputedStyle(header).borderBottomWidth || '0')
+      : 0;
+    const isWide = window.matchMedia('(min-width: 1024px)').matches;
+    const extraGap = isWide ? 16 : 8; // small breathing space
+    const margin = headerHeight + borderBottom + extraGap;
+
+    const prevInline = (el as HTMLElement).style.scrollMarginTop;
+    (el as HTMLElement).style.scrollMarginTop = `${margin}px`;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Restore previous inline style after the frame (tailwind class remains intact)
+    requestAnimationFrame(() => {
+      (el as HTMLElement).style.scrollMarginTop = prevInline;
     });
   };
 
-  // After the list grows (i.e., a new report is appended), scroll to the bottom once
+  // After the list grows (i.e., a new report is appended), scroll the new item to the top once
   useEffect(() => {
     if (shouldScrollAfterAppendRef.current) {
       // Defer to next frame to ensure DOM is painted
       requestAnimationFrame(() => {
-        scrollToBottom();
+        scrollInsertedToTop();
         shouldScrollAfterAppendRef.current = false;
+        scrollTargetIdRef.current = null;
       });
     }
   }, [reports.length]);
@@ -52,6 +75,7 @@ function App() {
     };
 
     shouldScrollAfterAppendRef.current = true;
+    scrollTargetIdRef.current = loadingBattle.id;
     setReports((prev) => {
       insertedIndex = prev.length;
       return [...prev, loadingBattle];
@@ -113,7 +137,14 @@ function App() {
         {mode != null && reports.length > 0 && (
           <section className="mx-auto w-full max-w-6xl space-y-8">
             {reports.map((battle: Battle) => (
-              <BattleContainer key={battle.id} battle={battle} mode={mode} />
+              // Wrapper for adjusting scroll margin
+              <div
+                key={battle.id}
+                id={battle.id}
+                className="scroll-mt-[72px] lg:scroll-mt-[96px] border-4 "
+              >
+                <BattleContainer battle={battle} mode={mode} />
+              </div>
             ))}
           </section>
         )}
