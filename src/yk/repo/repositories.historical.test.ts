@@ -5,7 +5,7 @@ import { BattleReportRandomDataRepository } from './repositories.random-jokes';
 
 describe('BattleReportRandomDataRepository', () => {
   it('returns a battle with provenance from seed', async () => {
-  const repo = new BattleReportRandomDataRepository();
+    const repo = new BattleReportRandomDataRepository();
     const battle = await repo.generateReport();
     expect(battle.title).toBeTruthy();
     expect(Array.isArray(battle.provenance)).toBe(true);
