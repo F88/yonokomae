@@ -19,7 +19,7 @@ export type TitleContanerProps = {
 export function TitleContaner({
   modes,
   onSelect,
-  title = 'YONOKOMAE',
+  title = 'SELECT MODE',
   subtitle = 'Select a play mode',
 }: TitleContanerProps) {
   const options = useMemo(() => modes ?? defaultPlayModes, [modes]);
@@ -29,21 +29,71 @@ export function TitleContaner({
   useEffect(() => {
     if (index >= options.length) {
       setIndex(0);
+      return;
+    }
+    // If current points to disabled, move to first enabled
+    const firstEnabled = options.findIndex((o) => o.enabled !== false);
+    if (
+      options[index] &&
+      options[index].enabled === false &&
+      firstEnabled >= 0
+    ) {
+      setIndex(firstEnabled);
     }
   }, [options, index]);
 
   const handleConfirm = () => {
     const chosen = options[index];
-    if (chosen) onSelect(chosen);
+    if (chosen && chosen.enabled !== false) onSelect(chosen);
   };
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
-    if (e.key === 'ArrowUp') {
+    if (
+      e.key === 'ArrowUp' ||
+      e.key === 'k' ||
+      e.key === 'K' ||
+      e.key === 'w' ||
+      e.key === 'W'
+    ) {
       e.preventDefault();
-      setIndex((i) => (i - 1 + options.length) % options.length);
-    } else if (e.key === 'ArrowDown') {
+      setIndex((i) => {
+        let next = i;
+        for (let step = 0; step < options.length; step++) {
+          next = (next - 1 + options.length) % options.length;
+          if (options[next]?.enabled !== false) return next;
+        }
+        return i;
+      });
+    } else if (
+      e.key === 'ArrowDown' ||
+      e.key === 'j' ||
+      e.key === 'J' ||
+      e.key === 's' ||
+      e.key === 'S'
+    ) {
       e.preventDefault();
-      setIndex((i) => (i + 1) % options.length);
+      setIndex((i) => {
+        let next = i;
+        for (let step = 0; step < options.length; step++) {
+          next = (next + 1) % options.length;
+          if (options[next]?.enabled !== false) return next;
+        }
+        return i;
+      });
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      setIndex(() => {
+        const idx = options.findIndex((o) => o.enabled !== false);
+        return idx >= 0 ? idx : 0;
+      });
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      setIndex(() => {
+        for (let i = options.length - 1; i >= 0; i--) {
+          if (options[i]?.enabled !== false) return i;
+        }
+        return 0;
+      });
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleConfirm();
@@ -55,7 +105,7 @@ export function TitleContaner({
       <Card className="w-full max-w-xl text-center">
         <CardHeader className="gap-2 py-4">
           <CardTitle className="text-3xl font-bold tracking-wide">
-            {/* {title} */}
+            {title}
           </CardTitle>
           {/* <div className="text-sm text-muted-foreground">{subtitle}</div> */}
         </CardHeader>
@@ -69,45 +119,54 @@ export function TitleContaner({
           >
             {options.map((m, i) => {
               const selected = i === index;
+              const inputId = `play-mode-${m.id}`;
               return (
-                <button
-                  type="button"
+                <label
                   key={m.id}
-                  role="radio"
-                  disabled={!m.enabled} // This is correct, no change needed.
-                  aria-checked={selected}
-                  onMouseEnter={() => setIndex(i)}
-                  onClick={() => {
-                    setIndex(i);
-                    handleConfirm();
+                  htmlFor={inputId}
+                  onMouseEnter={() => {
+                    if (m.enabled !== false) setIndex(i);
                   }}
+                  title={`${m.title} — ${m.description}${m.enabled === false ? ' (disabled)' : ''}`}
                   className={[
-                    'flex items-center justify-between rounded-md border px-4 py-3 text-left transition-colors',
+                    'flex cursor-pointer items-center justify-start gap-3 rounded-md border px-4 py-3 text-left transition-colors',
                     selected
                       ? 'border-primary bg-primary/10'
                       : 'hover:bg-muted',
                   ].join(' ')}
                 >
-                  <div className="flex min-w-0 flex-col">
-                    <span className="truncate text-base font-semibold">
-                      {m.title}
-                    </span>
-                    <span className="truncate text-sm text-muted-foreground">
-                      {m.description}
-                    </span>
-                  </div>
+                  <input
+                    id={inputId}
+                    type="radio"
+                    name="play-mode"
+                    className="sr-only"
+                    disabled={m.enabled === false}
+                    checked={selected}
+                    onChange={() => {
+                      if (m.enabled !== false) {
+                        setIndex(i);
+                        handleConfirm();
+                      }
+                    }}
+                  />
                   <span
                     aria-hidden
                     className={[
-                      'ml-3 inline-flex h-5 w-5 items-center justify-center rounded-sm border text-xs',
+                      'inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border text-xs',
                       selected
                         ? 'border-primary bg-primary text-primary-foreground'
                         : 'border-muted-foreground/30 text-muted-foreground',
                     ].join(' ')}
                   >
-                    {selected ? '★' : '☆'}
+                    {selected ? '>' : ''}
                   </span>
-                </button>
+                  <div className="flex min-w-0 flex-col">
+                    <span className=" text-base font-semibold">{m.title}</span>
+                    <span className=" text-sm text-muted-foreground">
+                      {m.description}
+                    </span>
+                  </div>
+                </label>
               );
             })}
           </div>
