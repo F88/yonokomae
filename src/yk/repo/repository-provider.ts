@@ -58,11 +58,16 @@ export async function getJudgementRepository(
   return new FakeJudgementRepository({ delay });
 }
 
+// Utility to safely access Vite env variables
+function getViteEnvVar(key: string): string | undefined {
+  // Vite injects env variables into import.meta.env
+  // Type assertion is encapsulated here for maintainability
+  const env = (import.meta as unknown as { env?: Record<string, string | undefined> }).env;
+  return env?.[key];
+}
+
 function getApiBaseUrl(): string {
-  return (
-    (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env
-      ?.VITE_API_BASE_URL ?? '/api'
-  );
+  return getViteEnvVar('VITE_API_BASE_URL') ?? '/api';
 }
 type DelayKind = 'report' | 'judgement';
 function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
