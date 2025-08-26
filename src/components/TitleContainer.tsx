@@ -4,11 +4,8 @@ import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyChip } from '@/components/ui/key-chip';
 import { isEditable } from '@/lib/dom-utils';
-import {
-  historicalSeeds,
-  setSelectedSeedFile,
-  rotateSelectedSeed,
-} from '@/yk/repo/historical-seeds';
+import { historicalSeeds } from '@/yk/repo/historical-seeds';
+import { useHistoricalSeedSelection } from '@/yk/repo/historical-seed-store';
 
 export type TitleContainerProps = {
   modes?: PlayMode[];
@@ -27,6 +24,7 @@ export function TitleContainer({
   onSelect,
   title = 'SELECT MODE',
 }: TitleContainerProps) {
+  const seedSelection = useHistoricalSeedSelection();
   const options = useMemo(() => modes ?? defaultPlayModes, [modes]);
   const [index, setIndex] = useState(0);
 
@@ -163,9 +161,9 @@ export function TitleContainer({
                   aria-label="Historical seed selector"
                   className="rounded border px-2 py-1"
                   onChange={(e) =>
-                    setSelectedSeedFile(e.target.value || undefined)
+                    seedSelection?.setSeedFile(e.target.value || undefined)
                   }
-                  defaultValue=""
+                  value={seedSelection?.seedFile ?? ''}
                 >
                   <option value="">(auto)</option>
                   {historicalSeeds.map((s) => (
@@ -178,7 +176,7 @@ export function TitleContainer({
                   type="button"
                   className="rounded border px-2 py-1 hover:bg-muted"
                   title="Rotate seed"
-                  onClick={() => rotateSelectedSeed()}
+                  onClick={() => seedSelection?.rotateSeed()}
                 >
                   Rotate
                 </button>

@@ -9,6 +9,7 @@ import {
   getJudgementRepository,
 } from './repository-provider';
 import { RepoContext, type RepoContextValue } from './repository-context';
+import { useHistoricalSeedSelection } from './historical-seed-store';
 
 export function RepositoryProvider({
   mode,
@@ -17,10 +18,14 @@ export function RepositoryProvider({
   mode?: PlayMode;
   children: React.ReactNode;
 }) {
+  const seedSelection = useHistoricalSeedSelection();
   const value = useMemo<RepoContextValue>(() => {
     const battleReport = {
       generateReport: async (opts?: { signal?: AbortSignal }) => {
-        const repo = await getBattleReportRepository(mode);
+        const repo = await getBattleReportRepository(
+          mode,
+          seedSelection?.seedFile,
+        );
         return repo.generateReport(opts);
       },
     } as BattleReportRepository;
@@ -33,7 +38,7 @@ export function RepositoryProvider({
       },
     } as JudgementRepository;
     return { battleReport, judgement };
-  }, [mode]);
+  }, [mode, seedSelection?.seedFile]);
 
   return <RepoContext.Provider value={value}>{children}</RepoContext.Provider>;
 }

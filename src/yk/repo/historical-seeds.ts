@@ -40,20 +40,3 @@ export async function loadSeedByFile(
   }
   return loader();
 }
-
-let selectedSeedFile: string | undefined;
-export function setSelectedSeedFile(file?: string): void {
-  selectedSeedFile = file;
-}
-export function getSelectedSeedFile(): string | undefined {
-  return selectedSeedFile;
-}
-export function rotateSelectedSeed(): string | undefined {
-  if (historicalSeeds.length === 0) return undefined;
-  const idx = selectedSeedFile
-    ? historicalSeeds.findIndex((s) => s.file === selectedSeedFile)
-    : -1;
-  const nextIdx = (idx + 1) % historicalSeeds.length;
-  selectedSeedFile = historicalSeeds[nextIdx]?.file;
-  return selectedSeedFile;
-}

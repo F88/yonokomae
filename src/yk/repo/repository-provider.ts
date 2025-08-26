@@ -6,6 +6,7 @@ import type { PlayMode } from '@/yk/play-mode';
 
 export async function getBattleReportRepository(
   mode?: PlayMode,
+  seedFile?: string,
 ): Promise<BattleReportRepository> {
   const { FakeBattleReportRepository } = await import(
     '@/yk/repo/repositories.fake'
@@ -30,10 +31,8 @@ export async function getBattleReportRepository(
     const { HistoricalBattleReportRepository } = await import(
       '@/yk/repo/repositories.historical'
     );
-    const { getSelectedSeedFile } = await import('@/yk/repo/historical-seeds');
-    return new HistoricalBattleReportRepository({
-      seedFile: getSelectedSeedFile(),
-    });
+    // Selected seed is provided via context; callers pass it here.
+    return new HistoricalBattleReportRepository({ seedFile });
   }
   return new FakeBattleReportRepository(undefined, undefined, { delay });
 }
