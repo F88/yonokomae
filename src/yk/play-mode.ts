@@ -6,9 +6,11 @@ export interface PlayMode {
 }
 
 /**
+ * Play modes available in the game.
+ *
  * - DEMO
-- HISTORICAL EVIDENCE (WIP)
-- AI MODE (MAYBE LATER)
+ * - HISTORICAL EVIDENCE (WIP)
+ * - AI MODE (MAYBE LATER)
  */
 
 export const playMode: PlayMode[] = [
