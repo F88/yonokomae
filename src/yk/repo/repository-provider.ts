@@ -85,7 +85,7 @@ function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
       return kind === 'report'
         ? { min: 800, max: 1600 }
         : { min: 100, max: 400 };
-    case 'historical-evidence':
+    case 'historical-evidences':
     case 'mixed-nuts':
       return kind === 'report'
         ? { min: 1200, max: 2500 }

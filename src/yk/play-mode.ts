@@ -36,8 +36,8 @@ export const playMode: PlayMode[] = [
     enabled: true,
   },
   {
-    id: 'historical-evidence',
-    title: 'HISTORICAL EVIDENCE',
+    id: 'historical-evidences',
+    title: 'HISTORICAL EVIDENCES',
     description:
       '[WIP] A mode that generates battles based on historical events.',
     enabled: true,
