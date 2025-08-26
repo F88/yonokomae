@@ -1,6 +1,7 @@
 const title = 'Yono vs Komae Battle Simulator';
 const desc =
-  'This game is a thought-provoking game that examines from multiple angles what happened to two countries that experienced "The World Merger Battle of the Heisei era" ("平成の大合併大戦")';
+  'This thought-provoking game explores the outcomes for two countries' +
+  " after 'The World Merger Battle' of the Heisei era (平成の大合併大戦).";
 
 export const Intro = () => {
   return (

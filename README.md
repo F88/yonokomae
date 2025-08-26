@@ -4,10 +4,10 @@
 
 Yono Komae War
 
-This game is a thought-provoking game that examines from multiple angles what happened to two countries that experienced "The World Merger Battle of the Heisei era" ("平成の大合併大戦")
+This thought-provoking game explores the outcomes for two countries after 'The World Merger Battle' of the Heisei era (平成の大合併大戦).
 
 ```text
-Note: This game is full of humorous jokes and is not a deepfake or fake.
+Note: This game is full of humorous jokes, but to be clear, it is not a deepfake or a mere fabrication.
 ```
 
 ![ykwar.png](imgs/ykwar.png)
