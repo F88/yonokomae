@@ -59,6 +59,11 @@ export class HistoricalBattleReportRepository
   async generateReport(): Promise<Battle> {
     // Load selected or default seed
     const chosen = this.seedFile ?? historicalSeeds[0]?.file;
+    if (!chosen) {
+      throw new Error(
+        'No historical seeds available. Provide a seedFile or add entries to historicalSeeds.',
+      );
+    }
     const seed = await loadSeedByFile(chosen);
     // Build basic Netas using historical base repos (titles/images can remain placeholders)
     const netaRepo = new HistoricalNetaRepository();
