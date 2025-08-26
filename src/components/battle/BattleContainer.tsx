@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { Battle } from '@/types/types';
-import { HistoricalScene } from '@/components/HistoricalScene';
-import { ConsiderationsAndJudgments } from '@/components/ConsiderationsAndJudgments';
+import { HistoricalScene } from '@/components/battle/HistoricalScene';
+import { ConsiderationsAndJudgments } from '@/components/battle/ConsiderationsAndJudgments';
 import type { PlayMode } from '@/yk/play-mode';
 
 export type BattleContainerProps = {

@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Field } from '@/components/field/Field';
+import { Field } from '@/components/battle/Field';
 import type { Battle } from '@/types/types';
 import {
   Card,

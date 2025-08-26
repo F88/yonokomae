@@ -1,4 +1,4 @@
-import { BattleContainer } from '@/components/BattleContainer';
+import { BattleContainer } from '@/components/battle/BattleContainer';
 import { Controller } from '@/components/Controller';
 import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
 import { Intro } from '@/components/Intro';

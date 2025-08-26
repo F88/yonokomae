@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { Neta } from '@/types/types';
-import { NetaView } from '@/components/Neta';
+import { NetaView } from '@/components/battle/Neta';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export type FieldProps = {
