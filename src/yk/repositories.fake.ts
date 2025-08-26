@@ -15,7 +15,7 @@ export class FakeScenarioRepository implements ScenarioRepository {
   async generateTitle(): Promise<string> {
     const year = faker.number.int({ min: 1990, max: 2050 });
     return `The Great Battle of ${year}`;
-    
+
   }
   async generateSubtitle(): Promise<string> {
     return faker.lorem.words({ min: 2, max: 5 });

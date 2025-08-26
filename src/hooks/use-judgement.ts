@@ -2,11 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import type { Battle } from '@/types/types';
 import type { PlayMode } from '@/yk/play-mode';
 import { getJudgementRepository } from '@/yk/repository-provider';
+import type { Winner } from '@/yk/repositories';
 
 export type JudgementState =
   | { status: 'idle'; data: null; error: null }
   | { status: 'loading'; data: null; error: null }
-  | { status: 'success'; data: string; error: null }
+  | { status: 'success'; data: Winner; error: null }
   | { status: 'error'; data: null; error: Error };
 
 export function useJudgement(

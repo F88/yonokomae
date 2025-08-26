@@ -2,6 +2,8 @@ import type { FC } from 'react';
 import type { Battle } from '@/types/types';
 import { useJudgement } from '@/hooks/use-judgement';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import type { Winner } from '@/yk/repositories';
 import type { PlayMode } from '@/yk/play-mode';
 
 export type JudgeCardProps = {
@@ -30,9 +32,28 @@ export const JudgeCard: FC<JudgeCardProps> = ({
           {judgement.status === 'error' && (
             <span className="text-destructive">Failed</span>
           )}
-          {judgement.status === 'success' && judgement.data}
+          {judgement.status === 'success' && (
+            <WinnerBadge winner={judgement.data} />
+          )}
         </div>
       </CardContent>
     </Card>
   );
 };
+
+function WinnerBadge({ winner }: { winner: Winner }) {
+  switch (winner) {
+    case 'YONO':
+      return <Badge variant="default" aria-label="Winner: YONO">YONO</Badge>;
+    case 'KOMAE':
+      return (
+        <Badge variant="secondary" aria-label="Winner: KOMAE">KOMAE</Badge>
+      );
+    case 'DRAW':
+      return (
+        <Badge variant="outline" aria-label="Result: DRAW" className="border-muted-foreground/40 text-muted-foreground">
+          DRAW
+        </Badge>
+      );
+  }
+}
