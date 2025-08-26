@@ -340,70 +340,149 @@ See [TESTING.md](./TESTING.md) for testing guidance.
 - README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper
   steps here).
 
+## Historical Evidence Data Ownership
+
+In HISTORICAL EVIDENCE mode, data is static at build time and owned entirely by seed files.
+
+- Primary source (seeds):
+    - JSON: `seeds/historical-evidence/scenario/*.json`
+    - TS modules: `src/seeds/historical-evidence/scenario/*.ts` exporting
+      `export default {...} satisfies HistoricalSeed;`
+
+- Neta base profiles and report config are also seeds:
+    - Neta: `seeds/historical-evidence/neta/{komae,yono}.json` (or TS under `src/seeds/historical-evidence/neta/`)
+    - Report config: `seeds/historical-evidence/report/config.json` (or TS under `src/seeds/historical-evidence/report/`)
+
+- Repositories:
+    - Load from seeds discovered at build-time via `import.meta.glob`. If none are present, use minimal built-in stubs to avoid breaking UI.
+
+Other modes (DEMO, API, etc.) keep their own data/logic within their repositories and are not constrained by the HISTORICAL rules above.
+
 ## Historical Seed System
 
-The Historical Evidence mode uses a seed-based deterministic generation system to ensure reproducible results and proper attribution of historical events.
+HISTORICAL EVIDENCE supports deterministic seeds to reproduce specific
+scenarios or curate demos, with seeds as the single source of truth.
 
 ### Architecture Overview
 
 The Historical Seed System consists of:
 
-- **Seed Files**: JSON files located in `seeds/historical/*.json` containing historical event data
-- **HistoricalSeedProvider**: React context provider managing seed selection state
-- **Seed Selection Hooks**: Custom hooks for accessing and rotating seeds
-- **Historical Repositories**: Repository implementations that consume seed data
+- **Seed Files**: either JSON under `seeds/historical-evidence/scenario/*.json` or TS modules
+  under `src/seeds/historical-evidence/scenario/*.ts` (recommended for type-safety)
+- **HistoricalSeedProvider**: React context provider managing seed selection
+  state (file path string)
+- **Seed Selection Hooks**: Custom hooks to access and rotate seeds
+- **Historical Repositories**: Implementations that consume seeds; if none are present, they use minimal built-in stubs (no TS constants)
+
+### Static-only seed loading policy (eager imports)
+
+We intentionally load historical seeds using static, eager imports only.
+Dynamic imports are not used for seeds. This avoids mixed static/dynamic
+references and the related bundling warnings during build.
+
+- What this means
+    - Discovery and loading both use `import.meta.glob(..., { eager: true })` for
+      `/src/seeds/historical-evidence/...` (TS) and `/seeds/...` (JSON, if any).
+    - `loadSeedByFile(file)` resolves from the eager module map and does not use
+      `import()` at runtime.
+
+- Why we chose this
+    - Simplicity: synchronous access to module exports, no async boundaries where
+      not necessary.
+    - Predictable bundling: no Vite/Rollup warnings about "module is dynamically
+      imported but also statically imported".
+    - Early failure: schema/type errors surface at build/test time.
+
+- Trade-offs
+    - Slightly larger initial bundle because all seeds are included. This is
+      acceptable for our current seed volume. If volume grows significantly, we
+      can revisit code-splitting for seeds.
+
+- Authoring guidance
+    - Prefer TypeScript seeds under `src/seeds/historical-evidence/...` for
+      type-safety. JSON under `seeds/...` remains supported but not preferred.
+    - IDs must be unique across all seeds. CI and runtime enforce uniqueness.
+    - No manual registration is required; files are discovered automatically.
 
 ### Seed File Structure
 
-Historical seeds are JSON files with the following structure:
+Historical seeds use the `HistoricalSeed` shape. Examples:
+
+JSON (`seeds/historical-evidence/scenario/tama-river.json`):
 
 ```json
 {
-  "default": {
+    "id": "tama-river-001",
     "title": "Battle of Tama River",
     "subtitle": "A Turning Point in Regional History",
     "overview": "Based on documented events and testimonies.",
-    "narrative": "Eyewitness accounts describe...",
+    "narrative": "Eyewitness accounts describe a fierce clash near the river banks.",
     "provenance": [
-      "Source: Historical Archives",
-      "Date: 1185",
-      "Location: Tama River banks"
+        { "label": "City Archives: Komae", "url": "https://example.org/..." },
+        {
+            "label": "Historical Society Bulletin 1999",
+            "note": "Vol. 12, pp. 45-48"
+        }
     ]
-  }
 }
+```
+
+TypeScript (`src/seeds/historical-evidence/scenario/tama-river.ts`):
+
+```ts
+import type { HistoricalSeed } from '@/yk/repo/historical-seeds';
+
+export default {
+    id: 'tama-river-001',
+    title: 'Battle of Tama River',
+    subtitle: 'A Turning Point in Regional History',
+    overview: 'Based on documented events and testimonies.',
+    narrative:
+        'Eyewitness accounts describe a fierce clash near the river banks.',
+    provenance: [
+        { label: 'City Archives: Komae', url: 'https://example.org/...' },
+        {
+            label: 'Historical Society Bulletin 1999',
+            note: 'Vol. 12, pp. 45-48',
+        },
+    ],
+} satisfies HistoricalSeed;
 ```
 
 ### Using the Historical Seed System
 
 1. **Adding a new historical seed**:
-   - Create a new JSON file in `seeds/historical/`
-   - Follow the structure above with appropriate historical data
-   - Register the seed in `src/yk/repo/historical-seeds.ts`
 
-2. **Implementing seed rotation**:
-   - The Tab key rotates through available seeds in the UI
-   - Use the `useRotateHistoricalSeed` hook to programmatically rotate seeds:
+- Prefer TS modules in `src/seeds/historical-evidence/scenario/` for type-safety
+- Or add JSON under `seeds/historical-evidence/scenario/`
+- No manual registration is needed: seeds are auto-discovered via `import.meta.glob`
+
+1. **Implementing seed rotation**:
+
+- The Tab key rotates through available seeds in the UI
+- Use the `useRotateHistoricalSeed` hook to programmatically rotate seeds:
 
 ```tsx
 import { useRotateHistoricalSeed } from '@/yk/repo/use-rotate-historical-seed';
 
 function MyComponent() {
-  const rotateSeed = useRotateHistoricalSeed();
-  
-  // Rotate to next seed
-  const handleRotate = () => rotateSeed();
+    const rotateSeed = useRotateHistoricalSeed();
+
+    // Rotate to next seed
+    const handleRotate = () => rotateSeed();
 }
 ```
 
-3. **Accessing current seed selection**:
-   - Use `useHistoricalSeedSelection` to access the current seed:
+1. **Accessing current seed selection**:
+
+- Use `useHistoricalSeedSelection` to access the current seed:
 
 ```tsx
 import { useHistoricalSeedSelection } from '@/yk/repo/use-historical-seed-selection';
 
 function MyComponent() {
-  const seedSelection = useHistoricalSeedSelection();
-  const currentSeedFile = seedSelection?.seedFile;
+    const seedSelection = useHistoricalSeedSelection();
+    const currentSeedFile = seedSelection?.seedFile;
 }
 ```
 
@@ -412,23 +491,20 @@ function MyComponent() {
 The `HistoricalBattleReportRepository` demonstrates seed consumption:
 
 ```ts
-export class HistoricalBattleReportRepository implements BattleReportRepository {
-  private readonly seedFile?: string;
-  
-  constructor(opts?: { seedFile?: string }) {
-    this.seedFile = opts?.seedFile;
-  }
-  
-  async generateReport(): Promise<Battle> {
-    const chosen = this.seedFile ?? historicalSeeds[0]?.file;
-    const seed = await loadSeedByFile(chosen);
-    // Generate battle report using seed data
-    return {
-      title: seed.default.title,
-      provenance: seed.default.provenance,
-      // ... other fields
-    };
-  }
+export class HistoricalBattleReportRepository
+    implements BattleReportRepository
+{
+    private readonly seedFile?: string;
+
+    constructor(opts?: { seedFile?: string }) {
+        this.seedFile = opts?.seedFile;
+    }
+
+    async generateReport(): Promise<Battle> {
+        // Prefer a chosen seed; else pick a discovered one. See repositories.historical.ts
+        // for the complete behavior and report config application.
+        // Returns a fully-formed Battle with provenance.
+    }
 }
 ```
 
@@ -442,13 +518,9 @@ The `useBreakpoint` hook provides a reactive way to handle responsive design:
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 
 function ResponsiveComponent() {
-  const isLarge = useBreakpoint('lg'); // true when viewport >= 1024px
-  
-  return (
-    <div>
-      {isLarge ? <DesktopLayout /> : <MobileLayout />}
-    </div>
-  );
+    const isLarge = useBreakpoint('lg'); // true when viewport >= 1024px
+
+    return <div>{isLarge ? <DesktopLayout /> : <MobileLayout />}</div>;
 }
 ```
 
@@ -466,15 +538,15 @@ scrollToAnchor('battle-report-section');
 
 // With options
 scrollToAnchor('battle-report-section', {
-  stickyHeaderSelector: 'header',
-  extraGapSmall: 12,  // gap on mobile
-  extraGapLarge: 20,  // gap on desktop
-  largeMinWidth: 1024 // breakpoint for large screens
+    stickyHeaderSelector: 'header',
+    extraGapSmall: 12, // gap on mobile
+    extraGapLarge: 20, // gap on desktop
+    largeMinWidth: 1024, // breakpoint for large screens
 });
 ```
 
 This utility is particularly useful for:
+
 - Auto-scrolling to battle reports after generation
 - Navigating to specific sections with keyboard shortcuts
 - Maintaining proper spacing below sticky headers
-

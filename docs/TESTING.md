@@ -67,17 +67,17 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 it('rotates seeds on Tab key', async () => {
-  const user = userEvent.setup();
-  render(
-    <HistoricalSeedProvider>
-      <YourComponent />
-    </HistoricalSeedProvider>
-  );
-  
-  // Press Tab to rotate seed
-  await user.keyboard('[Tab]');
-  
-  // Assert on expected behavior after rotation
+    const user = userEvent.setup();
+    render(
+        <HistoricalSeedProvider>
+            <YourComponent />
+        </HistoricalSeedProvider>,
+    );
+
+    // Press Tab to rotate seed
+    await user.keyboard('[Tab]');
+
+    // Assert on expected behavior after rotation
 });
 ```
 
@@ -90,18 +90,23 @@ import { renderWithProviders } from '@/test/renderWithProviders';
 import { screen } from '@testing-library/react';
 
 it('uses historical repository in historical mode', () => {
-  renderWithProviders(<YourComponent />, {
-    mode: { id: 'historical', title: 'HISTORICAL', description: '', enabled: true },
-  });
-  
-  // Component will receive HistoricalBattleReportRepository
-  // Assert on historical-specific behavior
+    renderWithProviders(<YourComponent />, {
+        mode: {
+            id: 'historical',
+            title: 'HISTORICAL',
+            description: '',
+            enabled: true,
+        },
+    });
+
+    // Component will receive HistoricalBattleReportRepository
+    // Assert on historical-specific behavior
 });
 ```
 
 For testing async provider initialization:
 
-```tsx
+````tsx
 import { Suspense } from 'react';
 import { RepositoryProviderSuspense } from '@/yk/repo/RepositoryProvider';
 
@@ -113,7 +118,7 @@ it('handles async provider setup', async () => {
       </RepositoryProviderSuspense>
     </Suspense>
   );
-  
+
   // Wait for suspension to resolve
   await screen.findByText('Expected content');
 });
@@ -142,12 +147,12 @@ it('renders with provider', () => {
   });
   expect(screen.getByText('hello')).toBeInTheDocument();
 });
-```
+````
 
 ## Determinism & delays
 
 - Delays are computed but skipped in test environment. Avoid `sleep` in tests.
-- Historical seeds live under `seeds/historical/*.json` for reproducibility.
+- Historical seeds live under `seeds/historical-evidence/scenario/*.json` for reproducibility.
 - Provider `defaultDelayForMode` returns ranges for UX, but tests shouldn’t wait because repo code bypasses delays under `NODE_ENV=test`.
 
 ## Environment & config
