@@ -32,6 +32,12 @@ export async function getBattleReportRepository(
     // Selected seed is provided via context; callers pass it here.
     return new HistoricalBattleReportRepository({ seedFile });
   }
+  if (mode?.id === 'mixed-nuts') {
+    const { BattleReportRandomDataRepository } = await import(
+      '@/yk/repo/repositories.historical'
+    );
+    return new BattleReportRandomDataRepository({ seedFile });
+  }
   return new FakeBattleReportRepository(undefined, undefined, { delay });
 }
 
@@ -80,6 +86,7 @@ function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
         ? { min: 800, max: 1600 }
         : { min: 100, max: 400 };
     case 'historical-evidence':
+    case 'mixed-nuts':
       return kind === 'report'
         ? { min: 1200, max: 2500 }
         : { min: 200, max: 800 };

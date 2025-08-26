@@ -51,4 +51,10 @@ export const playMode: PlayMode[] = [
     description: 'Backed by a remote API (mockable in dev/test).',
     enabled: false,
   },
+  {
+    id: 'mixed-nuts',
+    title: 'MIXED NUTS',
+    description: 'Randomized, seed-backed battle generator (was historical).',
+    enabled: true,
+  },
 ];
