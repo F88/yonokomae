@@ -262,3 +262,32 @@ it('renders with provider', () => {
 - feat(repo): add ExampleRepo repositories and provider wiring
 - docs(dev): add developer guide for ExampleMode and ExampleRepo
 - test(repo): add unit tests for ExampleRepo behavior
+
+## リリース/Changelog の運用
+
+このプロジェクトは Changesets を用いてバージョニングと変更履歴を管理します。
+
+1. 変更をコミットしたら、変更内容を記述する changeset を作成します。
+
+  ```bash
+  npx changeset
+  ```
+
+  対話形式でタイプ(feat, fix など)を選択します。
+
+1. CHANGELOG.md を生成/更新するときは次を実行します。
+
+  ```bash
+  npx changeset-changelog
+  ```
+
+  既存の CHANGELOG.md を Conventional Changelog で更新することもできます。
+
+  ```bash
+  npx conventional-changelog --infile CHANGELOG.md -r 0 --same-file --preset eslint
+  ```
+
+参考:
+
+- Changesets: [https://github.com/changesets/changesets](https://github.com/changesets/changesets)
+- Conventional Changelog: [https://github.com/conventional-changelog](https://github.com/conventional-changelog)

@@ -279,6 +279,35 @@ it('renders with provider', () => {
 - docs(dev): add developer guide for ExampleMode and ExampleRepo
 - test(repo): add unit tests for ExampleRepo behavior
 
+## Release & Changelog workflow
+
+This project uses Changesets to manage versioning and changelogs.
+
+1. After committing changes, create a changeset to describe them:
+
+  ```bash
+  npx changeset
+  ```
+
+  Follow the interactive prompts (select type: feat, fix, etc.).
+
+1. When you are ready to generate or update the CHANGELOG.md, run:
+
+  ```bash
+  npx changeset-changelog
+  ```
+
+  Alternatively, you can update an existing CHANGELOG.md using Conventional Changelog:
+
+  ```bash
+  npx conventional-changelog --infile CHANGELOG.md -r 0 --same-file --preset eslint
+  ```
+
+References:
+
+- Changesets: [https://github.com/changesets/changesets](https://github.com/changesets/changesets)
+- Conventional Changelog: [https://github.com/conventional-changelog](https://github.com/conventional-changelog)
+
 ## Architecture diagrams (Mermaid)
 
 High-level flow of data and DI:
