@@ -191,14 +191,21 @@ async function loadReportConfig(): Promise<ReportConfig> {
     }),
   } as Record<string, CfgModule>;
   const mod = mods[jsonKey] ?? mods[tsKey];
-  const cfg: Partial<ReportConfig> = mod
-    ? (('default' in mod
-        ? (mod as { default?: Partial<ReportConfig> }).default
-        : (mod as Partial<ReportConfig>)) ?? {})
-    : {};
+  // Normalize the module shape: JSON/TS seeds may export the config either as
+  // a default export or as the module object itself. Avoid nested ternaries for clarity.
+  let cfgObj: Partial<ReportConfig> = {};
+  if (mod != null) {
+    const maybeDefault = mod as { default?: Partial<ReportConfig> };
+    const hasDefault =
+      typeof mod === 'object' && mod !== null && 'default' in maybeDefault;
+    cfgObj = hasDefault
+      ? (maybeDefault.default ?? {})
+      : (mod as Partial<ReportConfig>);
+  }
   return {
     attribution:
-      cfg.attribution ?? 'Images: placeholders (https://placehold.co/)',
-    defaultPower: typeof cfg.defaultPower === 'number' ? cfg.defaultPower : 50,
+      cfgObj.attribution ?? 'Images: placeholders (https://placehold.co/)',
+    defaultPower:
+      typeof cfgObj.defaultPower === 'number' ? cfgObj.defaultPower : 50,
   } satisfies ReportConfig;
 }
