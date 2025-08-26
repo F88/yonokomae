@@ -131,11 +131,11 @@ export class FakeBattleReportRepository implements BattleReportRepository {
     const komae: Neta = {
       ...komaeBase,
       power: faker.number.int({ min: 0, max: 100 }),
-    } as Neta;
+    };
     const yono: Neta = {
       ...yonoBase,
       power: faker.number.int({ min: 0, max: 100 }),
-    } as Neta;
+    };
 
     return {
       id: uid('battle'),
