@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { uid } from '@/lib/id';
 import { Header } from './components/Header';
 import type { Battle } from './types/types';
-import TitleContaner from './components/TitleContaner';
+import TitleContainer from './components/TitleContainer';
 import { playMode, type PlayMode } from './yk/play-mode';
 
 function App() {
@@ -106,7 +106,7 @@ function App() {
 
         {/* Title Container (shown only before a mode is selected) */}
         {!mode && (
-          <TitleContaner modes={playMode} onSelect={(mode) => setMode(mode)} />
+          <TitleContainer modes={playMode} onSelect={(mode) => setMode(mode)} />
         )}
 
         {/* Battle Reports */}

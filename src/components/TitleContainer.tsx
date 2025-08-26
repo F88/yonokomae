@@ -5,23 +5,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyChip } from '@/components/ui/key-chip';
 import { isEditable } from '@/lib/dom-utils';
 
-export type TitleContanerProps = {
+export type TitleContainerProps = {
   modes?: PlayMode[];
   onSelect: (mode: PlayMode) => void;
   title?: string;
 };
 
 /**
- * TitleContaner
+ * TitleContainer
  * - Shows a simple title screen with vertically stacked play modes.
  * - Users can navigate with ArrowUp/ArrowDown and confirm with Enter/Space.
  * - Clicking an item also selects and confirms.
  */
-export function TitleContaner({
+export function TitleContainer({
   modes,
   onSelect,
   title = 'SELECT MODE',
-}: TitleContanerProps) {
+}: TitleContainerProps) {
   const options = useMemo(() => modes ?? defaultPlayModes, [modes]);
   const [index, setIndex] = useState(0);
 
@@ -109,25 +109,38 @@ export function TitleContaner({
     [options, handleConfirm],
   );
 
+  // Shared event-level handler to avoid duplication between local/global key handling
+  type AnyKeyEvent = Pick<
+    KeyboardEvent,
+    'key' | 'metaKey' | 'ctrlKey' | 'altKey' | 'target' | 'preventDefault'
+  >;
+  const handleKeyEvent = useCallback(
+    (e: AnyKeyEvent, opts?: { isGlobal?: boolean }) => {
+      const isGlobal = opts?.isGlobal === true;
+      if (isGlobal) {
+        if (isEditable(e.target)) return; // ignore typing in inputs
+        if (e.metaKey || e.ctrlKey || e.altKey) return; // ignore modified keys
+      }
+
+      const handled = handleNavigationKey(e.key);
+      if (handled) e.preventDefault();
+    },
+    [handleNavigationKey],
+  );
+
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
-    if (handleNavigationKey(e.key)) {
-      e.preventDefault();
-    }
+    handleKeyEvent(e);
   };
 
   // Global keydown support (works without focusing the component)
   useEffect(() => {
     const onGlobalKeyDown = (e: KeyboardEvent) => {
-      if (isEditable(e.target)) return; // ignore typing in inputs
-      if (e.metaKey || e.ctrlKey || e.altKey) return; // ignore modified keys
-
-      const handled = handleNavigationKey(e.key);
-      if (handled) e.preventDefault();
+      handleKeyEvent(e, { isGlobal: true });
     };
 
     window.addEventListener('keydown', onGlobalKeyDown);
     return () => window.removeEventListener('keydown', onGlobalKeyDown);
-  }, [handleNavigationKey]);
+  }, [handleKeyEvent]);
 
   return (
     <div className="flex w-full justify-center p-6">
@@ -230,5 +243,3 @@ export function TitleContaner({
     </div>
   );
 }
-
-export default TitleContaner;
