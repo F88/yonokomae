@@ -105,9 +105,9 @@ function App() {
         </section>
 
         {/* Title Container (shown only before a mode is selected) */}
-        {mode == null ? (
+        {!mode && (
           <TitleContaner modes={playMode} onSelect={(mode) => setMode(mode)} />
-        ) : null}
+        )}
 
         {/* Battle Reports */}
         {mode != null && reports.length > 0 && (
@@ -120,7 +120,7 @@ function App() {
       </div>
 
       {/* Fixed Controller */}
-      {mode == null ? null : (
+      {!mode && (
         <footer className="sticky bottom-0 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container py-4">
             <Controller

@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useState, type FC } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { PlayMode } from '@/yk/play-mode';
 import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { KeyChip } from '@/components/ui/key-chip';
+import { isEditable } from '@/lib/dom-utils';
 
 export type TitleContanerProps = {
   modes?: PlayMode[];
@@ -46,81 +47,16 @@ export function TitleContaner({
     if (chosen && chosen.enabled !== false) onSelect(chosen);
   }, [index, onSelect, options]);
 
-  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
-    if (
-      e.key === 'ArrowUp' ||
-      e.key === 'k' ||
-      e.key === 'K' ||
-      e.key === 'w' ||
-      e.key === 'W'
-    ) {
-      e.preventDefault();
-      setIndex((i) => {
-        let next = i;
-        for (let step = 0; step < options.length; step++) {
-          next = (next - 1 + options.length) % options.length;
-          if (options[next]?.enabled !== false) return next;
-        }
-        return i;
-      });
-    } else if (
-      e.key === 'ArrowDown' ||
-      e.key === 'j' ||
-      e.key === 'J' ||
-      e.key === 's' ||
-      e.key === 'S'
-    ) {
-      e.preventDefault();
-      setIndex((i) => {
-        let next = i;
-        for (let step = 0; step < options.length; step++) {
-          next = (next + 1) % options.length;
-          if (options[next]?.enabled !== false) return next;
-        }
-        return i;
-      });
-    } else if (e.key === 'Home') {
-      e.preventDefault();
-      setIndex(() => {
-        const idx = options.findIndex((o) => o.enabled !== false);
-        return idx >= 0 ? idx : 0;
-      });
-    } else if (e.key === 'End') {
-      e.preventDefault();
-      setIndex(() => {
-        for (let i = options.length - 1; i >= 0; i--) {
-          if (options[i]?.enabled !== false) return i;
-        }
-        return 0;
-      });
-    } else if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleConfirm();
-    }
-  };
-
-  // Global keydown support (works without focusing the component)
-  useEffect(() => {
-    const isEditable = (el: EventTarget | null) => {
-      if (!(el instanceof HTMLElement)) return false;
-      const tag = el.tagName.toLowerCase();
-      if (el.isContentEditable) return true;
-      return tag === 'input' || tag === 'textarea' || tag === 'select';
-    };
-
-    const onGlobalKeyDown = (e: KeyboardEvent) => {
-      if (isEditable(e.target)) return; // ignore typing in inputs
-      if (e.metaKey || e.ctrlKey || e.altKey) return; // ignore modified keys
-
-      // Mirror the same logic as handleKeyDown
+  // Shared keyboard navigation handler. Returns true if the key was handled.
+  const handleNavigationKey = useCallback(
+    (key: string): boolean => {
       if (
-        e.key === 'ArrowUp' ||
-        e.key === 'k' ||
-        e.key === 'K' ||
-        e.key === 'w' ||
-        e.key === 'W'
+        key === 'ArrowUp' ||
+        key === 'k' ||
+        key === 'K' ||
+        key === 'w' ||
+        key === 'W'
       ) {
-        e.preventDefault();
         setIndex((i) => {
           let next = i;
           for (let step = 0; step < options.length; step++) {
@@ -129,14 +65,15 @@ export function TitleContaner({
           }
           return i;
         });
-      } else if (
-        e.key === 'ArrowDown' ||
-        e.key === 'j' ||
-        e.key === 'J' ||
-        e.key === 's' ||
-        e.key === 'S'
+        return true;
+      }
+      if (
+        key === 'ArrowDown' ||
+        key === 'j' ||
+        key === 'J' ||
+        key === 's' ||
+        key === 'S'
       ) {
-        e.preventDefault();
         setIndex((i) => {
           let next = i;
           for (let step = 0; step < options.length; step++) {
@@ -145,29 +82,52 @@ export function TitleContaner({
           }
           return i;
         });
-      } else if (e.key === 'Home') {
-        e.preventDefault();
+        return true;
+      }
+      if (key === 'Home') {
         setIndex(() => {
           const idx = options.findIndex((o) => o.enabled !== false);
           return idx >= 0 ? idx : 0;
         });
-      } else if (e.key === 'End') {
-        e.preventDefault();
+        return true;
+      }
+      if (key === 'End') {
         setIndex(() => {
           for (let i = options.length - 1; i >= 0; i--) {
             if (options[i]?.enabled !== false) return i;
           }
           return 0;
         });
-      } else if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleConfirm();
+        return true;
       }
+      if (key === 'Enter' || key === ' ') {
+        handleConfirm();
+        return true;
+      }
+      return false;
+    },
+    [options, handleConfirm],
+  );
+
+  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (handleNavigationKey(e.key)) {
+      e.preventDefault();
+    }
+  };
+
+  // Global keydown support (works without focusing the component)
+  useEffect(() => {
+    const onGlobalKeyDown = (e: KeyboardEvent) => {
+      if (isEditable(e.target)) return; // ignore typing in inputs
+      if (e.metaKey || e.ctrlKey || e.altKey) return; // ignore modified keys
+
+      const handled = handleNavigationKey(e.key);
+      if (handled) e.preventDefault();
     };
 
     window.addEventListener('keydown', onGlobalKeyDown);
     return () => window.removeEventListener('keydown', onGlobalKeyDown);
-  }, [options, handleConfirm]);
+  }, [handleNavigationKey]);
 
   return (
     <div className="flex w-full justify-center p-6">
@@ -180,31 +140,18 @@ export function TitleContaner({
         </CardHeader>
         <CardContent>
           {/** Key hint chips (>= sm) */}
-          {(() => {
-            const KeyChip: FC<{ label: string }> = ({ label }) => (
-              <Badge
-                variant="outline"
-                className="px-1.5 py-0.5 text-[10px] sm:text-xs font-mono tracking-tight"
-                aria-label={`Shortcut key ${label}`}
-              >
-                {label}
-              </Badge>
-            );
-            return (
-              <div className="mb-4 hidden flex-col items-center gap-1 text-xs text-muted-foreground sm:flex">
-                <div className="flex items-center gap-1">
-                  <KeyChip label="↓" />
-                  <KeyChip label="↑" />
-                  <KeyChip label="J" />
-                  <KeyChip label="K" />
-                  <KeyChip label="S" />
-                  <KeyChip label="W" />
-                  <KeyChip label="Space" />
-                  <KeyChip label="Enter" />
-                </div>
-              </div>
-            );
-          })()}
+          <div className="mb-4 hidden flex-col items-center gap-1 text-xs text-muted-foreground sm:flex">
+            <div className="flex items-center gap-1">
+              <KeyChip label="↓" />
+              <KeyChip label="↑" />
+              <KeyChip label="J" />
+              <KeyChip label="K" />
+              <KeyChip label="S" />
+              <KeyChip label="W" />
+              <KeyChip label="Space" />
+              <KeyChip label="Enter" />
+            </div>
+          </div>
 
           {/** Compact hint (< sm) */}
           <div className="mb-2 text-[10px] text-muted-foreground sm:hidden">
