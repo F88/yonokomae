@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Battle } from '@/types/types';
-import { Judge as JudgeClass } from '@/yk/judge';
 import type { PlayMode } from '@/yk/play-mode';
+import { getJudgementRepository } from '@/yk/repo/repository-provider';
+import type { Winner } from '@/yk/repo/repositories';
+import { useRepositoriesOptional } from '@/yk/repo/repository-context';
 
 export type JudgementState =
   | { status: 'idle'; data: null; error: null }
   | { status: 'loading'; data: null; error: null }
-  | { status: 'success'; data: string; error: null }
+  | { status: 'success'; data: Winner; error: null }
   | { status: 'error'; data: null; error: Error };
 
 export function useJudgement(
@@ -14,6 +16,7 @@ export function useJudgement(
   battle: Battle,
   mode: PlayMode,
 ): JudgementState {
+  const provided = useRepositoriesOptional();
   const [state, setState] = useState<JudgementState>({
     status: 'idle',
     data: null,
@@ -28,18 +31,23 @@ export function useJudgement(
   useEffect(() => {
     let cancelled = false;
     async function run() {
+      const controller = new AbortController();
+      let timer: ReturnType<typeof setTimeout> | null = null;
       try {
         setState({ status: 'loading', data: null, error: null });
-        // In the future this can be a fetch to an API endpoint.
-        // Simulate async to keep API shape stable.
-        await Promise.resolve();
-        const result = await new JudgeClass(
-          inputs.nameOfJudge,
-          mode,
-        ).determineWinner({
-          yono: inputs.yono,
-          komae: inputs.komae,
-        });
+        const repo =
+          provided?.judgement ?? (await getJudgementRepository(mode));
+        timer = setTimeout(() => controller.abort(), 10_000);
+        const result = await repo.determineWinner(
+          {
+            mode,
+            yono: inputs.yono,
+            komae: inputs.komae,
+          },
+          { signal: controller.signal },
+        );
+        if (timer) clearTimeout(timer);
+        timer = null;
         if (!cancelled) {
           setState({ status: 'success', data: result, error: null });
         }
@@ -51,13 +59,15 @@ export function useJudgement(
             error: e instanceof Error ? e : new Error(String(e)),
           });
         }
+      } finally {
+        if (timer) clearTimeout(timer);
       }
     }
     run();
     return () => {
       cancelled = true;
     };
-  }, [inputs, mode]);
+  }, [inputs, mode, provided]);
 
   return state;
 }

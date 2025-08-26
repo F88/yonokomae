@@ -1,3 +1,6 @@
+/**
+ * Play modes available in the game.
+ */
 export interface PlayMode {
   id: string;
   title: string;
@@ -8,9 +11,17 @@ export interface PlayMode {
 /**
  * Play modes available in the game.
  *
- * - DEMO
- * - HISTORICAL EVIDENCE (WIP)
- * - AI MODE (MAYBE LATER)
+ * DEMO
+ * - A quick demonstration mode with placeholder data.
+ * - repo: `repositories.fake.ts`
+ *
+ * HISTORICAL EVIDENCE (WIP)
+ * - A mode that generates battles based on historical events.
+ * - repo: `repositories.historical.ts`
+ *
+ * AI MODE (MAYBE LATER)
+ * - A mode that uses AI to generate unique battle scenarios.
+ * - repo: `repositories.ai.ts` (not implemented yet)
  */
 
 export const playMode: PlayMode[] = [
@@ -32,6 +43,12 @@ export const playMode: PlayMode[] = [
     title: 'AI MODE',
     description:
       'A mode that uses AI to generate unique battle scenarios. (Maybe later)',
+    enabled: false,
+  },
+  {
+    id: 'api',
+    title: 'API MODE',
+    description: 'Backed by a remote API (mockable in dev/test).',
     enabled: false,
   },
 ];

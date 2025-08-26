@@ -1,5 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { Battle } from '@/types/types';
+import type { PlayMode } from '@/yk/play-mode';
+import { getBattleReportRepository } from '@/yk/repo/repository-provider';
+import { useRepositoriesOptional } from '@/yk/repo/repository-context';
 
 /**
  * useGenerateReport
@@ -8,22 +11,24 @@ import type { Battle } from '@/types/types';
  * synchronous generator so it can be swapped with a real API without
  * changing callers.
  */
-export function useGenerateReport() {
-  const generateReport = useCallback(
-    async (name: string = 'John Doe'): Promise<Battle> => {
-      const sleep = (ms: number) =>
-        new Promise<void>((resolve) => setTimeout(resolve, ms));
-      const delayMs = 1000 + Math.floor(Math.random() * 2000); // 1..3s
-      // Wait 1 .. 3 secs before resolving
-      await sleep(delayMs);
-      // Lazy-load the journalist (and heavy faker dep) only when needed
-      const { FrontlineJournalist } = await import('@/yk/frontline-journalist');
-      const j = new FrontlineJournalist(name);
-      // Keep it async-friendly for future API integration.
-      return j.report();
-    },
-    [],
-  );
+export function useGenerateReport(mode?: PlayMode) {
+  const provided = useRepositoriesOptional();
+  const timeoutMs = useMemo(() => 10_000, []);
+  const generateReport = useCallback(async (): Promise<Battle> => {
+    const repo =
+      provided?.battleReport ?? (await getBattleReportRepository(mode));
+    const controller = new AbortController();
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    try {
+      timer = setTimeout(() => controller.abort(), timeoutMs);
+      const result = await repo.generateReport({ signal: controller.signal });
+      if (timer) clearTimeout(timer);
+      timer = null;
+      return result;
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  }, [mode, provided, timeoutMs]);
 
   return { generateReport };
 }

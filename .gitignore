@@ -29,8 +29,6 @@ dist-ssr
 # Vite
 .vite/
 
-# Private seeds
-seeds/
 
 
 

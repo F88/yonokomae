@@ -4,10 +4,10 @@
 
 Yono Komae War
 
-This game is a thought-provoking game that examines from multiple angles what happened to two countries that experienced "The World Merger Battle of the Heisei era" ("平成の大合併大戦")
+This thought-provoking game explores the outcomes for two countries after 'The World Merger Battle' of the Heisei era (平成の大合併大戦).
 
 ```text
-Note: This game is full of humorous jokes and is not a deepfake or fake.
+Note: This game is full of humorous jokes, but to be clear, it is not a deepfake or a mere fabrication.
 ```
 
 ![ykwar.png](imgs/ykwar.png)
@@ -16,148 +16,62 @@ Note: This game is full of humorous jokes and is not a deepfake or fake.
 
 - Multiple play modes with clear status
     - DEMO: quick demonstration with placeholder data (enabled)
-    - HISTORICAL EVIDENCE: WIP mode based on events (enabled)
+    - HISTORICAL EVIDENCE: deterministic mode based on historical seeds (enabled)
+        - Seed-based reproducible generation
+        - Tab key to rotate through available seeds
+        - Provenance tracking and display
     - AI MODE: planned, AI-generated scenarios (disabled)
 - One-click battle report generation with smooth auto-scroll to latest
+- Keyboard shortcuts for improved accessibility
+    - Enter/Space/B: Generate battle report
+    - R: Reset battle state
+    - Tab: Rotate historical seed (in Historical Evidence mode)
 - Robust loading and error states
     - Async judgement with simulated latency
     - Shadcn skeleton placeholders on the battle field
-- Title screen selection with full keyboard support
-    - Navigate: ArrowUp/ArrowDown, J/K, W/S; Confirm: Enter/Space; Home/End
-- Global controller shortcuts
-    - Battle: B / Enter / Space; Reset: R
 - Modern UI stack
     - React + Vite + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
     - Dark mode toggle via class-based theme
-- Testing-first setup with Vitest + React Testing Library
+    - Responsive design with breakpoint-aware layouts
 - Zero-SSR SPA optimized for client-side rendering
 - GitHub Pages deployment with base path configured
+
+## Documentation
+
+- [Developer guide (EN)](./docs/DEVELOPMENT_EN.md)
+- [開発ガイド (JA)](./docs/DEVELOPMENT_JA.md)
+- [Testing guide (EN)](./docs/TESTING.md)
+- [Contributing guide](./CONTRIBUTING.md)
 
 ## Roadmap / TODO
 
 - Historical Evidence mode
-    - Implement data sources and generation rules for historical events
+    - Expand repositories with curated event data (JSON/seed files) and
+      deterministic generation rules
     - Surface provenance/notes in the UI (citations, links, disclaimers)
-    - Tests for deterministic generation paths
+    - Replace placeholder images with licensed assets and show attribution
+    - Add unit tests for deterministic historical paths
 - AI Mode (later)
     - Evaluate model/provider and on-device vs API trade-offs
     - Add safety guardrails and content filters
-    - Provide offline mock for tests and local dev
+    - Provide offline mock/stub for tests and local dev
+- API-backed mode (optional)
+    - Wire Api repositories under a dedicated mode (e.g., `api`) using
+      `VITE_API_BASE_URL`
+    - Provide a mock server and integration tests
+    - Add provider branching and a feature flag
 - Battle UX polish
     - Add progress indicator for async judgement (per-step animation)
-    - Improve error surfaces with retry
-    - Persist last N battle reports in localStorage with clear button
-- Accessibility
-    - Ensure keyboard traps are eliminated in dialogs/menus
-    - Add aria attributes to interactive elements and list updates
-    - High-contrast focus rings consistent with theme
-- Internationalization
-    - Prepare copy for i18n; externalize strings, English/日本語
-    - RTL-friendly layout checks
-- Performance
-    - Virtualize long battle lists
-    - Avoid unnecessary re-renders in `BattleContainer` and children
-- Tooling
-    - Add pre-commit hooks (lint, typecheck, test) via simple Git hook or Husky
-    - Add CI workflow: lint, typecheck, test, build
-- Docs
-    - Expand developer guide for adding new play modes
-    - Document keyboard map and customization
-
-## Tech Stack
-
-- **Framework**: [React](https://react.dev/) v19.1.1
-- **Build Tool**: [Vite](https://vitejs.dev/) v7.1.2
-- **Language**: [TypeScript](https://www.typescriptlang.org/) v5.8.3
-- **UI Framework**: [shadcn/ui](https://ui.shadcn.com/) (New York style)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) v4.1.12 with [tailwindcss-animate](https://github.com/jamiebuilds/tailwindcss-animate)
-- **Icons**: [Lucide React](https://lucide.dev/guide/packages/lucide-react) & [React Icons](https://react-icons.github.io/react-icons/)
-- **Testing**: [Vitest](https://vitest.dev/) v3.2.4 & [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) v16.3.0
-- **Linting**: [ESLint](https://eslint.org/) v9.33.0 with TypeScript support
-- **Data Generation**: [@faker-js/faker](https://fakerjs.dev/) v10.0.0
-- **Deployment**: [GitHub Pages](https://pages.github.com/) via [gh-pages](https://github.com/tschaub/gh-pages)
+    - Make judgement cancellable with user feedback
+    - Respect reduced-motion preferences for scroll/animation
+- Accessibility and i18n
+    - A11y audit (labels, focus management, contrast)
+    - Improve keyboard flow after generating a report (focus return/announce)
+    - Localize UI strings (EN/JA alignment with docs)
+- Testing
+    - Add E2E tests (e.g., Playwright) for key flows
+    - Optional visual regression for core components
 
 ## Project notes
 
-### Styling (Tailwind CSS v4)
-
-- Tailwind v4 is used. The single CSS entry is the project root `index.css`.
-    - `src/main.tsx` imports `../index.css`.
-    - Tailwind plugin is wired via Vite (`@tailwindcss/vite`), not PostCSS config files.
-    - `index.css` registers `@plugin "tailwindcss-animate"` and uses `@theme inline`.
-- Dark mode uses the `.dark` class on `document.documentElement` (toggled in `ThemeToggle`).
-
-### shadcn/ui
-
-- Config: see `components.json` (style: `new-york`, aliases for `@/components`, etc.).
-- Components live under `src/components/ui`.
-- You can add more via shadcn CLI (optional), following the Vite guide.
-
-### Async judgement flow
-
-- `Judge.determineWinner` is async and waits 0..5 seconds before resolving (0 ms in tests).
-- Use `useJudgement(nameOfJudge, battle, mode)` to fetch and render results with `loading/error/success` states.
-- `mode` must be a `PlayMode` from `@/yk/play-mode`.
-- UI component: `JudgeCard` consumes `useJudgement` and handles the states.
-
-### Play mode selection & keyboard shortcuts
-
-- Title screen component allows selecting a play mode using both mouse and keyboard.
-- Keyboard on the title screen (global and focused):
-    - Navigate: ArrowUp/ArrowDown, J/K, W/S
-    - Confirm: Enter or Space
-    - Jump to first/last enabled: Home/End
-- Controller shortcuts (global):
-    - Battle: B, Enter, or Space
-    - Reset: R
-- Key hints are rendered using the shared `<KeyChip />` component (`src/components/ui/key-chip.tsx`).
-
-### Path aliases
-
-- `@` maps to `src/` (configured in `tsconfig` and `vite.config.ts`).
-
-### Testing notes
-
-- Tests avoid asserting on random values. If you need deterministic behavior for
-  `@faker-js/faker`, mock the specific generators within the test case.
-  For example, spy on `faker.lorem.words` or `faker.number.int` as needed.
-- `faker.number.int` is called three times in `FrontlineJournalist.report`:
-  `komae.power`, `yono.power`, and title year.
-- For UI tests around the battle field, placeholders and slots expose test IDs
-  to make assertions robust:
-    - `data-testid="slot-yono"`, `data-testid="slot-komae"`
-    - `data-testid="placeholder"`
-
-### SSR
-
-- Server-Side Rendering (SSR) is not used. This app is a client-side rendered SPA.
-- Accessing `window`/`document` in components is acceptable.
-- Hydration mismatch concerns for random values (e.g., `Math.random()` during render) do not apply in the current setup.
-
-## Release Notes (Changelog) Generation
-
-このプロジェクトでは `@changesets/cli` を利用してリリースノート (CHANGELOG.md) を作成します。
-
-### 使い方
-
-1. 変更内容をまとめるため、コミット後に下記コマンドを実行します。
-
-    ```bash
-    npx changeset
-    ```
-
-    対話形式で変更内容 (feat, fix など) を記述します。
-
-2. すべての変更がまとまったら、リリースノート (CHANGELOG.md) を生成します。
-
-    ```bash
-    npx changeset-changelog
-    ```
-
-    または、下記コマンドで既存の CHANGELOG.md を更新できます。
-
-    ```bash
-    npx conventional-changelog --infile CHANGELOG.md -r 0 --same-file --preset eslint
-    ```
-
-詳細は [changesets documentation](https://github.com/changesets/changesets) を参照してください。
+See the developer guides linked above for technical implementation details.

@@ -4,6 +4,8 @@ import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyChip } from '@/components/ui/key-chip';
 import { isEditable } from '@/lib/dom-utils';
+import { historicalSeeds } from '@/yk/repo/historical-seeds';
+import { useHistoricalSeedSelection } from '@/yk/repo/historical-seed-store';
 
 export type TitleContainerProps = {
   modes?: PlayMode[];
@@ -22,6 +24,7 @@ export function TitleContainer({
   onSelect,
   title = 'SELECT MODE',
 }: TitleContainerProps) {
+  const seedSelection = useHistoricalSeedSelection();
   const options = useMemo(() => modes ?? defaultPlayModes, [modes]);
   const [index, setIndex] = useState(0);
 
@@ -150,6 +153,36 @@ export function TitleContainer({
             {title}
           </CardTitle>
           {/* <div className="text-sm text-muted-foreground">{subtitle}</div> */}
+          {options[index]?.id === 'historical-evidence' && (
+            <div className="mt-2 flex flex-col items-center gap-2 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <span>Seed:</span>
+                <select
+                  aria-label="Historical seed selector"
+                  className="rounded border px-2 py-1"
+                  onChange={(e) =>
+                    seedSelection?.setSeedFile(e.target.value || undefined)
+                  }
+                  value={seedSelection?.seedFile ?? ''}
+                >
+                  <option value="">(auto)</option>
+                  {historicalSeeds.map((s) => (
+                    <option key={s.file} value={s.file}>
+                      {s.title}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="button"
+                  className="rounded border px-2 py-1 hover:bg-muted"
+                  title="Rotate seed"
+                  onClick={() => seedSelection?.rotateSeed()}
+                >
+                  Rotate
+                </button>
+              </div>
+            </div>
+          )}
         </CardHeader>
         <CardContent>
           {/** Key hint chips (>= sm) */}
