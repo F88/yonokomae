@@ -25,6 +25,12 @@ export async function getBattleReportRepository(
     const api = new ApiClient(base);
     return new ApiBattleReportRepository(api);
   }
+  if (mode?.id === 'historical-evidences') {
+    const { HistoricalEvidencesBattleReportRepository } = await import(
+      '@/yk/repo/historical-evidences/repositories.historical-evidences'
+    );
+    return new HistoricalEvidencesBattleReportRepository({ file: seedFile });
+  }
   if (mode?.id === 'historical-evidence') {
     const { BattleReportRandomDataRepository } = await import(
       '@/yk/repo/random-jokes/repositories.random-jokes'

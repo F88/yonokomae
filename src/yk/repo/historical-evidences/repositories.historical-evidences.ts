@@ -26,7 +26,7 @@ export class HistoricalEvidencesBattleReportRepository
     const all = discoverBattleFiles();
     if (all.length === 0) {
       throw new Error(
-        'No historical battle files found under seeds/historical/battle or src/seeds/historical/battle',
+        'No historical battle files found under seeds/historical-evidences/battle or src/seeds/historical-evidences/battle',
       );
     }
 
@@ -43,16 +43,20 @@ type BattleModule = { default?: Partial<Battle> } | Partial<Battle>;
 
 function discoverBattleFiles(): string[] {
   const mods = {
-    ...import.meta.glob('/seeds/historical/battle/*', { eager: true }),
-    ...import.meta.glob('/src/seeds/historical/battle/*', { eager: true }),
+    ...import.meta.glob('/seeds/historical-evidences/battle/*', {
+      eager: true,
+    }),
+    ...import.meta.glob('/src/seeds/historical-evidences/battle/*', {
+      eager: true,
+    }),
   } as Record<string, unknown>;
   const files: string[] = [];
   for (const abs of Object.keys(mods)) {
     // Normalize to relative from each base
-    if (abs.startsWith('/seeds/historical/battle/')) {
-      files.push(abs.replace('/seeds/historical/battle/', ''));
-    } else if (abs.startsWith('/src/seeds/historical/battle/')) {
-      files.push(abs.replace('/src/seeds/historical/battle/', ''));
+    if (abs.startsWith('/seeds/historical-evidences/battle/')) {
+      files.push(abs.replace('/seeds/historical-evidences/battle/', ''));
+    } else if (abs.startsWith('/src/seeds/historical-evidences/battle/')) {
+      files.push(abs.replace('/src/seeds/historical-evidences/battle/', ''));
     }
   }
   return files.sort();
@@ -60,11 +64,15 @@ function discoverBattleFiles(): string[] {
 
 async function loadBattleModule(file: string): Promise<BattleModule> {
   const mods = {
-    ...import.meta.glob('/seeds/historical/battle/*', { eager: true }),
-    ...import.meta.glob('/src/seeds/historical/battle/*', { eager: true }),
+    ...import.meta.glob('/seeds/historical-evidences/battle/*', {
+      eager: true,
+    }),
+    ...import.meta.glob('/src/seeds/historical-evidences/battle/*', {
+      eager: true,
+    }),
   } as Record<string, unknown>;
-  const jsonKey = `/seeds/historical/battle/${file}`;
-  const tsKey = `/src/seeds/historical/battle/${file}`;
+  const jsonKey = `/seeds/historical-evidences/battle/${file}`;
+  const tsKey = `/src/seeds/historical-evidences/battle/${file}`;
   const mod = (mods[jsonKey] ?? mods[tsKey]) as BattleModule | undefined;
   if (!mod) throw new Error(`Battle not found: ${file}`);
   return mod;
