@@ -4,6 +4,8 @@ import type { Battle } from '@/types/types';
 import type { PlayMode } from '@/yk/play-mode';
 import { ScrollText } from 'lucide-react';
 import { type FC, useEffect } from 'react';
+import { scrollToAnchor } from '@/lib/scroll';
+import { BREAKPOINTS } from '@/hooks/use-breakpoint';
 export type Props = {
   battle?: Battle;
   mode: PlayMode;
@@ -45,20 +47,12 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
               className="inline-flex items-center gap-1.5 underline decoration-dotted underline-offset-2 hover:decoration-solid"
               onClick={(e) => {
                 e.preventDefault();
-                const target = document.getElementById(battle.id);
-                if (!target) return;
-                const header = document.querySelector(
-                  'header.sticky',
-                ) as HTMLElement | null;
-                const headerBottom =
-                  header?.getBoundingClientRect().bottom ?? 0;
-                const isWide = window.matchMedia('(min-width: 1024px)').matches;
-                const extraGap = isWide ? 20 : 12;
-                const rect = target.getBoundingClientRect();
-                const delta = rect.top - headerBottom - extraGap;
-                if (Math.abs(delta) > 1) {
-                  window.scrollBy({ top: delta, behavior: 'smooth' });
-                }
+                scrollToAnchor(battle.id, {
+                  stickyHeaderSelector: 'header.sticky',
+                  largeMinWidth: BREAKPOINTS.lg,
+                  extraGapLarge: 20,
+                  extraGapSmall: 12,
+                });
                 // update hash without default jump
                 history.replaceState(null, '', `#${battle.id}`);
               }}
