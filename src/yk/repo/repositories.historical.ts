@@ -1,4 +1,8 @@
-import type { ScenarioRepository, NetaRepository, BattleReportRepository } from './repositories';
+import type {
+  ScenarioRepository,
+  NetaRepository,
+  BattleReportRepository,
+} from './repositories';
 import type { Battle, Neta } from '@/types/types';
 import { uid } from '@/lib/id';
 import { historicalSeeds, loadSeedByFile } from './historical-seeds';
@@ -45,7 +49,9 @@ export class HistoricalNetaRepository implements NetaRepository {
  * HistoricalBattleReportRepository
  * Minimal seed-backed implementation that produces a Battle with provenance.
  */
-export class HistoricalBattleReportRepository implements BattleReportRepository {
+export class HistoricalBattleReportRepository
+  implements BattleReportRepository
+{
   private readonly seedFile?: string;
   constructor(opts?: { seedFile?: string }) {
     this.seedFile = opts?.seedFile;

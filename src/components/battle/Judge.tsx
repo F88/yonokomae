@@ -44,14 +44,24 @@ export const JudgeCard: FC<JudgeCardProps> = ({
 function WinnerBadge({ winner }: { winner: Winner }) {
   switch (winner) {
     case 'YONO':
-      return <Badge variant="default" aria-label="Winner: YONO">YONO</Badge>;
+      return (
+        <Badge variant="default" aria-label="Winner: YONO">
+          YONO
+        </Badge>
+      );
     case 'KOMAE':
       return (
-        <Badge variant="secondary" aria-label="Winner: KOMAE">KOMAE</Badge>
+        <Badge variant="secondary" aria-label="Winner: KOMAE">
+          KOMAE
+        </Badge>
       );
     case 'DRAW':
       return (
-        <Badge variant="outline" aria-label="Result: DRAW" className="border-muted-foreground/40 text-muted-foreground">
+        <Badge
+          variant="outline"
+          aria-label="Result: DRAW"
+          className="border-muted-foreground/40 text-muted-foreground"
+        >
           DRAW
         </Badge>
       );

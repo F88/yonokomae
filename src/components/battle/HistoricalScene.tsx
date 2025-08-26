@@ -72,7 +72,12 @@ export const HistoricalScene: FC<Props> = ({ battle }) => {
                       ) : (
                         <span>{p.label}</span>
                       )}
-                      {p.note ? <span className="text-muted-foreground"> — {p.note}</span> : null}
+                      {p.note ? (
+                        <span className="text-muted-foreground">
+                          {' '}
+                          — {p.note}
+                        </span>
+                      ) : null}
                     </li>
                   ))}
                 </ul>

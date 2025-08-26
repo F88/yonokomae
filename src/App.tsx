@@ -81,7 +81,7 @@ function App() {
     // Scrolling will occur in the effect after DOM updates
 
     try {
-  const next = await generateReport();
+      const next = await generateReport();
       // Replace the placeholder at the captured index
       setReports((prev) =>
         prev.map((b, i) => (i === insertedIndex ? next : b)),

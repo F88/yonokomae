@@ -17,11 +17,13 @@ export async function getBattleReportRepository(
   //   return new Demo2BattleReportRepository();
   // }
   if (mode?.id === 'api') {
-  const { ApiClient, ApiBattleReportRepository } = await import(
+    const { ApiClient, ApiBattleReportRepository } = await import(
       '@/yk/repo/repositories.api'
     );
-  const base: string = (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env?.VITE_API_BASE_URL ?? '/api';
-  const api = new ApiClient(base);
+    const base: string =
+      (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env
+        ?.VITE_API_BASE_URL ?? '/api';
+    const api = new ApiClient(base);
     return new ApiBattleReportRepository(api);
   }
   if (mode?.id === 'historical-evidence') {
@@ -49,11 +51,13 @@ export async function getJudgementRepository(
   //   return new Demo2JudgementRepository();
   // }
   if (mode?.id === 'api') {
-  const { ApiClient, ApiJudgementRepository } = await import(
+    const { ApiClient, ApiJudgementRepository } = await import(
       '@/yk/repo/repositories.api'
     );
-  const base: string = (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env?.VITE_API_BASE_URL ?? '/api';
-  const api = new ApiClient(base);
+    const base: string =
+      (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env
+        ?.VITE_API_BASE_URL ?? '/api';
+    const api = new ApiClient(base);
     return new ApiJudgementRepository(api);
   }
   return new FakeJudgementRepository({ delay });
