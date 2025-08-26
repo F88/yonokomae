@@ -36,6 +36,12 @@ export const playMode: PlayMode[] = [
     enabled: true,
   },
   {
+    id: 'mixed-nuts',
+    title: 'MIXED NUTS',
+    description: 'Randomized, seed-backed battle generator (was historical).',
+    enabled: true,
+  },
+  {
     id: 'historical-evidences',
     title: 'HISTORICAL EVIDENCES',
     description:
@@ -54,11 +60,5 @@ export const playMode: PlayMode[] = [
     title: 'API MODE',
     description: 'Backed by a remote API (mockable in dev/test).',
     enabled: false,
-  },
-  {
-    id: 'mixed-nuts',
-    title: 'MIXED NUTS',
-    description: 'Randomized, seed-backed battle generator (was historical).',
-    enabled: true,
   },
 ];

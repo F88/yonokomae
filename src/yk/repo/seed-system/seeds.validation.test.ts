@@ -46,7 +46,7 @@ describe('Seed schemas', () => {
   it('validates all scenario seeds', async () => {
     const modules = {
       ...import.meta.glob('/seeds/random-data/scenario/*', { eager: true }),
-      ...import.meta.glob('/src/seeds/random-data/scenario/*', {
+      ...import.meta.glob('/src/seeds/random-data/scenario/*.{en,ja}.ts', {
         eager: true,
       }),
     } as Record<string, unknown>;
@@ -83,9 +83,11 @@ describe('Seed schemas', () => {
     } as Record<string, unknown>;
     const komae =
       getDefault<unknown>(modules['/seeds/random-data/neta/komae.json']) ??
+      getDefault<unknown>(modules['/src/seeds/random-data/neta/komae.en.ts']) ??
       getDefault<unknown>(modules['/src/seeds/random-data/neta/komae.ts']);
     const yono =
       getDefault<unknown>(modules['/seeds/random-data/neta/yono.json']) ??
+      getDefault<unknown>(modules['/src/seeds/random-data/neta/yono.en.ts']) ??
       getDefault<unknown>(modules['/src/seeds/random-data/neta/yono.ts']);
     expect(() => netaOptionsSchema.parse(komae)).not.toThrow();
     expect(() => netaOptionsSchema.parse(yono)).not.toThrow();
@@ -98,6 +100,9 @@ describe('Seed schemas', () => {
     } as Record<string, unknown>;
     const cfg =
       getDefault<unknown>(modules['/seeds/random-data/report/config.json']) ??
+      getDefault<unknown>(
+        modules['/src/seeds/random-data/report/config.en.ts'],
+      ) ??
       getDefault<unknown>(modules['/src/seeds/random-data/report/config.ts']);
     expect(() => reportConfigSchema.parse(cfg)).not.toThrow();
   });

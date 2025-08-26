@@ -27,7 +27,7 @@
     "mock-api": "node ./mock-api/server.ts",
     "deploy": "npm run build -- --base=/yonokomae/ && gh-pages -d dist -m \"Updates --skip-ci\"",
     "test": "vitest run",
-    "test:seeds": "vitest run src/yk/repo/seeds.validation.test.ts",
+    "test:seeds": "vitest run src/yk/repo/seed-system/seeds.validation.test.ts",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage"
   },

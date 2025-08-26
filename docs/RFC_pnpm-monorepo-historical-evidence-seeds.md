@@ -57,7 +57,7 @@ The application will consume seeds via static imports from the data package inst
         - neta/{komae.ts,yono.ts}
         - report/config.ts
         - index.ts (exports: historicalSeeds, netaKomae, netaYono, reportConfig)
-    - tests/seeds.validation.test.ts (Zod + duplicate ID validation)
+    - src/yk/repo/seed-system/seeds.validation.test.ts (Zod + duplicate ID validation)
     - scripts/generate-manifest.ts (optional; see Alternatives)
 - packages/types/
     - package.json (name: @f88/types-historical)
