@@ -50,6 +50,10 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
         - Provenance tracking and display
     - AI MODE: planned, AI-generated scenarios (disabled)
 - One-click battle report generation with smooth auto-scroll to latest
+- Interactive user engagement components
+    - Usage examples showcase with category-based organization
+    - User testimonials with marquee animation effects
+    - TSV export functionality for usage data and user voices
 - Keyboard shortcuts for improved accessibility
     - Enter/Space/B: Generate battle report
     - R: Reset battle state
