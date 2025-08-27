@@ -141,7 +141,8 @@ async function getWithRetry<T>(
       return await api.get<T>(path, signal, headers);
     } catch (e) {
       attempt++;
-      const is5xx = e instanceof HttpError && e.status >= 500 && e.status <= 599;
+      const is5xx =
+        e instanceof HttpError && e.status >= 500 && e.status <= 599;
       if (!is5xx || attempt >= maxAttempts) throw e;
       // exponential backoff with jitter: base 200ms
       const base = 200 * Math.pow(2, attempt - 1);
