@@ -1,7 +1,6 @@
+import { USAGE_EXAMPLES } from '@/data/usage-examples';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { USAGE_EXAMPLES } from '@/data/usage-examples';
-import { UsageExamplesMarquee } from './UsageExamplesMarquee';
 import './UserManual.css';
 import UserVoicesCarousel from './UserVoicesCarousel';
 

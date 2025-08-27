@@ -1,19 +1,16 @@
 import { BattleContainer } from '@/components/battle/BattleContainer';
 import { Controller } from '@/components/Controller';
-import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
 import { Intro } from '@/components/Intro';
+import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
 import { useGenerateReport } from '@/hooks/use-generate-report';
+import { uid } from '@/lib/id';
 import { Placeholders } from '@/yk/placeholder';
 import { useEffect, useRef, useState } from 'react';
-import { uid } from '@/lib/id';
 import { Header } from './components/Header';
-import type { Battle } from './types/types';
-import { playMode, type PlayMode } from './yk/play-mode';
 import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
-import UserVoicesCarousel from './components/UserVoicesCarousel';
-import UsageExamplesCarousel from './components/UsageExamplesCarousel';
-import { UsageExamplesMarquee } from './components/UsageExamplesMarquee';
+import type { Battle } from './types/types';
+import { playMode, type PlayMode } from './yk/play-mode';
 
 function App() {
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
