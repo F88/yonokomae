@@ -350,6 +350,15 @@ See [TESTING.md](./TESTING.md) for testing guidance.
 - README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper
   steps here).
 
+### Judgement collapsing/cache configuration
+
+Judgement request collapsing and short-term caching are configured per
+repository in code only. There are no environment variable overrides.
+
+- Edit defaults and per-repo values in `src/yk/repo/core/judgement-config.ts`
+- Provider uses these values via `getJudgementCollapseConfigFor(repoId)`
+- Test environment forces TTL=0 for fast tests; production default TTL=60000ms
+
 ## Modes and Data Ownership
 
 Note about seeds and modes:

@@ -19,19 +19,26 @@ describe('Fake repositories - delay capping', () => {
     });
     const result = await repo.determineWinner({
       mode: playMode[0],
-      yono: {
-        imageUrl: '',
-        title: 'Y',
-        subtitle: '',
-        description: '',
-        power: 10,
-      },
-      komae: {
-        imageUrl: '',
-        title: 'K',
-        subtitle: '',
-        description: '',
-        power: 5,
+      battle: {
+        id: 'b-1',
+        title: 't',
+        subtitle: 's',
+        overview: 'o',
+        scenario: 'sc',
+        yono: {
+          imageUrl: '',
+          title: 'Y',
+          subtitle: '',
+          description: '',
+          power: 10,
+        },
+        komae: {
+          imageUrl: '',
+          title: 'K',
+          subtitle: '',
+          description: '',
+          power: 5,
+        },
       },
     });
     expect(result).toBe('YONO');
@@ -46,19 +53,26 @@ describe('Fake repositories - delay capping', () => {
     const repo = new FakeJudgementRepository({ delay: -100 });
     const res = await repo.determineWinner({
       mode: playMode[0],
-      yono: {
-        imageUrl: '',
-        title: 'Y',
-        subtitle: '',
-        description: '',
-        power: 1,
-      },
-      komae: {
-        imageUrl: '',
-        title: 'K',
-        subtitle: '',
-        description: '',
-        power: 2,
+      battle: {
+        id: 'b-2',
+        title: 't',
+        subtitle: 's',
+        overview: 'o',
+        scenario: 'sc',
+        yono: {
+          imageUrl: '',
+          title: 'Y',
+          subtitle: '',
+          description: '',
+          power: 1,
+        },
+        komae: {
+          imageUrl: '',
+          title: 'K',
+          subtitle: '',
+          description: '',
+          power: 2,
+        },
       },
     });
     expect(res).toBe('KOMAE');

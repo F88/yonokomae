@@ -1,5 +1,6 @@
 import type { PlayMode } from '@/yk/play-mode';
-import type { JudgementRepository, Winner, Neta } from '../core/repositories';
+import type { JudgementRepository, Winner } from '../core/repositories';
+import type { Battle } from '@/types/types';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 
 export class FakeJudgementRepository implements JudgementRepository {
@@ -9,7 +10,7 @@ export class FakeJudgementRepository implements JudgementRepository {
   }
   async determineWinner(
     input: {
-      battle: { yono: Neta; komae: Neta };
+      battle: Battle;
       mode: PlayMode;
       extra?: Record<string, unknown>;
     },

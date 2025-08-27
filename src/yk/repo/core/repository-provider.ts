@@ -159,19 +159,27 @@ export async function getJudgementRepository(
     const { ApiClient, ApiJudgementRepository } = await import(
       '@/yk/repo/api/repositories.api'
     );
+    const { getJudgementCollapseConfigFor } = await import(
+      './judgement-config'
+    );
     const base: string = getApiBaseUrl();
     const api = new ApiClient(base);
     const judgementDelay = defaultDelayForMode(mode, 'judgement');
     // Order matters: timing wraps underlying call; collapsing ensures
     // only one underlying call happens and all subscribers share it.
+    const cfg = getJudgementCollapseConfigFor('api');
     return withJudgementCollapsing(
       withJudgementTiming(
         new ApiJudgementRepository(api, { delay: judgementDelay }),
       ),
+      { enabled: cfg.enabled, cacheTtlMs: cfg.ttlMs, maxSize: cfg.maxSize },
     );
   }
+  const { getJudgementCollapseConfigFor } = await import('./judgement-config');
+  const cfg = getJudgementCollapseConfigFor('fake');
   return withJudgementCollapsing(
     withJudgementTiming(new FakeJudgementRepository({ delay })),
+    { enabled: cfg.enabled, cacheTtlMs: cfg.ttlMs, maxSize: cfg.maxSize },
   );
 }
 
@@ -211,18 +219,7 @@ function getApiBaseUrl(): string {
   return getViteEnvVar('VITE_API_BASE_URL') ?? '/api';
 }
 
-function getBoolEnv(key: string, fallback: boolean): boolean {
-  const v = getViteEnvVar(key);
-  if (v == null) return fallback;
-  return /^(1|true|yes|on)$/i.test(v.trim());
-}
-
-function getNumberEnv(key: string, fallback: number): number {
-  const v = getViteEnvVar(key);
-  if (!v) return fallback;
-  const n = Number(v);
-  return Number.isFinite(n) ? n : fallback;
-}
+// Note: Environment-based overrides for judgement collapsing have been removed to avoid confusion.
 
 /**
  * Delay configuration type for repository operations.
@@ -435,12 +432,10 @@ function withJudgementCollapsing<T extends JudgementRepository>(
     maxSize?: number;
   },
 ): T {
-  const enabled =
-    opts?.enabled ?? getBoolEnv('VITE_JUDGEMENT_COLLAPSE_ENABLED', true);
-  const ttlEnv = getNumberEnv('VITE_JUDGEMENT_CACHE_TTL_MS', 60_000);
-  const maxSize =
-    opts?.maxSize ?? getNumberEnv('VITE_JUDGEMENT_CACHE_MAX', 100);
-  const ttl = opts?.cacheTtlMs ?? (isTestEnv() ? 0 : ttlEnv); // env-configurable
+  // Only use code-based (per-repo) config; no .env overrides.
+  const enabled = opts?.enabled ?? true;
+  const maxSize = opts?.maxSize ?? 100;
+  const ttl = opts?.cacheTtlMs ?? (isTestEnv() ? 0 : 60_000);
   const keyFn = opts?.keyFn ?? computeJudgementKey;
 
   const decorated: JudgementRepository = {
@@ -541,8 +536,6 @@ export function bustJudgementCacheFor(
   opts?: { maxSize?: number },
 ): void {
   const key = computeJudgementKey(input);
-  const cache = getJudgementCache(
-    opts?.maxSize ?? getNumberEnv('VITE_JUDGEMENT_CACHE_MAX', 100),
-  );
+  const cache = getJudgementCache(opts?.maxSize ?? 100);
   cache.delete(key);
 }

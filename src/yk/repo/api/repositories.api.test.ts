@@ -30,19 +30,26 @@ describe('api mode repositories (msw)', () => {
     const repo = await getJudgementRepository(apiMode);
     const winner = await repo.determineWinner({
       mode: apiMode,
-      yono: {
-        imageUrl: '',
-        title: '',
-        subtitle: '',
-        description: '',
-        power: 1,
-      },
-      komae: {
-        imageUrl: '',
-        title: '',
-        subtitle: '',
-        description: '',
-        power: 1,
+      battle: {
+        id: 'msw-battle-1',
+        title: 't',
+        subtitle: 's',
+        overview: 'o',
+        scenario: 'sc',
+        yono: {
+          imageUrl: '',
+          title: '',
+          subtitle: '',
+          description: '',
+          power: 1,
+        },
+        komae: {
+          imageUrl: '',
+          title: '',
+          subtitle: '',
+          description: '',
+          power: 1,
+        },
       },
     });
     expect(winner).toBe('DRAW');
