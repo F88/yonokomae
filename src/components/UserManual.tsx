@@ -1,7 +1,6 @@
 import { USAGE_EXAMPLES } from '@/data/usage-examples';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import './UserManual.css';
 import UserVoicesCarousel from './UserVoicesCarousel';
 
 interface UserManualProps {
@@ -40,17 +39,20 @@ export const UserManual: React.FC<UserManualProps> = ({
   };
 
   return ReactDOM.createPortal(
-    <div className="user-manual-overlay" onClick={onClose}>
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-10 sm:p-5 overflow-y-auto animate-in fade-in duration-300"
+      onClick={onClose}
+    >
       <div
-        className="user-manual-modal"
+        className="relative bg-background border border-border rounded-2xl shadow-2xl w-full max-w-3xl sm:w-[95%] max-h-[calc(100vh-80px)] sm:max-h-[calc(100vh-40px)] flex flex-col animate-in zoom-in-95 duration-300 z-[10000]"
         onClick={handleModalClick}
         style={{ height: modalHeight }}
       >
-        <div className="user-manual-header">
-          <h2 className="user-manual-title">取扱説明書</h2>
+        <div className="relative p-6 sm:p-5 border-b border-border text-center">
+          <h2 className="text-2xl font-semibold text-foreground">取扱説明書</h2>
           <button
             type="button"
-            className="user-manual-close"
+            className="absolute top-4 right-4 sm:top-3 sm:right-3 bg-background border-2 border-border rounded-full text-xl cursor-pointer w-10 h-10 flex items-center justify-center text-muted-foreground transition-all duration-200 font-bold hover:bg-muted hover:border-muted-foreground hover:text-foreground hover:rotate-90"
             onClick={onClose}
             aria-label="Close"
           >
@@ -58,10 +60,12 @@ export const UserManual: React.FC<UserManualProps> = ({
           </button>
         </div>
 
-        <div className="user-manual-content">
-          <div className="user-manual-list-section">
-            <h2 className="user-manual-subtitle">個人の感想</h2>
-            <div className="border my-6  border-gray-300 rounded-md p-2">
+        <div className="flex-1 overflow-y-auto p-6 sm:p-5">
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-foreground mb-5">
+              個人の感想
+            </h2>
+            <div className="border border-border rounded-md p-2 my-6">
               <UserVoicesCarousel
                 intervalMs={3000}
                 pauseOnHover
@@ -72,13 +76,20 @@ export const UserManual: React.FC<UserManualProps> = ({
             </div>
           </div>
 
-          <div className="user-manual-list-section">
-            <h3 className="user-manual-subtitle">活用例</h3>
-            <div className="user-manual-examples">
+          <div>
+            <h3 className="text-xl font-semibold text-foreground mb-5">
+              活用例
+            </h3>
+            <div className="grid gap-5">
               {USAGE_EXAMPLES.map((example, index) => (
-                <div key={index} className="user-manual-example">
-                  <h4 className="user-manual-example-title">{example.title}</h4>
-                  <p className="user-manual-example-description">
+                <div
+                  key={index}
+                  className="p-4 bg-muted/50 dark:bg-muted/20 rounded-lg border-l-4 border-l-blue-500"
+                >
+                  <h4 className="text-lg font-semibold text-foreground mb-2">
+                    {example.title}
+                  </h4>
+                  <p className="text-muted-foreground leading-relaxed">
                     {example.description}
                   </p>
                 </div>

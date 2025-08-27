@@ -1,5 +1,4 @@
 import React from 'react';
-import './UserManual.css';
 interface UserManualProps {
   isOpen: boolean;
   onClose: () => void;
