@@ -1,0 +1,73 @@
+/* UserVoicesMarquee styles */
+.yk-uvm-root {
+  position: relative;
+  overflow: hidden;
+}
+.yk-uvm-track {
+  position: relative;
+  display: block;
+  will-change: transform, opacity;
+}
+@keyframes yk-uvm-fade-slide {
+  0% {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.yk-uvm-item-enter {
+  animation: yk-uvm-fade-slide 320ms ease-out both;
+}
+
+/* exit animation (slide up and fade) */
+@keyframes yk-uvm-fade-slide-out {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+}
+
+/* base item and exit stacking */
+.yk-uvm-item {
+  position: relative;
+}
+.yk-uvm-item-exit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  animation: yk-uvm-fade-slide-out 280ms ease-in both;
+}
+
+/* content styles extracted from inline */
+.yk-uvm-blockquote {
+  margin: 0;
+}
+.yk-uvm-figcaption {
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+.yk-uvm-figcaption-strong {
+  font-weight: 600;
+}
+
+/* inline meta placed after voice on the same line */
+.yk-uvm-meta {
+  margin-left: 8px;
+  opacity: 0.8;
+}
+
+/* force one-line with truncation */
+.yk-uvm-one-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

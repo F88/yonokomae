@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import type { Battle } from './types/types';
@@ -166,14 +166,18 @@ describe('App', () => {
     await setupWithModeSelected();
 
     // Press 'b' to battle
-    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }));
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'b' }));
+    });
     await screen.findByRole('heading', { name: /kb battle/i });
     await waitFor(() => {
       expect(mockGenerateReport).toHaveBeenCalledTimes(1);
     });
 
     // Press 'r' to reset
-    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'r' }));
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'r' }));
+    });
     await waitFor(() => {
       expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
     });

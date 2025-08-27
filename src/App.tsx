@@ -1,15 +1,16 @@
 import { BattleContainer } from '@/components/battle/BattleContainer';
 import { Controller } from '@/components/Controller';
-import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
 import { Intro } from '@/components/Intro';
+import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
 import { useGenerateReport } from '@/hooks/use-generate-report';
+import { uid } from '@/lib/id';
 import { Placeholders } from '@/yk/placeholder';
 import { useEffect, useRef, useState } from 'react';
-import { uid } from '@/lib/id';
 import { Header } from './components/Header';
+import { TitleContainer } from './components/TitleContainer';
+import UserVoicesMarquee from './components/UserVoicesMarquee';
 import type { Battle } from './types/types';
 import { playMode, type PlayMode } from './yk/play-mode';
-import { TitleContainer } from './components/TitleContainer';
 
 function App() {
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
@@ -117,6 +118,26 @@ function App() {
           <Header mode={mode} />
         </div>
       </header>
+
+      <br />
+
+      {/* Information */}
+      <div className="grid gap-3 py-0 border-0 border-orange-400 ">
+        <UserVoicesMarquee
+          shuffle={true}
+          speed={60}
+          pauseOnHover={true}
+          fadeWidth={'w-24'}
+        />
+        {/* <UserVoicesCarousel
+          intervalMs={3000}
+          pauseOnHover
+          orientation="vertical"
+        /> */}
+        {/* <UserVoicesCarousel intervalMs={3000} pauseOnHover orientation="vertical" /> */}
+        {/* <UsageExamplesCarousel intervalMs={3000} pauseOnHover orientation="vertical"/> */}
+        {/* <UsageExamplesMarquee speed={60} /> */}
+      </div>
 
       {/* Main Content */}
       <div className="container flex flex-col gap-0 py-0 pb-32">

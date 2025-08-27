@@ -18,7 +18,10 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
-    "noEmit": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "jsx": "react-jsx",
 
     /* Linting */
@@ -30,7 +33,10 @@
     "noUncheckedSideEffectImports": true,
 
     /* Interop Constraints */
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    /* Project References */
+    "composite": true
   },
-  "include": ["src", "src/types"]
+  "include": ["src", "src/types", "vite-env.d.ts"]
 }

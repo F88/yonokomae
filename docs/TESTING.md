@@ -54,7 +54,7 @@ Override per test by calling `server.use(...)` with additional handlers.
 ## Repositories testing
 
 - Fake repos (`repositories.fake.ts`): test deterministic logic; avoid actual delays (code already skips delays under `NODE_ENV=test`).
-- Historical repos (`repositories.historical.ts`): seed-backed deterministic generation. Assert structure and `provenance` presence.
+- Random Joke repos (`repositories.random-jokes.ts`): seed-backed deterministic generation. Assert structure and `provenance` presence.
 - API repos (`repositories.api.ts`): prefer provider-level tests with MSW (see `repository-provider.api.test.ts`).
 
 ### Testing Historical Seed System
@@ -62,7 +62,7 @@ Override per test by calling `server.use(...)` with additional handlers.
 When testing components that use the Historical Seed System:
 
 ```tsx
-import { HistoricalSeedProvider } from '@/yk/repo/historical-seed-provider';
+import { HistoricalSeedProvider } from '@/yk/repo/seed-system/seed-provider';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -99,7 +99,7 @@ it('uses historical repository in historical mode', () => {
         },
     });
 
-    // Component will receive HistoricalBattleReportRepository
+    // Component will receive BattleReportRandomDataRepository
     // Assert on historical-specific behavior
 });
 ```
@@ -129,8 +129,35 @@ it('handles async provider setup', async () => {
 - `Field` shows placeholders when sides are missing; asserts based on roles/labels.
 - `TitleContainer` supports keyboard navigation and (in historical mode) minimal seed selection UI.
 - `Controller` wires keyboard shortcuts (Enter/Space/B for Battle, R for Reset).
+- `UsageExamples` component renders categorized usage examples with interactive cards.
+- `UserVoices` component displays user testimonials with marquee animation effects.
 
 Use queries by role/label to keep tests resilient and accessible.
+
+### Testing Export Functionality
+
+For TSV export scripts testing:
+
+```tsx
+import { exportUsageExamplesToTsv } from '@/ops/export-usage-examples-to-tsv';
+import { exportUsersVoiceToTsv } from '@/ops/export-users-voice-to-tsv';
+
+it('exports usage examples to TSV format', () => {
+    const tsvOutput = exportUsageExamplesToTsv();
+
+    // Assert TSV structure
+    expect(tsvOutput).toContain('Category\tTitle\tDescription');
+    expect(tsvOutput.split('\n').length).toBeGreaterThan(1);
+});
+
+it('exports user voices to TSV format', () => {
+    const tsvOutput = exportUsersVoiceToTsv();
+
+    // Assert TSV structure
+    expect(tsvOutput).toContain('Quote\tAttribution');
+    expect(tsvOutput.split('\n').length).toBeGreaterThan(1);
+});
+```
 
 ### Helper: renderWithProviders example
 
@@ -152,7 +179,7 @@ it('renders with provider', () => {
 ## Determinism & delays
 
 - Delays are computed but skipped in test environment. Avoid `sleep` in tests.
-- Historical seeds live under `seeds/historical-evidence/scenario/*.json` for reproducibility.
+- Historical seeds live under `seeds/random-data/scenario/*.json` for reproducibility.
 - Provider `defaultDelayForMode` returns ranges for UX, but tests shouldn’t wait because repo code bypasses delays under `NODE_ENV=test`.
 
 ## Environment & config

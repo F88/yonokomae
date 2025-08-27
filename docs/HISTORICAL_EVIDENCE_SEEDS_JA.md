@@ -34,11 +34,11 @@ Please use half-width characters for numbers, letters, and symbols.
 ## シードの配置場所 (TS 推奨)
 
 - 推奨 (TypeScript):
-    - `src/seeds/historical-evidence/scenario/*.ts`
-    - `src/seeds/historical-evidence/neta/{komae,yono}.ts`
-    - `src/seeds/historical-evidence/report/config.ts`
+    - `src/seeds/random-data/scenario/*.ts`
+    - `src/seeds/random-data/neta/{komae,yono}.ts`
+    - `src/seeds/random-data/report/config.ts`
 - 任意 (レガシー JSON、非推奨):
-    - `seeds/historical-evidence/...` (自動検出は継続しますが、TS へ移行済みです)
+    - `seeds/random-data/...` (自動検出; 可能なら TS を推奨)
 
 ## 静的のみの読み込み方針 (eager import)
 
@@ -75,9 +75,9 @@ Please use half-width characters for numbers, letters, and symbols.
 
 ## シードの追加/更新手順
 
-1. `src/seeds/historical-evidence/...` 配下に TS ファイルを作成または編集します。
+1. `src/seeds/random-data/...` 配下に TS ファイルを作成または編集します。
     - 例 (scenario):
-        - `src/seeds/historical-evidence/scenario/my-scenario.ts`
+    - `src/seeds/random-data/scenario/my-scenario.ts`
         - `export default { id, title, ... } satisfies HistoricalSeed;`
 1. `id` がグローバルに一意であることを確認します。
 1. ローカルで検証を実行します:
@@ -95,14 +95,27 @@ Please use half-width characters for numbers, letters, and symbols.
 ## トラブルシューティング
 
 - 重複 `id` エラー
-    - `src/seeds/historical-evidence/scenario/` 全体で該当 `id` を検索し、競合を解消してください。
+    - `src/seeds/random-data/scenario/` 全体で該当 `id` を検索し、競合を解消してください。
 - 静的/動的 import 混在に関するビルド警告
     - 現在は静的のみです。動的な `import()` を呼んでいないか確認してください。
 - 大きなバンドルに関する警告
     - 現時点では許容範囲です。シード量が増えた場合に再検討します。
 
+## データエクスポート統合
+
+歴史シードシステムは TSV エクスポート機能と統合されています:
+
+- エクスポートスクリプトはシードベースのデータを外部分析用に処理できます
+- 使用例とユーザーボイスは以下でエクスポート可能です:
+    - `npm run build:usage-examples-tsv`
+    - `npm run build:users-voice-tsv`
+- エクスポートデータソース:
+    - `src/data/usage-examples.ts` - カテゴリ付き使用例
+    - `src/data/users-voice.ts` - ユーザーの証言とフィードバック
+
 ## 参考
 
-- 実装: `src/yk/repo/historical-seeds.ts`
-- 検証テスト: `src/yk/repo/seeds.validation.test.ts`
+- 実装: `src/yk/repo/seed-system/seeds.ts`
+- 検証テスト: `src/yk/repo/seed-system/seeds.validation.test.ts`
 - モード概要: `docs/DEVELOPMENT_EN.md` (Historical Seed System)
+- エクスポートスクリプト: `src/ops/export-*-to-tsv.ts`

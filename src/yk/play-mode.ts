@@ -15,9 +15,13 @@ export interface PlayMode {
  * - A quick demonstration mode with placeholder data.
  * - repo: `repositories.fake.ts`
  *
- * HISTORICAL EVIDENCE (WIP)
+ * HISTORICAL EVIDENCE (Not implemented)
  * - A mode that generates battles based on historical events.
- * - repo: `repositories.historical.ts`
+ * - repo: (reserved; will be separate from Random Joke Data)
+ *
+ * RANDOM JOKES
+ * - A mode that generates random, humorous battle scenarios.
+ * - repo: `repositories.random-jokes.ts`
  *
  * AI MODE (MAYBE LATER)
  * - A mode that uses AI to generate unique battle scenarios.
@@ -32,8 +36,14 @@ export const playMode: PlayMode[] = [
     enabled: true,
   },
   {
-    id: 'historical-evidence',
-    title: 'HISTORICAL EVIDENCE',
+    id: 'mixed-nuts',
+    title: 'MIXED NUTS',
+    description: 'Randomized, seed-backed battle generator (was historical).',
+    enabled: true,
+  },
+  {
+    id: 'historical-evidences',
+    title: 'HISTORICAL EVIDENCES',
     description:
       '[WIP] A mode that generates battles based on historical events.',
     enabled: true,

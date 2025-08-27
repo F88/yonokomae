@@ -34,11 +34,11 @@ English is the single source of truth; the Japanese file is a translation.
 ## Seed locations (TS preferred)
 
 - Preferred (TypeScript):
-    - `src/seeds/historical-evidence/scenario/*.ts`
-    - `src/seeds/historical-evidence/neta/{komae,yono}.ts`
-    - `src/seeds/historical-evidence/report/config.ts`
-- Optional (legacy JSON, not preferred):
-    - `seeds/historical-evidence/...` (still auto-discovered, but we migrated to TS)
+    - `src/seeds/random-data/scenario/*.ts`
+    - `src/seeds/random-data/neta/{komae,yono}.ts`
+    - `src/seeds/random-data/report/config.ts`
+- Optional (JSON):
+    - `seeds/random-data/...` (auto-discovered; TS is preferred)
 
 ## Static-only loading policy (eager imports)
 
@@ -75,9 +75,9 @@ English is the single source of truth; the Japanese file is a translation.
 
 ## How to add or update a seed
 
-1. Create or edit a TS file under `src/seeds/historical-evidence/...`.
+1. Create or edit a TS file under `src/seeds/random-data/...`.
     - Example (scenario):
-        - `src/seeds/historical-evidence/scenario/my-scenario.ts`
+    - `src/seeds/random-data/scenario/my-scenario.ts`
         - `export default { id, title, ... } satisfies HistoricalSeed;`
 1. Ensure `id` is globally unique.
 1. Run validation locally:
@@ -95,14 +95,27 @@ English is the single source of truth; the Japanese file is a translation.
 ## Troubleshooting
 
 - Duplicate ID error
-    - Search for the ID across `src/seeds/historical-evidence/scenario/` and fix conflicts.
+    - Search for the ID across `src/seeds/random-data/scenario/` and fix conflicts.
 - Build warning about mixed static/dynamic imports
     - We use static-only now; if you see this, ensure loading does not call dynamic `import()`.
 - Large bundle warnings
     - Acceptable at present. We may revisit when seed volume grows.
 
+## Data Export Integration
+
+The historical seed system integrates with the TSV export functionality:
+
+- Export scripts can process seed-based data for external analysis
+- Usage examples and user voices can be exported via:
+    - `npm run build:usage-examples-tsv`
+    - `npm run build:users-voice-tsv`
+- Export data sources:
+    - `src/data/usage-examples.ts` - Usage examples with categories
+    - `src/data/users-voice.ts` - User testimonials and feedback
+
 ## References
 
-- Implementation: `src/yk/repo/historical-seeds.ts`
-- Validation tests: `src/yk/repo/seeds.validation.test.ts`
+- Implementation: `src/yk/repo/seed-system/seeds.ts`
+- Validation tests: `src/yk/repo/seed-system/seeds.validation.test.ts`
 - Mode overview: `docs/DEVELOPMENT_EN.md` (Historical Seed System)
+- Export scripts: `src/ops/export-*-to-tsv.ts`

@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import type { Battle } from '@/types/types';
 import type { PlayMode } from '@/yk/play-mode';
-import { getBattleReportRepository } from '@/yk/repo/repository-provider';
-import { useRepositoriesOptional } from '@/yk/repo/repository-context';
+import { getBattleReportRepository } from '@/yk/repo/core/repository-provider';
+import { useRepositoriesOptional } from '@/yk/repo/core/repository-context';
 
 /**
  * useGenerateReport

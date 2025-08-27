@@ -102,9 +102,27 @@ npm test
 
 # Build project
 npm run build
+
+# Build data exports (optional)
+npm run build:usage-examples-tsv
+npm run build:users-voice-tsv
 ```
 
 Note: The `typecheck` script runs TypeScript compiler in check mode without emitting files, ensuring type safety across the codebase.
+
+### Data Export Scripts
+
+The project includes TSV export functionality for usage examples and user voices:
+
+- `npm run build:usage-examples-tsv` - Exports usage examples to TSV format
+- `npm run build:users-voice-tsv` - Exports user voices data to TSV format
+
+These scripts use the TypeScript configurations in `tsconfig.ops.json` and process data from:
+
+- `src/data/usage-examples.ts` - Usage examples with categories and descriptions
+- `src/data/users-voice.ts` - User testimonials and feedback
+
+Export scripts are located in `src/ops/` directory and generate TSV files suitable for data analysis and external use.
 
 ### Environment Variables
 

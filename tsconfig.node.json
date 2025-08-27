@@ -17,7 +17,10 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
-    "noEmit": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
 
     /* Linting */
     "strict": true,
@@ -28,7 +31,10 @@
     "noUncheckedSideEffectImports": true,
 
     /* Interop Constraints */
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+
+    /* Project References */
+    "composite": true
   },
   "include": ["vite.config.ts"]
 }

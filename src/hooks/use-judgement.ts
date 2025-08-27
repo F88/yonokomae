@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Battle } from '@/types/types';
 import type { PlayMode } from '@/yk/play-mode';
-import { getJudgementRepository } from '@/yk/repo/repository-provider';
-import type { Winner } from '@/yk/repo/repositories';
-import { useRepositoriesOptional } from '@/yk/repo/repository-context';
+import { getJudgementRepository } from '@/yk/repo/core/repository-provider';
+import type { Winner } from '@/yk/repo/core/repositories';
+import { useRepositoriesOptional } from '@/yk/repo/core/repository-context';
 
 export type JudgementState =
   | { status: 'idle'; data: null; error: null }

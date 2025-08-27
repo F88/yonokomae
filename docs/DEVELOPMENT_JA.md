@@ -40,10 +40,20 @@ Please use half-width characters for numbers, letters, and symbols.
 
 ## 目標と契約
 
-- Repository のコントラクトは `src/yk/repo/repositories.ts` に定義されています。
+- Repository のコントラクトは `src/yk/repo/core/repositories.ts` に定義されています。
 - 具体実装は `src/yk/repo/*` に配置します。
 - Play Mode は `src/yk/play-mode.ts` に定義します。
-- 具体実装を返す Provider のファクトリは `src/yk/repo/repository-provider.ts` にあります。
+- 具体実装を返す Provider のファクトリは `src/yk/repo/core/repository-provider.ts` にあります。
+
+注: Repository 実装は `src/yk/repo/` 下で種類別に整理されています:
+
+- `api/` - REST API クライアント実装
+- `core/` - Repository インターフェイスとプロバイダロジック
+- `demo/` - デモ/固定データリポジトリ
+- `historical-evidences/` - 厳選された歴史データリポジトリ
+- `mock/` - テスト/偽リポジトリ(FakeJudgementRepository のみ)
+- `random-jokes/` - シードベースランダムデータリポジトリ(デフォルト)
+- `seed-system/` - Historical シード管理システム
 
 中核インターフェイス:
 
@@ -54,11 +64,11 @@ Please use half-width characters for numbers, letters, and symbols.
 
 ## 既存モードで新規 Repository を使う(ExampleRepo)
 
-既存モード(例: `demo`)
+既存モード(例: `demo`)で新しいリポジトリ(ExampleRepo)を使用したい場合の手順です。
 
 1. Repository 実装ファイルを作成
 
-- 配置: `src/yk/repo/repositories.example.ts`
+- 配置: `src/yk/repo/example/repositories.example.ts`
 
 TSDoc 付きの例:
 
@@ -68,8 +78,17 @@ TSDoc 付きの例:
 
 1. 既存モードに ExampleRepo を配線
 
-- 対象: `src/yk/repo/repository-provider.ts`
+- 対象: `src/yk/repo/core/repository-provider.ts`
 - `mode.id` が対象(例: `demo`)の時に `ExampleBattleReportRepository` と `ExampleJudgementRepository` を返す分岐を追加します。
+
+```ts
+if (mode?.id === 'example-mode') {
+    const { ExampleBattleReportRepository } = await import(
+        '@/yk/repo/example/repositories.example'
+    );
+    return new ExampleBattleReportRepository();
+}
+```
 
 1. (任意) モードごとのデフォルト遅延を調整
 
@@ -77,7 +96,7 @@ TSDoc 付きの例:
 
 1. 実装近傍にテストを追加
 
-- 例: `src/yk/repo/repositories.example.test.ts`
+- 例: `src/yk/repo/example/repositories.example.test.ts`
 - タイマーや乱数は必要に応じてモックし、ランダム値ではなく状態やインタラクションを検証します。
 
 ## 新規モードと実装一式を追加する(ExampleMode)
@@ -95,15 +114,20 @@ TSDoc 付きの例:
 
 1. Repository を実装
 
-- 配置: `src/yk/repo/repositories.example.ts`(上記と同じ。必要なら分割)
+- 配置: `src/yk/repo/example/repositories.example.ts`(上記と同じ。必要なら分割)
 
 1. Provider ファクトリにモード分岐を追加
 
-- 対象: `src/yk/repo/repository-provider.ts`
+- 対象: `src/yk/repo/core/repository-provider.ts`
 - `getBattleReportRepository` と `getJudgementRepository` に分岐を追加。
 
 ```ts
-// 英語版(EN)のサンプルを参照してください。
+if (mode?.id === 'example-mode') {
+    const { ExampleBattleReportRepository } = await import(
+        '@/yk/repo/example/repositories.example'
+    );
+    return new ExampleBattleReportRepository();
+}
 ```
 
 1. UI やテストでモードを選択
@@ -116,7 +140,7 @@ TSDoc 付きの例:
 
 ## Provider 工場での配線
 
-- ファクトリは `src/yk/repo/repository-provider.ts` にあります。
+- ファクトリは `src/yk/repo/core/repository-provider.ts` にあります。
 - `mode.id` ごとに適切な実装を返す分岐を追加します。
 - 副作用を避け、軽量に保ち、可能な限り動的 import を使います。
 
@@ -125,13 +149,32 @@ TSDoc 付きの例:
 基本の Provider(同期/遅延作成):
 
 ```tsx
-// 英語版(EN)のサンプルを参照してください。
+import React from 'react';
+import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
+import { playMode, type PlayMode } from '@/yk/play-mode';
+
+export function Root() {
+    const [mode] = React.useState<PlayMode>(playMode[0]);
+    return <RepositoryProvider mode={mode}>{/* App */}</RepositoryProvider>;
+}
 ```
 
 Suspense 対応 Provider(非同期初期化):
 
 ```tsx
-// 英語版(EN)のサンプルを参照してください。
+import React, { Suspense } from 'react';
+import { RepositoryProviderSuspense } from '@/yk/repo/core/RepositoryProvider';
+import type { PlayMode } from '@/yk/play-mode';
+
+export function Root({ mode }: { mode: PlayMode }) {
+    return (
+        <Suspense fallback={<div>Initializing…</div>}>
+            <RepositoryProviderSuspense mode={mode}>
+                {/* App */}
+            </RepositoryProviderSuspense>
+        </Suspense>
+    );
+}
 ```
 
 ## テストヘルパと Tips
@@ -157,6 +200,11 @@ Suspense 対応 Provider(非同期初期化):
 
 ## Historical Seed システム
 
+注意(モードとデータ所有):
+
+- Random Data(現在): 試作/デモ向けの "Random Joke Data"。`src/seeds/random-data/**`(TS 推奨)、`seeds/random-data/**`(JSON 任意)。
+- Historical Evidence(将来): 予約済み。導入時は別フォルダと厳格な provenance ルールを採用します。現在の random-data は歴史資料ではありません。
+
 Historical Evidence モードは、再現可能な結果と歴史的イベントの適切な帰属を保証するために、シードベースの決定論的生成システムを使用します。
 
 詳細なシードの追加/更新手順は「歴史的証拠シード: コントリビュータガイド」を参照してください:
@@ -167,7 +215,7 @@ Historical Evidence モードは、再現可能な結果と歴史的イベント
 
 Historical Seed システムは以下で構成されています:
 
-- **シードファイル**: JSON は `seeds/historical-evidence/scenario/*.json`、TS は `src/seeds/historical-evidence/scenario/*.ts`
+- **シードファイル**: JSON は `seeds/random-data/scenario/*.json`、TS は `src/seeds/random-data/scenario/*.ts`
 - **HistoricalSeedProvider**: シード選択状態を管理する React コンテキストプロバイダ
 - **シード選択フック**: シードへのアクセスと回転のためのカスタムフック
 - **Historical リポジトリ**: シードデータを消費するリポジトリ実装
@@ -179,14 +227,14 @@ seedに対して動的 import は使いません。これにより、ビルド�
 参照の混在に関するバンドル警告を回避します。
 
 - 具体的な意味 - 発見と読み込みの両方で `import.meta.glob(..., { eager: true })` を使用し、
-  `src/seeds/historical-evidence/...`(TS) と `seeds/...`(JSON、存在する場合) を対象とします。- `loadSeedByFile(file)` は eager なモジュールマップから解決し、実行時に
+  `src/seeds/random-data/...`(TS) と `seeds/...`(JSON、存在する場合) を対象とします。- `loadSeedByFile(file)` は eager なモジュールマップから解決し、実行時に
   `import()` は使用しません。
 
 - 採用理由 - シンプル: モジュールエクスポートへ同期アクセスができ、不必要な非同期境界を持たない。- 予測可能なバンドル: 「同一モジュールを動的かつ静的に参照」という Vite/Rollup の警告を避けられる。- 早期失敗: スキーマ/型エラーがビルド/テスト時点で顕在化する。
 
 - トレードオフ - 初期バンドルがやや大きくなります(すべてのseedが含まれるため)。現状のseed量では許容範囲です。将来的に大幅に増える場合は、seedのコード分割を再検討します。
 
-- 著者向けガイダンス - 型安全性のため `src/seeds/historical-evidence/...` への TypeScript seed を推奨します。`seeds/...` の JSON もサポートはしますが推奨ではありません。- ID は全seedで一意である必要があります。CI と実行時の両方で一意性を検証します。- 手動登録は不要です。ファイルは自動検出されます。
+- 著者向けガイダンス - 型安全性のため `src/seeds/random-data/...` への TypeScript seed を推奨します。`seeds/...` の JSON もサポートはしますが推奨ではありません。- ID は全seedで一意である必要があります。CI と実行時の両方で一意性を検証します。- 手動登録は不要です。ファイルは自動検出されます。
 
 ### シードファイル構造
 
@@ -212,7 +260,7 @@ Historical seed は以下の構造を持つ JSON ファイルです:
 
 1. **新しい historical seed の追加**:
 
-- 型安全性のため `src/seeds/historical-evidence/scenario/` に TS モジュールを追加、または `seeds/historical-evidence/scenario/` に JSON を追加
+- 型安全性のため `src/seeds/random-data/scenario/` に TS モジュールを追加、または `seeds/random-data/scenario/` に JSON を追加
 - 登録は不要です。`import.meta.glob` により自動検出されます。
 
 1. **シード回転の実装**:
@@ -220,7 +268,7 @@ Historical seed は以下の構造を持つ JSON ファイルです:
     - `useRotateHistoricalSeed` フックを使ってプログラムでシードを回転:
 
 ```tsx
-import { useRotateHistoricalSeed } from '@/yk/repo/use-rotate-historical-seed';
+import { useRotateHistoricalSeed } from '@/yk/repo/seed-system/use-rotate-seed';
 
 function MyComponent() {
     const rotateSeed = useRotateHistoricalSeed();
@@ -234,7 +282,7 @@ function MyComponent() {
     - `useHistoricalSeedSelection` を使って現在のシードにアクセス:
 
 ```tsx
-import { useHistoricalSeedSelection } from '@/yk/repo/use-historical-seed-selection';
+import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/use-seed-selection';
 
 function MyComponent() {
     const seedSelection = useHistoricalSeedSelection();
@@ -244,10 +292,10 @@ function MyComponent() {
 
 ### Historical リポジトリ実装
 
-`HistoricalBattleReportRepository` はシード消費の例を示します:
+`BattleReportRandomDataRepository` はシード消費の例を示します:
 
 ```ts
-export class HistoricalBattleReportRepository
+export class BattleReportRandomDataRepository
     implements BattleReportRepository
 {
     private readonly seedFile?: string;
@@ -257,6 +305,8 @@ export class HistoricalBattleReportRepository
     }
 
     async generateReport(): Promise<Battle> {
+        // 選択シードを優先し、未指定時は検出済みシードから選択します。
+        // 完全な挙動とレポート設定の適用は `repositories.random-jokes.ts` を参照してください。
         const chosen = this.seedFile ?? historicalSeeds[0]?.file;
         const seed = await loadSeedByFile(chosen);
         // シードデータを使ってバトルレポートを生成
@@ -268,6 +318,55 @@ export class HistoricalBattleReportRepository
     }
 }
 ```
+
+## データエクスポートシステム
+
+アプリケーションは使用例とユーザーボイスデータの TSV(Tab-Separated Values) エクスポート機能を提供します。
+
+### エクスポートスクリプト
+
+`src/ops/` に 2 つの主要なエクスポートスクリプトがあります:
+
+- `export-usage-examples-to-tsv.ts` - 使用例データのエクスポート
+- `export-users-voice-to-tsv.ts` - ユーザーボイスデータのエクスポート
+
+これらのスクリプトは npm scripts で実行可能です:
+
+```bash
+npm run build:usage-examples-tsv
+npm run build:users-voice-tsv
+```
+
+### データソース
+
+エクスポートデータは以下から取得されます:
+
+- `src/data/usage-examples.ts` - カテゴリと説明を含む使用例
+- `src/data/users-voice.ts` - ユーザーの証言とフィードバック
+
+### エクスポート形式
+
+TSV ファイルはヘッダーと適切にエスケープされたコンテンツを含み、データ分析と外部利用が可能です。
+
+## UI コンポーネント
+
+### UsageExamples コンポーネント
+
+`UsageExamples` コンポーネント(`src/components/UsageExamples.tsx`)はカテゴリ分けされた使用例を表示します:
+
+- レスポンシブなカードレイアウト
+- カテゴリベースの整理
+- インタラクティブなホバーエフェクト
+- モバイル最適化表示
+
+### UserVoices コンポーネント
+
+`UserVoices` コンポーネント(`src/components/UserVoices.tsx`)はユーザーの証言を表示します:
+
+- 水平スクロールマーキーアニメーション
+- 属性付きの引用形式
+- 様々な画面サイズに対応するレスポンシブデザイン
+- `src/components/UserVoicesMarquee.css` のカスタム CSS アニメーション
 
 ## UI ユーティリティ
 

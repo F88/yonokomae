@@ -44,11 +44,11 @@ Note: The app is a CSR SPA (no SSR). Dependency injection (DI) is provided via
 
 ### Goals and Contracts
 
-- Clear repository contracts are defined in `src/yk/repo/repositories.ts`.
+- Clear repository contracts are defined in `src/yk/repo/core/repositories.ts`.
 - Implementations live under `src/yk/repo/*`.
 - Play Modes are defined in `src/yk/play-mode.ts`.
 - Provider factories that return concrete repos live in
-  `src/yk/repo/repository-provider.ts`.
+  `src/yk/repo/core/repository-provider.ts`.
 
 Core interfaces:
 
@@ -131,10 +131,10 @@ classDiagram
   class HistoricalScenarioRepository
   class HistoricalNetaRepository
 
-  FakeBattleReportRepository ..|> BattleReportRepository
+  BattleReportRandomDataRepository ..|> BattleReportRepository
   FakeJudgementRepository ..|> JudgementRepository
-  HistoricalScenarioRepository ..|> ScenarioRepository
-  HistoricalNetaRepository ..|> NetaRepository
+  RandomJokeScenarioRepository ..|> ScenarioRepository
+  RandomJokeNetaRepository ..|> NetaRepository
 ```
 
 ### Add a new Repository for an existing Play Mode
@@ -142,19 +142,29 @@ classDiagram
 Use this path when you want to add a new repository (ExampleRepo) and consume
 it under an existing mode (e.g., `demo`).
 
+Note: Repository implementations are organized by type under `src/yk/repo/`:
+
+- `api/` - REST API client implementations
+- `core/` - Repository interfaces and provider logic
+- `demo/` - Demo/fixed data repositories
+- `historical-evidences/` - Curated historical data repositories
+- `mock/` - Test/fake repositories (FakeJudgementRepository only)
+- `random-jokes/` - Seed-based random data repositories (default)
+- `seed-system/` - Historical seed management system
+
 1. Create the Repository implementation file
 
-- Location: `src/yk/repo/repositories.example.ts`
+- Location: `src/yk/repo/example/repositories.example.ts`
 
 Example with TSDoc:
 
 ```ts
-// src/yk/repo/repositories.example.ts
+// src/yk/repo/example/repositories.example.ts
 import type {
     BattleReportRepository,
     JudgementRepository,
     Winner,
-} from '@/yk/repo/repositories';
+} from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { uid } from '@/lib/id';
 
@@ -219,7 +229,7 @@ export class ExampleJudgementRepository implements JudgementRepository {
 
 1. Wire ExampleRepo into the existing mode
 
-- File: `src/yk/repo/repository-provider.ts`
+- File: `src/yk/repo/core/repository-provider.ts`
 - Add a branch to return `ExampleBattleReportRepository` and
   `ExampleJudgementRepository` when `mode.id` matches your target mode (e.g.,
   `demo`).
@@ -231,7 +241,7 @@ export class ExampleJudgementRepository implements JudgementRepository {
 
 1. Add tests near the implementation
 
-- File: `src/yk/repo/repositories.example.test.ts`
+- File: `src/yk/repo/example/repositories.example.test.ts`
 - Mock timers/random if needed; assert on states and interactions, not random
   values.
 
@@ -255,25 +265,25 @@ Use this path when you introduce a brand-new `ExampleMode` and new repositories.
 
 1. Implement the Repositories
 
-- Location: `src/yk/repo/repositories.example.ts` (same as above) or split as
+- Location: `src/yk/repo/example/repositories.example.ts` (same as above) or split as
   needed.
 
 1. Wire the new mode in provider factories
 
-- File: `src/yk/repo/repository-provider.ts`
+- File: `src/yk/repo/core/repository-provider.ts`
 - Add branches in `getBattleReportRepository` and `getJudgementRepository`:
 
 ```ts
 if (mode?.id === 'example-mode') {
     const { ExampleBattleReportRepository } = await import(
-        '@/yk/repo/repositories.example'
+        '@/yk/repo/example/repositories.example'
     );
     return new ExampleBattleReportRepository();
 }
 // ...
 if (mode?.id === 'example-mode') {
     const { ExampleJudgementRepository } = await import(
-        '@/yk/repo/repositories.example'
+        '@/yk/repo/example/repositories.example'
     );
     return new ExampleJudgementRepository();
 }
@@ -291,7 +301,7 @@ if (mode?.id === 'example-mode') {
 
 ### Wiring in the Provider Factories
 
-- Provider factories live in `src/yk/repo/repository-provider.ts`.
+- Provider factories live in `src/yk/repo/core/repository-provider.ts`.
 - Add a branch per `mode.id` to instantiate the correct implementation.
 - Keep factories lightweight and avoid side effects; prefer async imports.
 
@@ -301,7 +311,7 @@ Basic provider (sync or lazy creation):
 
 ```tsx
 import React from 'react';
-import { RepositoryProvider } from '@/yk/repo/RepositoryProvider';
+import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
 import { playMode, type PlayMode } from '@/yk/play-mode';
 
 export function Root() {
@@ -314,7 +324,7 @@ Suspense-ready provider (async initialization):
 
 ```tsx
 import React, { Suspense } from 'react';
-import { RepositoryProviderSuspense } from '@/yk/repo/RepositoryProvider';
+import { RepositoryProviderSuspense } from '@/yk/repo/core/RepositoryProvider';
 import type { PlayMode } from '@/yk/play-mode';
 
 export function Root({ mode }: { mode: PlayMode }) {
@@ -340,18 +350,23 @@ See [TESTING.md](./TESTING.md) for testing guidance.
 - README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper
   steps here).
 
-## Historical Evidence Data Ownership
+## Modes and Data Ownership
 
-In HISTORICAL EVIDENCE mode, data is static at build time and owned entirely by seed files.
+Note about seeds and modes:
 
-- Primary source (seeds):
-    - JSON: `seeds/historical-evidence/scenario/*.json`
-    - TS modules: `src/seeds/historical-evidence/scenario/*.ts` exporting
+- Random Data (current): demo-style "Random Joke Data" used for prototyping and examples.
+  Seeds live under `src/seeds/random-data/**` (TS preferred) and `seeds/random-data/**` (JSON optional).
+- Historical Evidence (future): reserved. When introduced, it will use a separate folder and
+  stricter provenance rules. Current random-data seeds are not historical data.
+
+- Primary source (Random Data seeds):
+    - JSON: `seeds/random-data/scenario/*.json`
+    - TS modules: `src/seeds/random-data/scenario/*.ts` exporting
       `export default {...} satisfies HistoricalSeed;`
 
 - Neta base profiles and report config are also seeds:
-    - Neta: `seeds/historical-evidence/neta/{komae,yono}.json` (or TS under `src/seeds/historical-evidence/neta/`)
-    - Report config: `seeds/historical-evidence/report/config.json` (or TS under `src/seeds/historical-evidence/report/`)
+    - Neta: `seeds/random-data/neta/{komae,yono}.json` (or TS under `src/seeds/random-data/neta/`)
+    - Report config: `seeds/random-data/report/config.json` (or TS under `src/seeds/random-data/report/`)
 
 - Repositories:
     - Load from seeds discovered at build-time via `import.meta.glob`. If none are present, use minimal built-in stubs to avoid breaking UI.
@@ -367,8 +382,8 @@ scenarios or curate demos, with seeds as the single source of truth.
 
 The Historical Seed System consists of:
 
-- **Seed Files**: either JSON under `seeds/historical-evidence/scenario/*.json` or TS modules
-  under `src/seeds/historical-evidence/scenario/*.ts` (recommended for type-safety)
+- **Seed Files**: either JSON under `seeds/random-data/scenario/*.json` or TS modules
+  under `src/seeds/random-data/scenario/*.ts` (recommended for type-safety)
 - **HistoricalSeedProvider**: React context provider managing seed selection
   state (file path string)
 - **Seed Selection Hooks**: Custom hooks to access and rotate seeds
@@ -382,7 +397,7 @@ references and the related bundling warnings during build.
 
 - What this means
     - Discovery and loading both use `import.meta.glob(..., { eager: true })` for
-      `/src/seeds/historical-evidence/...` (TS) and `/seeds/...` (JSON, if any).
+      `/src/seeds/random-data/...` (TS) and `/seeds/...` (JSON, if any).
     - `loadSeedByFile(file)` resolves from the eager module map and does not use
       `import()` at runtime.
 
@@ -399,8 +414,10 @@ references and the related bundling warnings during build.
       can revisit code-splitting for seeds.
 
 - Authoring guidance
-    - Prefer TypeScript seeds under `src/seeds/historical-evidence/...` for
+    - Prefer TypeScript seeds under `src/seeds/random-data/...` for
       type-safety. JSON under `seeds/...` remains supported but not preferred.
+    - IDs must be unique across all seeds. CI and runtime enforce uniqueness.
+    - No manual registration is required; files are discovered automatically.
     - IDs must be unique across all seeds. CI and runtime enforce uniqueness.
     - No manual registration is required; files are discovered automatically.
 
@@ -408,7 +425,7 @@ references and the related bundling warnings during build.
 
 Historical seeds use the `HistoricalSeed` shape. Examples:
 
-JSON (`seeds/historical-evidence/scenario/tama-river.json`):
+JSON (`seeds/random-data/scenario/tama-river.json`):
 
 ```json
 {
@@ -427,10 +444,10 @@ JSON (`seeds/historical-evidence/scenario/tama-river.json`):
 }
 ```
 
-TypeScript (`src/seeds/historical-evidence/scenario/tama-river.ts`):
+TypeScript (`src/seeds/random-data/scenario/tama-river.ts`):
 
 ```ts
-import type { HistoricalSeed } from '@/yk/repo/historical-seeds';
+import type { HistoricalSeed } from '@/yk/repo/seed-system/seeds';
 
 export default {
     id: 'tama-river-001',
@@ -453,8 +470,8 @@ export default {
 
 1. **Adding a new historical seed**:
 
-- Prefer TS modules in `src/seeds/historical-evidence/scenario/` for type-safety
-- Or add JSON under `seeds/historical-evidence/scenario/`
+- Prefer TS modules in `src/seeds/random-data/scenario/` for type-safety
+- Or add JSON under `seeds/random-data/scenario/`
 - No manual registration is needed: seeds are auto-discovered via `import.meta.glob`
 
 1. **Implementing seed rotation**:
@@ -463,7 +480,7 @@ export default {
 - Use the `useRotateHistoricalSeed` hook to programmatically rotate seeds:
 
 ```tsx
-import { useRotateHistoricalSeed } from '@/yk/repo/use-rotate-historical-seed';
+import { useRotateHistoricalSeed } from '@/yk/repo/seed-system/use-rotate-seed';
 
 function MyComponent() {
     const rotateSeed = useRotateHistoricalSeed();
@@ -478,7 +495,7 @@ function MyComponent() {
 - Use `useHistoricalSeedSelection` to access the current seed:
 
 ```tsx
-import { useHistoricalSeedSelection } from '@/yk/repo/use-historical-seed-selection';
+import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/use-seed-selection';
 
 function MyComponent() {
     const seedSelection = useHistoricalSeedSelection();
@@ -488,10 +505,10 @@ function MyComponent() {
 
 ### Historical Repository Implementation
 
-The `HistoricalBattleReportRepository` demonstrates seed consumption:
+The `BattleReportRandomDataRepository` demonstrates seed consumption:
 
 ```ts
-export class HistoricalBattleReportRepository
+export class BattleReportRandomDataRepository
     implements BattleReportRepository
 {
     private readonly seedFile?: string;
@@ -501,12 +518,61 @@ export class HistoricalBattleReportRepository
     }
 
     async generateReport(): Promise<Battle> {
-        // Prefer a chosen seed; else pick a discovered one. See repositories.historical.ts
+        // Prefer a chosen seed; else pick a discovered one. See repositories.random-jokes.ts
         // for the complete behavior and report config application.
         // Returns a fully-formed Battle with provenance.
     }
 }
 ```
+
+## Data Export System
+
+The application provides TSV (Tab-Separated Values) export functionality for usage examples and user voices data.
+
+### Export Scripts
+
+Two main export scripts are available in `src/ops/`:
+
+- `export-usage-examples-to-tsv.ts` - Exports usage examples data
+- `export-users-voice-to-tsv.ts` - Exports user voices data
+
+These scripts can be executed via npm scripts:
+
+```bash
+npm run build:usage-examples-tsv
+npm run build:users-voice-tsv
+```
+
+### Data Sources
+
+Export data comes from:
+
+- `src/data/usage-examples.ts` - Usage examples with categories and descriptions
+- `src/data/users-voice.ts` - User testimonials and feedback
+
+### Export Format
+
+TSV files include headers and properly escaped content for data analysis and external use.
+
+## UI Components
+
+### UsageExamples Component
+
+The `UsageExamples` component (`src/components/UsageExamples.tsx`) displays categorized usage examples with:
+
+- Responsive card layout
+- Category-based organization
+- Interactive hover effects
+- Mobile-optimized display
+
+### UserVoices Component
+
+The `UserVoices` component (`src/components/UserVoices.tsx`) showcases user testimonials with:
+
+- Horizontal scrolling marquee animation
+- Quote formatting with attribution
+- Responsive design for various screen sizes
+- Custom CSS animations in `src/components/UserVoicesMarquee.css`
 
 ## UI Utilities
 

@@ -49,6 +49,8 @@ The application will consume seeds via static imports from the data package inst
     - mock-api/
     - src/ (current application code moved here)
         - components/, hooks/, lib/, yk/, assets/, index.css, main.tsx, App.tsx, tests
+        - data/ (usage-examples.ts, users-voice.ts)
+        - ops/ (export scripts with tsconfig.ops.json)
 - data/historical-evidence/
     - package.json (name: @f88/data-historical-evidence)
     - tsconfig.json
@@ -57,7 +59,7 @@ The application will consume seeds via static imports from the data package inst
         - neta/{komae.ts,yono.ts}
         - report/config.ts
         - index.ts (exports: historicalSeeds, netaKomae, netaYono, reportConfig)
-    - tests/seeds.validation.test.ts (Zod + duplicate ID validation)
+    - src/yk/repo/seed-system/seeds.validation.test.ts (Zod + duplicate ID validation)
     - scripts/generate-manifest.ts (optional; see Alternatives)
 - packages/types/
     - package.json (name: @f88/types-historical)
@@ -106,7 +108,8 @@ Guideline: React should exist only in the app package to avoid duplicate instanc
 - Split jobs:
     - types: lint/typecheck/test for @f88/types-historical
     - data: lint/typecheck/test (Zod + duplicate ID) for @f88/data-historical-evidence
-    - app: lint/typecheck/test/build for @f88/app
+    - app: lint/typecheck/test/build/export for @f88/app (includes TSV export validation)
+- TSV export validation: ensure export scripts run without errors and produce valid output
 - Optionally filter jobs by path changes later.
 
 ## Migration plan (phased)
