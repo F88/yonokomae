@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getBattleReportRepository } from './repository-provider';
+import { getBattleReportRepository } from '../core/repository-provider';
 import type { PlayMode } from '@/yk/play-mode';
 
 const heMode: PlayMode = {

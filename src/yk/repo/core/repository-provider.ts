@@ -14,7 +14,7 @@ export async function getBattleReportRepository(
   const delay = defaultDelayForMode(mode);
   // Tip: add new branches per mode here (e.g., 'demo-2', 'api')
   // if (mode?.id === 'demo-2') {
-  //   const { Demo2BattleReportRepository } = await import('@/yk/repo/repositories.demo2');
+  //   const { Demo2BattleReportRepository } = await import('@/yk/repo/demo/repositories.demo');
   //   return new Demo2BattleReportRepository();
   // }
   if (mode?.id === 'api') {
@@ -56,7 +56,7 @@ export async function getJudgementRepository(
   const delay = defaultDelayForMode(mode, 'judgement');
   // Tip: add new branches per mode here (e.g., 'demo-2', 'api')
   // if (mode?.id === 'demo-2') {
-  //   const { Demo2JudgementRepository } = await import('@/yk/repo/repositories.demo2');
+  //   const { Demo2JudgementRepository } = await import('@/yk/repo/demo/repositories.demo');
   //   return new Demo2JudgementRepository();
   // }
   if (mode?.id === 'api') {

@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Ctx, type HistoricalSeedSelection } from './historical-seed-context';
-import { historicalSeeds } from './historical-seeds';
+import { Ctx, type HistoricalSeedSelection } from './seed-context';
+import { historicalSeeds } from './seeds';
 
 export function HistoricalSeedProvider({
   children,

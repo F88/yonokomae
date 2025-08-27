@@ -2,7 +2,7 @@ import type {
   BattleReportRepository,
   JudgementRepository,
   Winner,
-} from '@/yk/repo/repositories';
+} from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { uid } from '@/lib/id';
 

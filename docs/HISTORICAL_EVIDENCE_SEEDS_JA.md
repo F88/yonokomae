@@ -103,6 +103,6 @@ Please use half-width characters for numbers, letters, and symbols.
 
 ## 参考
 
-- 実装: `src/yk/repo/historical-seeds.ts`
+- 実装: `src/yk/repo/seed-system/seeds.ts`
 - 検証テスト: `src/yk/repo/seed-system/seeds.validation.test.ts`
 - モード概要: `docs/DEVELOPMENT_EN.md` (Historical Seed System)

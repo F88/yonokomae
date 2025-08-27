@@ -438,7 +438,7 @@ JSON (`seeds/random-data/scenario/tama-river.json`):
 TypeScript (`src/seeds/random-data/scenario/tama-river.ts`):
 
 ```ts
-import type { HistoricalSeed } from '@/yk/repo/seed-system/historical-seeds';
+import type { HistoricalSeed } from '@/yk/repo/seed-system/seeds';
 
 export default {
     id: 'tama-river-001',
@@ -471,7 +471,7 @@ export default {
 - Use the `useRotateHistoricalSeed` hook to programmatically rotate seeds:
 
 ```tsx
-import { useRotateHistoricalSeed } from '@/yk/repo/use-rotate-historical-seed';
+import { useRotateHistoricalSeed } from '@/yk/repo/seed-system/use-rotate-seed';
 
 function MyComponent() {
     const rotateSeed = useRotateHistoricalSeed();
@@ -486,7 +486,7 @@ function MyComponent() {
 - Use `useHistoricalSeedSelection` to access the current seed:
 
 ```tsx
-import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/use-historical-seed-selection';
+import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/use-seed-selection';
 
 function MyComponent() {
     const seedSelection = useHistoricalSeedSelection();

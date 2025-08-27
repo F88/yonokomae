@@ -9,7 +9,7 @@ import type {
   NetaRepository,
   ScenarioRepository,
   Winner,
-} from '@/yk/repo/core/repositories';
+} from '../core/repositories';
 
 export class FakeScenarioRepository implements ScenarioRepository {
   async generateTitle(): Promise<string> {

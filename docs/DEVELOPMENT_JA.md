@@ -225,7 +225,7 @@ Historical seed は以下の構造を持つ JSON ファイルです:
     - `useRotateHistoricalSeed` フックを使ってプログラムでシードを回転:
 
 ```tsx
-import { useRotateHistoricalSeed } from '@/yk/repo/use-rotate-historical-seed';
+import { useRotateHistoricalSeed } from '@/yk/repo/seed-system/use-rotate-seed';
 
 function MyComponent() {
     const rotateSeed = useRotateHistoricalSeed();
@@ -239,7 +239,7 @@ function MyComponent() {
     - `useHistoricalSeedSelection` を使って現在のシードにアクセス:
 
 ```tsx
-import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/use-historical-seed-selection';
+import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/use-seed-selection';
 
 function MyComponent() {
     const seedSelection = useHistoricalSeedSelection();

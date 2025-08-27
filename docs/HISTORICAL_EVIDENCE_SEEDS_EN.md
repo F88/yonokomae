@@ -103,6 +103,6 @@ English is the single source of truth; the Japanese file is a translation.
 
 ## References
 
-- Implementation: `src/yk/repo/historical-seeds.ts`
+- Implementation: `src/yk/repo/seed-system/seeds.ts`
 - Validation tests: `src/yk/repo/seed-system/seeds.validation.test.ts`
 - Mode overview: `docs/DEVELOPMENT_EN.md` (Historical Seed System)

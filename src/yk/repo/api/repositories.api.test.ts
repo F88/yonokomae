@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import {
   getBattleReportRepository,
   getJudgementRepository,
-} from './repository-provider';
+} from '../core/repository-provider';
 import type { PlayMode } from '@/yk/play-mode';
 
 const apiMode: PlayMode = {

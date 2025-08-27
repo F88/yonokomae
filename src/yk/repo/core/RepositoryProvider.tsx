@@ -9,7 +9,7 @@ import {
   getJudgementRepository,
 } from './repository-provider';
 import { RepoContext, type RepoContextValue } from './repository-context';
-import { useHistoricalSeedSelection } from './seed-system/historical-seed-store';
+import { useHistoricalSeedSelection } from './seed-system/seed-store';
 
 export function RepositoryProvider({
   mode,

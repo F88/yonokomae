@@ -62,7 +62,7 @@ Override per test by calling `server.use(...)` with additional handlers.
 When testing components that use the Historical Seed System:
 
 ```tsx
-import { HistoricalSeedProvider } from '@/yk/repo/seed-system/historical-seed-provider';
+import { HistoricalSeedProvider } from '@/yk/repo/seed-system/seed-provider';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 

@@ -2,9 +2,10 @@ import type {
   ScenarioRepository,
   NetaRepository,
   BattleReportRepository,
-} from '@/yk/repo/core/repositories';
+} from '../core/repositories';
 import type { Battle, Neta } from '@/types/types';
-import { historicalSeeds, loadSeedByFile } from '@/yk/repo/seed-system';
+// Seed loaders
+import { historicalSeeds, loadSeedByFile } from './seed-system';
 import { uid } from '@/lib/id';
 
 export class HistoricalScenarioRepository implements ScenarioRepository {
@@ -41,6 +42,10 @@ export class HistoricalNetaRepository implements NetaRepository {
   }
 }
 
+/**
+ * BattleReportRandomDataRepository
+ * Minimal seed-backed implementation that produces a Battle with provenance.
+ */
 export class BattleReportRandomDataRepository
   implements BattleReportRepository
 {
@@ -49,6 +54,7 @@ export class BattleReportRandomDataRepository
     this.seedFile = opts?.seedFile;
   }
   async generateReport(): Promise<Battle> {
+    // Prefer a specific seed if provided, else pick randomly from discovered seeds.
     let overview = '';
     let title = '';
     let subtitle = '';
@@ -70,10 +76,11 @@ export class BattleReportRandomDataRepository
           provenance = seed.provenance ?? [];
         }
       } catch {
-        // Ignore seed load failures and fall back to defaults
+        // On any failure, gracefully fall back to built-in humorous scenarios
       }
     }
 
+    // If still empty (no seeds), create a minimal stub to avoid breaking UI
     if (!title) {
       title = 'Random Joke Data';
       subtitle = '';
@@ -82,11 +89,13 @@ export class BattleReportRandomDataRepository
       provenance = [];
     }
 
+    // Build basic Netas using historical base repos (titles/images can remain placeholders)
     const netaRepo = new HistoricalNetaRepository();
     const [komaeBase, yonoBase] = await Promise.all([
       netaRepo.getKomaeBase(),
       netaRepo.getYonoBase(),
     ]);
+    // Strengthen attribution: include a short note in descriptions
     const cfg = await loadReportConfig();
     const attribution = cfg.attribution;
     return {
@@ -121,6 +130,7 @@ export class BattleReportRandomDataRepository
   }
 }
 
+// Helpers
 type HistoricalSeed = {
   id: string;
   title: string;
@@ -142,7 +152,8 @@ type NetaBase = Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>;
 
 async function loadNetaOptions(kind: 'komae' | 'yono'): Promise<NetaBase[]> {
   const jsonKeyNew = `/seeds/random-data/neta/${kind}.json`;
-  const tsKeyNew = `/src/seeds/random-data/neta/${kind}.ts`;
+  const tsKeyNew = `/src/seeds/random-data/neta/${kind}.en.ts`;
+  const tsKeyOld = `/src/seeds/random-data/neta/${kind}.ts`;
   type NetaModule = {
     default?: { options?: NetaBase[] };
     options?: NetaBase[];
@@ -151,9 +162,10 @@ async function loadNetaOptions(kind: 'komae' | 'yono'): Promise<NetaBase[]> {
     ...import.meta.glob('/seeds/random-data/neta/*.json', { eager: true }),
     ...import.meta.glob('/src/seeds/random-data/neta/*.ts', { eager: true }),
   } as Record<string, NetaModule>;
-  const mod = mods[jsonKeyNew] ?? mods[tsKeyNew];
+  const mod = mods[jsonKeyNew] ?? mods[tsKeyNew] ?? mods[tsKeyOld];
   const options: NetaBase[] = mod?.default?.options ?? mod?.options ?? [];
   if (options.length > 0) return options;
+  // Minimal default to avoid empty options
   return [
     {
       imageUrl: 'about:blank',
@@ -167,13 +179,14 @@ async function loadNetaOptions(kind: 'komae' | 'yono'): Promise<NetaBase[]> {
 type ReportConfig = { attribution: string; defaultPower: number };
 async function loadReportConfig(): Promise<ReportConfig> {
   const jsonKeyNew = '/seeds/random-data/report/config.json';
-  const tsKeyNew = '/src/seeds/random-data/report/config.ts';
+  const tsKeyNew = '/src/seeds/random-data/report/config.en.ts';
+  const tsKeyOld = '/src/seeds/random-data/report/config.ts';
   type CfgModule = { default?: Partial<ReportConfig> } | Partial<ReportConfig>;
   const mods = {
     ...import.meta.glob('/seeds/random-data/report/*', { eager: true }),
     ...import.meta.glob('/src/seeds/random-data/report/*', { eager: true }),
   } as Record<string, CfgModule>;
-  const mod = mods[jsonKeyNew] ?? mods[tsKeyNew];
+  const mod = mods[jsonKeyNew] ?? mods[tsKeyNew] ?? mods[tsKeyOld];
   let cfgObj: Partial<ReportConfig> = {};
   if (mod != null) {
     const maybeDefault = mod as { default?: Partial<ReportConfig> };

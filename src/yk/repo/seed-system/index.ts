@@ -1,5 +1,5 @@
-export { HistoricalSeedProvider } from './historical-seed-provider';
-export { useHistoricalSeedSelection } from './use-historical-seed-selection';
-export type { HistoricalSeedSelection } from './historical-seed-context';
-export { Ctx } from './historical-seed-context';
-export * from './historical-seeds';
+export { HistoricalSeedProvider } from './seed-provider';
+export { useHistoricalSeedSelection } from './use-seed-selection';
+export type { HistoricalSeedSelection } from './seed-context';
+export { Ctx } from './seed-context';
+export * from './seeds';

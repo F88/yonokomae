@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { HistoricalSeedProvider } from './seed-system/historical-seed-provider';
-import { useHistoricalSeedSelection } from './seed-system/use-historical-seed-selection';
-import { historicalSeeds } from './seed-system/historical-seeds';
+import { HistoricalSeedProvider } from './seed-provider';
+import { useHistoricalSeedSelection } from './use-seed-selection';
+import { historicalSeeds } from './seeds';
 
 function SeedConsumer() {
   const sel = useHistoricalSeedSelection();

@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyChip } from '@/components/ui/key-chip';
 import { isEditable } from '@/lib/dom-utils';
 import { historicalSeeds } from '@/yk/repo/seed-system';
-import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/historical-seed-store';
+import { useHistoricalSeedSelection } from '@/yk/repo/seed-system/seed-store';
 
 export type TitleContainerProps = {
   modes?: PlayMode[];

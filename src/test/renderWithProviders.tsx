@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import type { PlayMode } from '@/yk/play-mode';
-import { RepositoryProvider } from '@/yk/repo/RepositoryProvider';
+import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
 
 export function renderWithProviders(
   ui: React.ReactElement,
