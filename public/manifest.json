@@ -7,12 +7,7 @@
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "description": "AIの予測と人間の勘が交錯するシミュレーション『Yono-Komae War』。よのとこまえの勢力図、外交、人口推移、歴史的仮説をデータで楽しむインタラクティブ体験。",
-  "categories": [
-    "simulation",
-    "strategy",
-    "education",
-    "games"
-  ],
+  "categories": ["simulation", "strategy", "education", "games"],
   "icons": [
     {
       "src": "https://f88.github.io/yoonkomae/icon.png",
