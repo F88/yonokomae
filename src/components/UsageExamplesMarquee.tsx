@@ -1,6 +1,11 @@
 import React, { useMemo } from 'react';
 import { USAGE_EXAMPLES } from '@/data/usage-examples';
-import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from '@/components/ui/simple-marquee';
+import {
+  Marquee,
+  MarqueeContent,
+  MarqueeFade,
+  MarqueeItem,
+} from '@/components/ui/simple-marquee';
 import '@/components/UsageExamplesMarquee.css';
 
 export type UsageExamplesMarqueeProps = {

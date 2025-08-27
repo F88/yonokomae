@@ -1,6 +1,11 @@
 import React, { useMemo } from 'react';
 import { USER_VOICES } from '@/data/users-voice';
-import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from '@/components/ui/simple-marquee';
+import {
+  Marquee,
+  MarqueeContent,
+  MarqueeFade,
+  MarqueeItem,
+} from '@/components/ui/simple-marquee';
 import '@/components/UserVoicesMarquee.css';
 
 export type UserVoicesMarqueeProps = {
