@@ -1,0 +1,1 @@
+const t={enabled:!0,ttlMs:6e4,maxSize:100},a={fake:{enabled:!0,ttlMs:2e4,maxSize:100},api:{enabled:!0,ttlMs:6e4,maxSize:200}};function n(e){return{...t,...a[e]??{}}}export{n as getJudgementCollapseConfigFor};

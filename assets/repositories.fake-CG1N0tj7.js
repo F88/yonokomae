@@ -1,1 +1,0 @@
-import{a as t}from"./delay-utils-lugK4fzg.js";class s{delay;constructor(e){this.delay=e?.delay}async determineWinner(e,o){await t(this.delay,o?.signal);const{yono:r,komae:a}=e;return r.power>a.power?"YONO":r.power<a.power?"KOMAE":"DRAW"}}export{s as FakeJudgementRepository};
