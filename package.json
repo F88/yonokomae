@@ -29,10 +29,12 @@
     "test": "vitest run",
     "test:seeds": "vitest run src/yk/repo/seed-system/seeds.validation.test.ts",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "ops:build": "tsc -p tsconfig.ops.json",
+    "ops:export-usage-examples-to-tsv": "npm run ops:build && node dist/ops/export-usage-examples-to-tsv.js",
+    "ops:export-users-voice-to-tsv": "npm run ops:build && node dist/ops/export-users-voice-to-tsv.js"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.0.0",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
