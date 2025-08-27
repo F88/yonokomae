@@ -11,7 +11,6 @@ import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
 import type { Battle } from './types/types';
 import { playMode, type PlayMode } from './yk/play-mode';
-import UsageExamplesMarquee from './components/UsageExamplesMarquee';
 
 function App() {
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
