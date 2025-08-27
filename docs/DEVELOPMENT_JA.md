@@ -188,6 +188,15 @@ export function Root({ mode }: { mode: PlayMode }) {
 - 新モードがある場合は Provider ファクトリの分岐が実装されている。
 - README/DEVELOPMENT_EN に必要な更新が反映されている(README は概要、詳細は本ドキュメント)。
 
+### 判定の折りたたみ/キャッシュ設定
+
+判定のリクエスト折りたたみと短期キャッシュは、リポジトリごとのコード設定のみです。
+環境変数での上書きはありません。
+
+- デフォルト/リポジトリ別の設定は `src/yk/repo/core/judgement-config.ts` を編集
+- Provider は `getJudgementCollapseConfigFor(repoId)` で設定を参照
+- テスト環境では TTL=0、その他はデフォルトで 60000ms
+
 ## 推奨コミットメッセージ
 
 - feat(repo): add ExampleRepo repositories and provider wiring

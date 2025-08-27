@@ -2,6 +2,7 @@ import type {
   BattleReportRepository,
   JudgementRepository,
   Winner,
+  PlayMode,
 } from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { uid } from '@/lib/id';
@@ -85,11 +86,12 @@ export class DemoJudgementRepository implements JudgementRepository {
   }
 
   async determineWinner(
-    input: { mode: { id: string }; yono: Neta; komae: Neta },
+    input: { battle: Battle; mode: PlayMode; extra?: Record<string, unknown> },
     options?: { signal?: AbortSignal },
   ): Promise<Winner> {
     await applyDelay(this.delay, options?.signal);
-    if (input.yono.power === input.komae.power) return 'DRAW';
-    return input.yono.power > input.komae.power ? 'YONO' : 'KOMAE';
+    const { yono, komae } = input.battle;
+    if (yono.power === komae.power) return 'DRAW';
+    return yono.power > komae.power ? 'YONO' : 'KOMAE';
   }
 }

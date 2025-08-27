@@ -3,6 +3,7 @@ import {
   DemoBattleReportRepository,
   DemoJudgementRepository,
 } from './repositories.demo';
+import { playMode } from '@/yk/play-mode';
 
 describe('Demo repositories with delay support', () => {
   let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
@@ -78,8 +79,12 @@ describe('Demo repositories with delay support', () => {
     it('determines winner based on power comparison', async () => {
       const repo = new DemoJudgementRepository();
 
-      const winner = await repo.determineWinner({
-        mode: { id: 'demo' },
+      const battle = {
+        id: 'b-1',
+        title: 't',
+        subtitle: 's',
+        overview: 'o',
+        scenario: 'sc',
         yono: {
           title: 'Y',
           subtitle: '',
@@ -94,6 +99,11 @@ describe('Demo repositories with delay support', () => {
           imageUrl: '',
           power: 60,
         },
+      };
+
+      const winner = await repo.determineWinner({
+        battle,
+        mode: playMode.find((m) => m.id === 'demo')!,
       });
 
       expect(winner).toBe('YONO');
@@ -102,8 +112,12 @@ describe('Demo repositories with delay support', () => {
     it('returns DRAW when powers are equal', async () => {
       const repo = new DemoJudgementRepository({ delay: 500 });
 
-      const winner = await repo.determineWinner({
-        mode: { id: 'demo' },
+      const battle = {
+        id: 'b-2',
+        title: 't',
+        subtitle: 's',
+        overview: 'o',
+        scenario: 'sc',
         yono: {
           title: 'Y',
           subtitle: '',
@@ -118,6 +132,11 @@ describe('Demo repositories with delay support', () => {
           imageUrl: '',
           power: 75,
         },
+      };
+
+      const winner = await repo.determineWinner({
+        battle,
+        mode: playMode.find((m) => m.id === 'demo')!,
       });
 
       expect(winner).toBe('DRAW');
@@ -132,24 +151,30 @@ describe('Demo repositories with delay support', () => {
       controller.abort();
 
       // Should not throw in test env
-      const winner = await repo.determineWinner(
-        {
-          mode: { id: 'demo' },
-          yono: {
-            title: 'Y',
-            subtitle: '',
-            description: '',
-            imageUrl: '',
-            power: 90,
-          },
-          komae: {
-            title: 'K',
-            subtitle: '',
-            description: '',
-            imageUrl: '',
-            power: 70,
-          },
+      const battle = {
+        id: 'b-3',
+        title: 't',
+        subtitle: 's',
+        overview: 'o',
+        scenario: 'sc',
+        yono: {
+          title: 'Y',
+          subtitle: '',
+          description: '',
+          imageUrl: '',
+          power: 90,
         },
+        komae: {
+          title: 'K',
+          subtitle: '',
+          description: '',
+          imageUrl: '',
+          power: 70,
+        },
+      };
+
+      const winner = await repo.determineWinner(
+        { battle, mode: playMode.find((m) => m.id === 'demo')! },
         { signal: controller.signal },
       );
 

@@ -6,6 +6,16 @@ import type {
 import type { Battle, Neta } from '@/types/types';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 
+/** Custom HTTP error with status code for robust error handling */
+class HttpError extends Error {
+  readonly status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = 'HttpError';
+    this.status = status;
+  }
+}
+
 /** Lightweight fetch wrapper. Adapt as needed. */
 export class ApiClient {
   private readonly baseUrl: string;
@@ -15,14 +25,19 @@ export class ApiClient {
     this.token = token;
   }
 
-  async get<T>(path: string, signal?: AbortSignal): Promise<T> {
+  async get<T>(
+    path: string,
+    signal?: AbortSignal,
+    headers?: Record<string, string>,
+  ): Promise<T> {
     const res = await fetch(`${this.baseUrl}${path}`, {
-      headers: this.token
-        ? { Authorization: `Bearer ${this.token}` }
-        : undefined,
+      headers: {
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : undefined),
+        ...headers,
+      },
       signal,
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new HttpError(`HTTP ${res.status}`, res.status);
     return res.json() as Promise<T>;
   }
 }
@@ -91,9 +106,76 @@ export class ApiJudgementRepository implements JudgementRepository {
   ): Promise<Winner> {
     await applyDelay(this.delay, opts?.signal);
     const mode = input.mode.id;
-    return this.api.get<Winner>(
-      `/battle/judgement?mode=${encodeURIComponent(mode)}`,
-      opts?.signal,
-    );
+    const reqKey = JSON.stringify({ battleId: input.battle.id, mode });
+    const idempotencyKey = fnv1a32(reqKey);
+    const path = `/battle/judgement?mode=${encodeURIComponent(mode)}`;
+    return getWithRetry<Winner>(this.api, path, opts?.signal, {
+      'X-Idempotency-Key': idempotencyKey,
+    });
   }
+}
+
+function sleep(ms: number, signal?: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(resolve, ms);
+    if (signal) {
+      const onAbort = () => {
+        clearTimeout(t);
+        reject(new DOMException('Aborted', 'AbortError'));
+      };
+      signal.addEventListener('abort', onAbort, { once: true });
+    }
+  });
+}
+
+async function getWithRetry<T>(
+  api: ApiClient,
+  path: string,
+  signal?: AbortSignal,
+  headers?: Record<string, string>,
+): Promise<T> {
+  let attempt = 0;
+  const maxAttempts = 2; // 1 retry on 5xx
+  while (true) {
+    try {
+      return await api.get<T>(path, signal, headers);
+    } catch (e) {
+      attempt++;
+      const is5xx =
+        e instanceof HttpError && e.status >= 500 && e.status <= 599;
+      if (!is5xx || attempt >= maxAttempts) throw e;
+      // exponential backoff with jitter: base 200ms
+      const base = 200 * Math.pow(2, attempt - 1);
+      const jitter = Math.floor(Math.random() * 100);
+      await sleep(base + jitter, signal);
+    }
+  }
+}
+
+/**
+ * FNV-1a 32-bit hash
+ *
+ * Purpose: generate a fast, non-cryptographic hash for idempotency keys and
+ * lightweight deduplication. Do NOT use for security-sensitive purposes.
+ *
+ * Algorithm:
+ * - Initialize with 32-bit FNV offset basis 0x811c9dc5
+ * - For each UTF-16 code unit: XOR then multiply by 32-bit FNV prime 16777619
+ *   (implemented via shift/add to keep it as unsigned 32-bit arithmetic)
+ * - Return the unsigned hash encoded in base36 for compactness
+ *
+ * References:
+ * - https://en.wikipedia.org/wiki/Fowler–Noll–Vo_hash_function
+ */
+function fnv1a32(input: string): string {
+  // 0x811c9dc5: 32-bit FNV offset basis
+  let h = 0x811c9dc5;
+  for (let i = 0; i < input.length; i++) {
+    // XOR with next byte (here, UTF-16 code unit)
+    h ^= input.charCodeAt(i);
+    // Multiply by FNV prime 16777619 using shifts to stay in uint32 domain
+    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  }
+  // base36 for shorter, URL/header-friendly representation
+  return h.toString(36);
 }
