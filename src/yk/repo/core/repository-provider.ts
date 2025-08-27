@@ -360,8 +360,49 @@ type CacheEntry = {
   expiresAt: number;
 };
 
+class LruCache<K, V> {
+  private map = new Map<K, V>();
+  private maxSize: number;
+  constructor(maxSize: number) {
+    this.maxSize = Math.max(1, maxSize);
+  }
+  get(key: K): V | undefined {
+    const val = this.map.get(key);
+    if (val !== undefined) {
+      // refresh recency
+      this.map.delete(key);
+      this.map.set(key, val);
+    }
+    return val;
+  }
+  set(key: K, val: V): void {
+    if (this.map.has(key)) this.map.delete(key);
+    this.map.set(key, val);
+    if (this.map.size > this.maxSize) {
+      // evict least recently used (first)
+      const oldest = this.map.keys().next().value as K | undefined;
+      if (oldest !== undefined) this.map.delete(oldest);
+    }
+  }
+  delete(key: K): void {
+    this.map.delete(key);
+  }
+  clear(): void {
+    this.map.clear();
+  }
+  size(): number {
+    return this.map.size;
+  }
+}
+
 // Module-scoped cache to dedupe across multiple repo instances
-const judgementCache: Map<string, CacheEntry> = new Map();
+let judgementCache: LruCache<string, CacheEntry> | null = null;
+function getJudgementCache(maxSize: number): LruCache<string, CacheEntry> {
+  if (!judgementCache) {
+    judgementCache = new LruCache<string, CacheEntry>(maxSize);
+  }
+  return judgementCache;
+}
 
 function computeJudgementKey(
   input: Parameters<JudgementRepository['determineWinner']>[0],
@@ -387,10 +428,18 @@ function shortHash(input: string): string {
 
 function withJudgementCollapsing<T extends JudgementRepository>(
   repo: T,
-  opts?: { cacheTtlMs?: number; keyFn?: typeof computeJudgementKey },
+  opts?: {
+    cacheTtlMs?: number;
+    keyFn?: typeof computeJudgementKey;
+    enabled?: boolean;
+    maxSize?: number;
+  },
 ): T {
-  const enabled = getBoolEnv('VITE_JUDGEMENT_COLLAPSE_ENABLED', true);
+  const enabled =
+    opts?.enabled ?? getBoolEnv('VITE_JUDGEMENT_COLLAPSE_ENABLED', true);
   const ttlEnv = getNumberEnv('VITE_JUDGEMENT_CACHE_TTL_MS', 60_000);
+  const maxSize =
+    opts?.maxSize ?? getNumberEnv('VITE_JUDGEMENT_CACHE_MAX', 100);
   const ttl = opts?.cacheTtlMs ?? (isTestEnv() ? 0 : ttlEnv); // env-configurable
   const keyFn = opts?.keyFn ?? computeJudgementKey;
 
@@ -401,15 +450,18 @@ function withJudgementCollapsing<T extends JudgementRepository>(
       }
       const key = keyFn(input);
       const now = Date.now();
-      const current = judgementCache.get(key);
+      const cache = getJudgementCache(maxSize);
+      const current = cache.get(key);
 
       // Fresh cached value
       if (current && current.value !== undefined && current.expiresAt > now) {
+        console.count('judgement.cache.hit');
         return current.value;
       }
 
       // In-flight promise
       if (current && current.promise) {
+        console.count('judgement.cache.hit');
         // Respect caller abort without cancelling underlying request:
         if (options?.signal) {
           if (options.signal.aborted) {
@@ -430,13 +482,14 @@ function withJudgementCollapsing<T extends JudgementRepository>(
         return current.promise;
       }
 
+      console.count('judgement.cache.miss');
       // Start a new underlying call. Important: do NOT pass caller signal
       // so that one impatient subscriber doesn't cancel others.
       const p = repo
         .determineWinner(input)
         .then((value) => {
           // store result with TTL
-          judgementCache.set(key, {
+          cache.set(key, {
             promise: null,
             value,
             expiresAt: Date.now() + ttl,
@@ -445,11 +498,11 @@ function withJudgementCollapsing<T extends JudgementRepository>(
         })
         .catch((err) => {
           // clear entry on error so future attempts can retry
-          judgementCache.delete(key);
+          cache.delete(key);
           throw err;
         });
 
-      judgementCache.set(key, {
+      cache.set(key, {
         promise: p,
         value: undefined,
         expiresAt: now + ttl,
@@ -476,4 +529,20 @@ function withJudgementCollapsing<T extends JudgementRepository>(
   };
 
   return decorated as T;
+}
+
+// ---- cache management API ----
+export function clearAllJudgementCache(): void {
+  if (judgementCache) judgementCache.clear();
+}
+
+export function bustJudgementCacheFor(
+  input: Parameters<JudgementRepository['determineWinner']>[0],
+  opts?: { maxSize?: number },
+): void {
+  const key = computeJudgementKey(input);
+  const cache = getJudgementCache(
+    opts?.maxSize ?? getNumberEnv('VITE_JUDGEMENT_CACHE_MAX', 100),
+  );
+  cache.delete(key);
 }

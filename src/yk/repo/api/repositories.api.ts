@@ -15,11 +15,16 @@ export class ApiClient {
     this.token = token;
   }
 
-  async get<T>(path: string, signal?: AbortSignal): Promise<T> {
+  async get<T>(
+    path: string,
+    signal?: AbortSignal,
+    headers?: Record<string, string>,
+  ): Promise<T> {
     const res = await fetch(`${this.baseUrl}${path}`, {
-      headers: this.token
-        ? { Authorization: `Bearer ${this.token}` }
-        : undefined,
+      headers: {
+        ...(this.token ? { Authorization: `Bearer ${this.token}` } : undefined),
+        ...headers,
+      },
       signal,
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -91,9 +96,57 @@ export class ApiJudgementRepository implements JudgementRepository {
   ): Promise<Winner> {
     await applyDelay(this.delay, opts?.signal);
     const mode = input.mode.id;
-    return this.api.get<Winner>(
-      `/battle/judgement?mode=${encodeURIComponent(mode)}`,
-      opts?.signal,
-    );
+    const reqKey = JSON.stringify({ battleId: input.battle.id, mode });
+    const idempotencyKey = fnv1a32(reqKey);
+    const path = `/battle/judgement?mode=${encodeURIComponent(mode)}`;
+    return getWithRetry<Winner>(this.api, path, opts?.signal, {
+      'X-Idempotency-Key': idempotencyKey,
+    });
   }
+}
+
+function sleep(ms: number, signal?: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(resolve, ms);
+    if (signal) {
+      const onAbort = () => {
+        clearTimeout(t);
+        reject(new DOMException('Aborted', 'AbortError'));
+      };
+      signal.addEventListener('abort', onAbort, { once: true });
+    }
+  });
+}
+
+async function getWithRetry<T>(
+  api: ApiClient,
+  path: string,
+  signal?: AbortSignal,
+  headers?: Record<string, string>,
+): Promise<T> {
+  let attempt = 0;
+  const maxAttempts = 2; // 1 retry on 5xx
+  while (true) {
+    try {
+      return await api.get<T>(path, signal, headers);
+    } catch (e) {
+      attempt++;
+      const m = e instanceof Error ? e.message : String(e);
+      const is5xx = /^HTTP 5\d\d$/.test(m);
+      if (!is5xx || attempt >= maxAttempts) throw e;
+      // exponential backoff with jitter: base 200ms
+      const base = 200 * Math.pow(2, attempt - 1);
+      const jitter = Math.floor(Math.random() * 100);
+      await sleep(base + jitter, signal);
+    }
+  }
+}
+
+function fnv1a32(input: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < input.length; i++) {
+    h ^= input.charCodeAt(i);
+    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  }
+  return h.toString(36);
 }
