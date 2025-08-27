@@ -319,6 +319,55 @@ export class BattleReportRandomDataRepository
 }
 ```
 
+## データエクスポートシステム
+
+アプリケーションは使用例とユーザーボイスデータの TSV(Tab-Separated Values) エクスポート機能を提供します。
+
+### エクスポートスクリプト
+
+`src/ops/` に 2 つの主要なエクスポートスクリプトがあります:
+
+- `export-usage-examples-to-tsv.ts` - 使用例データのエクスポート
+- `export-users-voice-to-tsv.ts` - ユーザーボイスデータのエクスポート
+
+これらのスクリプトは npm scripts で実行可能です:
+
+```bash
+npm run build:usage-examples-tsv
+npm run build:users-voice-tsv
+```
+
+### データソース
+
+エクスポートデータは以下から取得されます:
+
+- `src/data/usage-examples.ts` - カテゴリと説明を含む使用例
+- `src/data/users-voice.ts` - ユーザーの証言とフィードバック
+
+### エクスポート形式
+
+TSV ファイルはヘッダーと適切にエスケープされたコンテンツを含み、データ分析と外部利用が可能です。
+
+## UI コンポーネント
+
+### UsageExamples コンポーネント
+
+`UsageExamples` コンポーネント(`src/components/UsageExamples.tsx`)はカテゴリ分けされた使用例を表示します:
+
+- レスポンシブなカードレイアウト
+- カテゴリベースの整理
+- インタラクティブなホバーエフェクト
+- モバイル最適化表示
+
+### UserVoices コンポーネント
+
+`UserVoices` コンポーネント(`src/components/UserVoices.tsx`)はユーザーの証言を表示します:
+
+- 水平スクロールマーキーアニメーション
+- 属性付きの引用形式
+- 様々な画面サイズに対応するレスポンシブデザイン
+- `src/components/UserVoicesMarquee.css` のカスタム CSS アニメーション
+
 ## UI ユーティリティ
 
 ### useBreakpoint によるレスポンシブデザイン

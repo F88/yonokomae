@@ -101,8 +101,21 @@ English is the single source of truth; the Japanese file is a translation.
 - Large bundle warnings
     - Acceptable at present. We may revisit when seed volume grows.
 
+## Data Export Integration
+
+The historical seed system integrates with the TSV export functionality:
+
+- Export scripts can process seed-based data for external analysis
+- Usage examples and user voices can be exported via:
+  - `npm run build:usage-examples-tsv`
+  - `npm run build:users-voice-tsv`
+- Export data sources:
+  - `src/data/usage-examples.ts` - Usage examples with categories
+  - `src/data/users-voice.ts` - User testimonials and feedback
+
 ## References
 
 - Implementation: `src/yk/repo/seed-system/seeds.ts`
 - Validation tests: `src/yk/repo/seed-system/seeds.validation.test.ts`
 - Mode overview: `docs/DEVELOPMENT_EN.md` (Historical Seed System)
+- Export scripts: `src/ops/export-*-to-tsv.ts`

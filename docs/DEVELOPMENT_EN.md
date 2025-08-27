@@ -525,6 +525,55 @@ export class BattleReportRandomDataRepository
 }
 ```
 
+## Data Export System
+
+The application provides TSV (Tab-Separated Values) export functionality for usage examples and user voices data.
+
+### Export Scripts
+
+Two main export scripts are available in `src/ops/`:
+
+- `export-usage-examples-to-tsv.ts` - Exports usage examples data
+- `export-users-voice-to-tsv.ts` - Exports user voices data
+
+These scripts can be executed via npm scripts:
+
+```bash
+npm run build:usage-examples-tsv
+npm run build:users-voice-tsv
+```
+
+### Data Sources
+
+Export data comes from:
+
+- `src/data/usage-examples.ts` - Usage examples with categories and descriptions
+- `src/data/users-voice.ts` - User testimonials and feedback
+
+### Export Format
+
+TSV files include headers and properly escaped content for data analysis and external use.
+
+## UI Components
+
+### UsageExamples Component
+
+The `UsageExamples` component (`src/components/UsageExamples.tsx`) displays categorized usage examples with:
+
+- Responsive card layout
+- Category-based organization
+- Interactive hover effects
+- Mobile-optimized display
+
+### UserVoices Component
+
+The `UserVoices` component (`src/components/UserVoices.tsx`) showcases user testimonials with:
+
+- Horizontal scrolling marquee animation
+- Quote formatting with attribution
+- Responsive design for various screen sizes
+- Custom CSS animations in `src/components/UserVoicesMarquee.css`
+
 ## UI Utilities
 
 ### Responsive Design with useBreakpoint

@@ -129,8 +129,35 @@ it('handles async provider setup', async () => {
 - `Field` shows placeholders when sides are missing; asserts based on roles/labels.
 - `TitleContainer` supports keyboard navigation and (in historical mode) minimal seed selection UI.
 - `Controller` wires keyboard shortcuts (Enter/Space/B for Battle, R for Reset).
+- `UsageExamples` component renders categorized usage examples with interactive cards.
+- `UserVoices` component displays user testimonials with marquee animation effects.
 
 Use queries by role/label to keep tests resilient and accessible.
+
+### Testing Export Functionality
+
+For TSV export scripts testing:
+
+```tsx
+import { exportUsageExamplesToTsv } from '@/ops/export-usage-examples-to-tsv';
+import { exportUsersVoiceToTsv } from '@/ops/export-users-voice-to-tsv';
+
+it('exports usage examples to TSV format', () => {
+    const tsvOutput = exportUsageExamplesToTsv();
+    
+    // Assert TSV structure
+    expect(tsvOutput).toContain('Category\tTitle\tDescription');
+    expect(tsvOutput.split('\n').length).toBeGreaterThan(1);
+});
+
+it('exports user voices to TSV format', () => {
+    const tsvOutput = exportUsersVoiceToTsv();
+    
+    // Assert TSV structure
+    expect(tsvOutput).toContain('Quote\tAttribution');
+    expect(tsvOutput.split('\n').length).toBeGreaterThan(1);
+});
+```
 
 ### Helper: renderWithProviders example
 

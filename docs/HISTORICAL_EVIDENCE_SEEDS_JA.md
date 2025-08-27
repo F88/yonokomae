@@ -101,8 +101,21 @@ Please use half-width characters for numbers, letters, and symbols.
 - 大きなバンドルに関する警告
     - 現時点では許容範囲です。シード量が増えた場合に再検討します。
 
+## データエクスポート統合
+
+歴史シードシステムは TSV エクスポート機能と統合されています:
+
+- エクスポートスクリプトはシードベースのデータを外部分析用に処理できます
+- 使用例とユーザーボイスは以下でエクスポート可能です:
+  - `npm run build:usage-examples-tsv`
+  - `npm run build:users-voice-tsv`
+- エクスポートデータソース:
+  - `src/data/usage-examples.ts` - カテゴリ付き使用例
+  - `src/data/users-voice.ts` - ユーザーの証言とフィードバック
+
 ## 参考
 
 - 実装: `src/yk/repo/seed-system/seeds.ts`
 - 検証テスト: `src/yk/repo/seed-system/seeds.validation.test.ts`
 - モード概要: `docs/DEVELOPMENT_EN.md` (Historical Seed System)
+- エクスポートスクリプト: `src/ops/export-*-to-tsv.ts`
