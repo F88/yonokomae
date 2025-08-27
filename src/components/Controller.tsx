@@ -63,6 +63,21 @@ export const Controller: FC<ControllerProps> = ({
         </div>
       </div>
 
+      {/* Navigation hint block */}
+      <div className="hidden sm:flex flex-col items-center gap-1">
+        <div className="text-xs text-muted-foreground">Navigate</div>
+        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+          <KeyChip label="←" />
+          <KeyChip label="↑" />
+          <KeyChip label="k" />
+          {/* <span className="mx-1">prev</span> */}|
+          {/* <span className="mx-1">next</span> */}
+          <KeyChip label="j" />
+          <KeyChip label="↓" />
+          <KeyChip label="→" />
+        </div>
+      </div>
+
       {/* Battle block */}
       <div className="flex flex-col items-center gap-1">
         <Button
