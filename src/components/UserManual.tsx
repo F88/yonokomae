@@ -2,7 +2,7 @@ import { USAGE_EXAMPLES } from '@/data/usage-examples';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './UserManual.css';
-import UserVoicesCarousel from './UserVoicesCarousel';
+import UserVoicesMarquee from './UserVoicesMarquee';
 
 interface UserManualProps {
   isOpen: boolean;
@@ -53,10 +53,10 @@ export const UserManual: React.FC<UserManualProps> = ({ isOpen, onClose }) => {
           <div className="user-manual-list-section">
             <h2 className="user-manual-subtitle">個人の感想</h2>
             <div className="user-manual-marquee-section">
-              <UserVoicesCarousel
-                intervalMs={3000}
-                pauseOnHover
-                orientation="vertical"
+              <UserVoicesMarquee
+                shuffle={true}
+                pauseOnHover={true}
+                speed={20}
               />
             </div>
           </div>
