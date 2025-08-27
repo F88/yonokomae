@@ -44,25 +44,23 @@ export type Winner = 'YONO' | 'KOMAE' | 'DRAW';
  * @see {@link PlayMode} for mode-based repository selection
  */
 export interface BattleReportRepository {
-    /**
-     * Generate or fetch a complete battle report.
-     *
-     * **Returns**: A complete Battle object with stable ID, characters, scenario, and metadata.
-     *
-     * **Guarantees**:
-     * - Always returns a valid Battle with all required fields
-     * - Battle ID is stable and unique
-     * - Both Yono and Komae characters are fully populated
-     * - Includes narrative elements (title, subtitle, overview)
-     *
-     * @param options Optional configuration
-     * @param options.signal AbortSignal for cancelling long-running operations
-     * @returns Promise resolving to complete Battle object
-     * @throws Error if generation fails or is cancelled
-     */
-    generateReport(options?: {
-        signal?: AbortSignal;
-    }): Promise<Battle>;
+  /**
+   * Generate or fetch a complete battle report.
+   *
+   * **Returns**: A complete Battle object with stable ID, characters, scenario, and metadata.
+   *
+   * **Guarantees**:
+   * - Always returns a valid Battle with all required fields
+   * - Battle ID is stable and unique
+   * - Both Yono and Komae characters are fully populated
+   * - Includes narrative elements (title, subtitle, overview)
+   *
+   * @param options Optional configuration
+   * @param options.signal AbortSignal for cancelling long-running operations
+   * @returns Promise resolving to complete Battle object
+   * @throws Error if generation fails or is cancelled
+   */
+  generateReport(options?: { signal?: AbortSignal }): Promise<Battle>;
 }
 /**
  * JudgementRepository
@@ -102,31 +100,34 @@ export interface BattleReportRepository {
  * @see {@link PlayMode} for mode-specific judging rules
  */
 export interface JudgementRepository {
-    /**
-     * Determine the winner of a battle between Yono and Komae.
-     *
-     * **Decision Factors**:
-     * - Character power levels (primary factor)
-     * - PlayMode-specific rules and modifiers
-     * - Battle context and scenario elements
-     * - Random factors (implementation-dependent)
-     *
-     * @param input Battle participants and context
-     * @param input.mode PlayMode affecting judging rules
-     * @param input.yono Yono character with power and attributes
-     * @param input.komae Komae character with power and attributes
-     * @param options Optional configuration
-     * @param options.signal AbortSignal for cancelling long-running judgements
-     * @returns Promise resolving to battle Winner
-     * @throws Error if judgement fails or is cancelled
-     */
-    determineWinner(input: {
-        battle: Battle;
-        mode: PlayMode;
-        extra?: Record<string, unknown>;
-    }, options?: {
-        signal?: AbortSignal;
-    }): Promise<Winner>;
+  /**
+   * Determine the winner of a battle between Yono and Komae.
+   *
+   * **Decision Factors**:
+   * - Character power levels (primary factor)
+   * - PlayMode-specific rules and modifiers
+   * - Battle context and scenario elements
+   * - Random factors (implementation-dependent)
+   *
+   * @param input Battle participants and context
+   * @param input.mode PlayMode affecting judging rules
+   * @param input.yono Yono character with power and attributes
+   * @param input.komae Komae character with power and attributes
+   * @param options Optional configuration
+   * @param options.signal AbortSignal for cancelling long-running judgements
+   * @returns Promise resolving to battle Winner
+   * @throws Error if judgement fails or is cancelled
+   */
+  determineWinner(
+    input: {
+      battle: Battle;
+      mode: PlayMode;
+      extra?: Record<string, unknown>;
+    },
+    options?: {
+      signal?: AbortSignal;
+    },
+  ): Promise<Winner>;
 }
 /**
  * ScenarioRepository
@@ -158,26 +159,26 @@ export interface JudgementRepository {
  * @see {@link RandomJokeScenarioRepository} for seed-based implementation
  */
 export interface ScenarioRepository {
-    /**
-     * Generate a battle title.
-     * @returns Promise resolving to battle title string
-     */
-    generateTitle(): Promise<string>;
-    /**
-     * Generate a battle subtitle or tagline.
-     * @returns Promise resolving to subtitle string
-     */
-    generateSubtitle(): Promise<string>;
-    /**
-     * Generate a battle overview summary.
-     * @returns Promise resolving to overview text
-     */
-    generateOverview(): Promise<string>;
-    /**
-     * Generate detailed battle narrative.
-     * @returns Promise resolving to full narrative text
-     */
-    generateNarrative(): Promise<string>;
+  /**
+   * Generate a battle title.
+   * @returns Promise resolving to battle title string
+   */
+  generateTitle(): Promise<string>;
+  /**
+   * Generate a battle subtitle or tagline.
+   * @returns Promise resolving to subtitle string
+   */
+  generateSubtitle(): Promise<string>;
+  /**
+   * Generate a battle overview summary.
+   * @returns Promise resolving to overview text
+   */
+  generateOverview(): Promise<string>;
+  /**
+   * Generate detailed battle narrative.
+   * @returns Promise resolving to full narrative text
+   */
+  generateNarrative(): Promise<string>;
 }
 /**
  * NetaRepository
@@ -212,24 +213,28 @@ export interface ScenarioRepository {
  * @see {@link RandomJokeNetaRepository} for seed-based implementation
  */
 export interface NetaRepository {
-    /**
-     * Get base profile data for Komae character.
-     *
-     * Power level is intentionally excluded as it's determined during
-     * battle generation to allow for scenario-specific balancing.
-     *
-     * @returns Promise resolving to Komae's base profile
-     */
-    getKomaeBase(): Promise<Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>>;
-    /**
-     * Get base profile data for Yono character.
-     *
-     * Power level is intentionally excluded as it's determined during
-     * battle generation to allow for scenario-specific balancing.
-     *
-     * @returns Promise resolving to Yono's base profile
-     */
-    getYonoBase(): Promise<Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>>;
+  /**
+   * Get base profile data for Komae character.
+   *
+   * Power level is intentionally excluded as it's determined during
+   * battle generation to allow for scenario-specific balancing.
+   *
+   * @returns Promise resolving to Komae's base profile
+   */
+  getKomaeBase(): Promise<
+    Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>
+  >;
+  /**
+   * Get base profile data for Yono character.
+   *
+   * Power level is intentionally excluded as it's determined during
+   * battle generation to allow for scenario-specific balancing.
+   *
+   * @returns Promise resolving to Yono's base profile
+   */
+  getYonoBase(): Promise<
+    Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>
+  >;
 }
 /**
  * Optional granular repos (future):

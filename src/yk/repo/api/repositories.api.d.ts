@@ -1,12 +1,20 @@
-import type { BattleReportRepository, JudgementRepository, Winner } from '@/yk/repo/core/repositories';
+import type {
+  BattleReportRepository,
+  JudgementRepository,
+  Winner,
+} from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { type DelayOption } from '../core/delay-utils';
 /** Lightweight fetch wrapper. Adapt as needed. */
 export declare class ApiClient {
-    private readonly baseUrl;
-    private readonly token?;
-    constructor(baseUrl: string, token?: string);
-    get<T>(path: string, signal?: AbortSignal, headers?: Record<string, string>): Promise<T>;
+  private readonly baseUrl;
+  private readonly token?;
+  constructor(baseUrl: string, token?: string);
+  get<T>(
+    path: string,
+    signal?: AbortSignal,
+    headers?: Record<string, string>,
+  ): Promise<T>;
 }
 /**
  * ApiBattleReportRepository
@@ -39,33 +47,42 @@ export declare class ApiClient {
  * @see {@link BattleReportRepository} for interface definition
  * @see {@link ApiClient} for HTTP client implementation
  */
-export declare class ApiBattleReportRepository implements BattleReportRepository {
-    private readonly api;
-    private readonly delay?;
-    constructor(api: ApiClient, options?: {
-        delay?: DelayOption;
-    });
-    generateReport(opts?: {
-        signal?: AbortSignal;
-    }): Promise<Battle>;
+export declare class ApiBattleReportRepository
+  implements BattleReportRepository
+{
+  private readonly api;
+  private readonly delay?;
+  constructor(
+    api: ApiClient,
+    options?: {
+      delay?: DelayOption;
+    },
+  );
+  generateReport(opts?: { signal?: AbortSignal }): Promise<Battle>;
 }
 export declare class ApiJudgementRepository implements JudgementRepository {
-    private readonly api;
-    private readonly delay?;
-    constructor(api: ApiClient, options?: {
-        delay?: DelayOption;
-    });
-    determineWinner(input: {
-        battle: {
-            id: string;
-            yono: Neta;
-            komae: Neta;
-        };
-        mode: {
-            id: string;
-        };
-        extra?: Record<string, unknown>;
-    }, opts?: {
-        signal?: AbortSignal;
-    }): Promise<Winner>;
+  private readonly api;
+  private readonly delay?;
+  constructor(
+    api: ApiClient,
+    options?: {
+      delay?: DelayOption;
+    },
+  );
+  determineWinner(
+    input: {
+      battle: {
+        id: string;
+        yono: Neta;
+        komae: Neta;
+      };
+      mode: {
+        id: string;
+      };
+      extra?: Record<string, unknown>;
+    },
+    opts?: {
+      signal?: AbortSignal;
+    },
+  ): Promise<Winner>;
 }

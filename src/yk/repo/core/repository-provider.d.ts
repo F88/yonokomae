@@ -1,4 +1,7 @@
-import type { BattleReportRepository, JudgementRepository } from './repositories';
+import type {
+  BattleReportRepository,
+  JudgementRepository,
+} from './repositories';
 import type { PlayMode } from '@/yk/play-mode';
 /**
  * Factory function for creating BattleReportRepository instances based on PlayMode.
@@ -45,7 +48,10 @@ import type { PlayMode } from '@/yk/play-mode';
  * const defaultRepo = await getBattleReportRepository();
  * ```
  */
-export declare function getBattleReportRepository(mode?: PlayMode, seedFile?: string): Promise<BattleReportRepository>;
+export declare function getBattleReportRepository(
+  mode?: PlayMode,
+  seedFile?: string,
+): Promise<BattleReportRepository>;
 /**
  * Factory function for creating JudgementRepository instances based on PlayMode.
  *
@@ -88,8 +94,13 @@ export declare function getBattleReportRepository(mode?: PlayMode, seedFile?: st
  * });
  * ```
  */
-export declare function getJudgementRepository(mode?: PlayMode): Promise<JudgementRepository>;
+export declare function getJudgementRepository(
+  mode?: PlayMode,
+): Promise<JudgementRepository>;
 export declare function clearAllJudgementCache(): void;
-export declare function bustJudgementCacheFor(input: Parameters<JudgementRepository['determineWinner']>[0], opts?: {
+export declare function bustJudgementCacheFor(
+  input: Parameters<JudgementRepository['determineWinner']>[0],
+  opts?: {
     maxSize?: number;
-}): void;
+  },
+): void;

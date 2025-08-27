@@ -1,4 +1,9 @@
-import type { BattleReportRepository, JudgementRepository, Winner, PlayMode } from '@/yk/repo/core/repositories';
+import type {
+  BattleReportRepository,
+  JudgementRepository,
+  Winner,
+  PlayMode,
+} from '@/yk/repo/core/repositories';
 import type { Battle } from '@/types/types';
 import { type DelayOption } from '../core/delay-utils';
 /**
@@ -34,14 +39,12 @@ import { type DelayOption } from '../core/delay-utils';
  *
  * @see {@link BattleReportRepository} for interface definition
  */
-export declare class DemoBattleReportRepository implements BattleReportRepository {
-    private delay?;
-    constructor(options?: {
-        delay?: DelayOption;
-    });
-    generateReport(options?: {
-        signal?: AbortSignal;
-    }): Promise<Battle>;
+export declare class DemoBattleReportRepository
+  implements BattleReportRepository
+{
+  private delay?;
+  constructor(options?: { delay?: DelayOption });
+  generateReport(options?: { signal?: AbortSignal }): Promise<Battle>;
 }
 /**
  * DemoJudgementRepository
@@ -49,15 +52,16 @@ export declare class DemoBattleReportRepository implements BattleReportRepositor
  * A sample judgement implementation for DEMO. Adjust rules freely.
  */
 export declare class DemoJudgementRepository implements JudgementRepository {
-    private delay?;
-    constructor(options?: {
-        delay?: DelayOption;
-    });
-    determineWinner(input: {
-        battle: Battle;
-        mode: PlayMode;
-        extra?: Record<string, unknown>;
-    }, options?: {
-        signal?: AbortSignal;
-    }): Promise<Winner>;
+  private delay?;
+  constructor(options?: { delay?: DelayOption });
+  determineWinner(
+    input: {
+      battle: Battle;
+      mode: PlayMode;
+      extra?: Record<string, unknown>;
+    },
+    options?: {
+      signal?: AbortSignal;
+    },
+  ): Promise<Winner>;
 }
