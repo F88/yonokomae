@@ -8,11 +8,16 @@ export class FakeJudgementRepository implements JudgementRepository {
     this.delay = options?.delay;
   }
   async determineWinner(
-    input: { mode: PlayMode; yono: Neta; komae: Neta },
+    input: {
+      battle: { yono: Neta; komae: Neta };
+      mode: PlayMode;
+      extra?: Record<string, unknown>;
+    },
     options?: { signal?: AbortSignal },
   ): Promise<Winner> {
     await applyDelay(this.delay, options?.signal);
-    const { yono, komae } = input;
+    const yono = input.battle.yono;
+    const komae = input.battle.komae;
     if (yono.power > komae.power) return 'YONO';
     if (yono.power < komae.power) return 'KOMAE';
     return 'DRAW';

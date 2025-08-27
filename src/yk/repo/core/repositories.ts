@@ -93,11 +93,7 @@ export interface BattleReportRepository {
  * **Usage Pattern**:
  * ```typescript
  * const repository = await getJudgementRepository(mode);
- * const winner = await repository.determineWinner({
- *   mode,
- *   yono: battle.yono,
- *   komae: battle.komae
- * });
+ * const winner = await repository.determineWinner({ battle, mode });
  * ```
  *
  * **Implementations**:
@@ -128,7 +124,13 @@ export interface JudgementRepository {
    * @throws Error if judgement fails or is cancelled
    */
   determineWinner(
-    input: { mode: PlayMode; yono: Neta; komae: Neta },
+    input: {
+      // Preferred shape: pass the whole battle and mode
+      battle: Battle;
+      mode: PlayMode;
+      // Future extension point
+      extra?: Record<string, unknown>;
+    },
     options?: { signal?: AbortSignal },
   ): Promise<Winner>;
 }
