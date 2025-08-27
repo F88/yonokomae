@@ -27,81 +27,79 @@ describe('Judge', () => {
         subtitle: '',
         description: '',
       });
+      const dummyBattle = (
+        y: ReturnType<typeof dummyNeta>,
+        k: ReturnType<typeof dummyNeta>,
+      ) => ({
+        id: 'test-battle',
+        title: 't',
+        subtitle: 't',
+        overview: 'o',
+        scenario: 's',
+        yono: y,
+        komae: k,
+      });
       it('should return "YONO" when yonoPower is greater than komaePower', async () => {
         const judge = new Judge('T', playMode[0]);
-        const result = await judge.determineWinner({
-          yono: dummyNeta(100),
-          komae: dummyNeta(50),
-        });
+        const battle = dummyBattle(dummyNeta(100), dummyNeta(50));
+        const result = await judge.determineWinner({ battle });
         expect(result).toBe('YONO');
       });
 
       it('should return "KOMAE" when komaePower is greater than yonoPower', async () => {
         const judge = new Judge('T', playMode[0]);
-        const result = await judge.determineWinner({
-          yono: dummyNeta(30),
-          komae: dummyNeta(80),
-        });
+        const battle = dummyBattle(dummyNeta(30), dummyNeta(80));
+        const result = await judge.determineWinner({ battle });
         expect(result).toBe('KOMAE');
       });
 
       it('should return "DRAW" when powers are equal', async () => {
         const judge = new Judge('T', playMode[0]);
-        const result = await judge.determineWinner({
-          yono: dummyNeta(50),
-          komae: dummyNeta(50),
-        });
+        const battle = dummyBattle(dummyNeta(50), dummyNeta(50));
+        const result = await judge.determineWinner({ battle });
         expect(result).toBe('DRAW');
       });
 
       it('should handle edge case with zero powers', async () => {
         const judge = new Judge('T', playMode[0]);
-        const result = await judge.determineWinner({
-          yono: dummyNeta(0),
-          komae: dummyNeta(0),
-        });
+        const battle = dummyBattle(dummyNeta(0), dummyNeta(0));
+        const result = await judge.determineWinner({ battle });
         expect(result).toBe('DRAW');
       });
 
       it('should handle edge case with negative powers', async () => {
         const judge = new Judge('T', playMode[0]);
-        const result1 = await judge.determineWinner({
-          yono: dummyNeta(-10),
-          komae: dummyNeta(-5),
-        });
+  const result1 = await judge.determineWinner({
+    battle: dummyBattle(dummyNeta(-10), dummyNeta(-5)),
+  });
         expect(result1).toBe('KOMAE');
 
-        const result2 = await judge.determineWinner({
-          yono: dummyNeta(-5),
-          komae: dummyNeta(-10),
-        });
+  const result2 = await judge.determineWinner({
+    battle: dummyBattle(dummyNeta(-5), dummyNeta(-10)),
+  });
         expect(result2).toBe('YONO');
 
-        const result3 = await judge.determineWinner({
-          yono: dummyNeta(-5),
-          komae: dummyNeta(-5),
-        });
+  const result3 = await judge.determineWinner({
+    battle: dummyBattle(dummyNeta(-5), dummyNeta(-5)),
+  });
         expect(result3).toBe('DRAW');
       });
 
       it('should handle decimal powers', async () => {
         const judge = new Judge('T', playMode[0]);
-        const result1 = await judge.determineWinner({
-          yono: dummyNeta(50.5),
-          komae: dummyNeta(50.4),
-        });
+  const result1 = await judge.determineWinner({
+    battle: dummyBattle(dummyNeta(50.5), dummyNeta(50.4)),
+  });
         expect(result1).toBe('YONO');
 
-        const result2 = await judge.determineWinner({
-          yono: dummyNeta(50.4),
-          komae: dummyNeta(50.5),
-        });
+  const result2 = await judge.determineWinner({
+    battle: dummyBattle(dummyNeta(50.4), dummyNeta(50.5)),
+  });
         expect(result2).toBe('KOMAE');
 
-        const result3 = await judge.determineWinner({
-          yono: dummyNeta(50.5),
-          komae: dummyNeta(50.5),
-        });
+  const result3 = await judge.determineWinner({
+    battle: dummyBattle(dummyNeta(50.5), dummyNeta(50.5)),
+  });
         expect(result3).toBe('DRAW');
       });
 
@@ -112,22 +110,28 @@ describe('Judge', () => {
 
       it('should work with maximum safe integer values', async () => {
         const judge = new Judge('T', playMode[0]);
-        const result1 = await judge.determineWinner({
-          yono: dummyNeta(Number.MAX_SAFE_INTEGER),
-          komae: dummyNeta(Number.MAX_SAFE_INTEGER - 1),
-        });
+  const result1 = await judge.determineWinner({
+    battle: dummyBattle(
+      dummyNeta(Number.MAX_SAFE_INTEGER),
+      dummyNeta(Number.MAX_SAFE_INTEGER - 1),
+    ),
+  });
         expect(result1).toBe('YONO');
 
-        const result2 = await judge.determineWinner({
-          yono: dummyNeta(Number.MAX_SAFE_INTEGER - 1),
-          komae: dummyNeta(Number.MAX_SAFE_INTEGER),
-        });
+  const result2 = await judge.determineWinner({
+    battle: dummyBattle(
+      dummyNeta(Number.MAX_SAFE_INTEGER - 1),
+      dummyNeta(Number.MAX_SAFE_INTEGER),
+    ),
+  });
         expect(result2).toBe('KOMAE');
 
-        const result3 = await judge.determineWinner({
-          yono: dummyNeta(Number.MAX_SAFE_INTEGER),
-          komae: dummyNeta(Number.MAX_SAFE_INTEGER),
-        });
+  const result3 = await judge.determineWinner({
+    battle: dummyBattle(
+      dummyNeta(Number.MAX_SAFE_INTEGER),
+      dummyNeta(Number.MAX_SAFE_INTEGER),
+    ),
+  });
         expect(result3).toBe('DRAW');
       });
     });

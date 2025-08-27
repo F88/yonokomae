@@ -211,6 +211,19 @@ function getApiBaseUrl(): string {
   return getViteEnvVar('VITE_API_BASE_URL') ?? '/api';
 }
 
+function getBoolEnv(key: string, fallback: boolean): boolean {
+  const v = getViteEnvVar(key);
+  if (v == null) return fallback;
+  return /^(1|true|yes|on)$/i.test(v.trim());
+}
+
+function getNumberEnv(key: string, fallback: number): number {
+  const v = getViteEnvVar(key);
+  if (!v) return fallback;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
 /**
  * Delay configuration type for repository operations.
  * - `'report'`: Battle report generation delays
@@ -305,29 +318,30 @@ function withJudgementTiming<T extends JudgementRepository>(repo: T): T {
         }
       }
       if (shouldLog) {
-        // called immediately after
-        // keep log concise to avoid noisy console
-        // console.log( `[Judgement#${reqId}] start repo=${repoName ?? 'unknown'} mode=${input.mode.id} yono=${input.yono.power} komae=${input.komae.power}`,);
+        console.groupCollapsed(
+          `Judgement#${reqId} ${input.mode.id} battle=${'battle' in input ? input.battle.id : '?'}`,
+        );
+        console.log('start');
       }
       try {
         const result = await repo.determineWinner(input, options);
         if (shouldLog) {
           const end =
             typeof performance !== 'undefined' ? performance.now() : Date.now();
-          console.log(
-            `[Judgement#${reqId}] done in ${Math.round(end - start)}ms result=${result}`,
-          );
+          console.log(`done in ${Math.round(end - start)}ms result=${result}`);
+          console.groupEnd();
         }
         return result;
       } catch (e) {
         if (shouldLog) {
           const end =
             typeof performance !== 'undefined' ? performance.now() : Date.now();
-          console.log(
-            `[Judgement#${reqId}] error after ${Math.round(end - start)}ms: ${
+          console.error(
+            `error after ${Math.round(end - start)}ms: ${
               e instanceof Error ? e.message : String(e)
             }`,
           );
+          console.groupEnd();
         }
         throw e;
       }
@@ -375,11 +389,16 @@ function withJudgementCollapsing<T extends JudgementRepository>(
   repo: T,
   opts?: { cacheTtlMs?: number; keyFn?: typeof computeJudgementKey },
 ): T {
-  const ttl = opts?.cacheTtlMs ?? (isTestEnv() ? 0 : 60_000); // 60s in dev/prod by default
+  const enabled = getBoolEnv('VITE_JUDGEMENT_COLLAPSE_ENABLED', true);
+  const ttlEnv = getNumberEnv('VITE_JUDGEMENT_CACHE_TTL_MS', 60_000);
+  const ttl = opts?.cacheTtlMs ?? (isTestEnv() ? 0 : ttlEnv); // env-configurable
   const keyFn = opts?.keyFn ?? computeJudgementKey;
 
   const decorated: JudgementRepository = {
     async determineWinner(input, options) {
+      if (!enabled) {
+        return repo.determineWinner(input, options);
+      }
       const key = keyFn(input);
       const now = Date.now();
       const current = judgementCache.get(key);
