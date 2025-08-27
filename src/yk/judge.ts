@@ -2,8 +2,10 @@
  * Judge class for determining the winner between two fighters.
  */
 
-import type { Neta } from 'src/types/types';
+import type { Battle, Neta } from 'src/types/types';
 import type { PlayMode } from './play-mode';
+import { getJudgementRepository } from '@/yk/repo/core/repository-provider';
+import type { Winner } from '@/yk/repo/core/repositories';
 
 export class Judge {
   name: string;
@@ -16,26 +18,23 @@ export class Judge {
     this.mode = mode;
   }
 
-  // Async to allow future API calls; waits 0..5s (0ms in tests)
+  // Async to allow future API calls; delay is handled in repository layer now
   async determineWinner({
     yono,
     komae,
+    battle,
   }: {
     yono: Neta;
     komae: Neta;
-  }): Promise<string> {
-    const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
-    const isTest =
-      typeof process !== 'undefined' && process?.env?.NODE_ENV === 'test';
-    const delayMs = isTest ? 0 : Math.floor(Math.random() * 5001);
-    await sleep(delayMs);
-
-    if (yono.power > komae.power) {
-      return 'YONO';
-    } else if (yono.power < komae.power) {
-      return 'KOMAE';
-    } else {
-      return 'DRAW';
-    }
+    battle: Battle;
+  }): Promise<Winner> {
+    // Delegate to repository layer (handles delays and strategy per mode)
+    const repo = await getJudgementRepository(this.mode);
+    const fullBattle: Battle = {
+      ...battle,
+      yono,
+      komae,
+    };
+    return repo.determineWinner({ battle: fullBattle, mode: this.mode });
   }
 }

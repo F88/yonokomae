@@ -83,16 +83,16 @@ export class ApiJudgementRepository implements JudgementRepository {
   }
   async determineWinner(
     input: {
+      battle: { id: string; yono: Neta; komae: Neta };
       mode: { id: string };
-      yono: Neta;
-      komae: Neta;
+      extra?: Record<string, unknown>;
     },
     opts?: { signal?: AbortSignal },
   ): Promise<Winner> {
     await applyDelay(this.delay, opts?.signal);
-    // This is a placeholder; adapt path and payload to your API
+    const mode = input.mode.id;
     return this.api.get<Winner>(
-      `/battle/judgement?mode=${encodeURIComponent(input.mode.id)}`,
+      `/battle/judgement?mode=${encodeURIComponent(mode)}`,
       opts?.signal,
     );
   }

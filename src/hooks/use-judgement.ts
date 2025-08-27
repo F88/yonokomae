@@ -24,8 +24,13 @@ export function useJudgement(
   });
 
   const inputs = useMemo(
-    () => ({ nameOfJudge, yono: battle.yono, komae: battle.komae }),
-    [nameOfJudge, battle.yono, battle.komae],
+    () => ({
+      nameOfJudge,
+      battleId: battle.id,
+      yono: battle.yono,
+      komae: battle.komae,
+    }),
+    [nameOfJudge, battle.id, battle.yono, battle.komae],
   );
 
   useEffect(() => {
@@ -40,9 +45,9 @@ export function useJudgement(
         timer = setTimeout(() => controller.abort(), 10_000);
         const result = await repo.determineWinner(
           {
+            battle: { ...battle, yono: inputs.yono, komae: inputs.komae },
             mode,
-            yono: inputs.yono,
-            komae: inputs.komae,
+            extra: undefined,
           },
           { signal: controller.signal },
         );
@@ -67,7 +72,7 @@ export function useJudgement(
     return () => {
       cancelled = true;
     };
-  }, [inputs, mode, provided]);
+  }, [inputs, mode, provided, battle]);
 
   return state;
 }
