@@ -24,7 +24,7 @@ export const SimpleVerticalCarousel: React.FC<SimpleVerticalCarouselProps> = ({
   className,
   intervalMs = 3000,
   pauseOnHover = true,
-  height = "120px",
+  height = '120px',
 }) => {
   const voices = useMemo(
     () => (shuffle ? shuffleArray(USER_VOICES) : USER_VOICES),
