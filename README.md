@@ -70,14 +70,38 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 
 ## Documentation
 
-- [Developer guide (EN)](./docs/DEVELOPMENT_EN.md)
-- [開発ガイド (JA)](./docs/DEVELOPMENT_JA.md)
-- [Testing guide (EN)](./docs/TESTING.md)
-- [Contributing guide](./CONTRIBUTING.md)
+[Developer guide (EN)](./docs/DEVELOPMENT_EN.md)
+[開発ガイド (JA)](./docs/DEVELOPMENT_JA.md)
+[Testing guide (EN)](./docs/TESTING.md)
+[Contributing guide](./CONTRIBUTING.md)
 
-## Roadmap / TODO
+Historical Evidence mode
 
-- Historical Evidence mode
+- Expand repositories with curated event data (JSON/seed files) and
+  deterministic generation rules
+- Surface provenance/notes in the UI (citations, links, disclaimers)
+- Replace placeholder images with licensed assets and show attribution
+- Add unit tests for deterministic historical paths
+- AI Mode (later)
+- Evaluate model/provider and on-device vs API trade-offs
+- Add safety guardrails and content filters
+- Provide offline mock/stub for tests and local dev
+- API-backed mode (optional)
+- Wire Api repositories under a dedicated mode (e.g., `api`) using
+  `VITE_API_BASE_URL`
+- Provide a mock server and integration tests
+- Add provider branching and a feature flag
+- Battle UX polish
+- Add progress indicator for async judgement (per-step animation)
+- Make judgement cancellable with user feedback
+- Respect reduced-motion preferences for scroll/animation
+- Accessibility and i18n
+- A11y audit (labels, focus management, contrast)
+- Improve keyboard flow after generating a report (focus return/announce)
+- Localize UI strings (EN/JA alignment with docs)
+- Testing
+- Add E2E tests (e.g., Playwright) for key flows
+- Optional visual regression for core components
     - Expand repositories with curated event data (JSON/seed files) and
       deterministic generation rules
     - Surface provenance/notes in the UI (citations, links, disclaimers)
