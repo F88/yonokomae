@@ -54,6 +54,7 @@ export const Header = ({ mode }: { mode?: PlayMode }) => {
       <UserManual
         isOpen={isManualOpen}
         onClose={() => setIsManualOpen(false)}
+        modalHeight="80vh"
       />
     </>
   );

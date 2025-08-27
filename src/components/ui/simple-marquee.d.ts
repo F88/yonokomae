@@ -14,10 +14,12 @@ export declare const MarqueeContent: ({
 }: MarqueeContentProps) => import('react/jsx-runtime').JSX.Element;
 export type MarqueeFadeProps = HTMLAttributes<HTMLDivElement> & {
   side: 'left' | 'right';
+  width?: string;
 };
 export declare const MarqueeFade: ({
   className,
   side,
+  width,
   ...props
 }: MarqueeFadeProps) => import('react/jsx-runtime').JSX.Element;
 export type MarqueeItemProps = HTMLAttributes<HTMLDivElement>;

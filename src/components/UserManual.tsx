@@ -2,15 +2,19 @@ import { USAGE_EXAMPLES } from '@/data/usage-examples';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './UserManual.css';
-import UserVoicesMarquee from './UserVoicesMarquee';
 import UserVoicesCarousel from './UserVoicesCarousel';
 
 interface UserManualProps {
   isOpen: boolean;
   onClose: () => void;
+  modalHeight?: string;
 }
 
-export const UserManual: React.FC<UserManualProps> = ({ isOpen, onClose }) => {
+export const UserManual: React.FC<UserManualProps> = ({
+  isOpen,
+  onClose,
+  modalHeight = '80vh',
+}) => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -37,7 +41,11 @@ export const UserManual: React.FC<UserManualProps> = ({ isOpen, onClose }) => {
 
   return ReactDOM.createPortal(
     <div className="user-manual-overlay" onClick={onClose}>
-      <div className="user-manual-modal" onClick={handleModalClick}>
+      <div
+        className="user-manual-modal"
+        onClick={handleModalClick}
+        style={{ height: modalHeight }}
+      >
         <div className="user-manual-header">
           <h2 className="user-manual-title">取扱説明書</h2>
           <button
