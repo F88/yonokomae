@@ -12,6 +12,14 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 
 ![ykwar.png](imgs/ykwar.png)
 
+## 「よのこまえ」の活用術10選
+
+foo bar
+
+## 個人の感想です
+
+このゲームは、地域の歴史や社会について考えるきっかけを与えてくれます。特に、合併の背景やその影響を知ることで、地域への理解が深まりました。
+
 ## Key Features
 
 - Multiple play modes with clear status
