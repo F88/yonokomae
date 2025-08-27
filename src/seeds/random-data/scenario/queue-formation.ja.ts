@@ -6,7 +6,5 @@ export default {
   subtitle: '秩序ある制圧',
   overview: '完璧な行列が丁寧な速度で前進。目標は自然と譲歩。',
   narrative: '「お願いします」と「ありがとうございます」が決定打。',
-  provenance: [
-    { label: '作法書', note: '決定的な礼節の章。' },
-  ],
+  provenance: [{ label: '作法書', note: '決定的な礼節の章。' }],
 } satisfies HistoricalSeed;

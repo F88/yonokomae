@@ -1,8 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import {
-  FakeBattleReportRepository,
-  FakeJudgementRepository,
-} from '@/yk/repo/fake/repositories.fake';
+import { FakeJudgementRepository } from '@/yk/repo/mock/repositories.fake';
 import { playMode } from '@/yk/play-mode';
 
 describe('Fake repositories - delay capping', () => {
@@ -16,22 +13,9 @@ describe('Fake repositories - delay capping', () => {
     warnSpy.mockRestore();
   });
 
-  it('caps numeric delay > 10s and warns (BattleReport)', async () => {
-    const repo = new FakeBattleReportRepository(undefined, undefined, {
-      delay: 20_000,
-    });
-    const battle = await repo.generateReport();
-    expect(battle).toBeTruthy();
-    expect(warnSpy).toHaveBeenCalled();
-    const messages = warnSpy.mock.calls.map((c) => String(c[0]));
-    expect(messages.some((m) => m.includes('Delay capped at 10000ms'))).toBe(
-      true,
-    );
-  });
-
-  it('caps range delay when max > 10s and warns (Judgement)', async () => {
+  it('caps range delay when max > 5s and warns (Judgement)', async () => {
     const repo = new FakeJudgementRepository({
-      delay: { min: 5_000, max: 20_000 },
+      delay: { min: 3_000, max: 8_000 },
     });
     const result = await repo.determineWinner({
       mode: playMode[0],
@@ -54,7 +38,7 @@ describe('Fake repositories - delay capping', () => {
     expect(warnSpy).toHaveBeenCalled();
     const messages = warnSpy.mock.calls.map((c) => String(c[0]));
     expect(
-      messages.some((m) => m.includes('Delay range capped to <= 10000ms')),
+      messages.some((m) => m.includes('Delay range capped to <= 5000ms')),
     ).toBe(true);
   });
 
@@ -78,15 +62,6 @@ describe('Fake repositories - delay capping', () => {
       },
     });
     expect(res).toBe('KOMAE');
-    expect(warnSpy).not.toHaveBeenCalled();
-  });
-
-  it('does not warn when range is within limit and min==max', async () => {
-    const repo = new FakeBattleReportRepository(undefined, undefined, {
-      delay: { min: 200, max: 200 },
-    });
-    const battle = await repo.generateReport();
-    expect(battle).toBeTruthy();
     expect(warnSpy).not.toHaveBeenCalled();
   });
 });

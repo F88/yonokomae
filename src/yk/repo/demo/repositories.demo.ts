@@ -5,20 +5,50 @@ import type {
 } from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { uid } from '@/lib/id';
+import { applyDelay, type DelayOption } from '../core/delay-utils';
 
 /**
  * DemoBattleReportRepository
  *
- * A sample variant repository for the DEMO play mode.
- * Produces battles with a different flavor from the default fake implementation.
+ * **Purpose**: Demonstration implementation with predefined battle scenarios for showcasing features.
+ *
+ * **Data Source**:
+ * - Uses hardcoded, curated battle data for consistent demo experiences
+ * - Generates fixed battle scenarios with predetermined outcomes
+ * - Creates stable, reproducible battles for presentations and testing
+ *
+ * **Features**:
+ * - Deterministic battle generation for reliable demos
+ * - Showcases typical Yono vs Komae battle structure
+ * - Hardcoded power levels and battle narratives
+ * - No external dependencies or randomization
+ * - Supports AbortSignal for cancellation
+ *
+ * **Use Cases**:
+ * - Product demonstrations and presentations
+ * - User interface testing with known data
+ * - Feature showcase scenarios
+ * - Integration testing with predictable outcomes
+ *
+ * **Battle Structure**:
+ * - Fixed battle ID and timestamp
+ * - Predefined character powers and descriptions
+ * - Consistent narrative elements
+ * - Stable provenance information
+ *
+ * **Dependencies**: None (self-contained)
+ *
+ * @see {@link BattleReportRepository} for interface definition
  */
 export class DemoBattleReportRepository implements BattleReportRepository {
-  // Add fields in the future if you need configuration (e.g., delay)
-  constructor() {}
+  private delay?: DelayOption;
 
-  async generateReport(_opts?: { signal?: AbortSignal }): Promise<Battle> {
-    // touch _opts to satisfy lint until real use is added
-    void _opts?.signal;
+  constructor(options?: { delay?: DelayOption }) {
+    this.delay = options?.delay;
+  }
+
+  async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
+    await applyDelay(this.delay, options?.signal);
     // NOTE: Replace with your own deterministic/randomized logic as needed.
     // This is a placeholder to be adapted when DEMO-2 is implemented.
     const makeNeta = (title: string): Neta => ({
@@ -48,14 +78,17 @@ export class DemoBattleReportRepository implements BattleReportRepository {
  * A sample judgement implementation for DEMO. Adjust rules freely.
  */
 export class DemoJudgementRepository implements JudgementRepository {
-  // Add fields in the future if you need configuration (e.g., delay)
-  constructor() {}
+  private delay?: DelayOption;
 
-  async determineWinner(input: {
-    mode: { id: string };
-    yono: Neta;
-    komae: Neta;
-  }): Promise<Winner> {
+  constructor(options?: { delay?: DelayOption }) {
+    this.delay = options?.delay;
+  }
+
+  async determineWinner(
+    input: { mode: { id: string }; yono: Neta; komae: Neta },
+    options?: { signal?: AbortSignal },
+  ): Promise<Winner> {
+    await applyDelay(this.delay, options?.signal);
     if (input.yono.power === input.komae.power) return 'DRAW';
     return input.yono.power > input.komae.power ? 'YONO' : 'KOMAE';
   }

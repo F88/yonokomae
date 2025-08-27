@@ -2,28 +2,66 @@ import { uid } from '@/lib/id';
 import type { Battle, Neta } from '@/types/types';
 import type { BattleReportRepository } from '@/yk/repo/core/repositories';
 import { z } from 'zod';
+import { applyDelay, type DelayOption } from '../core/delay-utils';
 
 /**
  * HistoricalEvidencesBattleReportRepository
  *
- * 史実的な戦闘データを提供するリポジトリ実装。
+ * **Purpose**: Historical evidence repository for loading complete, curated battle data files.
  *
- * Battle 単位で用意されたデータファイルを読み取って返す
+ * **Data Source**:
+ * - **Uses dedicated evidence files**: Loads from `/seeds/historical-evidences/battle/` directory
+ * - Supports both JSON and TypeScript battle files (.json, .ts)
+ * - Each file contains complete Battle objects with full historical context
+ * - More comprehensive than seed-system scenarios (complete battles vs. scenario templates)
  *
- * 対応フォーマット:
- * - JSON:  seeds/historical-evidences/battle/*.json で Battle 互換オブジェクトを default でエクスポート
- * - TS:    src/seeds/historical-evidences/battle/*.ts で Battle 互換オブジェクトを default でエクスポート
+ * **File Discovery**:
+ * - Automatically discovers battle files at build time via Vite glob imports
+ * - Searches in both `/seeds/historical-evidences/battle/` and `/src/seeds/historical-evidences/battle/`
+ * - Each file exports a Battle-compatible object as default export
+ *
+ * **Features**:
+ * - Complete battle data loading (not generation)
+ * - Rich historical documentation with full battle context
+ * - Supports file-specific loading or random selection
+ * - Higher fidelity historical content than scenario-based generation
+ * - Ready-to-use Battle objects with all fields populated
+ * - Zod validation for battle data integrity
+ *
+ * **Use Cases**:
+ * - 'historical-evidences' PlayMode - Authentic historical battles
+ * - Educational content with verified historical accuracy
+ * - Museum/archive integration scenarios
+ * - High-quality content showcasing
+ *
+ * **File Format**:
+ * ```typescript
+ * // battle-name.ts
+ * export default {
+ *   id: "historical-battle-001",
+ *   title: "Battle Title",
+ *   // ... complete Battle object
+ * } satisfies Battle;
+ * ```
+ *
+ * **Dependencies**: Vite glob imports, Zod validation
+ *
+ * @see {@link BattleReportRepository} for interface definition
+ * @see Battle type for complete battle data structure
  */
 export class HistoricalEvidencesBattleReportRepository
   implements BattleReportRepository
 {
   private readonly file?: string;
+  private readonly delay?: DelayOption;
 
-  constructor(opts?: { file?: string }) {
+  constructor(opts?: { file?: string; delay?: DelayOption }) {
     this.file = opts?.file;
+    this.delay = opts?.delay;
   }
 
-  async generateReport(): Promise<Battle> {
+  async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
+    await applyDelay(this.delay, options?.signal);
     const all = discoverBattleFiles();
     if (all.length === 0) {
       throw new Error(

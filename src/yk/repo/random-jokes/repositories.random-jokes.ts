@@ -5,8 +5,9 @@ import type {
 } from '../core/repositories';
 import type { Battle, Neta } from '@/types/types';
 // Seed loaders
-import { historicalSeeds, loadSeedByFile } from './seed-system';
+import { historicalSeeds, loadSeedByFile } from '../seed-system/seeds';
 import { uid } from '@/lib/id';
+import { applyDelay, type DelayOption } from '../core/delay-utils';
 
 export class RandomJokeScenarioRepository implements ScenarioRepository {
   async generateTitle(): Promise<string> {
@@ -44,16 +45,60 @@ export class RandomJokeNetaRepository implements NetaRepository {
 
 /**
  * BattleReportRandomDataRepository
- * Minimal seed-backed implementation that produces a Battle with provenance.
+ *
+ * **Purpose**: Seed-based historical battle scenario generator using curated historical data.
+ *
+ * **Data Source**:
+ * - **Uses seed-system**: Loads battle scenarios from `/seeds/random-data/scenario/` directory
+ * - Supports both JSON and TypeScript seed files (.json, .en.ts, .ja.ts)
+ * - Falls back to random joke scenarios when no seeds are available
+ * - Each seed contains historical battle narratives, titles, and provenance
+ *
+ * **Seed System Integration**:
+ * - Imports `historicalSeeds` and `loadSeedByFile` from seed-system
+ * - Respects user's seed file selection from context
+ * - Automatically discovers seed files at build time via Vite glob imports
+ * - Validates seed file integrity and prevents duplicate IDs
+ *
+ * **Features**:
+ * - Deterministic battles based on selected seed file
+ * - Rich historical narratives with provenance information
+ * - Supports both specific seed selection and random seed picking
+ * - Multilingual content support (EN/JA variants)
+ * - Uses RandomJokeScenarioRepository and RandomJokeNetaRepository for content generation
+ * - Generates battles with historical context and source attribution
+ *
+ * **Use Cases**:
+ * - 'historical-evidence' PlayMode - Single seed battles
+ * - 'mixed-nuts' PlayMode - Varied seed selection
+ * - Educational content with historical references
+ * - Content showcasing with source attribution
+ *
+ * **Battle Structure**:
+ * - Title, subtitle, overview from seed data
+ * - Historical narrative context
+ * - Provenance array with source references
+ * - Balanced character powers (50-50 default)
+ *
+ * **Dependencies**: seed-system, RandomJoke repositories
+ *
+ * @see {@link BattleReportRepository} for interface definition
+ * @see historicalSeeds from seed-system for available scenarios
+ * @see loadSeedByFile from seed-system for seed loading logic
  */
 export class BattleReportRandomDataRepository
   implements BattleReportRepository
 {
   private readonly seedFile?: string;
-  constructor(opts?: { seedFile?: string }) {
+  private readonly delay?: DelayOption;
+
+  constructor(opts?: { seedFile?: string; delay?: DelayOption }) {
     this.seedFile = opts?.seedFile;
+    this.delay = opts?.delay;
   }
-  async generateReport(): Promise<Battle> {
+
+  async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
+    await applyDelay(this.delay, options?.signal);
     // Prefer a specific seed if provided, else pick randomly from discovered seeds.
     let overview = '';
     let title = '';
