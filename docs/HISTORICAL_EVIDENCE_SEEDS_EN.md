@@ -107,11 +107,11 @@ The historical seed system integrates with the TSV export functionality:
 
 - Export scripts can process seed-based data for external analysis
 - Usage examples and user voices can be exported via:
-  - `npm run build:usage-examples-tsv`
-  - `npm run build:users-voice-tsv`
+    - `npm run build:usage-examples-tsv`
+    - `npm run build:users-voice-tsv`
 - Export data sources:
-  - `src/data/usage-examples.ts` - Usage examples with categories
-  - `src/data/users-voice.ts` - User testimonials and feedback
+    - `src/data/usage-examples.ts` - Usage examples with categories
+    - `src/data/users-voice.ts` - User testimonials and feedback
 
 ## References
 

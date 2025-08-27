@@ -144,7 +144,7 @@ import { exportUsersVoiceToTsv } from '@/ops/export-users-voice-to-tsv';
 
 it('exports usage examples to TSV format', () => {
     const tsvOutput = exportUsageExamplesToTsv();
-    
+
     // Assert TSV structure
     expect(tsvOutput).toContain('Category\tTitle\tDescription');
     expect(tsvOutput.split('\n').length).toBeGreaterThan(1);
@@ -152,7 +152,7 @@ it('exports usage examples to TSV format', () => {
 
 it('exports user voices to TSV format', () => {
     const tsvOutput = exportUsersVoiceToTsv();
-    
+
     // Assert TSV structure
     expect(tsvOutput).toContain('Quote\tAttribution');
     expect(tsvOutput.split('\n').length).toBeGreaterThan(1);

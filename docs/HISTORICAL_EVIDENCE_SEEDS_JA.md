@@ -107,11 +107,11 @@ Please use half-width characters for numbers, letters, and symbols.
 
 - エクスポートスクリプトはシードベースのデータを外部分析用に処理できます
 - 使用例とユーザーボイスは以下でエクスポート可能です:
-  - `npm run build:usage-examples-tsv`
-  - `npm run build:users-voice-tsv`
+    - `npm run build:usage-examples-tsv`
+    - `npm run build:users-voice-tsv`
 - エクスポートデータソース:
-  - `src/data/usage-examples.ts` - カテゴリ付き使用例
-  - `src/data/users-voice.ts` - ユーザーの証言とフィードバック
+    - `src/data/usage-examples.ts` - カテゴリ付き使用例
+    - `src/data/users-voice.ts` - ユーザーの証言とフィードバック
 
 ## 参考
 
