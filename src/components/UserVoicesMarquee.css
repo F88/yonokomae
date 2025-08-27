@@ -1,0 +1,22 @@
+/* UserVoicesMarquee styles */
+.yk-uvm-root {
+  position: relative;
+  overflow: hidden;
+}
+.yk-uvm-track {
+  display: block;
+  will-change: transform, opacity;
+}
+@keyframes yk-uvm-fade-slide {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.yk-uvm-item-enter {
+  animation: yk-uvm-fade-slide 320ms ease-out both;
+}
