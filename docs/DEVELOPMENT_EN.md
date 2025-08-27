@@ -131,16 +131,26 @@ classDiagram
   class HistoricalScenarioRepository
   class HistoricalNetaRepository
 
-  FakeBattleReportRepository ..|> BattleReportRepository
+  BattleReportRandomDataRepository ..|> BattleReportRepository
   FakeJudgementRepository ..|> JudgementRepository
-  HistoricalScenarioRepository ..|> ScenarioRepository
-  HistoricalNetaRepository ..|> NetaRepository
+  RandomJokeScenarioRepository ..|> ScenarioRepository
+  RandomJokeNetaRepository ..|> NetaRepository
 ```
 
 ### Add a new Repository for an existing Play Mode
 
 Use this path when you want to add a new repository (ExampleRepo) and consume
 it under an existing mode (e.g., `demo`).
+
+Note: Repository implementations are organized by type under `src/yk/repo/`:
+
+- `api/` - REST API client implementations
+- `core/` - Repository interfaces and provider logic
+- `demo/` - Demo/fixed data repositories
+- `historical-evidences/` - Curated historical data repositories
+- `mock/` - Test/fake repositories (FakeJudgementRepository only)
+- `random-jokes/` - Seed-based random data repositories (default)
+- `seed-system/` - Historical seed management system
 
 1. Create the Repository implementation file
 
@@ -154,7 +164,7 @@ import type {
     BattleReportRepository,
     JudgementRepository,
     Winner,
-} from '@/yk/repo/repositories';
+} from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { uid } from '@/lib/id';
 
@@ -266,14 +276,14 @@ Use this path when you introduce a brand-new `ExampleMode` and new repositories.
 ```ts
 if (mode?.id === 'example-mode') {
     const { ExampleBattleReportRepository } = await import(
-        '@/yk/repo/repositories.example'
+        '@/yk/repo/example/repositories.example'
     );
     return new ExampleBattleReportRepository();
 }
 // ...
 if (mode?.id === 'example-mode') {
     const { ExampleJudgementRepository } = await import(
-        '@/yk/repo/repositories.example'
+        '@/yk/repo/example/repositories.example'
     );
     return new ExampleJudgementRepository();
 }
@@ -301,7 +311,7 @@ Basic provider (sync or lazy creation):
 
 ```tsx
 import React from 'react';
-import { RepositoryProvider } from '@/yk/repo/RepositoryProvider';
+import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
 import { playMode, type PlayMode } from '@/yk/play-mode';
 
 export function Root() {
@@ -314,7 +324,7 @@ Suspense-ready provider (async initialization):
 
 ```tsx
 import React, { Suspense } from 'react';
-import { RepositoryProviderSuspense } from '@/yk/repo/RepositoryProvider';
+import { RepositoryProviderSuspense } from '@/yk/repo/core/RepositoryProvider';
 import type { PlayMode } from '@/yk/play-mode';
 
 export function Root({ mode }: { mode: PlayMode }) {
@@ -348,7 +358,6 @@ Note about seeds and modes:
   Seeds live under `src/seeds/random-data/**` (TS preferred) and `seeds/random-data/**` (JSON optional).
 - Historical Evidence (future): reserved. When introduced, it will use a separate folder and
   stricter provenance rules. Current random-data seeds are not historical data.
-
 
 - Primary source (Random Data seeds):
     - JSON: `seeds/random-data/scenario/*.json`
@@ -388,7 +397,7 @@ references and the related bundling warnings during build.
 
 - What this means
     - Discovery and loading both use `import.meta.glob(..., { eager: true })` for
-  `/src/seeds/random-data/...` (TS) and `/seeds/...` (JSON, if any).
+      `/src/seeds/random-data/...` (TS) and `/seeds/...` (JSON, if any).
     - `loadSeedByFile(file)` resolves from the eager module map and does not use
       `import()` at runtime.
 
@@ -500,7 +509,7 @@ The `BattleReportRandomDataRepository` demonstrates seed consumption:
 
 ```ts
 export class BattleReportRandomDataRepository
-  implements BattleReportRepository
+    implements BattleReportRepository
 {
     private readonly seedFile?: string;
 
@@ -509,7 +518,7 @@ export class BattleReportRandomDataRepository
     }
 
     async generateReport(): Promise<Battle> {
-  // Prefer a chosen seed; else pick a discovered one. See repositories.random-jokes.ts
+        // Prefer a chosen seed; else pick a discovered one. See repositories.random-jokes.ts
         // for the complete behavior and report config application.
         // Returns a fully-formed Battle with provenance.
     }

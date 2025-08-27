@@ -45,6 +45,16 @@ Please use half-width characters for numbers, letters, and symbols.
 - Play Mode は `src/yk/play-mode.ts` に定義します。
 - 具体実装を返す Provider のファクトリは `src/yk/repo/core/repository-provider.ts` にあります。
 
+注: Repository 実装は `src/yk/repo/` 下で種類別に整理されています:
+
+- `api/` - REST API クライアント実装
+- `core/` - Repository インターフェイスとプロバイダロジック
+- `demo/` - デモ/固定データリポジトリ
+- `historical-evidences/` - 厳選された歴史データリポジトリ
+- `mock/` - テスト/偽リポジトリ(FakeJudgementRepository のみ)
+- `random-jokes/` - シードベースランダムデータリポジトリ(デフォルト)
+- `seed-system/` - Historical シード管理システム
+
 中核インターフェイス:
 
 - `BattleReportRepository`
@@ -54,7 +64,7 @@ Please use half-width characters for numbers, letters, and symbols.
 
 ## 既存モードで新規 Repository を使う(ExampleRepo)
 
-既存モード(例: `demo`)
+既存モード(例: `demo`)で新しいリポジトリ(ExampleRepo)を使用したい場合の手順です。
 
 1. Repository 実装ファイルを作成
 
@@ -70,6 +80,15 @@ TSDoc 付きの例:
 
 - 対象: `src/yk/repo/core/repository-provider.ts`
 - `mode.id` が対象(例: `demo`)の時に `ExampleBattleReportRepository` と `ExampleJudgementRepository` を返す分岐を追加します。
+
+```ts
+if (mode?.id === 'example-mode') {
+    const { ExampleBattleReportRepository } = await import(
+        '@/yk/repo/example/repositories.example'
+    );
+    return new ExampleBattleReportRepository();
+}
+```
 
 1. (任意) モードごとのデフォルト遅延を調整
 
@@ -103,7 +122,12 @@ TSDoc 付きの例:
 - `getBattleReportRepository` と `getJudgementRepository` に分岐を追加。
 
 ```ts
-// 英語版(EN)のサンプルを参照してください。
+if (mode?.id === 'example-mode') {
+    const { ExampleBattleReportRepository } = await import(
+        '@/yk/repo/example/repositories.example'
+    );
+    return new ExampleBattleReportRepository();
+}
 ```
 
 1. UI やテストでモードを選択
@@ -125,13 +149,32 @@ TSDoc 付きの例:
 基本の Provider(同期/遅延作成):
 
 ```tsx
-// 英語版(EN)のサンプルを参照してください。
+import React from 'react';
+import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
+import { playMode, type PlayMode } from '@/yk/play-mode';
+
+export function Root() {
+    const [mode] = React.useState<PlayMode>(playMode[0]);
+    return <RepositoryProvider mode={mode}>{/* App */}</RepositoryProvider>;
+}
 ```
 
 Suspense 対応 Provider(非同期初期化):
 
 ```tsx
-// 英語版(EN)のサンプルを参照してください。
+import React, { Suspense } from 'react';
+import { RepositoryProviderSuspense } from '@/yk/repo/core/RepositoryProvider';
+import type { PlayMode } from '@/yk/play-mode';
+
+export function Root({ mode }: { mode: PlayMode }) {
+    return (
+        <Suspense fallback={<div>Initializing…</div>}>
+            <RepositoryProviderSuspense mode={mode}>
+                {/* App */}
+            </RepositoryProviderSuspense>
+        </Suspense>
+    );
+}
 ```
 
 ## テストヘルパと Tips
@@ -262,8 +305,8 @@ export class BattleReportRandomDataRepository
     }
 
     async generateReport(): Promise<Battle> {
-    // 選択シードを優先し、未指定時は検出済みシードから選択します。
-    // 完全な挙動とレポート設定の適用は `repositories.random-jokes.ts` を参照してください。
+        // 選択シードを優先し、未指定時は検出済みシードから選択します。
+        // 完全な挙動とレポート設定の適用は `repositories.random-jokes.ts` を参照してください。
         const chosen = this.seedFile ?? historicalSeeds[0]?.file;
         const seed = await loadSeedByFile(chosen);
         // シードデータを使ってバトルレポートを生成
