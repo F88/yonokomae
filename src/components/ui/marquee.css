@@ -58,7 +58,7 @@
   bottom: 0;
   width: var(--yk-marquee-fade-width);
   pointer-events: none;
-  z-index: 1;
+  z-index: 10;
 }
 .yk-marquee--fade-edges-overlay::before {
   left: 0;
@@ -91,6 +91,8 @@
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   width: 200%;
+  position: relative;
+  z-index: 0;
 }
 
 @keyframes yk-marquee-keyframes {

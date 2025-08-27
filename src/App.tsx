@@ -125,7 +125,7 @@ function App() {
       <br />
 
       {/* Information */}
-      <div className="grid gap-3 py-0 border-1 border-orange-400 ">
+      <div className="grid gap-3 py-0 border-0 border-orange-400 ">
         <UserVoicesMarquee speed="molasses" gap="md" reverse={false} />
         {/* <UserVoicesCarousel intervalMs={3000} pauseOnHover orientation="vertical" /> */}
         {/* <UsageExamplesCarousel intervalMs={3000} pauseOnHover orientation="vertical"/> */}

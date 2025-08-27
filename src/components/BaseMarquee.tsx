@@ -61,14 +61,15 @@ export function BaseMarquee<T>({
   if (source.length === 0) return null;
 
   return (
-    <section className={className} aria-label={ariaLabel}>
+    <section
+      className={[className, 'yk-marquee--fade-edges-overlay']
+        .filter(Boolean)
+        .join(' ')}
+      aria-label={ariaLabel}
+    >
       <div aria-live="polite">
         <Marquee
-          className={[
-            'yk-marquee--fade-edges',
-            'yk-marquee--fade-edges-overlay',
-            marqueeClassName,
-          ]
+          className={['yk-marquee--fade-edges', marqueeClassName]
             .filter(Boolean)
             .join(' ')}
           pauseOnHover={pauseOnHover}
