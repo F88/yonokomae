@@ -18,8 +18,31 @@ function App() {
   const [reports, setReports] = useState<Battle[]>([]);
   const shouldScrollAfterAppendRef = useRef(false);
   const scrollTargetIdRef = useRef<string | null>(null);
+  const [gridCols, setGridCols] = useState('grid-cols-1 lg:grid-cols-2');
 
   const { generateReport } = useGenerateReport(mode);
+
+  // Handle responsive grid columns based on window width
+  useEffect(() => {
+    const updateGridCols = () => {
+      const width = window.innerWidth;
+
+      if (width > 2560) {
+        // Custom breakpoint for 3 columns
+        setGridCols('grid grid-cols-3');
+      } else if (width >= 1280) {
+        // xl
+        setGridCols('grid grid-cols-2');
+      } else {
+        // sm, md, lg
+        setGridCols('grid grid-cols-1');
+      }
+    };
+
+    updateGridCols();
+    window.addEventListener('resize', updateGridCols);
+    return () => window.removeEventListener('resize', updateGridCols);
+  }, []);
 
   // Removed dynamic CSS variable; using static responsive scroll margins instead.
 
@@ -235,7 +258,7 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <div className="container flex flex-col gap-0 py-0 pb-32">
+      <div className="flex flex-col gap-0 py-0 pb-32 px-8">
         {/* Intro Section */}
         <section className="flex flex-col items-center text-center m-2">
           <Intro />
@@ -249,16 +272,18 @@ function App() {
 
         {/* Battle Reports */}
         {mode != null && reports.length > 0 && (
-          <section className="mx-auto w-full max-w-6xl space-y-8">
-            {reports.map((battle: Battle) => (
-              <div
-                key={battle.id}
-                id={battle.id}
-                className="scroll-mt-[72px] lg:scroll-mt-[96px]"
-              >
-                <BattleContainer battle={battle} mode={mode} />
-              </div>
-            ))}
+          <section className="mx-auto w-full max-w-[2800px]">
+            <div className={`${gridCols} gap-4 lg:gap-6`}>
+              {reports.map((battle: Battle) => (
+                <div
+                  key={battle.id}
+                  id={battle.id}
+                  className="scroll-mt-[72px] lg:scroll-mt-[96px]"
+                >
+                  <BattleContainer battle={battle} mode={mode} />
+                </div>
+              ))}
+            </div>
           </section>
         )}
       </div>
