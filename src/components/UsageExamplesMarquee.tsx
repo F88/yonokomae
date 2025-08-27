@@ -1,53 +1,54 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { USAGE_EXAMPLES } from '@/data/usage-examples';
-import { BaseMarquee } from '@/components/BaseMarquee';
+import { Marquee, MarqueeContent, MarqueeFade, MarqueeItem } from '@/components/ui/simple-marquee';
 import '@/components/UsageExamplesMarquee.css';
 
 export type UsageExamplesMarqueeProps = {
   shuffle?: boolean;
   className?: string;
-  ariaLabel?: string;
-  speed?:
-    | 'molasses'
-    | 'glacial'
-    | 'ultra-slow'
-    | 'very-slow'
-    | 'slowest'
-    | 'slower'
-    | 'slow'
-    | 'normal'
-    | 'fast';
-  gap?: 'sm' | 'md' | 'lg';
-  reverse?: boolean;
+  speed?: number;
+  pauseOnHover?: boolean;
 };
+
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 export const UsageExamplesMarquee: React.FC<UsageExamplesMarqueeProps> = ({
   shuffle = false,
   className,
-  ariaLabel = 'Usage examples marquee',
-  speed = 'glacial',
-  gap = 'md',
-  reverse = false,
+  speed = 20,
+  pauseOnHover = true,
 }) => {
+  const examples = useMemo(
+    () => (shuffle ? shuffleArray(USAGE_EXAMPLES) : USAGE_EXAMPLES),
+    [shuffle],
+  );
+
+  if (!examples.length) return null;
+
   return (
-    <BaseMarquee
-      data={USAGE_EXAMPLES}
-      shuffle={shuffle}
-      className={className}
-      ariaLabel={ariaLabel}
-      speed={speed}
-      gap={gap}
-      reverse={reverse}
-      marqueeClassName="yk-marquee--fade-edges"
-      renderItem={(example) => (
-        <article className="yk-uem-item">
-          <div className="yk-uem-card">
-            <h3 className="yk-uem-title">{example.title}</h3>
-            <p className="yk-uem-description">{example.description}</p>
-          </div>
-        </article>
-      )}
-    />
+    <Marquee className={className}>
+      <MarqueeFade side="left" />
+      <MarqueeContent speed={speed} pauseOnHover={pauseOnHover}>
+        {examples.map((example, index) => (
+          <MarqueeItem key={index}>
+            <article className="yk-uem-item">
+              <div className="yk-uem-card">
+                <h3 className="yk-uem-title">{example.title}</h3>
+                <p className="yk-uem-description">{example.description}</p>
+              </div>
+            </article>
+          </MarqueeItem>
+        ))}
+      </MarqueeContent>
+      <MarqueeFade side="right" />
+    </Marquee>
   );
 };
 
