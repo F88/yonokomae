@@ -1,3 +1,10 @@
+// ---- judgement cache hit/miss counters (development/debug only) ----
+// These counters are used for logging cache hit/miss rates during development.
+// They are module-scoped and accumulate values for the lifetime of the process.
+// Not suitable for production or multi-process environments.
+// Reset only on reload. For accurate analytics, use a proper metrics system.
+let cacheHitCount = 0;
+let cacheMissCount = 0;
 import type {
   BattleReportRepository,
   JudgementRepository,
@@ -438,6 +445,19 @@ function withJudgementCollapsing<T extends JudgementRepository>(
   const ttl = opts?.cacheTtlMs ?? (isTestEnv() ? 0 : 60_000);
   const keyFn = opts?.keyFn ?? computeJudgementKey;
 
+  // Log cache hit/miss rate for development/debugging
+  function logCacheRate() {
+    // Note: These counters are module-scoped and not reset per session/request.
+    // For production, use a proper metrics system.
+    const total = cacheHitCount + cacheMissCount;
+    if (total > 0) {
+      const rate = ((cacheHitCount / total) * 100).toFixed(1);
+      console.info(
+        `judgement.cache.rate: ${cacheHitCount}/${total} (${rate}%)`,
+      );
+    }
+  }
+
   const decorated: JudgementRepository = {
     async determineWinner(input, options) {
       if (!enabled) {
@@ -450,13 +470,17 @@ function withJudgementCollapsing<T extends JudgementRepository>(
 
       // Fresh cached value
       if (current && current.value !== undefined && current.expiresAt > now) {
+        cacheHitCount++;
         console.count('judgement.cache.hit');
+        logCacheRate();
         return current.value;
       }
 
       // In-flight promise
       if (current && current.promise) {
+        cacheHitCount++;
         console.count('judgement.cache.hit');
+        logCacheRate();
         // Respect caller abort without cancelling underlying request:
         if (options?.signal) {
           if (options.signal.aborted) {
@@ -477,7 +501,9 @@ function withJudgementCollapsing<T extends JudgementRepository>(
         return current.promise;
       }
 
+      cacheMissCount++;
       console.count('judgement.cache.miss');
+      logCacheRate();
       // Start a new underlying call. Important: do NOT pass caller signal
       // so that one impatient subscriber doesn't cancel others.
       const p = repo
