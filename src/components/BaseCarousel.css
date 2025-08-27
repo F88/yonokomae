@@ -1,0 +1,24 @@
+.base-carousel-embla {
+  overflow: hidden;
+}
+.base-carousel-embla__container {
+  display: flex;
+}
+.base-carousel-embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.base-carousel-embla[data-orientation='vertical'] {
+  height: 150px;
+}
+.base-carousel-embla[data-orientation='vertical']
+  .base-carousel-embla__container {
+  flex-direction: column;
+  height: 100%;
+}
+.base-carousel-embla[data-orientation='vertical'] .base-carousel-embla__slide {
+  flex: 0 0 100%;
+  min-height: 0;
+  height: 100%;
+}

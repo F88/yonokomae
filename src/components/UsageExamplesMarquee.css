@@ -1,0 +1,26 @@
+.yk-uem-item {
+  position: relative;
+  display: inline-block;
+}
+
+.yk-uem-card {
+  padding: 20px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.yk-uem-title {
+  margin: 0 0 12px 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.yk-uem-description {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.9;
+}

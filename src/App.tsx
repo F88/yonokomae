@@ -10,6 +10,10 @@ import { Header } from './components/Header';
 import type { Battle } from './types/types';
 import { playMode, type PlayMode } from './yk/play-mode';
 import { TitleContainer } from './components/TitleContainer';
+import UserVoicesMarquee from './components/UserVoicesMarquee';
+import UserVoicesCarousel from './components/UserVoicesCarousel';
+import UsageExamplesCarousel from './components/UsageExamplesCarousel';
+import { UsageExamplesMarquee } from './components/UsageExamplesMarquee';
 
 function App() {
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
@@ -117,6 +121,16 @@ function App() {
           <Header mode={mode} />
         </div>
       </header>
+
+      <br />
+
+      {/* Information */}
+      <div className="grid gap-3 py-0 border-1 border-orange-400 ">
+        <UserVoicesMarquee speed="molasses" gap="md" reverse={false} />
+        {/* <UserVoicesCarousel intervalMs={3000} pauseOnHover orientation="vertical" /> */}
+        {/* <UsageExamplesCarousel intervalMs={3000} pauseOnHover orientation="vertical"/> */}
+        {/* <UsageExamplesMarquee speed="molasses" gap="md" reverse={false} /> */}
+      </div>
 
       {/* Main Content */}
       <div className="container flex flex-col gap-0 py-0 pb-32">

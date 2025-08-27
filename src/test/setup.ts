@@ -2,6 +2,23 @@ import '@testing-library/jest-dom';
 import { beforeAll, afterEach, afterAll } from 'vitest';
 import { server } from './msw';
 
+// jsdom polyfills for browser-only APIs used in components (e.g., Embla)
+if (typeof window !== 'undefined' && !('matchMedia' in window)) {
+  // Minimal matchMedia mock used by Embla's options handler
+  // See: https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).matchMedia = (query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  });
+}
+
 // Establish API mocking before all tests.
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'bypass' });

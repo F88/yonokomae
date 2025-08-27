@@ -19,11 +19,13 @@ export const ThemeToggle: React.FC = () => {
 
   return (
     <button
-      className="ml-auto px-4 py-2 rounded bg-gray-200 text-gray-800 shadow hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 transition"
+      type="button"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
       aria-label="Toggle theme"
+      title={theme === 'light' ? 'ダークモード' : 'ライトモード'}
+      className="inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
     >
-      {theme === 'light' ? '🌙' : '☀️'}
+      <span className="text-base">{theme === 'light' ? '🌙' : '☀️'}</span>
     </button>
   );
 };
