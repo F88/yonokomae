@@ -11,6 +11,7 @@ import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
 import type { Battle } from './types/types';
 import { playMode, type PlayMode } from './yk/play-mode';
+import UserVoicesCarousel from './components/UserVoicesCarousel';
 
 function App() {
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
@@ -123,7 +124,17 @@ function App() {
 
       {/* Information */}
       <div className="grid gap-3 py-0 border-0 border-orange-400 ">
-        <UserVoicesMarquee speed={60} pauseOnHover={true} />
+        <UserVoicesMarquee
+          shuffle={true}
+          speed={60}
+          pauseOnHover={true}
+          fadeWidth={'w-24'}
+        />
+        {/* <UserVoicesCarousel
+          intervalMs={3000}
+          pauseOnHover
+          orientation="vertical"
+        /> */}
         {/* <UserVoicesCarousel intervalMs={3000} pauseOnHover orientation="vertical" /> */}
         {/* <UsageExamplesCarousel intervalMs={3000} pauseOnHover orientation="vertical"/> */}
         {/* <UsageExamplesMarquee speed={60} /> */}

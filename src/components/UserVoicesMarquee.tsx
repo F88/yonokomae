@@ -13,6 +13,7 @@ export type UserVoicesMarqueeProps = {
   className?: string;
   speed?: number;
   pauseOnHover?: boolean;
+  fadeWidth?: string;
 };
 
 function shuffleArray<T>(arr: T[]): T[] {
@@ -29,6 +30,7 @@ export const UserVoicesMarquee: React.FC<UserVoicesMarqueeProps> = ({
   className,
   speed = 20,
   pauseOnHover = true,
+  fadeWidth,
 }) => {
   const voices = useMemo(
     () => (shuffle ? shuffleArray(USER_VOICES) : USER_VOICES),
@@ -39,7 +41,7 @@ export const UserVoicesMarquee: React.FC<UserVoicesMarqueeProps> = ({
 
   return (
     <Marquee className={className}>
-      <MarqueeFade side="left" />
+      <MarqueeFade side="left" width={fadeWidth} />
       <MarqueeContent speed={speed} pauseOnHover={pauseOnHover}>
         {voices.map((voice, index) => (
           <MarqueeItem key={index}>
@@ -54,7 +56,7 @@ export const UserVoicesMarquee: React.FC<UserVoicesMarqueeProps> = ({
           </MarqueeItem>
         ))}
       </MarqueeContent>
-      <MarqueeFade side="right" />
+      <MarqueeFade side="right" width={fadeWidth} />
     </Marquee>
   );
 };

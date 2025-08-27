@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './UserManual.css';
 import UserVoicesMarquee from './UserVoicesMarquee';
+import UserVoicesCarousel from './UserVoicesCarousel';
 
 interface UserManualProps {
   isOpen: boolean;
@@ -52,18 +53,16 @@ export const UserManual: React.FC<UserManualProps> = ({ isOpen, onClose }) => {
         <div className="user-manual-content">
           <div className="user-manual-list-section">
             <h2 className="user-manual-subtitle">個人の感想</h2>
-            <div className="user-manual-marquee-section">
-              <UserVoicesMarquee
-                shuffle={true}
-                pauseOnHover={true}
-                speed={20}
+            <div className="border my-6  border-gray-300 rounded-md p-2">
+              <UserVoicesCarousel
+                intervalMs={3000}
+                pauseOnHover
+                orientation="vertical"
+                containerHeight="100px"
+                showControls={false}
               />
             </div>
           </div>
-
-          {/* <div className="user-manual-marquee-section"> */}
-          {/* <UsageExamplesMarquee speed="molasses" gap="md" reverse={false} /> */}
-          {/* </div> */}
 
           <div className="user-manual-list-section">
             <h3 className="user-manual-subtitle">活用例</h3>
