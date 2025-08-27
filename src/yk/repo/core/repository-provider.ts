@@ -1,7 +1,7 @@
 import type {
   BattleReportRepository,
   JudgementRepository,
-} from './core/repositories';
+} from './repositories';
 import type { PlayMode } from '@/yk/play-mode';
 
 export async function getBattleReportRepository(
@@ -9,13 +9,13 @@ export async function getBattleReportRepository(
   seedFile?: string,
 ): Promise<BattleReportRepository> {
   const { FakeBattleReportRepository } = await import(
-    '@/yk/repo/fake/repositories.fake'
+    '@/yk/repo/mock/repositories.fake'
   );
   const delay = defaultDelayForMode(mode);
-  // Tip: add new branches per mode here (e.g., 'demo-2', 'api')
-  // if (mode?.id === 'demo-2') {
-  //   const { Demo2BattleReportRepository } = await import('@/yk/repo/demo/repositories.demo');
-  //   return new Demo2BattleReportRepository();
+  // Tip: add new branches per mode here (e.g., 'demo', 'api')
+  // if (mode?.id === 'demo-custom') {
+  //   const { DemoBattleReportRepository } = await import('@/yk/repo/demo/repositories.demo');
+  //   return new DemoBattleReportRepository();
   // }
   if (mode?.id === 'api') {
     const { ApiClient, ApiBattleReportRepository } = await import(
@@ -33,14 +33,14 @@ export async function getBattleReportRepository(
   }
   if (mode?.id === 'historical-evidence') {
     const { BattleReportRandomDataRepository } = await import(
-      '@/yk/repo/random-jokes/repositories.random-jokes'
+      '@/yk/repo/historical-scenarios/repositories.random-jokes'
     );
     // Selected seed is provided via context; callers pass it here.
     return new BattleReportRandomDataRepository({ seedFile });
   }
   if (mode?.id === 'mixed-nuts') {
     const { BattleReportRandomDataRepository } = await import(
-      '@/yk/repo/random-jokes/repositories.random-jokes'
+      '@/yk/repo/historical-scenarios/repositories.random-jokes'
     );
     return new BattleReportRandomDataRepository({ seedFile });
   }
@@ -51,13 +51,13 @@ export async function getJudgementRepository(
   mode?: PlayMode,
 ): Promise<JudgementRepository> {
   const { FakeJudgementRepository } = await import(
-    '@/yk/repo/fake/repositories.fake'
+    '@/yk/repo/mock/repositories.fake'
   );
   const delay = defaultDelayForMode(mode, 'judgement');
-  // Tip: add new branches per mode here (e.g., 'demo-2', 'api')
-  // if (mode?.id === 'demo-2') {
-  //   const { Demo2JudgementRepository } = await import('@/yk/repo/demo/repositories.demo');
-  //   return new Demo2JudgementRepository();
+  // Tip: add new branches per mode here (e.g., 'demo', 'api')
+  // if (mode?.id === 'demo-custom') {
+  //   const { DemoJudgementRepository } = await import('@/yk/repo/demo/repositories.demo');
+  //   return new DemoJudgementRepository();
   // }
   if (mode?.id === 'api') {
     const { ApiClient, ApiJudgementRepository } = await import(

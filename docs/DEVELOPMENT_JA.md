@@ -40,10 +40,10 @@ Please use half-width characters for numbers, letters, and symbols.
 
 ## 目標と契約
 
-- Repository のコントラクトは `src/yk/repo/repositories.ts` に定義されています。
+- Repository のコントラクトは `src/yk/repo/core/repositories.ts` に定義されています。
 - 具体実装は `src/yk/repo/*` に配置します。
 - Play Mode は `src/yk/play-mode.ts` に定義します。
-- 具体実装を返す Provider のファクトリは `src/yk/repo/repository-provider.ts` にあります。
+- 具体実装を返す Provider のファクトリは `src/yk/repo/core/repository-provider.ts` にあります。
 
 中核インターフェイス:
 
@@ -58,7 +58,7 @@ Please use half-width characters for numbers, letters, and symbols.
 
 1. Repository 実装ファイルを作成
 
-- 配置: `src/yk/repo/repositories.example.ts`
+- 配置: `src/yk/repo/example/repositories.example.ts`
 
 TSDoc 付きの例:
 
@@ -68,7 +68,7 @@ TSDoc 付きの例:
 
 1. 既存モードに ExampleRepo を配線
 
-- 対象: `src/yk/repo/repository-provider.ts`
+- 対象: `src/yk/repo/core/repository-provider.ts`
 - `mode.id` が対象(例: `demo`)の時に `ExampleBattleReportRepository` と `ExampleJudgementRepository` を返す分岐を追加します。
 
 1. (任意) モードごとのデフォルト遅延を調整
@@ -77,7 +77,7 @@ TSDoc 付きの例:
 
 1. 実装近傍にテストを追加
 
-- 例: `src/yk/repo/repositories.example.test.ts`
+- 例: `src/yk/repo/example/repositories.example.test.ts`
 - タイマーや乱数は必要に応じてモックし、ランダム値ではなく状態やインタラクションを検証します。
 
 ## 新規モードと実装一式を追加する(ExampleMode)
@@ -95,11 +95,11 @@ TSDoc 付きの例:
 
 1. Repository を実装
 
-- 配置: `src/yk/repo/repositories.example.ts`(上記と同じ。必要なら分割)
+- 配置: `src/yk/repo/example/repositories.example.ts`(上記と同じ。必要なら分割)
 
 1. Provider ファクトリにモード分岐を追加
 
-- 対象: `src/yk/repo/repository-provider.ts`
+- 対象: `src/yk/repo/core/repository-provider.ts`
 - `getBattleReportRepository` と `getJudgementRepository` に分岐を追加。
 
 ```ts
@@ -116,7 +116,7 @@ TSDoc 付きの例:
 
 ## Provider 工場での配線
 
-- ファクトリは `src/yk/repo/repository-provider.ts` にあります。
+- ファクトリは `src/yk/repo/core/repository-provider.ts` にあります。
 - `mode.id` ごとに適切な実装を返す分岐を追加します。
 - 副作用を避け、軽量に保ち、可能な限り動的 import を使います。
 

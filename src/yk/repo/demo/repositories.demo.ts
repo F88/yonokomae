@@ -7,12 +7,12 @@ import type { Battle, Neta } from '@/types/types';
 import { uid } from '@/lib/id';
 
 /**
- * Demo2BattleReportRepository
+ * DemoBattleReportRepository
  *
- * A sample variant repository for the DEMO-2 play mode.
+ * A sample variant repository for the DEMO play mode.
  * Produces battles with a different flavor from the default fake implementation.
  */
-export class Demo2BattleReportRepository implements BattleReportRepository {
+export class DemoBattleReportRepository implements BattleReportRepository {
   // Add fields in the future if you need configuration (e.g., delay)
   constructor() {}
 
@@ -43,11 +43,11 @@ export class Demo2BattleReportRepository implements BattleReportRepository {
 }
 
 /**
- * Demo2JudgementRepository
+ * DemoJudgementRepository
  *
- * A sample judgement implementation for DEMO-2. Adjust rules freely.
+ * A sample judgement implementation for DEMO. Adjust rules freely.
  */
-export class Demo2JudgementRepository implements JudgementRepository {
+export class DemoJudgementRepository implements JudgementRepository {
   // Add fields in the future if you need configuration (e.g., delay)
   constructor() {}
 

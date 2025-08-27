@@ -8,7 +8,7 @@ import type { Battle, Neta } from '@/types/types';
 import { historicalSeeds, loadSeedByFile } from './seed-system';
 import { uid } from '@/lib/id';
 
-export class HistoricalScenarioRepository implements ScenarioRepository {
+export class RandomJokeScenarioRepository implements ScenarioRepository {
   async generateTitle(): Promise<string> {
     const seed = await pickAnySeed();
     return seed?.title ?? 'Random Joke Data';
@@ -27,7 +27,7 @@ export class HistoricalScenarioRepository implements ScenarioRepository {
   }
 }
 
-export class HistoricalNetaRepository implements NetaRepository {
+export class RandomJokeNetaRepository implements NetaRepository {
   async getKomaeBase(): Promise<
     Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>
   > {
@@ -90,7 +90,7 @@ export class BattleReportRandomDataRepository
     }
 
     // Build basic Netas using historical base repos (titles/images can remain placeholders)
-    const netaRepo = new HistoricalNetaRepository();
+    const netaRepo = new RandomJokeNetaRepository();
     const [komaeBase, yonoBase] = await Promise.all([
       netaRepo.getKomaeBase(),
       netaRepo.getYonoBase(),

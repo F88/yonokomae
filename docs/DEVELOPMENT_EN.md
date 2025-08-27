@@ -44,11 +44,11 @@ Note: The app is a CSR SPA (no SSR). Dependency injection (DI) is provided via
 
 ### Goals and Contracts
 
-- Clear repository contracts are defined in `src/yk/repo/repositories.ts`.
+- Clear repository contracts are defined in `src/yk/repo/core/repositories.ts`.
 - Implementations live under `src/yk/repo/*`.
 - Play Modes are defined in `src/yk/play-mode.ts`.
 - Provider factories that return concrete repos live in
-  `src/yk/repo/repository-provider.ts`.
+  `src/yk/repo/core/repository-provider.ts`.
 
 Core interfaces:
 
@@ -144,12 +144,12 @@ it under an existing mode (e.g., `demo`).
 
 1. Create the Repository implementation file
 
-- Location: `src/yk/repo/repositories.example.ts`
+- Location: `src/yk/repo/example/repositories.example.ts`
 
 Example with TSDoc:
 
 ```ts
-// src/yk/repo/repositories.example.ts
+// src/yk/repo/example/repositories.example.ts
 import type {
     BattleReportRepository,
     JudgementRepository,
@@ -219,7 +219,7 @@ export class ExampleJudgementRepository implements JudgementRepository {
 
 1. Wire ExampleRepo into the existing mode
 
-- File: `src/yk/repo/repository-provider.ts`
+- File: `src/yk/repo/core/repository-provider.ts`
 - Add a branch to return `ExampleBattleReportRepository` and
   `ExampleJudgementRepository` when `mode.id` matches your target mode (e.g.,
   `demo`).
@@ -231,7 +231,7 @@ export class ExampleJudgementRepository implements JudgementRepository {
 
 1. Add tests near the implementation
 
-- File: `src/yk/repo/repositories.example.test.ts`
+- File: `src/yk/repo/example/repositories.example.test.ts`
 - Mock timers/random if needed; assert on states and interactions, not random
   values.
 
@@ -255,12 +255,12 @@ Use this path when you introduce a brand-new `ExampleMode` and new repositories.
 
 1. Implement the Repositories
 
-- Location: `src/yk/repo/repositories.example.ts` (same as above) or split as
+- Location: `src/yk/repo/example/repositories.example.ts` (same as above) or split as
   needed.
 
 1. Wire the new mode in provider factories
 
-- File: `src/yk/repo/repository-provider.ts`
+- File: `src/yk/repo/core/repository-provider.ts`
 - Add branches in `getBattleReportRepository` and `getJudgementRepository`:
 
 ```ts
@@ -291,7 +291,7 @@ if (mode?.id === 'example-mode') {
 
 ### Wiring in the Provider Factories
 
-- Provider factories live in `src/yk/repo/repository-provider.ts`.
+- Provider factories live in `src/yk/repo/core/repository-provider.ts`.
 - Add a branch per `mode.id` to instantiate the correct implementation.
 - Keep factories lightweight and avoid side effects; prefer async imports.
 
