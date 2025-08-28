@@ -153,7 +153,7 @@ export function TitleContainer({
             {title}
           </CardTitle>
           {/* <div className="text-sm text-muted-foreground">{subtitle}</div> */}
-          {options[index]?.id === 'historical-evidences' && (
+          {options[index]?.id === 'historical-research' && (
             <div className="mt-2 flex flex-col items-center gap-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
                 <span>Seed:</span>
@@ -200,9 +200,9 @@ export function TitleContainer({
           </div>
 
           {/** Compact hint (< sm) */}
-          <div className="mb-2 text-[10px] text-muted-foreground sm:hidden">
-            Use ↓/↑ to choose, Enter to start (or j/k, s/w)
-          </div>
+          {/* <div className="mb-2 text-[10px] text-muted-foreground sm:hidden"> */}
+          {/* Use ↓/↑ to choose, Enter to start (or j/k, s/w) */}
+          {/* </div> */}
           <div
             role="radiogroup"
             aria-label="Play modes"

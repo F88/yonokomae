@@ -14,10 +14,54 @@
  *   animations; use these JS utilities for runtime decisions like
  *   scroll behavior or autoplay toggles.
  */
-export const prefersReducedMotion = (): boolean =>
+type ReducedMotionOverride = 'auto' | 'reduce' | 'no-preference';
+
+let reducedMotionOverride: ReducedMotionOverride = 'auto';
+
+/** Event name dispatched on window when the effective preference may change. */
+export const REDUCED_MOTION_EVENT = 'reduced-motion:change';
+
+/** Get current override mode: 'auto' | 'reduce' | 'no-preference'. */
+export const getReducedMotionOverride = (): ReducedMotionOverride =>
+  reducedMotionOverride;
+
+/**
+ * Set override mode. Use 'auto' for a system-driven decision, or 'reduce'
+ * to manually enable reduced motion. This updates the <html> class
+ * `reduced-motion` to reflect the current effective preference for CSS hooks.
+ */
+export const setReducedMotionOverride = (mode: ReducedMotionOverride) => {
+  reducedMotionOverride = mode;
+  // Update HTML class for CSS-based hooks
+  if (typeof document !== 'undefined') {
+    const effective = prefersReducedMotion();
+    document.documentElement.classList.toggle('reduced-motion', effective);
+  }
+  // Notify listeners that the effective state may have changed
+  if (
+    typeof window !== 'undefined' &&
+    typeof window.dispatchEvent === 'function'
+  ) {
+    try {
+      window.dispatchEvent(new CustomEvent(REDUCED_MOTION_EVENT));
+    } catch {
+      // no-op: CustomEvent may be unavailable in exotic environments
+    }
+  }
+};
+
+/** System-level reduced-motion detection. */
+const systemPrefersReducedMotion = (): boolean =>
   typeof window !== 'undefined' &&
   typeof window.matchMedia === 'function' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** Effective reduced-motion considering override. */
+export const prefersReducedMotion = (): boolean => {
+  if (reducedMotionOverride === 'reduce') return true;
+  if (reducedMotionOverride === 'no-preference') return false;
+  return systemPrefersReducedMotion();
+};
 
 /**
  * Pick a scroll behavior that respects the reduced-motion preference.

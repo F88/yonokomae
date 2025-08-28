@@ -14,6 +14,20 @@
  *   animations; use these JS utilities for runtime decisions like
  *   scroll behavior or autoplay toggles.
  */
+type ReducedMotionOverride = 'auto' | 'reduce' | 'no-preference';
+/** Event name dispatched on window when the effective preference may change. */
+export declare const REDUCED_MOTION_EVENT = 'reduced-motion:change';
+/** Get current override mode: 'auto' | 'reduce' | 'no-preference'. */
+export declare const getReducedMotionOverride: () => ReducedMotionOverride;
+/**
+ * Set override mode. Use 'auto' for a system-driven decision, or 'reduce'
+ * to manually enable reduced motion. This updates the <html> class
+ * `reduced-motion` to reflect the current effective preference for CSS hooks.
+ */
+export declare const setReducedMotionOverride: (
+  mode: ReducedMotionOverride,
+) => void;
+/** Effective reduced-motion considering override. */
 export declare const prefersReducedMotion: () => boolean;
 /**
  * Pick a scroll behavior that respects the reduced-motion preference.
@@ -79,3 +93,4 @@ export declare const scrollByY: (
     behavior?: ScrollBehavior;
   },
 ) => void;
+export {};
