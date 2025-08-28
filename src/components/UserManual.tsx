@@ -47,9 +47,18 @@ export const UserManual: React.FC<UserManualProps> = ({
         className="relative bg-background border border-border rounded-2xl shadow-2xl w-full max-w-3xl sm:w-[95%] max-h-[calc(100vh-80px)] sm:max-h-[calc(100vh-40px)] flex flex-col animate-in zoom-in-95 duration-300 z-[10000]"
         onClick={handleModalClick}
         style={{ height: modalHeight }}
+        id="user-manual-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="user-manual-title"
       >
         <div className="relative p-6 sm:p-5 border-b border-border text-center">
-          <h2 className="text-2xl font-semibold text-foreground">取扱説明書</h2>
+          <h2
+            id="user-manual-title"
+            className="text-2xl font-semibold text-foreground"
+          >
+            取扱説明書
+          </h2>
           <button
             type="button"
             className="absolute top-4 right-4 sm:top-3 sm:right-3 bg-background border-2 border-border rounded-full text-xl cursor-pointer w-10 h-10 flex items-center justify-center text-muted-foreground transition-all duration-200 font-bold hover:bg-muted hover:border-muted-foreground hover:text-foreground hover:rotate-90"
@@ -60,7 +69,11 @@ export const UserManual: React.FC<UserManualProps> = ({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 sm:p-5">
+        <div
+          className="flex-1 overflow-y-auto p-6 sm:p-5"
+          tabIndex={0}
+          aria-label="User manual content"
+        >
           <div className="mb-8">
             <h2 className="text-xl font-semibold text-foreground mb-5">
               個人の感想

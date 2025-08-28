@@ -153,7 +153,7 @@ export function TitleContainer({
             {title}
           </CardTitle>
           {/* <div className="text-sm text-muted-foreground">{subtitle}</div> */}
-          {options[index]?.id === 'historical-evidence' && (
+          {options[index]?.id === 'historical-evidences' && (
             <div className="mt-2 flex flex-col items-center gap-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
                 <span>Seed:</span>
@@ -206,10 +206,18 @@ export function TitleContainer({
           <div
             role="radiogroup"
             aria-label="Play modes"
+            aria-describedby="play-modes-hint"
+            aria-activedescendant={
+              options[index] ? `play-mode-${options[index].id}` : undefined
+            }
             tabIndex={0}
             onKeyDown={handleKeyDown}
-            className="mx-auto flex w-full flex-col gap-2"
+            className="mx-auto flex w-full flex-col gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
+            {/* SR-only hint for keyboard interaction */}
+            <div id="play-modes-hint" className="sr-only">
+              Use Arrow keys to choose a mode and press Enter or Space to start.
+            </div>
             {options.map((m, i) => {
               const selected = i === index;
               const inputId = `play-mode-${m.id}`;

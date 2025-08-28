@@ -4,6 +4,7 @@ import type { Battle } from '@/types/types';
 import type { PlayMode } from '@/yk/play-mode';
 import { ScrollText } from 'lucide-react';
 import { type FC, useEffect } from 'react';
+import { scrollToY } from '@/lib/reduced-motion';
 import { scrollToAnchor } from '@/lib/scroll';
 import { BREAKPOINTS } from '@/hooks/use-breakpoint';
 export type Props = {
@@ -21,7 +22,7 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
       // Use documentElement to cover the whole page height
       const doc = document.documentElement;
       const top = Math.max(doc.scrollHeight - window.innerHeight, 0);
-      window.scrollTo({ top, behavior: 'smooth' });
+      scrollToY(top);
     });
     return () => cancelAnimationFrame(id);
   }, [battle?.id]);

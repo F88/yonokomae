@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { scrollToY } from '@/lib/reduced-motion';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Swords, ScrollText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +10,7 @@ export const Header = ({ mode }: { mode?: PlayMode }) => {
   const [isManualOpen, setIsManualOpen] = useState(false);
 
   const handleScrollTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToY(0);
   };
   return (
     <>
@@ -41,6 +42,8 @@ export const Header = ({ mode }: { mode?: PlayMode }) => {
             type="button"
             onClick={() => setIsManualOpen(true)}
             aria-label="Open user manual"
+            aria-haspopup="dialog"
+            aria-controls="user-manual-dialog"
             title="取扱説明書"
             className="inline-flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
           >

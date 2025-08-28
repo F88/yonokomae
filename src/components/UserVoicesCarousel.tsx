@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import '@/components/UserVoicesMarquee.css';
+import { prefersReducedMotion } from '@/lib/reduced-motion';
 
 export type UserVoicesCarouselProps = {
   shuffle?: boolean;
@@ -45,13 +46,14 @@ export const UserVoicesCarousel: React.FC<UserVoicesCarouselProps> = ({
     [shuffle],
   );
 
-  const plugin = React.useRef(
-    Autoplay({
+  const autoplayPlugin = React.useMemo(() => {
+    if (prefersReducedMotion()) return undefined;
+    return Autoplay({
       delay: intervalMs,
       stopOnInteraction: false,
       stopOnMouseEnter: pauseOnHover,
-    }),
-  );
+    });
+  }, [intervalMs, pauseOnHover]);
 
   if (!voices.length) return null;
 
@@ -59,7 +61,7 @@ export const UserVoicesCarousel: React.FC<UserVoicesCarouselProps> = ({
     <Carousel
       className={className}
       orientation={orientation}
-      plugins={[plugin.current]}
+      plugins={autoplayPlugin ? [autoplayPlugin] : []}
       opts={{
         align: 'start',
         loop: true,

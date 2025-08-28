@@ -52,7 +52,7 @@ export const Controller: FC<ControllerProps> = ({
           onClick={handleReset}
           className="gap-2"
           title="Reset (R)"
-          aria-label="Reset (R)"
+          aria-label="Reset"
         >
           <Square className="h-4 w-4" />
           RESET
@@ -84,11 +84,15 @@ export const Controller: FC<ControllerProps> = ({
           onClick={handleGenerate}
           className="gap-2"
           title="Battle (Enter, Space, or B)"
-          aria-label="Battle (Enter, Space, or B)"
+          aria-label="Battle"
+          aria-describedby="kbd-battle-hint"
         >
           <GiInvertedDice3 className="h-5 w-5" />
           BATTLE
         </Button>
+        <span id="kbd-battle-hint" className="sr-only">
+          Shortcut: B, Enter, Space
+        </span>
         <div className="hidden items-center gap-1 text-xs text-muted-foreground sm:flex">
           <KeyChip label="B" />
           <KeyChip label="Enter" />

@@ -12,6 +12,7 @@ import UserVoicesMarquee from './components/UserVoicesMarquee';
 import type { Battle } from './types/types';
 import { playMode, type PlayMode } from './yk/play-mode';
 import { isEditable } from '@/lib/dom-utils';
+import { scrollByY, scrollToY } from '@/lib/reduced-motion';
 
 function App() {
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
@@ -64,7 +65,7 @@ function App() {
     // Scroll by the difference between the element's top and the header's bottom
     const delta = rect.top - headerBottom - extraGap;
     if (Math.abs(delta) > 1) {
-      window.scrollBy({ top: delta, behavior: 'smooth' });
+      scrollByY(delta);
     }
   };
 
@@ -99,7 +100,7 @@ function App() {
       '(prefers-reduced-motion: reduce)',
     ).matches;
     if (prefersReduced || duration <= 0) {
-      window.scrollBy({ top: deltaY });
+      scrollByY(deltaY, { behavior: 'auto' });
       return;
     }
     const startY = window.scrollY;
@@ -111,7 +112,7 @@ function App() {
       const t = Math.min(1, elapsed / duration);
       const eased = easeOutCubic(t);
       const nextY = startY + (targetY - startY) * eased;
-      window.scrollTo({ top: nextY });
+      scrollToY(nextY, { behavior: 'auto' });
       if (t < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
