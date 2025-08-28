@@ -5,6 +5,29 @@ import {
 } from '@/lib/reduced-motion';
 
 /**
+ * Legacy MediaQueryList interface for Safari compatibility.
+ * These methods are deprecated but still present in older browsers.
+ */
+interface LegacyMediaQueryList extends MediaQueryList {
+  addListener: (listener: () => void) => void;
+  removeListener: (listener: () => void) => void;
+}
+
+/**
+ * Type guard to check if MediaQueryList has legacy addListener method.
+ */
+const hasLegacyListener = (
+  mql: MediaQueryList,
+): mql is LegacyMediaQueryList => {
+  return (
+    'addListener' in mql &&
+    typeof (mql as any).addListener === 'function' &&
+    'removeListener' in mql &&
+    typeof (mql as any).removeListener === 'function'
+  );
+};
+
+/**
  * usePrefersReducedMotion
  *
  * Returns the current effective reduced-motion state as a boolean:
@@ -39,15 +62,12 @@ export const usePrefersReducedMotion = (): boolean => {
         mql.addEventListener('change', handleMqlChangeEvent);
         detachMql = () =>
           mql && mql.removeEventListener('change', handleMqlChangeEvent);
-      } else if (mql && 'addListener' in mql) {
+      } else if (mql && hasLegacyListener(mql)) {
         // Legacy Safari fallback using deprecated addListener/removeListener
         const handleLegacy = () => onChange();
-        const legacyMql = mql as MediaQueryList & {
-          addListener: (listener: () => void) => void;
-          removeListener: (listener: () => void) => void;
-        };
-        legacyMql.addListener(handleLegacy);
-        detachMql = () => legacyMql.removeListener(handleLegacy);
+        mql.addListener(handleLegacy);
+        detachMql = () =>
+          mql && hasLegacyListener(mql) && mql.removeListener(handleLegacy);
       }
     }
 
