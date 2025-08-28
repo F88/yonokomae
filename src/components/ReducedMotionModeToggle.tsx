@@ -72,7 +72,6 @@ export const ReducedMotionModeToggle: React.FC = () => {
   }, []);
 
   const statusText = `Reduced motion mode - ${isReduceModeEnabled ? 'enabled' : 'disabled'}`;
-  // ...
 
   return (
     <button

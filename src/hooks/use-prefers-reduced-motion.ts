@@ -13,22 +13,46 @@ import {
  *
  * Single source of truth: delegates to prefersReducedMotion() and
  * subscribes to the global REDUCED_MOTION_EVENT and media query changes.
+ *
+ * SSR-safe: guards against window/matchMedia being unavailable.
  */
 export const usePrefersReducedMotion = (): boolean => {
   const [val, setVal] = useState<boolean>(() => prefersReducedMotion());
 
   useEffect(() => {
+    // SSR/Non-DOM guard
+    if (typeof window === 'undefined') return;
+
     // Re-evaluate on our custom event (override or initial system change)
     const onChange = () => setVal(prefersReducedMotion());
     window.addEventListener(REDUCED_MOTION_EVENT, onChange);
 
     // Also listen to system media query updates for immediate re-evaluation
-    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
-    mql.addEventListener('change', onChange);
+    let mql: MediaQueryList | null = null;
+    let detachMql: (() => void) | null = null;
+
+    if (typeof window.matchMedia === 'function') {
+      mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+      // EventTarget path (modern browsers)
+      const handleMqlChangeEvent: EventListener = () => onChange();
+      if (mql && 'addEventListener' in mql) {
+        mql.addEventListener('change', handleMqlChangeEvent);
+        detachMql = () => mql && mql.removeEventListener('change', handleMqlChangeEvent);
+      } else if (mql && 'addListener' in mql) {
+        // Legacy Safari fallback using deprecated addListener/removeListener
+        const handleLegacy = () => onChange();
+        const legacyMql = mql as MediaQueryList & {
+          addListener: (listener: () => void) => void;
+          removeListener: (listener: () => void) => void;
+        };
+        legacyMql.addListener(handleLegacy);
+        detachMql = () => legacyMql.removeListener(handleLegacy);
+      }
+    }
 
     return () => {
       window.removeEventListener(REDUCED_MOTION_EVENT, onChange);
-      mql.removeEventListener('change', onChange);
+      if (detachMql) detachMql();
     };
   }, []);
 
