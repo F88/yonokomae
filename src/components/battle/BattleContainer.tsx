@@ -12,7 +12,7 @@ export type BattleContainerProps = {
 export const BattleContainer: FC<BattleContainerProps> = ({ battle, mode }) => {
   const isBattleReportLoading = battle.status === 'loading';
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="battle">
       <HistoricalScene battle={battle} />
       {isBattleReportLoading ? (
         <ConsiderationsAndJudgments battle={undefined} mode={mode} />

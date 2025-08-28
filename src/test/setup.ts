@@ -29,6 +29,24 @@ if (typeof window !== 'undefined' && !('ResizeObserver' in window)) {
   };
 }
 
+// IntersectionObserver polyfill for Embla
+if (typeof window !== 'undefined' && !('IntersectionObserver' in window)) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).IntersectionObserver = class IntersectionObserver {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    constructor(_cb: any, _opts?: any) {}
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+      return [];
+    }
+    root = null;
+    rootMargin = '';
+    thresholds: number[] = [];
+  };
+}
+
 // Establish API mocking before all tests.
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'bypass' });

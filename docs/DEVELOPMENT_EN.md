@@ -342,6 +342,56 @@ export function Root({ mode }: { mode: PlayMode }) {
 
 See [TESTING.md](./TESTING.md) for testing guidance.
 
+## End-to-End (E2E) testing policy
+
+We use Playwright for E2E coverage of core user flows and accessibility
+surfaces. Keep tests fast, deterministic, and focused on behavior users
+experience.
+
+Principles
+
+- Scope: place specs under `e2e/` and keep them task-oriented.
+- Locators: prefer `getByRole(..., { name })`; use `data-testid` only for
+  non-semantic containers (e.g., `battle`, `slot-yono`, `slot-komae`). Avoid
+  brittle CSS/XPath.
+- Determinism: avoid arbitrary waits; rely on `expect(...).toHave*` assertions.
+  Honor `prefers-reduced-motion`; emulate reduced motion in tests when helpful.
+- Performance tests: long-running or high-count flows should be marked as slow
+  and tagged `@performance` so they can be filtered separately.
+- Accessibility: assert accessible names and roles for critical controls.
+
+Annotations and tags
+
+- Tags are grep-able in Playwright (e.g., `@performance`, `@a11y`, `@smoke`).
+- Add report annotations where useful:
+  `test.info().annotations.push({ type: 'performance', description: '...' })`.
+- Reference: [Playwright Annotations](https://playwright.dev/docs/test-annotations)
+
+Examples
+
+```ts
+import { test } from '@playwright/test';
+
+test(
+    'appends up to 100 battle containers when Battle is clicked repeatedly',
+    {
+        tag: ['@performance', '@slow'],
+    },
+    async ({ page }) => {
+        // ... test body ...
+    },
+);
+
+test('a long-running performance check', async ({ page }) => {
+    test.slow();
+    test.info().annotations.push({
+        type: 'performance',
+        description: 'Clicks Battle 100 times and verifies 100 containers',
+    });
+    // ... test body ...
+});
+```
+
 ### Acceptance Checklist
 
 - TypeScript compiles with no new errors.
@@ -562,6 +612,77 @@ Export data comes from:
 ### Export Format
 
 TSV files include headers and properly escaped content for data analysis and external use.
+
+## Accessibility and Screen Reader Commitment
+
+We aim for full Screen Reader (SR) support across all primary user flows. This
+section codifies engineering practices, test strategy, and acceptance criteria.
+
+Guiding principles
+
+- Prefer semantic HTML with proper roles; avoid div/button anti-patterns.
+- Keep accessible names short and stable; avoid dynamic concatenation where not required.
+- Use aria-label for terse action names and aria-describedby for longer hints.
+- Make all core interactions keyboard-operable; publish shortcuts in README.
+- Announce state changes when appropriate (e.g., report generated, errors) and
+  keep focus visible and predictable.
+- Respect prefers-reduced-motion; provide non-animated fallbacks.
+
+Implementation notes
+
+- Buttons: name via aria-label (e.g., "Battle", "Reset"); attach descriptive
+  hints via aria-describedby for SR users.
+- Regions: use landmarks (header, main, nav) and headings for structure.
+- Async flows: ensure progress/skeletons have roles/status where helpful; avoid
+  noisy live regions unless necessary.
+- Testing: prefer getByRole(..., { name }) in unit/E2E tests; avoid brittle
+  selectors. Allow test IDs only for container scoping where semantics do not
+  apply.
+
+Acceptance checklist
+
+- Keyboard-only flow can complete core tasks (Battle, Reset, navigate to report).
+- Interactive elements have role and a stable accessible name.
+- Focus moves logically after actions and returns appropriately.
+- Reduced-motion is honored for scroll/animation.
+- Tests assert accessibility surfaces for critical flows.
+
+## Reduced Motion (prefers-reduced-motion)
+
+We minimize motion when the OS indicates `prefers-reduced-motion: reduce`.
+This applies to scrolling, autoplaying UI, and decorative animations.
+
+Engineering policy
+
+- Never gate essential information behind an animation only.
+- Provide instant or near-instant alternatives for motion-heavy effects.
+- Prefer CSS `@media (prefers-reduced-motion: reduce)` for pure animations.
+- Use JS feature checks for runtime decisions where needed.
+
+Implementation
+
+- JS helper: `src/lib/reduced-motion.ts` exposes detection utilities used by
+  scrolling and components.
+- Scrolling: `src/lib/scroll.ts` switches to instant/minimal scroll when motion
+  is reduced.
+- Carousel: `src/components/UserVoicesCarousel.tsx` disables/pause autoplay
+  under reduced motion.
+- CSS animations: marquee and entrance/exit animations use
+  `@media (prefers-reduced-motion: reduce)` to shorten or disable.
+    - `src/components/UserVoicesMarquee.css`
+    - `src/components/UsageExamplesMarquee.css`
+
+Testing
+
+- Unit/E2E tests should cover reduced-motion paths where feasible.
+- In Playwright, emulate media feature:
+    - `await page.emulateMedia({ reducedMotion: 'reduce' })`
+
+Acceptance checklist
+
+- Core flows remain usable with motion minimized.
+- Autoplaying behaviors pause when reduced motion is requested.
+- Decorative animations are shortened or disabled.
 
 ## UI Components
 

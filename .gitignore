@@ -31,5 +31,9 @@ dist-ssr
 
 
 
+## Playwright
+test-results/
+playwright-results/
+playwright-report/
 
 
