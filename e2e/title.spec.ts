@@ -6,6 +6,30 @@ import {
   assertModeSelectorAbsent,
   assertModeSelectorPresent,
 } from './helpers/visibility-assertions';
+import type { Page } from '@playwright/test';
+
+// Centralized role/name-based locators to avoid brittle id selectors
+const by = {
+  modeGroup: (page: Page) =>
+    page.getByRole('radiogroup', { name: 'Play modes' }),
+  // Radios are visually hidden and named by their <label>; use getByLabel.
+  modeRadio: (page: Page, name: string) => page.getByLabel(name),
+  modeBadge: (page: Page, mode: string) => page.getByLabel(`Mode: ${mode}`),
+} as const;
+
+const MODE = {
+  DEMO: 'DEMO',
+  MIXED: 'MIXED NUTS',
+  HISTORICAL: 'HISTORICAL RESEARCH',
+  AI: 'AI MODE',
+  API: 'API MODE',
+} as const;
+
+// Helpers for viewport-conditional assertions
+async function isSmUp(page: Page): Promise<boolean> {
+  const size = page.viewportSize();
+  return !!size && size.width >= 640; // Tailwind 'sm' breakpoint
+}
 
 /**
  * Title screen (TOP screen) e2e tests.
@@ -23,8 +47,10 @@ test.describe('Title', () => {
    */
   test.describe('Initial display', () => {
     test('shows TOP screen', async ({ page }) => {
-      // Go to the top screen
-      await page.goto('/');
+      await test.step('Preparation', async () => {
+        // Go to the top screen
+        await page.goto('/');
+      });
 
       // Header title
       await expect(
@@ -38,9 +64,11 @@ test.describe('Title', () => {
 
       // Mode selector title and radiogroup
       await assertModeSelectorPresent(page);
+      const group = by.modeGroup(page);
+      await expect(group).toBeVisible();
 
       // Default selection is DEMO
-      await expect(page.locator('#play-mode-demo')).toBeChecked();
+      await expect(group.getByLabel(MODE.DEMO)).toBeChecked();
 
       // Header controls are visible
       await assertHeaderControlsPresent(page);
@@ -49,24 +77,30 @@ test.describe('Title', () => {
       await expect(
         page.getByRole('heading', { name: 'How to play' }),
       ).toBeVisible();
-      await expect(
-        page.getByText(
-          'This thought-provoking game explores the outcomes for two countries',
-        ),
-      ).toBeVisible();
+      // Avoid brittle long-copy assertions that change frequently.
 
-      // Mode options are listed
-      await expect(page.getByText('DEMO', { exact: true })).toBeVisible();
-      await expect(page.getByText('MIXED NUTS', { exact: true })).toBeVisible();
-      await expect(
-        page.getByText('HISTORICAL RESEARCH', { exact: true }),
-      ).toBeVisible();
-      await expect(page.getByText('AI MODE', { exact: true })).toBeVisible();
-      await expect(page.getByText('API MODE', { exact: true })).toBeVisible();
+      // Radios: exact count and states (viewport-independent)
+      await expect(group.getByRole('radio')).toHaveCount(5);
+      await expect(group.getByLabel(MODE.MIXED)).toBeEnabled();
+      await expect(group.getByLabel(MODE.HISTORICAL)).toBeEnabled();
+      await expect(group.getByLabel(MODE.AI)).toBeDisabled();
+      await expect(group.getByLabel(MODE.API)).toBeDisabled();
 
-      // Disabled modes should be disabled
-      await expect(page.locator('#play-mode-ai-mode')).toBeDisabled();
-      await expect(page.locator('#play-mode-api')).toBeDisabled();
+      // Viewport-dependent visual hints: desktop chips vs mobile short text
+      const desktopHints = page
+        .locator('div.hidden.sm\\:flex')
+        .filter({ hasText: 'Enter' });
+      const mobileHint = page
+        .locator('div.sm\\:hidden')
+        .filter({ hasText: /Use ↓\/↑ to choose/i });
+      if (await isSmUp(page)) {
+        await expect(desktopHints).toBeVisible();
+        // mobile hint exists in DOM but should be hidden on >= sm
+        await expect(mobileHint).not.toBeVisible();
+      } else {
+        await expect(mobileHint).toBeVisible();
+        await expect(desktopHints).not.toBeVisible();
+      }
 
       // Controller should not be present yet
       await assertControllerAbsent(page);
@@ -87,28 +121,28 @@ test.describe('Title', () => {
     test('supports mode navigation and selection via keyboard', async ({
       page,
     }) => {
-      // Go to the top screen
-      await page.goto('/');
+      await test.step('Preparation', async () => {
+        // Go to the top screen
+        await page.goto('/');
+      });
 
       // Mode selector visible
       await assertModeSelectorPresent(page);
 
       // Initially, the first enabled option (DEMO) is selected
-      await expect(page.locator('#play-mode-demo')).toBeChecked();
+      await expect(by.modeRadio(page, MODE.DEMO)).toBeChecked();
 
       // ArrowDown moves to next enabled option (MIXED NUTS)
       await page.keyboard.press('ArrowDown');
-      await expect(page.locator('#play-mode-mixed-nuts')).toBeChecked();
+      await expect(by.modeRadio(page, MODE.MIXED)).toBeChecked();
 
-      // End jumps to the last enabled option (HISTORICAL EVIDENCES)
+      // End jumps to the last enabled option (HISTORICAL RESEARCH)
       await page.keyboard.press('End');
-      await expect(
-        page.locator('#play-mode-historical-evidences'),
-      ).toBeChecked();
+      await expect(by.modeRadio(page, MODE.HISTORICAL)).toBeChecked();
 
       // Home jumps back to the first enabled option (DEMO)
       await page.keyboard.press('Home');
-      await expect(page.locator('#play-mode-demo')).toBeChecked();
+      await expect(by.modeRadio(page, MODE.DEMO)).toBeChecked();
 
       // Enter confirms selection -> controller appears, title screen hides
       await page.keyboard.press('Enter');
@@ -128,7 +162,10 @@ test.describe('Title', () => {
     test('radiogroup exposes operation hint via aria-describedby', async ({
       page,
     }) => {
-      await page.goto('/');
+      await test.step('Preparation', async () => {
+        // Go to the top screen
+        await page.goto('/');
+      });
       const group = page.getByRole('radiogroup', { name: 'Play modes' });
       await expect(group).toBeVisible();
       const describedBy = await group.getAttribute('aria-describedby');
@@ -140,12 +177,13 @@ test.describe('Title', () => {
     test('Historical seed selector has an accessible name on highlight', async ({
       page,
     }) => {
-      await page.goto('/');
-      // Move highlight to HISTORICAL EVIDENCES (last enabled in the list)
+      await test.step('Preparation', async () => {
+        // Go to the top screen
+        await page.goto('/');
+      });
+      // Move highlight to HISTORICAL RESEARCH (last enabled in the list)
       await page.keyboard.press('End');
-      await expect(
-        page.locator('#play-mode-historical-evidences'),
-      ).toBeChecked();
+      await expect(by.modeRadio(page, MODE.HISTORICAL)).toBeChecked();
       // Seed selector becomes visible on title screen before confirming mode
       await expect(
         page.getByRole('combobox', { name: 'Historical seed selector' }),
@@ -163,14 +201,17 @@ test.describe('Title', () => {
    */
   test.describe('After mode selected', () => {
     test('shows Controller and mode after clicking DEMO', async ({ page }) => {
-      // Go to the top screen
-      await page.goto('/');
+      await test.step('Preparation', async () => {
+        // Go to the top screen
+        await page.goto('/');
+        // Precondition: mode selector is visible before choosing a mode
+        await assertModeSelectorPresent(page);
+      });
 
-      // Precondition: mode selector is visible before choosing a mode
-      await assertModeSelectorPresent(page);
-
-      // Select mode "DEMO"
-      await page.getByText('DEMO', { exact: true }).click();
+      await test.step('Select mode "DEMO"', async () => {
+        // Select mode "DEMO"
+        await page.getByText(MODE.DEMO, { exact: true }).click();
+      });
 
       // Mode selector disappears (component unmounted)
       await assertModeSelectorAbsent(page);

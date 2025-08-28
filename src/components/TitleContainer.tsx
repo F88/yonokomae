@@ -153,7 +153,7 @@ export function TitleContainer({
             {title}
           </CardTitle>
           {/* <div className="text-sm text-muted-foreground">{subtitle}</div> */}
-          {options[index]?.id === 'historical-evidences' && (
+          {options[index]?.id === 'historical-research' && (
             <div className="mt-2 flex flex-col items-center gap-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
                 <span>Seed:</span>
