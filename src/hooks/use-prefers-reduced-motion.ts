@@ -21,9 +21,11 @@ const hasLegacyListener = (
 ): mql is LegacyMediaQueryList => {
   return (
     'addListener' in mql &&
-    typeof (mql as any).addListener === 'function' &&
+    typeof (mql as unknown as LegacyMediaQueryList).addListener ===
+      'function' &&
     'removeListener' in mql &&
-    typeof (mql as any).removeListener === 'function'
+    typeof (mql as unknown as LegacyMediaQueryList).removeListener ===
+      'function'
   );
 };
 
