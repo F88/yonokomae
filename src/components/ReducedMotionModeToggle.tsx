@@ -31,9 +31,9 @@ type IsReduceModeEnabled = boolean;
  * Reduced Motion preference.
  *
  * Behavior
- * - Effective states: reduced motion is either enabled or disabled。
- * - 初期決定: OS等の環境に基づく（`prefers-reduced-motion`）。
- * - 以後: ユーザーが任意に enabled/disabled を切り替え可能。
+ * - Effective states: reduced motion is either enabled or disabled.
+ * - Initial determination: based on the OS or system environment (`prefers-reduced-motion`).
+ * - Afterwards: the user can freely toggle between enabled and disabled states.
  * - Persistence: none. The override is session-only; on reload it resets to
  *   the system preference. No localStorage is used.
  * - Effective state: toggled by the user; implementation uses
