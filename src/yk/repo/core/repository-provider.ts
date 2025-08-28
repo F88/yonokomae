@@ -74,7 +74,7 @@ export async function getBattleReportRepository(
     const delay = defaultDelayForMode(mode, 'report');
     return new ApiBattleReportRepository(api, { delay });
   }
-  if (mode?.id === 'historical-evidences') {
+  if (mode?.id === 'historical-research') {
     const { HistoricalEvidencesBattleReportRepository } = await import(
       '@/yk/repo/historical-evidences/repositories.historical-evidences'
     );

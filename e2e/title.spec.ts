@@ -59,7 +59,7 @@ test.describe('Title', () => {
       await expect(page.getByText('DEMO', { exact: true })).toBeVisible();
       await expect(page.getByText('MIXED NUTS', { exact: true })).toBeVisible();
       await expect(
-        page.getByText('HISTORICAL EVIDENCES', { exact: true }),
+        page.getByText('HISTORICAL RESEARCH', { exact: true }),
       ).toBeVisible();
       await expect(page.getByText('AI MODE', { exact: true })).toBeVisible();
       await expect(page.getByText('API MODE', { exact: true })).toBeVisible();

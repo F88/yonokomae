@@ -31,8 +31,8 @@ async function testDelays() {
   console.log('3️⃣ Auto delay via provider (historical-evidence mode)...');
   const start3 = Date.now();
   const providerRepo = await getBattleReportRepository({
-    id: 'historical-evidence',
-    title: 'HISTORICAL EVIDENCE',
+    id: 'historical-research',
+    title: 'HISTORICAL RESEARCH',
     description: 'Test mode',
     enabled: true,
   });

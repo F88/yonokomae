@@ -15,7 +15,7 @@ export interface PlayMode {
  * - A quick demonstration mode with placeholder data.
  * - repo: `repositories.fake.ts`
  *
- * HISTORICAL EVIDENCE (Not implemented)
+ * HISTORICAL RESEARCH (Not implemented)
  * - A mode that generates battles based on historical events.
  * - repo: (reserved; will be separate from Random Joke Data)
  *
@@ -42,8 +42,8 @@ export const playMode: PlayMode[] = [
     enabled: true,
   },
   {
-    id: 'historical-evidences',
-    title: 'HISTORICAL EVIDENCES',
+    id: 'historical-research',
+    title: 'HISTORICAL RESEARCH',
     description:
       '[WIP] A mode that generates battles based on historical events.',
     enabled: true,

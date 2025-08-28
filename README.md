@@ -50,7 +50,7 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 
 - Multiple play modes with clear status
     - DEMO: quick demonstration with placeholder data (enabled)
-    - HISTORICAL EVIDENCE: deterministic mode based on historical seeds (enabled)
+    - HISTORICAL RESEARCH: deterministic mode based on historical seeds (enabled)
         - Seed-based reproducible generation
         - Tab key to rotate through available seeds
         - Provenance tracking and display
