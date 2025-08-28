@@ -182,6 +182,59 @@ export function Root({ mode }: { mode: PlayMode }) {
 
 テストガイドは [TESTING.md](./TESTING.md) を参照してください。
 
+## E2E テスト方針
+
+E2E は Playwright を使用し、主要なユーザーフローとアクセシビリティの
+表面をカバーします。テストは速く、決定的(非確率的)で、ユーザー体験に
+直結する振る舞いに集中させます。
+
+原則
+
+- スコープ: `e2e/` 配下にタスク指向の spec を配置します。
+- ロケータ: `getByRole(..., { name })` を優先し、セマンティクスが無い
+    コンテナ(例: `battle`、`slot-yono`、`slot-komae`)に限って
+    `data-testid` を使用します。脆い CSS/XPath は避けます。
+- 決定性: 恣意的な待機は避け、`expect(...).toHave*` に依拠します。
+    `prefers-reduced-motion` を尊重し、必要に応じてエミュレートします。
++- パフォーマンス検証: 長時間/大量ケースは `@performance` タグと
+    `slow` 指定を付与し、個別にフィルタ可能にします。
+- アクセシビリティ: 重要なコントロールの role と名前を検証します。
+
+アノテーションとタグ
+
+- タグは Playwright の grep 対象です(例: `@performance`、`@a11y`、
+    `@smoke`)。
+- レポート注記が有用な場合は `test.info().annotations.push(...)` を
+    追加します。
+- 参考: [Annotations | Playwright](https://playwright.dev/docs/test-annotations)
+
+例
+
+```ts
+import { test } from '@playwright/test';
+
+test(
+    'appends up to 100 battle containers when Battle is clicked repeatedly',
+    {
+        tag: ['@performance', '@slow'],
+    },
+    async ({ page }) => {
+        // ... test body ...
+    },
+);
+
+test('a long-running performance check', async ({ page }) => {
+    test.slow();
+    test
+        .info()
+        .annotations.push({
+            type: 'performance',
+            description: 'Clicks Battle 100 times and verifies 100 containers',
+        });
+    // ... test body ...
+});
+```
+
 ## 受け入れ基準
 
 - TypeScript のビルドに新しいエラーがない。
