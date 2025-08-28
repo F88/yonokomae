@@ -16,7 +16,7 @@
  */
 type ReducedMotionOverride = 'auto' | 'reduce' | 'no-preference';
 /** Event name dispatched on window when the effective preference may change. */
-export declare const REDUCED_MOTION_EVENT = "reduced-motion:change";
+export declare const REDUCED_MOTION_EVENT = 'reduced-motion:change';
 /** Get current override mode: 'auto' | 'reduce' | 'no-preference'. */
 export declare const getReducedMotionOverride: () => ReducedMotionOverride;
 /**
@@ -24,7 +24,9 @@ export declare const getReducedMotionOverride: () => ReducedMotionOverride;
  * to manually enable reduced motion. This updates the <html> class
  * `reduced-motion` to reflect the current effective preference for CSS hooks.
  */
-export declare const setReducedMotionOverride: (mode: ReducedMotionOverride) => void;
+export declare const setReducedMotionOverride: (
+  mode: ReducedMotionOverride,
+) => void;
 /** Effective reduced-motion considering override. */
 export declare const prefersReducedMotion: () => boolean;
 /**
@@ -42,7 +44,9 @@ export declare const prefersReducedMotion: () => boolean;
  * const behavior = pickScrollBehavior('smooth');
  * window.scrollTo({ top: 0, behavior });
  */
-export declare const pickScrollBehavior: (desired?: ScrollBehavior) => ScrollBehavior;
+export declare const pickScrollBehavior: (
+  desired?: ScrollBehavior,
+) => ScrollBehavior;
 /**
  * Scroll the window to a vertical position while honoring reduced motion.
  *
@@ -60,9 +64,12 @@ export declare const pickScrollBehavior: (desired?: ScrollBehavior) => ScrollBeh
  * // Prefer smooth, but fall back to instant when reduced motion is on
  * scrollToY(0, { behavior: 'smooth' });
  */
-export declare const scrollToY: (top: number, opts?: Omit<ScrollToOptions, "top" | "behavior"> & {
+export declare const scrollToY: (
+  top: number,
+  opts?: Omit<ScrollToOptions, 'top' | 'behavior'> & {
     behavior?: ScrollBehavior;
-}) => void;
+  },
+) => void;
 /**
  * Scroll the window by a vertical delta while honoring reduced motion.
  *
@@ -80,7 +87,10 @@ export declare const scrollToY: (top: number, opts?: Omit<ScrollToOptions, "top"
  * // Scroll down by 400px; instant when reduced motion is on
  * scrollByY(400, { behavior: 'smooth' });
  */
-export declare const scrollByY: (deltaY: number, opts?: Omit<ScrollToOptions, "top" | "left" | "behavior"> & {
+export declare const scrollByY: (
+  deltaY: number,
+  opts?: Omit<ScrollToOptions, 'top' | 'left' | 'behavior'> & {
     behavior?: ScrollBehavior;
-}) => void;
+  },
+) => void;
 export {};
