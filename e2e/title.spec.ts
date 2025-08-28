@@ -124,6 +124,36 @@ test.describe('Title', () => {
     });
   });
 
+  test.describe('A11y surfaces', () => {
+    test('radiogroup exposes operation hint via aria-describedby', async ({
+      page,
+    }) => {
+      await page.goto('/');
+      const group = page.getByRole('radiogroup', { name: 'Play modes' });
+      await expect(group).toBeVisible();
+      const describedBy = await group.getAttribute('aria-describedby');
+      expect(describedBy).toBeTruthy();
+      const hint = page.locator(`#${describedBy}`);
+      await expect(hint).toHaveText(/Use Arrow keys to choose/i);
+    });
+
+    test('Historical seed selector has an accessible name on highlight', async ({
+      page,
+    }) => {
+      await page.goto('/');
+      // Move highlight to HISTORICAL EVIDENCES (last enabled in the list)
+      await page.keyboard.press('End');
+      await expect(
+        page.locator('#play-mode-historical-evidences'),
+      ).toBeChecked();
+      // Seed selector becomes visible on title screen before confirming mode
+      await expect(
+        page.getByRole('combobox', { name: 'Historical seed selector' }),
+      ).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Rotate' })).toBeVisible();
+    });
+  });
+
   /**
    * After a mode is selected (click DEMO):
    * - Title screen unmounts (mode selector disappears)

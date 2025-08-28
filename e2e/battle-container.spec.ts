@@ -64,14 +64,60 @@ test.describe('Battle container visibility', () => {
     await expect(page.getByTestId('slot-yono')).toHaveCount(1);
     await expect(page.getByTestId('slot-komae')).toHaveCount(1);
 
-    // generate second
-    await page
-      .getByRole('button', { name: 'Battle (Enter, Space, or B)' })
-      .click();
+    // generate second (use accessible name, not title)
+    await page.getByRole('button', { name: 'Battle' }).click();
 
     // test: counts increment (two containers -> two slots per side)
     await assertBattleContainersCount(page, 2);
     await expect(page.getByTestId('slot-yono')).toHaveCount(2);
     await expect(page.getByTestId('slot-komae')).toHaveCount(2);
   });
+
+  test('appends up to 10 battle containers when Battle is clicked repeatedly', async ({
+    page,
+  }) => {
+    // show top page
+    await page.goto('/');
+
+    // select mode (game start)
+    await page.getByText('DEMO', { exact: true }).click();
+
+    // click Battle 10 times, verifying counts increment each time
+    for (let i = 1; i <= 10; i++) {
+      await page.getByRole('button', { name: 'Battle' }).click();
+      await assertBattleContainersCount(page, i);
+      await expect(page.getByTestId('slot-yono')).toHaveCount(i);
+      await expect(page.getByTestId('slot-komae')).toHaveCount(i);
+    }
+  });
+
+  test(
+    'appends up to 100 battle containers when Battle is clicked repeatedly',
+    {
+      tag: ['@perfomance', '@slow'],
+    },
+    async ({ page }) => {
+      test.slow();
+      test.info().annotations.push({
+        type: 'performance',
+        description: 'Clicks Battle 100 times and verifies 100 containers',
+      });
+
+      // show top page
+      await page.goto('/');
+
+      // select mode (game start)
+      await page.getByText('DEMO', { exact: true }).click();
+
+      const battleBtn = page.getByRole('button', { name: 'Battle' });
+
+      // click Battle 100 times, verifying counts increment each time
+      for (let i = 1; i <= 100; i++) {
+        await battleBtn.click();
+        await assertBattleContainersCount(page, i);
+        await expect(page.getByTestId('slot-yono')).toHaveCount(i);
+        await expect(page.getByTestId('slot-komae')).toHaveCount(i);
+      }
+    },
+  );
 });
