@@ -94,7 +94,7 @@ test.describe('Battle container visibility', () => {
   test(
     'appends up to 100 battle containers when Battle is clicked repeatedly',
     {
-      tag: ['@perfomance', '@slow'],
+      tag: ['@performance', '@slow'],
     },
     async ({ page }) => {
       test.slow();
