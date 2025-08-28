@@ -58,18 +58,19 @@ export const usePrefersReducedMotion = (): boolean => {
 
     if (typeof window.matchMedia === 'function') {
       mql = window.matchMedia('(prefers-reduced-motion: reduce)');
-      // EventTarget path (modern browsers)
-      const handleMqlChangeEvent: EventListener = () => onChange();
+
       if (mql && 'addEventListener' in mql) {
+        // Modern browsers with addEventListener
+        const handleMqlChangeEvent: EventListener = () => onChange();
         mql.addEventListener('change', handleMqlChangeEvent);
         detachMql = () =>
           mql && mql.removeEventListener('change', handleMqlChangeEvent);
       } else if (mql && hasLegacyListener(mql)) {
         // Legacy Safari fallback using deprecated addListener/removeListener
+        const legacyMql = mql as LegacyMediaQueryList;
         const handleLegacy = () => onChange();
-        mql.addListener(handleLegacy);
-        detachMql = () =>
-          mql && hasLegacyListener(mql) && mql.removeListener(handleLegacy);
+        legacyMql.addListener(handleLegacy);
+        detachMql = () => legacyMql.removeListener(handleLegacy);
       }
     }
 
