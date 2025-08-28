@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { scrollToY } from '@/lib/reduced-motion';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { ReducedMotionModeToggle } from '@/components/ReducedMotionModeToggle';
 import { Swords, ScrollText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { UserManual } from '@/components/UserManual';
@@ -14,7 +15,7 @@ export const Header = ({ mode }: { mode?: PlayMode }) => {
   };
   return (
     <>
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full px-2 items-center justify-between">
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -25,7 +26,7 @@ export const Header = ({ mode }: { mode?: PlayMode }) => {
           >
             <Swords className="h-5 w-5" />
           </button>
-          <h1 className="text-lg font-semibold">yonokomae</h1>
+          <h1 className="text-lg font-semibold">よのこまえ</h1>
         </div>
         <div className="flex items-center gap-2">
           {mode ? (
@@ -49,6 +50,7 @@ export const Header = ({ mode }: { mode?: PlayMode }) => {
           >
             <ScrollText className="h-4 w-4" />
           </button>
+          <ReducedMotionModeToggle />
           <ThemeToggle />
         </div>
       </div>
