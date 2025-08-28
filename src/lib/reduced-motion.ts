@@ -63,8 +63,6 @@ export const prefersReducedMotion = (): boolean => {
   return systemPrefersReducedMotion();
 };
 
-// React hook moved to src/hooks/use-prefers-reduced-motion.ts
-
 /**
  * Pick a scroll behavior that respects the reduced-motion preference.
  *
