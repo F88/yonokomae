@@ -32,7 +32,10 @@
     "test:coverage": "vitest --coverage",
     "ops:build": "tsc -p tsconfig.ops.json",
     "ops:export-usage-examples-to-tsv": "npm run ops:build && node dist/ops/export-usage-examples-to-tsv.js",
-    "ops:export-users-voice-to-tsv": "npm run ops:build && node dist/ops/export-users-voice-to-tsv.js"
+    "ops:export-users-voice-to-tsv": "npm run ops:build && node dist/ops/export-users-voice-to-tsv.js",
+    "e2e": "playwright test",
+    "e2e:headed": "playwright test --headed --project=chromium",
+    "e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
@@ -52,8 +55,10 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@changesets/cli": "^2.29.6",
     "@eslint/js": "^9.33.0",
+    "@playwright/test": "^1.55.0",
     "@tailwindcss/postcss": "^4.1.12",
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",

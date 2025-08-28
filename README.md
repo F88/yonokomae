@@ -74,6 +74,38 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 - Zero-SSR SPA optimized for client-side rendering
 - GitHub Pages deployment with base path configured
 
+## Accessibility (Screen Reader)
+
+This game is designed with a Screen Reader-first mindset. Our goal is to
+achieve full SR support across core flows. We commit to:
+
+- Stable, concise accessible names for interactive controls
+- Proper roles, labels, and descriptions (aria-label / aria-describedby)
+- Keyboard-first operation with documented shortcuts
+- Landmarks and focus management for predictable navigation
+- Tests that assert accessibility surfaces (getByRole with name), not visuals
+- Respect reduced-motion preferences and avoid information conveyed by visuals only
+
+Status: in progress. We track improvements under the Accessibility section of
+the roadmap below and in the developer guides. Contributions to A11y are very
+welcome.
+
+## Reduced Motion (prefers-reduced-motion)
+
+We honor the user's reduced motion preference to minimize unnecessary
+animations and auto-scrolling. Key points:
+
+- Smooth scrolling falls back to minimal or instant movement when motion is
+    reduced. See `src/lib/scroll.ts` and `src/lib/reduced-motion.ts`.
+- Marquee and entrance/exit animations shorten or disable under
+    `@media (prefers-reduced-motion: reduce)`. See
+    `src/components/UserVoicesMarquee.css` and
+    `src/components/UsageExamplesMarquee.css`.
+- Auto-playing carousels pause/disable autoplay when motion is reduced. See
+    `src/components/UserVoicesCarousel.tsx`.
+
+Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
+
 ## Documentation
 
 [Developer guide (EN)](./docs/DEVELOPMENT_EN.md)

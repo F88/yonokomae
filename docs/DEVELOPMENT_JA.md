@@ -29,23 +29,24 @@ Please use half-width characters for numbers, letters, and symbols.
 
 ## 目次
 
-- 目標と契約
-- 既存モードで新規 Repository を使う(ExampleRepo)
-- 新規モードと実装一式を追加する(ExampleMode)
-- Provider 工場での配線
-- アプリでの Provider 利用(Suspense を含む)
-- テストヘルパと Tips
-- 受け入れ基準
-- 推奨コミットメッセージ
 
 ## 目標と契約
 
-- Repository のコントラクトは `src/yk/repo/core/repositories.ts` に定義されています。
-- 具体実装は `src/yk/repo/*` に配置します。
-- Play Mode は `src/yk/play-mode.ts` に定義します。
-- 具体実装を返す Provider のファクトリは `src/yk/repo/core/repository-provider.ts` にあります。
 
-注: Repository 実装は `src/yk/repo/` 下で種類別に整理されています:
+## Reduced Motion(prefers-reduced-motion)
+
+OS の設定で「動作を減らす」を選択することで、アニメーションを減らすことができます。
+
+- スクロール: `src/lib/scroll.ts` と `src/lib/reduced-motion.ts` で最小/即時スクロールに切り替えます。
+- CSS のアニメーションは `@media (prefers-reduced-motion: reduce)` を使用して制御します。
+    - `src/components/UserVoicesMarquee.css`
+    - `src/components/UsageExamplesMarquee.css`
+- Carousel の自動再生は、ユーザーの設定に応じて動作を調整します。
+
+### macOS の設定
+
+macOS では、システム環境設定 > アクセシビリティ > 表示 > 動作を減らす から設定できます。
+
 
 - `api/` - REST API クライアント実装
 - `core/` - Repository インターフェイスとプロバイダロジック
@@ -356,6 +357,34 @@ npm run build:users-voice-tsv
 ### エクスポート形式
 
 TSV ファイルはヘッダーと適切にエスケープされたコンテンツを含み、データ分析と外部利用が可能です。
+
+## アクセシビリティとスクリーンリーダーへの取り組み
+
+本プロジェクトは主要なユーザーフローにおいて、スクリーンリーダー(SR)の完全対応を目指します。以下にエンジニアリングの原則、テスト戦略、受け入れ基準を定義します。
+
+指針
+
+- セマンティックな HTML と適切な role を優先し、div/button のアンチパターンを避ける。
+- アクセシブルネームは短く安定させる。不要な動的結合は避ける。
+- 短い動作名には aria-label、詳細な説明には aria-describedby を用いる。
+- すべての主要操作をキーボードで実行可能にし、ショートカットは README に記載する。
+- 状態変化(例: レポート生成、エラー)は必要に応じてアナウンスし、フォーカスは可視かつ予測可能に保つ。
+- prefers-reduced-motion を尊重し、アニメーション以外の代替を用意する。
+
+実装ノート
+
+- ボタン: aria-label(例: "Battle"、"Reset")で名前を付け、詳細説明は aria-describedby で SR 向けに提供する。
+- リージョン: ランドマーク(header、main、nav)と見出しで構造化する。
+- 非同期フロー: 進捗/スケルトンに必要に応じて役割/ステータスを与え、不要な live region の乱用は避ける。
+- テスト: 重要フローでは getByRole(..., { name }) を優先し、脆弱なセレクタは避ける。セマンティクスが適用できない区画のスコープに限り test id を許可する。
+
+受け入れ基準
+
+- キーボードのみで主要タスク(Battle、Reset、レポートへの移動)を完了できる。
+- 対話要素に role と安定したアクセシブルネームがある。
+- アクション後のフォーカス遷移が論理的で、必要に応じて戻る。
+- スクロール/アニメーションで reduced-motion が尊重される。
+- 重要フローに対してアクセシビリティ面を検証するテストがある。
 
 ## UI コンポーネント
 
