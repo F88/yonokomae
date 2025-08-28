@@ -95,11 +95,17 @@ test.describe('Title', () => {
         .filter({ hasText: /Use ↓\/↑ to choose/i });
       if (await isSmUp(page)) {
         await expect(desktopHints).toBeVisible();
-        // mobile hint exists in DOM but should be hidden on >= sm
-        await expect(mobileHint).not.toBeVisible();
+        // If mobile hint exists, it should not be visible on >= sm
+        if ((await mobileHint.count()) > 0) {
+          await expect(mobileHint).not.toBeVisible();
+        }
       } else {
-        await expect(mobileHint).toBeVisible();
+        // On < sm, desktop chips should not be visible
         await expect(desktopHints).not.toBeVisible();
+        // Mobile hint is optional; only assert visibility if it exists
+        if ((await mobileHint.count()) > 0) {
+          await expect(mobileHint).toBeVisible();
+        }
       }
 
       // Controller should not be present yet

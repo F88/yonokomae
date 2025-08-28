@@ -200,9 +200,9 @@ export function TitleContainer({
           </div>
 
           {/** Compact hint (< sm) */}
-          <div className="mb-2 text-[10px] text-muted-foreground sm:hidden">
-            Use ↓/↑ to choose, Enter to start (or j/k, s/w)
-          </div>
+          {/* <div className="mb-2 text-[10px] text-muted-foreground sm:hidden"> */}
+          {/* Use ↓/↑ to choose, Enter to start (or j/k, s/w) */}
+          {/* </div> */}
           <div
             role="radiogroup"
             aria-label="Play modes"

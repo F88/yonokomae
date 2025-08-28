@@ -79,7 +79,7 @@ export const Controller: FC<ControllerProps> = ({
       </div>
 
       {/* Battle block */}
-      <div className="flex flex-col items-center gap-1">
+      <div className="flex flex-col items-center gap-1 pb-6 sm:pb-0">
         <Button
           onClick={handleGenerate}
           className="gap-2"
