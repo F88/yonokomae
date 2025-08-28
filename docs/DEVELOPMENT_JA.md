@@ -29,9 +29,7 @@ Please use half-width characters for numbers, letters, and symbols.
 
 ## 目次
 
-
 ## 目標と契約
-
 
 ## Reduced Motion(prefers-reduced-motion)
 
@@ -46,7 +44,6 @@ OS の設定で「動作を減らす」を選択することで、アニメー�
 ### macOS の設定
 
 macOS では、システム環境設定 > アクセシビリティ > 表示 > 動作を減らす から設定できます。
-
 
 - `api/` - REST API クライアント実装
 - `core/` - Repository インターフェイスとプロバイダロジック
@@ -192,20 +189,20 @@ E2E は Playwright を使用し、主要なユーザーフローとアクセシ�
 
 - スコープ: `e2e/` 配下にタスク指向の spec を配置します。
 - ロケータ: `getByRole(..., { name })` を優先し、セマンティクスが無い
-    コンテナ(例: `battle`、`slot-yono`、`slot-komae`)に限って
-    `data-testid` を使用します。脆い CSS/XPath は避けます。
+  コンテナ(例: `battle`、`slot-yono`、`slot-komae`)に限って
+  `data-testid` を使用します。脆い CSS/XPath は避けます。
 - 決定性: 恣意的な待機は避け、`expect(...).toHave*` に依拠します。
-    `prefers-reduced-motion` を尊重し、必要に応じてエミュレートします。
+  `prefers-reduced-motion` を尊重し、必要に応じてエミュレートします。
 - パフォーマンス検証: 長時間/大量ケースは `@performance` タグと
-    `slow` 指定を付与し、個別にフィルタ可能にします。
+  `slow` 指定を付与し、個別にフィルタ可能にします。
 - アクセシビリティ: 重要なコントロールの role と名前を検証します。
 
 アノテーションとタグ
 
 - タグは Playwright の grep 対象です(例: `@performance`、`@a11y`、
-    `@smoke`)。
+  `@smoke`)。
 - レポート注記が有用な場合は `test.info().annotations.push(...)` を
-    追加します。
+  追加します。
 - 参考: [Annotations | Playwright](https://playwright.dev/docs/test-annotations)
 
 例
@@ -225,12 +222,10 @@ test(
 
 test('a long-running performance check', async ({ page }) => {
     test.slow();
-    test
-        .info()
-        .annotations.push({
-            type: 'performance',
-            description: 'Clicks Battle 100 times and verifies 100 containers',
-        });
+    test.info().annotations.push({
+        type: 'performance',
+        description: 'Clicks Battle 100 times and verifies 100 containers',
+    });
     // ... test body ...
 });
 ```

@@ -373,24 +373,22 @@ Examples
 import { test } from '@playwright/test';
 
 test(
-  'appends up to 100 battle containers when Battle is clicked repeatedly',
-  {
-    tag: ['@performance', '@slow'],
-  },
-  async ({ page }) => {
-    // ... test body ...
-  },
+    'appends up to 100 battle containers when Battle is clicked repeatedly',
+    {
+        tag: ['@performance', '@slow'],
+    },
+    async ({ page }) => {
+        // ... test body ...
+    },
 );
 
 test('a long-running performance check', async ({ page }) => {
-  test.slow();
-  test
-    .info()
-    .annotations.push({
-      type: 'performance',
-      description: 'Clicks Battle 100 times and verifies 100 containers',
+    test.slow();
+    test.info().annotations.push({
+        type: 'performance',
+        description: 'Clicks Battle 100 times and verifies 100 containers',
     });
-  // ... test body ...
+    // ... test body ...
 });
 ```
 
@@ -678,7 +676,6 @@ Testing
 
 - Unit/E2E tests should cover reduced-motion paths where feasible.
 - In Playwright, emulate media feature:
-
     - `await page.emulateMedia({ reducedMotion: 'reduce' })`
 
 Acceptance checklist

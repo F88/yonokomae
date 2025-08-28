@@ -38,7 +38,9 @@ if (typeof window !== 'undefined' && !('IntersectionObserver' in window)) {
     observe() {}
     unobserve() {}
     disconnect() {}
-    takeRecords() { return []; }
+    takeRecords() {
+      return [];
+    }
     root = null;
     rootMargin = '';
     thresholds: number[] = [];

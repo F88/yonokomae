@@ -96,13 +96,13 @@ We honor the user's reduced motion preference to minimize unnecessary
 animations and auto-scrolling. Key points:
 
 - Smooth scrolling falls back to minimal or instant movement when motion is
-    reduced. See `src/lib/scroll.ts` and `src/lib/reduced-motion.ts`.
+  reduced. See `src/lib/scroll.ts` and `src/lib/reduced-motion.ts`.
 - Marquee and entrance/exit animations shorten or disable under
-    `@media (prefers-reduced-motion: reduce)`. See
-    `src/components/UserVoicesMarquee.css` and
-    `src/components/UsageExamplesMarquee.css`.
+  `@media (prefers-reduced-motion: reduce)`. See
+  `src/components/UserVoicesMarquee.css` and
+  `src/components/UsageExamplesMarquee.css`.
 - Auto-playing carousels pause/disable autoplay when motion is reduced. See
-    `src/components/UserVoicesCarousel.tsx`.
+  `src/components/UserVoicesCarousel.tsx`.
 
 Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 
