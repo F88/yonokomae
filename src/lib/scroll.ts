@@ -1,3 +1,4 @@
+import { scrollByY } from './reduced-motion';
 /**
  * Smoothly scroll to an element by id, accounting for a sticky header.
  */
@@ -26,6 +27,7 @@ export function scrollToAnchor(
   const rect = target.getBoundingClientRect();
   const delta = rect.top - headerBottom - extraGap;
   if (Math.abs(delta) > 1) {
-    window.scrollBy({ top: delta, behavior: 'smooth' });
+    // Respect prefers-reduced-motion
+    scrollByY(delta);
   }
 }
