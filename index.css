@@ -125,7 +125,7 @@
     margin-right: auto;
   }
   /* When JS decides reduced motion is effective, we toggle .reduced-motion on <html> */
-    html.reduced-motion .motion-debug-badge {
-      display: inline-flex;
-    }
+  html.reduced-motion .motion-debug-badge {
+    display: inline-flex;
+  }
 }

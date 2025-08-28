@@ -37,7 +37,8 @@ export const usePrefersReducedMotion = (): boolean => {
       const handleMqlChangeEvent: EventListener = () => onChange();
       if (mql && 'addEventListener' in mql) {
         mql.addEventListener('change', handleMqlChangeEvent);
-        detachMql = () => mql && mql.removeEventListener('change', handleMqlChangeEvent);
+        detachMql = () =>
+          mql && mql.removeEventListener('change', handleMqlChangeEvent);
       } else if (mql && 'addListener' in mql) {
         // Legacy Safari fallback using deprecated addListener/removeListener
         const handleLegacy = () => onChange();
