@@ -79,8 +79,8 @@ export const ReducedMotionModeToggle: React.FC = () => {
       onClick={() => {
         // Toggle the effective state regardless of the system setting.
         const next = !prefersReducedMotion();
-        setIsReduceModeEnabled(next);
         setReducedMotionOverride(next ? 'reduce' : 'no-preference');
+        setIsReduceModeEnabled(prefersReducedMotion());
       }}
       aria-label="Toggle reduced motion mode"
       title={statusText}
