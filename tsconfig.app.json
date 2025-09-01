@@ -18,8 +18,10 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
+    // Emit declarations but into a separate dir to avoid polluting src
     "declaration": true,
     "emitDeclarationOnly": true,
+    "declarationDir": "./node_modules/.types/app",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",

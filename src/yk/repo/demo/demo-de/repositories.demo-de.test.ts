@@ -1,36 +1,27 @@
 import { describe, it, expect } from 'vitest';
 import {
-  DemoEnBattleReportRepository,
-  DemoEnJudgementRepository,
-} from './repositories.demo-en';
+  DemoDeBattleReportRepository,
+  DemoDeJudgementRepository,
+} from './repositories.demo-de';
 
-describe('demo-en repositories', () => {
-  it('DemoEnBattleReportRepository.generateReport returns a valid battle with demo-en markers', async () => {
-    const repo = new DemoEnBattleReportRepository({
+describe('demo-de repositories', () => {
+  it('DemoDeBattleReportRepository.generateReport returns a valid battle with demo-de markers', async () => {
+    const repo = new DemoDeBattleReportRepository({
       delay: { min: 0, max: 0 },
     });
     const battle = await repo.generateReport();
 
     expect(battle.id).toMatch(/^battle-/);
-    // Title and subtitle depend on the selected scenario; ensure they are non-empty strings.
-    expect(battle.title).toBeTypeOf('string');
+    // Title/Subitle are dynamic per scenario in DE; assert non-empty strings
+    expect(typeof battle.title).toBe('string');
     expect(battle.title.length).toBeGreaterThan(0);
-    expect(battle.subtitle).toBeTypeOf('string');
+    expect(typeof battle.subtitle).toBe('string');
     expect(battle.subtitle.length).toBeGreaterThan(0);
-    expect(battle.overview).toBeTypeOf('string');
-    expect(battle.scenario).toBeTypeOf('string');
+    // DE strings are localized; overview/scenario may include (DE) markers, but not required for unit titles
+    expect(typeof battle.overview).toBe('string');
+    expect(typeof battle.scenario).toBe('string');
     expect(battle.status).toBe('success');
 
-    // demo-en unit names: randomized from three plausible types; no marker requirement
-    const enUnitTypes = [
-      'Recon Platoon',
-      'Signal Company',
-      'Bridge Guard',
-    ] as const;
-    expect(enUnitTypes.some((t) => battle.yono.title.includes(t))).toBe(true);
-    expect(enUnitTypes.some((t) => battle.komae.title.includes(t))).toBe(true);
-
-    // reasonable neta structure
     expect(typeof battle.yono.subtitle).toBe('string');
     expect(battle.yono.subtitle.length).toBeGreaterThan(0);
     expect(typeof battle.komae.subtitle).toBe('string');
@@ -43,12 +34,12 @@ describe('demo-en repositories', () => {
     expect(battle.komae.power).toBeLessThanOrEqual(100);
   });
 
-  it('DemoEnJudgementRepository.determineWinner compares power correctly', async () => {
-    const judge = new DemoEnJudgementRepository({ delay: { min: 0, max: 0 } });
+  it('DemoDeJudgementRepository.determineWinner compares power correctly', async () => {
+    const judge = new DemoDeJudgementRepository({ delay: { min: 0, max: 0 } });
     const battleBase = {
-      id: 'battle_demo_en_test',
-      title: 'Demo-2 Battle',
-      subtitle: 'Variant Showcase',
+      id: 'battle_demo_de_test',
+      title: 'Demo-DE Battle',
+      subtitle: 'Variant Showcase (DE)',
       overview: 'n/a',
       scenario: 'n/a',
       status: 'success' as const,
@@ -58,8 +49,8 @@ describe('demo-en repositories', () => {
     let winner = await judge.determineWinner(
       {
         mode: {
-          id: 'demo-en',
-          title: 'DEMO(en)',
+          id: 'demo-de',
+          title: 'DEMO(de)',
           description: '',
           enabled: true,
         },
@@ -89,8 +80,8 @@ describe('demo-en repositories', () => {
     winner = await judge.determineWinner(
       {
         mode: {
-          id: 'demo-en',
-          title: 'DEMO(en)',
+          id: 'demo-de',
+          title: 'DEMO(de)',
           description: '',
           enabled: true,
         },
@@ -120,8 +111,8 @@ describe('demo-en repositories', () => {
     winner = await judge.determineWinner(
       {
         mode: {
-          id: 'demo-en',
-          title: 'DEMO(en)',
+          id: 'demo-de',
+          title: 'DEMO(de)',
           description: '',
           enabled: true,
         },

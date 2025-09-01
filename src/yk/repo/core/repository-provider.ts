@@ -61,27 +61,23 @@ export async function getBattleReportRepository(
   seedFile?: string,
 ): Promise<BattleReportRepository> {
   // Tip: add new branches per mode here (e.g., 'demo', 'api')
-  // if (mode?.id === 'demo-custom') {
-  //   const { DemoJaBattleReportRepository } = await import('@/yk/repo/demo/repositories.demo');
-  //   return new DemoJaBattleReportRepository();
-  // }
   if (mode?.id === 'demo') {
     const { DemoJaBattleReportRepository } = await import(
-      '@/yk/repo/demo-ja/repositories.demo-ja'
+      '@/yk/repo/demo/demo-ja/repositories.demo-ja'
     );
     const delay = defaultDelayForMode(mode, 'report');
     return new DemoJaBattleReportRepository({ delay });
   }
   if (mode?.id === 'demo-en') {
     const { DemoEnBattleReportRepository } = await import(
-      '@/yk/repo/demo-en/repositories.demo-en'
+      '@/yk/repo/demo/demo-en/repositories.demo-en'
     );
     const delay = defaultDelayForMode(mode, 'report');
     return new DemoEnBattleReportRepository({ delay });
   }
   if (mode?.id === 'demo-de') {
     const { DemoDeBattleReportRepository } = await import(
-      '@/yk/repo/demo-de/repositories.demo-de'
+      '@/yk/repo/demo/demo-de/repositories.demo-de'
     );
     const delay = defaultDelayForMode(mode, 'report');
     return new DemoDeBattleReportRepository({ delay });
@@ -179,13 +175,9 @@ export async function getJudgementRepository(
   );
   const delay = defaultDelayForMode(mode, 'judgement');
   // Tip: add new branches per mode here (e.g., 'demo', 'api')
-  // if (mode?.id === 'demo-custom') {
-  //   const { DemoJudgementRepository } = await import('@/yk/repo/demo/repositories.demo');
-  //   return new DemoJudgementRepository();
-  // }
   if (mode?.id === 'demo') {
     const { DemoJaJudgementRepository } = await import(
-      '@/yk/repo/demo-ja/repositories.demo-ja'
+      '@/yk/repo/demo/demo-ja/repositories.demo-ja'
     );
     const judgementDelay = defaultDelayForMode(mode, 'judgement');
     return withJudgementCollapsing(
@@ -196,7 +188,7 @@ export async function getJudgementRepository(
   }
   if (mode?.id === 'demo-en') {
     const { DemoEnJudgementRepository } = await import(
-      '@/yk/repo/demo-en/repositories.demo-en'
+      '@/yk/repo/demo/demo-en/repositories.demo-en'
     );
     const judgementDelay = defaultDelayForMode(mode, 'judgement');
     return withJudgementCollapsing(
@@ -207,7 +199,7 @@ export async function getJudgementRepository(
   }
   if (mode?.id === 'demo-de') {
     const { DemoDeJudgementRepository } = await import(
-      '@/yk/repo/demo-de/repositories.demo-de'
+      '@/yk/repo/demo/demo-de/repositories.demo-de'
     );
     const judgementDelay = defaultDelayForMode(mode, 'judgement');
     return withJudgementCollapsing(

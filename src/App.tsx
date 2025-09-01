@@ -5,7 +5,7 @@ import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
 import { useGenerateReport } from '@/hooks/use-generate-report';
 import { uid } from '@/lib/id';
 import { Placeholders } from '@/yk/placeholder';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Header } from './components/Header';
 import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
@@ -19,9 +19,36 @@ function App() {
   const [reports, setReports] = useState<Battle[]>([]);
   const shouldScrollAfterAppendRef = useRef(false);
   const scrollTargetIdRef = useRef<string | null>(null);
+  const modeSelectionRef = useRef<HTMLDivElement | null>(null);
   const [gridCols, setGridCols] = useState('grid-cols-1 lg:grid-cols-2');
 
   const { generateReport } = useGenerateReport(mode);
+
+  // Helper: safe media query checks for non-browser/test envs
+  const supportsMatchMedia =
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function';
+
+  const isWideViewport = useCallback(() => {
+    try {
+      return supportsMatchMedia
+        ? window.matchMedia('(min-width: 1024px)').matches
+        : typeof window !== 'undefined'
+          ? window.innerWidth >= 1024
+          : false;
+    } catch {
+      return typeof window !== 'undefined' ? window.innerWidth >= 1024 : false;
+    }
+  }, [supportsMatchMedia]);
+
+  const prefersReducedMotion = useCallback(() => {
+    try {
+      return supportsMatchMedia
+        ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        : false;
+    } catch {
+      return false;
+    }
+  }, [supportsMatchMedia]);
 
   // Handle responsive grid columns based on window width
   useEffect(() => {
@@ -48,7 +75,7 @@ function App() {
   // Removed dynamic CSS variable; using static responsive scroll margins instead.
 
   // Smoothly scroll the newly inserted report to the top of the viewport
-  const scrollInsertedToTop = () => {
+  const scrollInsertedToTop = useCallback(() => {
     const id = scrollTargetIdRef.current;
     if (!id) return;
     const el = document.getElementById(id);
@@ -59,7 +86,7 @@ function App() {
     ) as HTMLElement | null;
     const headerRect = header?.getBoundingClientRect();
     const headerBottom = headerRect ? headerRect.bottom : 0;
-    const isWide = window.matchMedia('(min-width: 1024px)').matches;
+    const isWide = isWideViewport();
     const extraGap = isWide ? 20 : 12; // breathing space under header
     const rect = el.getBoundingClientRect();
     // Scroll by the difference between the element's top and the header's bottom
@@ -67,7 +94,7 @@ function App() {
     if (Math.abs(delta) > 1) {
       scrollByY(delta);
     }
-  };
+  }, [isWideViewport]);
 
   // After the list grows (i.e., a new report is appended), scroll the new item to the top once
   useEffect(() => {
@@ -82,7 +109,7 @@ function App() {
         });
       });
     }
-  }, [reports.length]);
+  }, [reports.length, scrollInsertedToTop]);
 
   // Faster animated scroll for keyboard navigation
   // === Speed knob ===
@@ -91,32 +118,34 @@ function App() {
   // Note: Respects prefers-reduced-motion (falls back to instant scroll).
   // const NAV_SCROLL_DURATION_MS = 220; // ms — decrease to speed up (e.g., 180), increase to slow down (e.g., 300)
   const NAV_SCROLL_DURATION_MS = 0; // Fastest
-  const scrollByAnimated = (
-    deltaY: number,
-    duration = NAV_SCROLL_DURATION_MS, // ms — lower = faster, higher = slower
-  ) => {
-    if (Math.abs(deltaY) <= 1) return;
-    const prefersReduced = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-    if (prefersReduced || duration <= 0) {
-      scrollByY(deltaY, { behavior: 'auto' });
-      return;
-    }
-    const startY = window.scrollY;
-    const targetY = startY + deltaY;
-    const start = performance.now();
-    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3); // Quick finish feel
-    const step = (now: number) => {
-      const elapsed = now - start;
-      const t = Math.min(1, elapsed / duration);
-      const eased = easeOutCubic(t);
-      const nextY = startY + (targetY - startY) * eased;
-      scrollToY(nextY, { behavior: 'auto' });
-      if (t < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  };
+
+  const scrollByAnimated = useCallback(
+    (
+      deltaY: number,
+      duration = NAV_SCROLL_DURATION_MS, // ms — lower = faster, higher = slower
+    ) => {
+      if (Math.abs(deltaY) <= 1) return;
+      const reduced = prefersReducedMotion();
+      if (reduced || duration <= 0) {
+        scrollByY(deltaY, { behavior: 'auto' });
+        return;
+      }
+      const startY = window.scrollY;
+      const targetY = startY + deltaY;
+      const start = performance.now();
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3); // Quick finish feel
+      const step = (now: number) => {
+        const elapsed = now - start;
+        const t = Math.min(1, elapsed / duration);
+        const eased = easeOutCubic(t);
+        const nextY = startY + (targetY - startY) * eased;
+        scrollToY(nextY, { behavior: 'auto' });
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    },
+    [prefersReducedMotion],
+  );
 
   // Keyboard navigation between BattleContainers
   useEffect(() => {
@@ -140,7 +169,7 @@ function App() {
       ) as HTMLElement | null;
       const headerRect = header?.getBoundingClientRect();
       const headerBottom = headerRect ? headerRect.bottom : 0;
-      const isWide = window.matchMedia('(min-width: 1024px)').matches;
+      const isWide = isWideViewport();
       const extraGap = isWide ? 20 : 12;
 
       const getDelta = (el: HTMLElement) => {
@@ -158,7 +187,7 @@ function App() {
         // Next: first element below the header area
         const next = elements.find((el) => getDelta(el) > 1);
         if (next) {
-          e.preventDefault();
+          (e as KeyboardEvent).preventDefault();
           const delta = getDelta(next);
           scrollByAnimated(delta);
         }
@@ -167,7 +196,7 @@ function App() {
         const above = elements.filter((el) => getDelta(el) < -1);
         const prev = above.length > 0 ? above[above.length - 1] : undefined;
         if (prev) {
-          e.preventDefault();
+          (e as KeyboardEvent).preventDefault();
           const delta = getDelta(prev);
           scrollByAnimated(delta);
         }
@@ -176,7 +205,7 @@ function App() {
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [mode, reports]);
+  }, [mode, reports, isWideViewport, scrollByAnimated]);
 
   const handleGenerateReport = async () => {
     // Insert a loading placeholder immediately
@@ -227,6 +256,28 @@ function App() {
   const handleClearReports = () => {
     setReports([]);
     setMode(undefined);
+    // Scroll to top after clearing
+    // scrollToY(0, { behavior: 'smooth' });
+    // Scroll to top of mode selection
+    // After mode resets, TitleContainer re-mounts; defer scroll until it exists and layout stabilizes
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const target = modeSelectionRef.current;
+        if (!target) return;
+        const header = document.querySelector(
+          'header.sticky',
+        ) as HTMLElement | null;
+        const headerRect = header?.getBoundingClientRect();
+        const headerBottom = headerRect ? headerRect.bottom : 0;
+        const isWide = isWideViewport();
+        const extraGap = isWide ? 20 : 12; // breathing space under header
+        const rect = target.getBoundingClientRect();
+        const delta = rect.top - headerBottom - extraGap;
+        if (Math.abs(delta) > 1) {
+          scrollByY(delta);
+        }
+      });
+    });
   };
 
   return (
@@ -259,7 +310,7 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-col gap-0 py-0 pb-32 px-8">
+      <div className="flex flex-col gap-0 py-0 pb-32 px-4">
         {/* Intro Section */}
         <section className="flex flex-col items-center text-center m-2">
           <Intro />
@@ -268,7 +319,16 @@ function App() {
 
         {/* Title Container (shown only before a mode is selected) */}
         {!mode && (
-          <TitleContainer modes={playMode} onSelect={(mode) => setMode(mode)} />
+          <div
+            ref={modeSelectionRef}
+            id="mode-selection"
+            className="scroll-mt-[72px] lg:scroll-mt-[96px]"
+          >
+            <TitleContainer
+              modes={playMode}
+              onSelect={(mode) => setMode(mode)}
+            />
+          </div>
         )}
 
         {/* Battle Reports */}

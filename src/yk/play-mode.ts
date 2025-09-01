@@ -30,21 +30,28 @@ export interface PlayMode {
 
 export const playMode: PlayMode[] = [
   {
+    id: 'historical-research',
+    title: 'よの ⚔️ こまえ',
+    description:
+      '[WIP] A mode that generates battles based on historical events.',
+    enabled: true,
+  },
+  {
     id: 'demo',
     title: 'デモ (ja)',
-    description: 'A quick demonstration mode with placeholder data.',
+    description: 'デモモード',
     enabled: true,
   },
   {
     id: 'demo-en',
     title: 'DEMO (en)',
-    description: 'A quick demonstration mode with placeholder data.',
+    description: 'Demonstration mode',
     enabled: true,
   },
   {
     id: 'demo-de',
-    title: 'Demonstrationsmodus (de)',
-    description: 'A quick demonstration mode with placeholder data (DE).',
+    title: 'Demo (de)',
+    description: 'Demonstrationsmodus',
     enabled: true,
   },
   {
@@ -53,13 +60,7 @@ export const playMode: PlayMode[] = [
     description: 'Randomized, seed-backed battle generator (was historical).',
     enabled: true,
   },
-  {
-    id: 'historical-research',
-    title: 'HISTORICAL RESEARCH',
-    description:
-      '[WIP] A mode that generates battles based on historical events.',
-    enabled: true,
-  },
+
   {
     id: 'ai-mode',
     title: 'AI MODE',

@@ -3,7 +3,7 @@
  * Run this file manually: npx tsx src/yk/repo/core/test-delays.ts
  */
 import { BattleReportRandomDataRepository } from '../random-jokes/repositories.random-jokes';
-import { DemoJaBattleReportRepository } from '../demo-ja/repositories.demo-ja';
+import { DemoJaBattleReportRepository } from '../demo/demo-ja/repositories.demo-ja';
 import { getBattleReportRepository } from './repository-provider';
 
 async function testDelays() {

@@ -10,7 +10,7 @@ const battle = {
   scenario:
     'YONOは1920の10,750から2050推計の104,000まで増加し、1945(19,000)、1970(71,000)、1980(81,000)、2000(97,000)、2020(103,000)と段階的に拡大。KOMAEは1920の5,595から1980の70,000まで上昇し、2020は約82,000で安定、その後2050には45,000へと減少推計。これらは都市化、インフラ、地域的役割の違いを映す。',
   komae: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAEの人口',
     subtitle: '上昇、横ばい、将来の減少',
     description:
@@ -18,7 +18,7 @@ const battle = {
     power: 52,
   },
   yono: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'YONOの人口',
     subtitle: '1世紀を通じた着実な成長',
     description:
@@ -27,7 +27,7 @@ const battle = {
   },
   provenance: [
     {
-      label: 'ユーザー提供の比較表(2025-08-27)',
+      label: 'Arakawa Crossing Council, Komae HQ',
       note: 'YONO・KOMAEの1920、1945、1970、1980、2000、2020、2050(推計)の人口値。',
     },
   ],
