@@ -89,9 +89,6 @@ export const ReducedMotionModeToggle: React.FC = () => {
       <span className="text-base" aria-hidden>
         {isReduceModeEnabled ? '➖' : '〰️'}
       </span>
-      <span className="ml-2 hidden sm:inline text-xs font-medium" aria-hidden>
-        {statusText}
-      </span>
       <span
         className="motion-debug-badge ml-1 hidden h-2 w-2 rounded-full bg-amber-500"
         aria-hidden
