@@ -20,7 +20,13 @@ export function scrollToAnchor(
     : null;
   const headerBottom = header?.getBoundingClientRect().bottom ?? 0;
   const largeMin = options?.largeMinWidth ?? 1024;
-  const isLarge = window.matchMedia(`(min-width: ${largeMin}px)`).matches;
+  // Safe large viewport detection for SSR/tests
+  const isLarge =
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+      ? window.matchMedia(`(min-width: ${largeMin}px)`).matches
+      : typeof window !== 'undefined'
+        ? window.innerWidth >= largeMin
+        : false;
   const extraGap = isLarge
     ? (options?.extraGapLarge ?? 20)
     : (options?.extraGapSmall ?? 12);
