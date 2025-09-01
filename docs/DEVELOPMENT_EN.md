@@ -804,8 +804,10 @@ export const localeFr: DemoLocale = {
 
 ```ts
 // src/yk/repo/demo/demo-fr/repositories.demo-fr.ts
-import { makeDemoBattleReportRepository,
-         makeDemoJudgementRepository } from '@/yk/repo/demo/common/repositories.demo-common';
+import {
+    makeDemoBattleReportRepository,
+    makeDemoJudgementRepository,
+} from '@/yk/repo/demo/common/repositories.demo-common';
 import { localeFr } from '@/yk/repo/demo/locales/fr';
 
 export const DemoFrBattleReportRepository = () =>
@@ -829,9 +831,9 @@ if (mode?.id === 'demo-fr') {
 
 Testing notes
 
-  tests should verify only that the right strings/labels are surfaced.
-  checks) to keep diffs small and readable.
+tests should verify only that the right strings/labels are surfaced.
+checks) to keep diffs small and readable.
 
 Maintenance
 
-  locale packs only if new copy is needed.
+locale packs only if new copy is needed.

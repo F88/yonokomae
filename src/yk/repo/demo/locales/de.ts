@@ -158,8 +158,7 @@ export const dePack: DemoLocalePack = {
       id: 'template-de-7',
       title: 'Höhenfeuer-Übung',
       subtitle: 'Licht schnell, Notizen schneller',
-      overview:
-        'Ein Signalsystem misst Timing gegen Wind und Laune.',
+      overview: 'Ein Signalsystem misst Timing gegen Wind und Laune.',
       scenario:
         'Fackeln stimmen sich; der Horizont korrigiert die Interpunktion.',
       yono: {
@@ -183,10 +182,8 @@ export const dePack: DemoLocalePack = {
       id: 'template-de-8',
       title: 'Regenversammlung',
       subtitle: 'Trommeln halten Takt, Regen hält alle ehrlich',
-      overview:
-        'Temperamentvolle Zusammenkunft unter kooperativem Wetter.',
-      scenario:
-        'Umhänge glänzen; Pläne erhalten wasserfeste Ränder.',
+      overview: 'Temperamentvolle Zusammenkunft unter kooperativem Wetter.',
+      scenario: 'Umhänge glänzen; Pläne erhalten wasserfeste Ränder.',
       yono: {
         imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
         title: 'Versorgung — Planen- und Feldflaschen-Check',
@@ -210,8 +207,7 @@ export const dePack: DemoLocalePack = {
       subtitle: 'Ordnung marschiert auf Klemmbrettern',
       overview:
         'Von Scharnieren bis Kopfzahlen bekommt alles einen sauberen Aufkleber.',
-      scenario:
-        'Regale salutieren; Bücher summen im Vier-Viertel-Takt.',
+      scenario: 'Regale salutieren; Bücher summen im Vier-Viertel-Takt.',
       yono: {
         imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
         title: 'Quartiermeisterkorps — Gang-für-Gang-Audit',
@@ -233,14 +229,13 @@ export const dePack: DemoLocalePack = {
       id: 'template-de-10',
       title: 'Mitternachtskuriere',
       subtitle: 'Fußnoten unterwegs',
-      overview:
-        'Leise Routen flechten die Karte; Sterne quittieren Empfang.',
-      scenario:
-        'Leise Stiefel, leise Signale, klare Ziele.',
+      overview: 'Leise Routen flechten die Karte; Sterne quittieren Empfang.',
+      scenario: 'Leise Stiefel, leise Signale, klare Ziele.',
       yono: {
         imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
         title: 'Aufklärungstrupp — Leise-Zustell-Drill',
-        subtitle: 'Schritte gepolstert, Wege verinnerlicht, Hunde vorab besänftigt',
+        subtitle:
+          'Schritte gepolstert, Wege verinnerlicht, Hunde vorab besänftigt',
         description:
           'Botschaften reisen mit der Geschwindigkeit des Vertrauens. Vermerk: Keksdiplomatie. Randnotiz kodifiziert zwinkerbasierte Bestätigungen.',
         power: 55,

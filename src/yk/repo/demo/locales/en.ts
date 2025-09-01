@@ -129,10 +129,8 @@ export const enPack: DemoLocalePack = {
       id: 'template-en-6',
       title: 'Market Square Drill',
       subtitle: 'Banners Up, Stalls Observing Quietly',
-      overview:
-        'Formation practice among crates, chalk, and curious pigeons.',
-      scenario:
-        'Cobbles count cadence; vendors critique posture.',
+      overview: 'Formation practice among crates, chalk, and curious pigeons.',
+      scenario: 'Cobbles count cadence; vendors critique posture.',
       yono: {
         imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
         title: 'Parade Detail — Market Axis Alignment Team',
@@ -154,10 +152,8 @@ export const enPack: DemoLocalePack = {
       id: 'template-en-7',
       title: 'Hilltop Beacon Exercise',
       subtitle: 'Light Fast, Notes Faster',
-      overview:
-        'A chain of signals tests timing against wind and whim.',
-      scenario:
-        'Torches align; the horizon edits punctuation.',
+      overview: 'A chain of signals tests timing against wind and whim.',
+      scenario: 'Torches align; the horizon edits punctuation.',
       yono: {
         imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
         title: 'Recon Platoon — Ridge Relay Setup',
@@ -179,10 +175,8 @@ export const enPack: DemoLocalePack = {
       id: 'template-en-8',
       title: 'Rain-Soaked Rally',
       subtitle: 'Drums Keep Time, Rain Keeps Everyone Honest',
-      overview:
-        'A spirited assembly under cooperative weather.',
-      scenario:
-        'Capes glisten; plans adopt waterproof margins.',
+      overview: 'A spirited assembly under cooperative weather.',
+      scenario: 'Capes glisten; plans adopt waterproof margins.',
       yono: {
         imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
         title: 'Supply Train — Canvas and Canteen Check',
@@ -204,10 +198,8 @@ export const enPack: DemoLocalePack = {
       id: 'template-en-9',
       title: 'Depot Inspection Day',
       subtitle: 'Order Marches on Clipboards',
-      overview:
-        'From hinges to headcounts, everything gets a tidy sticker.',
-      scenario:
-        'Shelves salute; ledgers hum in four-four time.',
+      overview: 'From hinges to headcounts, everything gets a tidy sticker.',
+      scenario: 'Shelves salute; ledgers hum in four-four time.',
       yono: {
         imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
         title: 'Quartermaster Corps — Aisle-by-Aisle Audit',
@@ -229,10 +221,8 @@ export const enPack: DemoLocalePack = {
       id: 'template-en-10',
       title: 'Midnight Couriers',
       subtitle: 'Footnotes on the Move',
-      overview:
-        'Silent routes braid the map; stars file dispatch receipts.',
-      scenario:
-        'Soft boots, soft signals, firm destinations.',
+      overview: 'Silent routes braid the map; stars file dispatch receipts.',
+      scenario: 'Soft boots, soft signals, firm destinations.',
       yono: {
         imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
         title: 'Recon Platoon — Low-Noise Delivery Drill',

@@ -546,8 +546,10 @@ export const localeFr: DemoLocale = {
 
 ```ts
 // src/yk/repo/demo/demo-fr/repositories.demo-fr.ts
-import { makeDemoBattleReportRepository,
-         makeDemoJudgementRepository } from '@/yk/repo/demo/common/repositories.demo-common';
+import {
+    makeDemoBattleReportRepository,
+    makeDemoJudgementRepository,
+} from '@/yk/repo/demo/common/repositories.demo-common';
 import { localeFr } from '@/yk/repo/demo/locales/fr';
 
 export const DemoFrBattleReportRepository = () =>
