@@ -245,13 +245,14 @@ export class ExampleJudgementRepository implements JudgementRepository {
 - `playMode` に項目を追加:
 
 ```ts
+// @ts-nocheck
 {
+type PlayMode = { id: string; title: string; description: string; enabled: boolean };
+    title: 'EXAMPLE MODE',
   id: 'example-mode',
   title: 'EXAMPLE MODE',
   description: 'A new mode powered by ExampleRepo',
   enabled: true,
-}
-```
 
 2. Repository を実装
 
