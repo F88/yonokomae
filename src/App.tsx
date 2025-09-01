@@ -19,6 +19,7 @@ function App() {
   const [reports, setReports] = useState<Battle[]>([]);
   const shouldScrollAfterAppendRef = useRef(false);
   const scrollTargetIdRef = useRef<string | null>(null);
+  const modeSelectionRef = useRef<HTMLDivElement | null>(null);
   const [gridCols, setGridCols] = useState('grid-cols-1 lg:grid-cols-2');
 
   const { generateReport } = useGenerateReport(mode);
@@ -227,6 +228,28 @@ function App() {
   const handleClearReports = () => {
     setReports([]);
     setMode(undefined);
+    // Scroll to top after clearing
+    // scrollToY(0, { behavior: 'smooth' });
+    // Scroll to top of mode selection
+    // After mode resets, TitleContainer re-mounts; defer scroll until it exists and layout stabilizes
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const target = modeSelectionRef.current;
+        if (!target) return;
+        const header = document.querySelector(
+          'header.sticky',
+        ) as HTMLElement | null;
+        const headerRect = header?.getBoundingClientRect();
+        const headerBottom = headerRect ? headerRect.bottom : 0;
+        const isWide = window.matchMedia('(min-width: 1024px)').matches;
+        const extraGap = isWide ? 20 : 12; // breathing space under header
+        const rect = target.getBoundingClientRect();
+        const delta = rect.top - headerBottom - extraGap;
+        if (Math.abs(delta) > 1) {
+          scrollByY(delta);
+        }
+      });
+    });
   };
 
   return (
@@ -259,7 +282,7 @@ function App() {
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-col gap-0 py-0 pb-32 px-8">
+      <div className="flex flex-col gap-0 py-0 pb-32 px-4">
         {/* Intro Section */}
         <section className="flex flex-col items-center text-center m-2">
           <Intro />
@@ -268,7 +291,16 @@ function App() {
 
         {/* Title Container (shown only before a mode is selected) */}
         {!mode && (
-          <TitleContainer modes={playMode} onSelect={(mode) => setMode(mode)} />
+          <div
+            ref={modeSelectionRef}
+            id="mode-selection"
+            className="scroll-mt-[72px] lg:scroll-mt-[96px]"
+          >
+            <TitleContainer
+              modes={playMode}
+              onSelect={(mode) => setMode(mode)}
+            />
+          </div>
         )}
 
         {/* Battle Reports */}
