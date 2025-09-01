@@ -244,7 +244,7 @@ export class ExampleJudgementRepository implements JudgementRepository {
 - ファイル: `src/yk/play-mode.ts`
 - `playMode` に項目を追加:
 
-```ts
+````ts
 // @ts-nocheck
 {
 type PlayMode = { id: string; title: string; description: string; enabled: boolean };
@@ -277,7 +277,7 @@ if (mode?.id === 'example-mode') {
     );
     return new ExampleJudgementRepository();
 }
-```
+````
 
 4. UI またはテストでモードを選択
 
