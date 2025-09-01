@@ -6,7 +6,7 @@ import type {
 } from '@/yk/repo/core/repositories';
 import type { Battle } from '@/types/types';
 import { uid } from '@/lib/id';
-import { applyDelay, type DelayOption } from '../core/delay-utils';
+import { applyDelay, type DelayOption } from '../../core/delay-utils';
 
 /**
  * DemoEnBattleReportRepository
