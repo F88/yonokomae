@@ -78,5 +78,177 @@ export const enPack: DemoLocalePack = {
         power: 54,
       },
     },
+    {
+      id: 'template-en-4',
+      title: 'River Mist Maneuvers',
+      subtitle: 'Maps Say Yes, Visibility Says No',
+      overview:
+        'Exercises along the bank; minutes gather condensation at the margins.',
+      scenario: 'Mist, quiet gravel, and commands that chat with the water.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Recon Platoon — North Bank Path, Fog Compass Calibrated',
+        subtitle: 'Steps counted, echoes tamed, the river takes marginal notes',
+        description:
+          'Discipline breathes in time with the waves. Note: dry boots later. A sidebar praises small-talk with pebbles; morale recommends waterproof irony.',
+        power: 53,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Bridge Guard — Fog Post at the Center Pier',
+        subtitle: 'Louvered lantern on duty, footsteps counting rail bolts',
+        description:
+          'Order feels its way forward; the fog nods in approval. Minutes: "low sight, clear intent." Appendix proposes fog signals A-Z, with field tests at moonrise.',
+        power: 57,
+      },
+    },
+    {
+      id: 'template-en-5',
+      title: 'Bakery Skirmish',
+      subtitle: 'Supplies Win Wars, Croissants Win Hearts',
+      overview: 'A logistical drama between oven heat and marching orders.',
+      scenario: 'Flour dust in formation; dough rises, plans follow.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Supply Train — Dawn Patrol at the Bakehouse',
+        subtitle: 'Lists fresh-baked, crumbs mapped, butter en route',
+        description:
+          'Strategy rehearsed to the rhythm of the mixer—result: morale, golden-brown. A footnote bans puns; procurement replies with a baguette stamp.',
+        power: 59,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Signal Company — Aroma-Signal Section',
+        subtitle: 'Wind direction computed, roll codes standardized',
+        description:
+          'Intelligence reports yeast transmissions with excellent reach. Recommendation: tactical cinnamon buns. Minutes record "victorious, lightly dusted."',
+        power: 52,
+      },
+    },
+    {
+      id: 'template-en-6',
+      title: 'Market Square Drill',
+      subtitle: 'Banners Up, Stalls Observing Quietly',
+      overview:
+        'Formation practice among crates, chalk, and curious pigeons.',
+      scenario:
+        'Cobbles count cadence; vendors critique posture.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Parade Detail — Market Axis Alignment Team',
+        subtitle: 'Chalk lines straight, apples stacked, morale sampled',
+        description:
+          'Precision drills with a hint of cinnamon. Minutes thank stallholders for rhythmic clapping; a footnote bans bartering during cadence calls.',
+        power: 58,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Signal Company — Pennant Pattern Review',
+        subtitle: 'Flags rehearse vowels; pigeons grade on a curve',
+        description:
+          'Flags articulate intent; pastry smells argue otherwise. Recommendation: post-lunch drills. Annex defines a no-crumb zone near the guidon.',
+        power: 55,
+      },
+    },
+    {
+      id: 'template-en-7',
+      title: 'Hilltop Beacon Exercise',
+      subtitle: 'Light Fast, Notes Faster',
+      overview:
+        'A chain of signals tests timing against wind and whim.',
+      scenario:
+        'Torches align; the horizon edits punctuation.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Recon Platoon — Ridge Relay Setup',
+        subtitle: 'Fuel tallied, wicks trimmed, echoes timed',
+        description:
+          'Clarity rides the updraft. Memo: spare flints. Appendix suggests semicolons for gusty nights and a glossary for dramatic pauses.',
+        power: 60,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Bridge Guard — Southern Spur Lookout',
+        subtitle: 'Lanterns shielded, shutters synced',
+        description:
+          'Discipline beams; clouds negotiate dimmer clauses. Minutes: "timely, scenic." A sidebar petitions for horizon bookmarks.',
+        power: 52,
+      },
+    },
+    {
+      id: 'template-en-8',
+      title: 'Rain-Soaked Rally',
+      subtitle: 'Drums Keep Time, Rain Keeps Everyone Honest',
+      overview:
+        'A spirited assembly under cooperative weather.',
+      scenario:
+        'Capes glisten; plans adopt waterproof margins.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Supply Train — Canvas and Canteen Check',
+        subtitle: 'Ties retied, tents tutored, tea temperature tracked',
+        description:
+          'Protocol adds drip marks as diacritics. Outcome: cheerful resilience. Footnote approves rhythmic puddle avoidance as morale training.',
+        power: 57,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Signal Company — Waterproof Dispatch Trial',
+        subtitle: 'Folds sealed, ink persuaded, routes rerouted',
+        description:
+          'Messages arrive with literary waves. Annex: rainproof punctuation set. Recommendation: umbrella drill stamps.',
+        power: 56,
+      },
+    },
+    {
+      id: 'template-en-9',
+      title: 'Depot Inspection Day',
+      subtitle: 'Order Marches on Clipboards',
+      overview:
+        'From hinges to headcounts, everything gets a tidy sticker.',
+      scenario:
+        'Shelves salute; ledgers hum in four-four time.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Quartermaster Corps — Aisle-by-Aisle Audit',
+        subtitle: 'Labels aligned, brooms knighted, crates alphabetized',
+        description:
+          'Inventory sings; dust retires early. Footnote legalizes celebratory label embossing; morale issues commemorative paperclips.',
+        power: 62,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Bridge Guard — Tool Cache Verification',
+        subtitle: 'Hammers accounted for, echoes consulted',
+        description:
+          'Silence passes inspection. Minutes: "neat, slightly smug." Addendum: weekly bolt lullabies authorized.',
+        power: 50,
+      },
+    },
+    {
+      id: 'template-en-10',
+      title: 'Midnight Couriers',
+      subtitle: 'Footnotes on the Move',
+      overview:
+        'Silent routes braid the map; stars file dispatch receipts.',
+      scenario:
+        'Soft boots, soft signals, firm destinations.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Recon Platoon — Low-Noise Delivery Drill',
+        subtitle: 'Steps padded, routes memorized, dogs pre-charmed',
+        description:
+          'Messages travel at the speed of trust. Memo: biscuit diplomacy. Sidebar codifies wink-based acknowledgements.',
+        power: 55,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Signal Company — Moonlight Handoff Protocol',
+        subtitle: 'Shadows scheduled, shutters whisper',
+        description:
+          'Timetables hum in lowercase. Minutes: "delivered, unruffled." Appendix standardizes starboard stargazing breaks.',
+        power: 57,
+      },
+    },
   ],
 };

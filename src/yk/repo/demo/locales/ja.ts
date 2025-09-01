@@ -72,5 +72,166 @@ export const jaPack: DemoLocalePack = {
         power: 55,
       },
     },
+    {
+      id: 'template-ja-4',
+      title: '川霧マヌーバ',
+      subtitle: '地図は可、視界は不可',
+      overview: '河岸に沿う演習。議事録は縁から結露。',
+      scenario: '霧、静かな砂利、そして水音と会話する号令。',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: '斥候小隊・北岸路、霧用コンパス再調整',
+        subtitle: '歩数は正確、反響は手懐け、川は欄外にメモ',
+        description:
+          '規律は波の拍に合わせて呼吸。備考: 靴の乾燥は後で。小石との世間話が上手と評され、士気係は耐水性の皮肉を推奨。',
+        power: 54,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: '橋梁警備隊・中央橋脚の霧中哨',
+        subtitle: '横羽根ランタン勤務、足取りはボルトを数える',
+        description:
+          '秩序は手探りで前進、霧はうなずいて了承。議事: 「視程乏しいが意図明瞭」。付録は霧信号A〜Zを提案、月の出で実地試験。',
+        power: 56,
+      },
+    },
+    {
+      id: 'template-ja-5',
+      title: 'ベーカリー小競り合い',
+      subtitle: '兵站が勝利、クロワッサンが心を掌握',
+      overview: '窯の熱と行軍命令のはざまで起きた兵站劇。',
+      scenario: '粉は整列、生地は膨張、計画もつられて膨張。',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: '補給列車・暁のベーカリー巡察',
+        subtitle: 'リストは焼きたて、パン屑は地形図、バターは進軍中',
+        description:
+          'ミキサーのリズムで戦略をリハーサル。結果: 士気はきつね色。ダジャレ禁止の脚注あり、調達はバゲット印で返答。',
+        power: 60,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: '通信中隊・香気信号班',
+        subtitle: '風向を演算、ロールパン符号を標準化',
+        description:
+          '酵母通信は伝播良好と報告。推奨: 戦術的シナモンロール。議事は「勝利、軽く粉糖」と記す。',
+        power: 52,
+      },
+    },
+    {
+      id: 'template-ja-6',
+      title: '朝市ドリル',
+      subtitle: '旗は凛々しく、屋台は静かに採点',
+      overview: '木箱とチョークと鳩の視線のあいだで整列訓練。',
+      scenario: '石畳が拍を数え、商人が姿勢を講評する。',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: '観閲分隊・市場軸線整備班',
+        subtitle: 'チョーク真っ直ぐ、林檎は整列、士気は試食',
+        description:
+          '精密ドリルにシナモンの香り。屋台の拍手に謝意、脚注では掛け声中の値切りを禁止。',
+        power: 58,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: '通信中隊・小旗パターン検閲',
+        subtitle: '旗は母音を練習、鳩は甘めに採点',
+        description:
+          '旗は意図を語り、菓子の匂いが反論。提案: 昼食後ドリル。付録は隊旗周辺の無パン屑エリアを定義。',
+        power: 55,
+      },
+    },
+    {
+      id: 'template-ja-7',
+      title: '丘上烽火演習',
+      subtitle: '光は速く、メモはさらに速い',
+      overview: '連なる信号が、風と気まぐれにタイミング勝負を挑む。',
+      scenario: '炬火は揃い、地平線が句読点を添削する。',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: '斥候小隊・尾根リレー設営',
+        subtitle: '燃料点呼、芯は整え、反響は計測',
+        description:
+          '明晰は上昇気流に乗る。覚え書き: 火打石の予備。付録は風の強い夜のセミコロン運用と、劇的間合いの用語集。',
+        power: 60,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: '橋梁警備隊・南支脈物見',
+        subtitle: 'ランタン遮光、シャッター同期',
+        description:
+          '規律は光る、雲は調光条項を交渉。議事: 「定時、眺望よし」。欄外は地平線しおりの配布を請願。',
+        power: 52,
+      },
+    },
+    {
+      id: 'template-ja-8',
+      title: '雨だまりラリー',
+      subtitle: '太鼓は刻み、雨はみなを正直にする',
+      overview: '協力的な天気のもとでの活気ある集合。',
+      scenario: '外套はきらめき、計画は防水の余白を得る。',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: '補給列車・天幕と水筒の点検',
+        subtitle: '結び直し、幕は指導、茶は温度管理',
+        description:
+          '手順に雨垂れのダイアクリティカルマークが追加。結論: ご機嫌な耐候性。脚注は水たまり回避のリズム練習を士気訓練として承認。',
+        power: 57,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: '通信中隊・耐水伝令試験',
+        subtitle: '折り目は封緘、インクは説得、経路は再配線',
+        description:
+          '文はさざ波を擬態して到着。付録: 耐雨句読点セット。提言: 傘ドリル認定印。',
+        power: 56,
+      },
+    },
+    {
+      id: 'template-ja-9',
+      title: '兵站倉庫査閲',
+      subtitle: '秩序はクリップボードの上を行進',
+      overview: '蝶番から点呼まで、全てに整頓ステッカーが貼られる。',
+      scenario: '棚は敬礼、帳簿は4分の4拍子で口ずさむ。',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: '軍需科・通路逐次監査',
+        subtitle: 'ラベル整列、箒を叙任、木箱は五十音',
+        description:
+          '在庫は歌い、埃は早退。脚注は祝賀エンボスを合法化、士気係は記念クリップを配布。',
+        power: 62,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: '橋梁警備隊・工具キャッシュ検証',
+        subtitle: '金槌は点呼済み、反響に諮問',
+        description:
+          '静けさは検査を通過。議事: 「清潔、やや自慢げ」。追記: ボルトへの子守歌を週次で許可。',
+        power: 50,
+      },
+    },
+    {
+      id: 'template-ja-10',
+      title: '真夜中の伝令',
+      subtitle: '脚注は移動する',
+      overview: '静かな経路が地図を編み、星は受領印を押す。',
+      scenario: '柔らかな足取り、柔らかな合図、確かな宛先。',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: '斥候小隊・低騒音デリバリードリル',
+        subtitle: '歩は柔らかく、経路は暗記、犬は事前に友好化',
+        description:
+          '信頼の速度で文が進む。覚え書き: ビスケット外交。欄外はウィンク承認の規程を策定。',
+        power: 55,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: '通信中隊・月光引き継ぎ規程',
+        subtitle: '影は時刻表、シャッターはささやき',
+        description:
+          '時刻表は小文字でハミング。議事: 「投函、乱れなし」。付録は右舷側の星見休憩を標準化。',
+        power: 57,
+      },
+    },
   ],
 };

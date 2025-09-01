@@ -79,5 +79,180 @@ export const dePack: DemoLocalePack = {
         power: 55,
       },
     },
+    {
+      id: 'template-de-4',
+      title: 'Flussnebel-Manöver',
+      subtitle: 'Karten sagen ja, Sicht sagt nein',
+      overview:
+        'Manöver entlang der Ufer, Protokolle beschlagen an den Rändern.',
+      scenario:
+        'Nebel, leiser Kies und Kommandos, die mit dem Wasser plaudern.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Aufklärungstrupp — Uferweg Nord, Nebelkompass justiert',
+        subtitle:
+          'Schritte gezählt, Echos gezähmt, der Fluss macht Randnotizen',
+        description:
+          'Disziplin atmet im Takt der Wellen. Notiz: Schuhe entfeuchten. Ein Randkommentar lobt die Gesprächsführung mit Kieselsteinen; die Moralabteilung empfiehlt wasserdichte Ironie.',
+        power: 53,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Brückenschutz — Nebelposten am Mittelpfeiler',
+        subtitle:
+          'Lamellenlaterne im Dienst, Schritte zählen die Geländerbolzen',
+        description:
+          'Ordnung tastet sich vor, Nebel nickt zustimmend. Protokoll: “sichtarm, aber zielklar”. Ein Zusatzblatt schlägt Nebelzeichen A–Z vor, mit Feldtest bei Mondphasen.',
+        power: 57,
+      },
+    },
+    {
+      id: 'template-de-5',
+      title: 'Bäckerei-Scharmützel',
+      subtitle: 'Vorräte gewinnen Schlachten, Croissants die Herzen',
+      overview: 'Ein logistisches Drama zwischen Ofenwärme und Marschbefehl.',
+      scenario: 'Mehlstaub in Formation, Teig geht auf, Pläne ebenso.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Versorgungszug — Frühpatrouille beim Backhaus',
+        subtitle: 'Listen frisch gebacken, Krümel kartiert, Butter im Anmarsch',
+        description:
+          'Strategie proben im Takt der Knetmaschine. Ergebnis: moralisch knusprig. Eine Fußnote verbietet Puns, das Antragswesen antwortet mit einem Baguette-Stempel.',
+        power: 59,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Fernmeldekompanie — Duftsignal-Abteilung',
+        subtitle: 'Windrichtung berechnet, Semmelcodes standardisiert',
+        description:
+          'Nachrichtendienst meldet Hefe-Übertragungen mit hoher Reichweite. Empfehlung: taktische Zimtschnecken. Das Protokoll vermerkt “siegreich, leicht bestreut”.',
+        power: 52,
+      },
+    },
+    {
+      id: 'template-de-6',
+      title: 'Marktplatz-Drill',
+      subtitle: 'Fahnen straff, Stände nicken prüfend',
+      overview:
+        'Formationsübung zwischen Kisten, Kreide und neugierigen Tauben.',
+      scenario:
+        'Kopfsteinpflaster zählt den Takt; Händler begutachten Haltung.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Paradedetail — Achsenausrichtungs-Team am Markt',
+        subtitle: 'Kreidelinien gerade, Äpfel gestapelt, Moral verkostet',
+        description:
+          'Präzisionsdrill mit Zimtnote. Protokoll dankt den Ständen fürs Mitklatschen; eine Fußnote verbietet Feilschen während der Kommandos.',
+        power: 58,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Fernmeldekompanie — Wimpel-Musterprüfung',
+        subtitle: 'Fahnen üben Vokale; Tauben benoten großzügig',
+        description:
+          'Fahnen artikulieren Absicht, Gebäckduft widerspricht. Empfehlung: Übungen nach dem Mittag. Anhang definiert krümelfreie Zone am Feldzeichen.',
+        power: 55,
+      },
+    },
+    {
+      id: 'template-de-7',
+      title: 'Höhenfeuer-Übung',
+      subtitle: 'Licht schnell, Notizen schneller',
+      overview:
+        'Ein Signalsystem misst Timing gegen Wind und Laune.',
+      scenario:
+        'Fackeln stimmen sich; der Horizont korrigiert die Interpunktion.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Aufklärungstrupp — Grat-Relaisaufbau',
+        subtitle: 'Brennstoff gezählt, Dochte getrimmt, Echos getaktet',
+        description:
+          'Klarheit segelt im Aufwind. Vermerk: Feuerstahl-Reserve. Anhang schlägt Semikolons für windige Nächte und ein Glossar für dramatische Pausen vor.',
+        power: 60,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Brückenschutz — Südsattel-Ausguck',
+        subtitle: 'Laternen abgeschirmt, Lamellen im Takt',
+        description:
+          'Disziplin leuchtet, Wolken verhandeln Dimmer-Klauseln. Protokoll: „pünktlich, panoramisch“. Randnotiz beantragt Horizont-Lesezeichen.',
+        power: 52,
+      },
+    },
+    {
+      id: 'template-de-8',
+      title: 'Regenversammlung',
+      subtitle: 'Trommeln halten Takt, Regen hält alle ehrlich',
+      overview:
+        'Temperamentvolle Zusammenkunft unter kooperativem Wetter.',
+      scenario:
+        'Umhänge glänzen; Pläne erhalten wasserfeste Ränder.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Versorgung — Planen- und Feldflaschen-Check',
+        subtitle: 'Knoten neu, Zelte geschult, Teetemperatur erfasst',
+        description:
+          'Protokoll fügt Tropfen als Diakritika hinzu. Ergebnis: fröhliche Robustheit. Fußnote genehmigt rhythmisches Pfützenmeiden als Moralschulung.',
+        power: 57,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Fernmeldekompanie — Wasserdicht-Depeschenversuch',
+        subtitle: 'Falten versiegelt, Tinte besänftigt, Wege neu verlegt',
+        description:
+          'Botschaften kommen mit literarischen Wellen an. Anhang: regenfeste Zeichensetzung. Empfehlung: Stempel für Schirmdrill.',
+        power: 56,
+      },
+    },
+    {
+      id: 'template-de-9',
+      title: 'Depot-Inspektionstag',
+      subtitle: 'Ordnung marschiert auf Klemmbrettern',
+      overview:
+        'Von Scharnieren bis Kopfzahlen bekommt alles einen sauberen Aufkleber.',
+      scenario:
+        'Regale salutieren; Bücher summen im Vier-Viertel-Takt.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Quartiermeisterkorps — Gang-für-Gang-Audit',
+        subtitle: 'Etiketten in Linie, Besen geadelt, Kisten alphabetisiert',
+        description:
+          'Inventar singt, Staub geht früher heim. Fußnote legalisiert feierliche Prägeetiketten; Moral verteilt Gedenk-Büroklammern.',
+        power: 62,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Brückenschutz — Werkzeug-Cache-Prüfung',
+        subtitle: 'Hämmer gezählt, Echos konsultiert',
+        description:
+          'Stille besteht die Prüfung. Protokoll: „ordentlich, leicht selbstzufrieden“. Nachtrag: wöchentliche Bolzenwiegenlieder genehmigt.',
+        power: 50,
+      },
+    },
+    {
+      id: 'template-de-10',
+      title: 'Mitternachtskuriere',
+      subtitle: 'Fußnoten unterwegs',
+      overview:
+        'Leise Routen flechten die Karte; Sterne quittieren Empfang.',
+      scenario:
+        'Leise Stiefel, leise Signale, klare Ziele.',
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Aufklärungstrupp — Leise-Zustell-Drill',
+        subtitle: 'Schritte gepolstert, Wege verinnerlicht, Hunde vorab besänftigt',
+        description:
+          'Botschaften reisen mit der Geschwindigkeit des Vertrauens. Vermerk: Keksdiplomatie. Randnotiz kodifiziert zwinkerbasierte Bestätigungen.',
+        power: 55,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Fernmeldekompanie — Mondlicht-Übergabeprotokoll',
+        subtitle: 'Schatten getaktet, Lamellen flüstern',
+        description:
+          'Fahrpläne summen in Kleinschrift. Protokoll: „zugestellt, unaufgeregt“. Anhang standardisiert steuerbordseitige Sternenschau-Pausen.',
+        power: 57,
+      },
+    },
   ],
 };
