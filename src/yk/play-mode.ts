@@ -32,19 +32,19 @@ export const playMode: PlayMode[] = [
   {
     id: 'demo',
     title: 'デモ (ja)',
-    description: 'A quick demonstration mode with placeholder data.',
+    description: 'デモモード',
     enabled: true,
   },
   {
     id: 'demo-en',
     title: 'DEMO (en)',
-    description: 'A quick demonstration mode with placeholder data.',
+    description: 'Demonstration mode',
     enabled: true,
   },
   {
     id: 'demo-de',
-    title: 'Demonstrationsmodus (de)',
-    description: 'A quick demonstration mode with placeholder data (DE).',
+    title: 'Demo (de)',
+    description: 'Demonstrationsmodus',
     enabled: true,
   },
   {
