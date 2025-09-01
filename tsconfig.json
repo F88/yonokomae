@@ -5,6 +5,10 @@
       "@/*": ["./src/*"]
     },
     "strict": true,
+    /* Module resolution for config files (vite/vitest) */
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     /* Interop Constraints */
     "forceConsistentCasingInFileNames": true
   },

@@ -37,7 +37,7 @@ export type Winner = 'YONO' | 'KOMAE' | 'DRAW';
  * **Implementations**:
  * - {@link BattleReportRandomDataRepository} - Seed-based scenarios (default)
  * - {@link ApiBattleReportRepository} - REST API client
- * - {@link DemoBattleReportRepository} - Fixed demo scenarios
+ * - {@link DemoJaBattleReportRepository} - Fixed demo scenarios
  * - {@link HistoricalEvidencesBattleReportRepository} - Curated historical data
  *
  * @see {@link Battle} for complete battle data structure
@@ -94,7 +94,7 @@ export interface BattleReportRepository {
  * **Implementations**:
  * - {@link FakeJudgementRepository} - Random/algorithmic judging
  * - {@link ApiJudgementRepository} - Remote API-based judging
- * - {@link DemoJudgementRepository} - Fixed demo outcomes
+ * - {@link DemoJaJudgementRepository} - Fixed demo outcomes
  *
  * @see {@link Winner} for possible battle outcomes
  * @see {@link PlayMode} for mode-specific judging rules

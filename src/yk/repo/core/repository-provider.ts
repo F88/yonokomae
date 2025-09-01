@@ -62,9 +62,30 @@ export async function getBattleReportRepository(
 ): Promise<BattleReportRepository> {
   // Tip: add new branches per mode here (e.g., 'demo', 'api')
   // if (mode?.id === 'demo-custom') {
-  //   const { DemoBattleReportRepository } = await import('@/yk/repo/demo/repositories.demo');
-  //   return new DemoBattleReportRepository();
+  //   const { DemoJaBattleReportRepository } = await import('@/yk/repo/demo/repositories.demo');
+  //   return new DemoJaBattleReportRepository();
   // }
+  if (mode?.id === 'demo') {
+    const { DemoJaBattleReportRepository } = await import(
+      '@/yk/repo/demo-ja/repositories.demo-ja'
+    );
+    const delay = defaultDelayForMode(mode, 'report');
+    return new DemoJaBattleReportRepository({ delay });
+  }
+  if (mode?.id === 'demo-en') {
+    const { DemoEnBattleReportRepository } = await import(
+      '@/yk/repo/demo-en/repositories.demo-en'
+    );
+    const delay = defaultDelayForMode(mode, 'report');
+    return new DemoEnBattleReportRepository({ delay });
+  }
+  if (mode?.id === 'demo-de') {
+    const { DemoDeBattleReportRepository } = await import(
+      '@/yk/repo/demo-de/repositories.demo-de'
+    );
+    const delay = defaultDelayForMode(mode, 'report');
+    return new DemoDeBattleReportRepository({ delay });
+  }
   if (mode?.id === 'api') {
     const { ApiClient, ApiBattleReportRepository } = await import(
       '@/yk/repo/api/repositories.api'
@@ -162,6 +183,39 @@ export async function getJudgementRepository(
   //   const { DemoJudgementRepository } = await import('@/yk/repo/demo/repositories.demo');
   //   return new DemoJudgementRepository();
   // }
+  if (mode?.id === 'demo') {
+    const { DemoJaJudgementRepository } = await import(
+      '@/yk/repo/demo-ja/repositories.demo-ja'
+    );
+    const judgementDelay = defaultDelayForMode(mode, 'judgement');
+    return withJudgementCollapsing(
+      withJudgementTiming(
+        new DemoJaJudgementRepository({ delay: judgementDelay }),
+      ),
+    );
+  }
+  if (mode?.id === 'demo-en') {
+    const { DemoEnJudgementRepository } = await import(
+      '@/yk/repo/demo-en/repositories.demo-en'
+    );
+    const judgementDelay = defaultDelayForMode(mode, 'judgement');
+    return withJudgementCollapsing(
+      withJudgementTiming(
+        new DemoEnJudgementRepository({ delay: judgementDelay }),
+      ),
+    );
+  }
+  if (mode?.id === 'demo-de') {
+    const { DemoDeJudgementRepository } = await import(
+      '@/yk/repo/demo-de/repositories.demo-de'
+    );
+    const judgementDelay = defaultDelayForMode(mode, 'judgement');
+    return withJudgementCollapsing(
+      withJudgementTiming(
+        new DemoDeJudgementRepository({ delay: judgementDelay }),
+      ),
+    );
+  }
   if (mode?.id === 'api') {
     const { ApiClient, ApiJudgementRepository } = await import(
       '@/yk/repo/api/repositories.api'

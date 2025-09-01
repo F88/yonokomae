@@ -2,6 +2,7 @@ import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
+import { playMode } from '@/yk/play-mode';
 import type { Battle } from './types/types';
 
 // Mock the generate report hook to avoid dynamic imports and delays
@@ -36,7 +37,8 @@ describe('App', () => {
   it('renders title screen initially (no controller)', () => {
     render(<App />);
     expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
-    expect(screen.getByText('DEMO')).toBeInTheDocument();
+    const firstEnabled = playMode.find((m) => m.enabled === true)!;
+    expect(screen.getByText(firstEnabled.title)).toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: /battle/i }),
     ).not.toBeInTheDocument();
@@ -58,7 +60,10 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: /reset/i })).toBeInTheDocument();
 
     // Header mode badge (uses aria-label="Mode: <title>")
-    expect(screen.getByLabelText('Mode: DEMO')).toBeInTheDocument();
+    const firstEnabled = playMode.find((m) => m.enabled === true)!;
+    expect(
+      screen.getByLabelText(`Mode: ${firstEnabled.title}`),
+    ).toBeInTheDocument();
   });
 
   it('clicking Battle calls generateReport and renders the result', async () => {
