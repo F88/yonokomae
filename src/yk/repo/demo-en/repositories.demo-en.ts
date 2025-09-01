@@ -42,7 +42,7 @@ export class DemoEnBattleReportRepository implements BattleReportRepository {
         scenario:
           'Dusk falls at the old bridge. Footing is narrow, morale runs high.',
         yono: {
-          imageUrl: '/YONO-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
           title: 'Bridge Guard — Night Watch Detail',
           subtitle:
             'Steady posts, steady nerves, and a ledger of squeaky boards',
@@ -51,7 +51,7 @@ export class DemoEnBattleReportRepository implements BattleReportRepository {
           power: 58,
         },
         komae: {
-          imageUrl: '/KOMAE-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
           title: 'Recon Platoon — Bridge Approaches Sweep',
           subtitle: 'Eyes forward, boots quiet, maps damp but determined',
           description:
@@ -68,7 +68,7 @@ export class DemoEnBattleReportRepository implements BattleReportRepository {
         scenario:
           'Recon lines shimmer under warm lantern light; strategy adapts on sight.',
         yono: {
-          imageUrl: '/YONO-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
           title: 'Recon Platoon — Forward Elements on Narrow Planks',
           subtitle:
             'Maps in pockets, shadows on call, boots learning diplomacy with mud',
@@ -77,7 +77,7 @@ export class DemoEnBattleReportRepository implements BattleReportRepository {
           power: 61,
         },
         komae: {
-          imageUrl: '/KOMAE-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
           title: 'Signal Company — Lantern Liaison Detachment',
           subtitle:
             'Flags, flares, and faultless timing, lantern polish optional',
@@ -95,7 +95,7 @@ export class DemoEnBattleReportRepository implements BattleReportRepository {
         scenario:
           'Whistles, flags, and a steady kettle—signal misreads reshape tempo.',
         yono: {
-          imageUrl: '/YONO-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
           title: 'Signal Company — Semaphore Section, Kettle Adjacent',
           subtitle:
             'Semaphores over steam, choreography approved by the kettle',
@@ -104,7 +104,7 @@ export class DemoEnBattleReportRepository implements BattleReportRepository {
           power: 47,
         },
         komae: {
-          imageUrl: '/KOMAE-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
           title: 'Bridge Guard — Timber Inspection Crew',
           subtitle: 'Timbers checked, tempers cooled, tea temperature debated',
           description:

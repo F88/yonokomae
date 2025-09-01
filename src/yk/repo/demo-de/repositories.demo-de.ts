@@ -37,7 +37,7 @@ export class DemoDeBattleReportRepository implements BattleReportRepository {
         scenario:
           'Dämmerung, schmale Bretter und heldenhafte Gleichgewichtstests.',
         yono: {
-          imageUrl: '/YONO-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
           title: 'Brückenschutz — Nachtwache, Abschnitt Ostpfeiler',
           subtitle:
             'Fester Stand, kühler Kopf und eine Liste knarrender Bohlen',
@@ -46,7 +46,7 @@ export class DemoDeBattleReportRepository implements BattleReportRepository {
           power: 56,
         },
         komae: {
-          imageUrl: '/KOMAE-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
           title: 'Aufklärungstrupp — Schräganlauf an den Brückenkopf',
           subtitle:
             'Blicke nach vorn, Schritte kaum hörbar, Karten leicht feucht vom Nebel',
@@ -64,7 +64,7 @@ export class DemoDeBattleReportRepository implements BattleReportRepository {
         scenario:
           'Sanftes Leuchten, noch sanftere Taktik: die Atmosphäre übernimmt.',
         yono: {
-          imageUrl: '/YONO-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
           title: 'Aufklärungstrupp — Vordere Elemente auf schmalen Brettern',
           subtitle:
             'Karten in der Tasche, Schatten im Dienst, Stiefel im Dialog mit Schlamm',
@@ -73,7 +73,7 @@ export class DemoDeBattleReportRepository implements BattleReportRepository {
           power: 62,
         },
         komae: {
-          imageUrl: '/KOMAE-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
           title: 'Fernmeldekompanie — Laternen-Verbindungsdetachement',
           subtitle:
             'Fahnen, Fackeln und präzises Timing, Laternenpolitur optional',
@@ -91,7 +91,7 @@ export class DemoDeBattleReportRepository implements BattleReportRepository {
         scenario:
           'Kazoos heben die Moral; Taktik wird zur Interpretationskunst.',
         yono: {
-          imageUrl: '/YONO-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
           title: 'Fernmeldekompanie — Semaphor-Zug, Kessel in Dienststellung',
           subtitle: 'Semaphor durch Dampf, Choreografie vom Kessel abgesegnet',
           description:
@@ -99,7 +99,7 @@ export class DemoDeBattleReportRepository implements BattleReportRepository {
           power: 48,
         },
         komae: {
-          imageUrl: '/KOMAE-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
           title: 'Brückenschutz — Holzprüfkommando',
           subtitle:
             'Balken geprüft, Gemüter beruhigt, Teetemperatur diskutiert',

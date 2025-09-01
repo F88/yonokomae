@@ -7,7 +7,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   // base: '/yonourawa/',
-  base: '/',
+  base: process.env.VITE_BASE_PATH || '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

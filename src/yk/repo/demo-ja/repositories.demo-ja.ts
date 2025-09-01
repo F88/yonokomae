@@ -42,7 +42,8 @@ export class DemoJaBattleReportRepository implements BattleReportRepository {
           '古橋の小競り合いの抜粋: 町のニュースと日記をミキサーにかけました。',
         scenario: '黄昏の橋の上、勇気と足元が同時に滑る。拍手はカモメだけ。',
         yono: {
-          imageUrl: '/YONO-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+          // component="main"
           title: '橋梁警備隊・夜間哨戒分隊',
           subtitle: '欄干にもたれ平衡維持、きしむ板を点検しながら',
           description:
@@ -50,7 +51,7 @@ export class DemoJaBattleReportRepository implements BattleReportRepository {
           power: 57,
         },
         komae: {
-          imageUrl: '/KOMAE-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
           title: '斥候小隊・橋詰め接近斜行班',
           subtitle: '足音は風任せ、視線は前へ、地図は少し湿気気味',
           description:
@@ -67,7 +68,7 @@ export class DemoJaBattleReportRepository implements BattleReportRepository {
         scenario:
           '柔らかな灯りで作戦会議は照明寄りに。雰囲気が全会一致で可決。',
         yono: {
-          imageUrl: '/YONO-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
           title: '斥候小隊・前進要素（狭橋対応）',
           subtitle: '地図は袖、影は味方、靴底は泥と対話中',
           description:
@@ -75,7 +76,7 @@ export class DemoJaBattleReportRepository implements BattleReportRepository {
           power: 60,
         },
         komae: {
-          imageUrl: '/KOMAE-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
           title: '通信中隊・提灯連絡分遣隊',
           subtitle: '旗と信号、時報は正確、提灯磨きは任意',
           description:
@@ -91,7 +92,7 @@ export class DemoJaBattleReportRepository implements BattleReportRepository {
           '急須の睨み合い速報: 蒸気が戦場を制圧、クッキーが和平を仲介。',
         scenario: '士気は沸騰、作戦は抽出、結論は渋み。勝敗は砂糖の匙加減。',
         yono: {
-          imageUrl: '/YONO-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
           title: '通信中隊・手旗班（薬缶監督付き）',
           subtitle: '湯気の向こうに手旗信号、薬缶の承認印つき',
           description:
@@ -99,7 +100,7 @@ export class DemoJaBattleReportRepository implements BattleReportRepository {
           power: 49,
         },
         komae: {
-          imageUrl: '/KOMAE-SYMBOL.png',
+          imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
           title: '橋梁警備隊・板材点検班',
           subtitle: '板を叩いて渡る専門職、湯気の様子も逐次確認',
           description:
