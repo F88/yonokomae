@@ -61,10 +61,6 @@ export async function getBattleReportRepository(
   seedFile?: string,
 ): Promise<BattleReportRepository> {
   // Tip: add new branches per mode here (e.g., 'demo', 'api')
-  // if (mode?.id === 'demo-custom') {
-  //   const { DemoJaBattleReportRepository } = await import('@/yk/repo/demo/repositories.demo');
-  //   return new DemoJaBattleReportRepository();
-  // }
   if (mode?.id === 'demo') {
     const { DemoJaBattleReportRepository } = await import(
       '@/yk/repo/demo/demo-ja/repositories.demo-ja'
@@ -179,10 +175,6 @@ export async function getJudgementRepository(
   );
   const delay = defaultDelayForMode(mode, 'judgement');
   // Tip: add new branches per mode here (e.g., 'demo', 'api')
-  // if (mode?.id === 'demo-custom') {
-  //   const { DemoJudgementRepository } = await import('@/yk/repo/demo/repositories.demo');
-  //   return new DemoJudgementRepository();
-  // }
   if (mode?.id === 'demo') {
     const { DemoJaJudgementRepository } = await import(
       '@/yk/repo/demo/demo-ja/repositories.demo-ja'
