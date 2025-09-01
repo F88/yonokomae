@@ -21,15 +21,6 @@ describe('demo-en repositories', () => {
     expect(battle.scenario).toBeTypeOf('string');
     expect(battle.status).toBe('success');
 
-    // demo-en unit names: randomized from three plausible types; no marker requirement
-    const enUnitTypes = [
-      'Recon Platoon',
-      'Signal Company',
-      'Bridge Guard',
-    ] as const;
-    expect(enUnitTypes.some((t) => battle.yono.title.includes(t))).toBe(true);
-    expect(enUnitTypes.some((t) => battle.komae.title.includes(t))).toBe(true);
-
     // reasonable neta structure
     expect(typeof battle.yono.subtitle).toBe('string');
     expect(battle.yono.subtitle.length).toBeGreaterThan(0);

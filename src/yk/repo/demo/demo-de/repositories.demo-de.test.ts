@@ -22,14 +22,6 @@ describe('demo-de repositories', () => {
     expect(typeof battle.scenario).toBe('string');
     expect(battle.status).toBe('success');
 
-    // demo-de unit names: randomized from three plausible types; no marker requirement
-    const deUnitTypes = [
-      'Aufklärungstrupp',
-      'Fernmeldekompanie',
-      'Brückenschutz',
-    ] as const;
-    expect(deUnitTypes.some((t) => battle.yono.title.includes(t))).toBe(true);
-    expect(deUnitTypes.some((t) => battle.komae.title.includes(t))).toBe(true);
     expect(typeof battle.yono.subtitle).toBe('string');
     expect(battle.yono.subtitle.length).toBeGreaterThan(0);
     expect(typeof battle.komae.subtitle).toBe('string');

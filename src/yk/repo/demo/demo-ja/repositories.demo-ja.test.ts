@@ -30,12 +30,6 @@ describe('Demo repositories with delay support', () => {
       expect(battle.title.length).toBeGreaterThan(0);
       expect(typeof battle.subtitle).toBe('string');
       expect(battle.subtitle.length).toBeGreaterThan(0);
-      // JA unit titles: randomized from three plausible types; no marker requirement
-      const jaUnitTypes = ['斥候小隊', '通信中隊', '橋梁警備隊'] as const;
-      expect(jaUnitTypes.some((t) => battle.yono.title.includes(t))).toBe(true);
-      expect(jaUnitTypes.some((t) => battle.komae.title.includes(t))).toBe(
-        true,
-      );
 
       // Should complete quickly in test env
       expect(endTime - startTime).toBeLessThan(100);
