@@ -8,7 +8,7 @@ describe('repository-provider mapping for demo-de', () => {
   it('returns DemoDeBattleReportRepository for battle reports', async () => {
     const repo = await getBattleReportRepository({
       id: 'demo-de',
-      title: 'DEMO(de)',
+      title: 'Demonstrationsmodus (de)',
       description: '',
       enabled: true,
     });
