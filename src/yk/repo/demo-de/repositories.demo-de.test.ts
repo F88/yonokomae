@@ -1,0 +1,149 @@
+import { describe, it, expect } from 'vitest';
+import {
+  DemoDeBattleReportRepository,
+  DemoDeJudgementRepository,
+} from './repositories.demo-de';
+
+describe('demo-de repositories', () => {
+  it('DemoDeBattleReportRepository.generateReport returns a valid battle with demo-de markers', async () => {
+    const repo = new DemoDeBattleReportRepository({
+      delay: { min: 0, max: 0 },
+    });
+    const battle = await repo.generateReport();
+
+    expect(battle.id).toMatch(/^battle-/);
+    // Title/Subitle are dynamic per scenario in DE; assert non-empty strings
+    expect(typeof battle.title).toBe('string');
+    expect(battle.title.length).toBeGreaterThan(0);
+    expect(typeof battle.subtitle).toBe('string');
+    expect(battle.subtitle.length).toBeGreaterThan(0);
+    // DE strings are localized; overview/scenario may include (DE) markers, but not required for unit titles
+    expect(typeof battle.overview).toBe('string');
+    expect(typeof battle.scenario).toBe('string');
+    expect(battle.status).toBe('success');
+
+    // demo-de unit names: randomized from three plausible types; no marker requirement
+    const deUnitTypes = [
+      'Aufklärungstrupp',
+      'Fernmeldekompanie',
+      'Brückenschutz',
+    ] as const;
+    expect(deUnitTypes.some((t) => battle.yono.title.includes(t))).toBe(true);
+    expect(deUnitTypes.some((t) => battle.komae.title.includes(t))).toBe(true);
+    expect(typeof battle.yono.subtitle).toBe('string');
+    expect(battle.yono.subtitle.length).toBeGreaterThan(0);
+    expect(typeof battle.komae.subtitle).toBe('string');
+    expect(battle.komae.subtitle.length).toBeGreaterThan(0);
+    expect(battle.yono.imageUrl).toBe('/YONO-SYMBOL.png');
+    expect(battle.komae.imageUrl).toBe('/KOMAE-SYMBOL.png');
+    expect(battle.yono.power).toBeGreaterThanOrEqual(0);
+    expect(battle.yono.power).toBeLessThanOrEqual(100);
+    expect(battle.komae.power).toBeGreaterThanOrEqual(0);
+    expect(battle.komae.power).toBeLessThanOrEqual(100);
+  });
+
+  it('DemoDeJudgementRepository.determineWinner compares power correctly', async () => {
+    const judge = new DemoDeJudgementRepository({ delay: { min: 0, max: 0 } });
+    const battleBase = {
+      id: 'battle_demo_de_test',
+      title: 'Demo-DE Battle',
+      subtitle: 'Variant Showcase (DE)',
+      overview: 'n/a',
+      scenario: 'n/a',
+      status: 'success' as const,
+    };
+
+    // YONO wins
+    let winner = await judge.determineWinner(
+      {
+        mode: {
+          id: 'demo-de',
+          title: 'DEMO(de)',
+          description: '',
+          enabled: true,
+        },
+        battle: {
+          ...battleBase,
+          yono: {
+            title: 'Y',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 10,
+          },
+          komae: {
+            title: 'K',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 1,
+          },
+        },
+      },
+      { signal: undefined },
+    );
+    expect(winner).toBe('YONO');
+
+    // KOMAE wins
+    winner = await judge.determineWinner(
+      {
+        mode: {
+          id: 'demo-de',
+          title: 'DEMO(de)',
+          description: '',
+          enabled: true,
+        },
+        battle: {
+          ...battleBase,
+          yono: {
+            title: 'Y',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 2,
+          },
+          komae: {
+            title: 'K',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 9,
+          },
+        },
+      },
+      { signal: undefined },
+    );
+    expect(winner).toBe('KOMAE');
+
+    // DRAW
+    winner = await judge.determineWinner(
+      {
+        mode: {
+          id: 'demo-de',
+          title: 'DEMO(de)',
+          description: '',
+          enabled: true,
+        },
+        battle: {
+          ...battleBase,
+          yono: {
+            title: 'Y',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 5,
+          },
+          komae: {
+            title: 'K',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 5,
+          },
+        },
+      },
+      { signal: undefined },
+    );
+    expect(winner).toBe('DRAW');
+  });
+});

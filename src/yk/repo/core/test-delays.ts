@@ -3,7 +3,7 @@
  * Run this file manually: npx tsx src/yk/repo/core/test-delays.ts
  */
 import { BattleReportRandomDataRepository } from '../random-jokes/repositories.random-jokes';
-import { DemoBattleReportRepository } from '../demo/repositories.demo';
+import { DemoJaBattleReportRepository } from '../demo-ja/repositories.demo-ja';
 import { getBattleReportRepository } from './repository-provider';
 
 async function testDelays() {
@@ -20,7 +20,7 @@ async function testDelays() {
   // Test 2: Range delay
   console.log('2️⃣ Range delay (1-3 seconds)...');
   const start2 = Date.now();
-  const rangeRepo = new DemoBattleReportRepository({
+  const rangeRepo = new DemoJaBattleReportRepository({
     delay: { min: 1000, max: 3000 },
   });
   await rangeRepo.generateReport();

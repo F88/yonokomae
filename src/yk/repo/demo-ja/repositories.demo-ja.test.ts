@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
-  DemoBattleReportRepository,
-  DemoJudgementRepository,
-} from './repositories.demo';
+  DemoJaBattleReportRepository,
+  DemoJaJudgementRepository,
+} from './repositories.demo-ja';
 import { playMode } from '@/yk/play-mode';
 
 describe('Demo repositories with delay support', () => {
@@ -16,35 +16,44 @@ describe('Demo repositories with delay support', () => {
     consoleWarnSpy.mockRestore();
   });
 
-  describe('DemoBattleReportRepository', () => {
+  describe('DemoJaBattleReportRepository', () => {
     it('generates battle report without delay by default', async () => {
-      const repo = new DemoBattleReportRepository();
+      const repo = new DemoJaBattleReportRepository();
       const startTime = Date.now();
 
       const battle = await repo.generateReport();
       const endTime = Date.now();
 
       expect(battle).toHaveProperty('id');
-      expect(battle).toHaveProperty('title', 'Demo-2 Battle');
-      expect(battle).toHaveProperty('subtitle', 'Variant Showcase');
-      expect(battle.yono.title).toBe('Yono - D2');
-      expect(battle.komae.title).toBe('Komae - D2');
+      // Title/Subitle are dynamic per scenario in JA; just assert they are non-empty strings
+      expect(typeof battle.title).toBe('string');
+      expect(battle.title.length).toBeGreaterThan(0);
+      expect(typeof battle.subtitle).toBe('string');
+      expect(battle.subtitle.length).toBeGreaterThan(0);
+      // JA unit titles: randomized from three plausible types; no marker requirement
+      const jaUnitTypes = ['斥候小隊', '通信中隊', '橋梁警備隊'] as const;
+      expect(jaUnitTypes.some((t) => battle.yono.title.includes(t))).toBe(true);
+      expect(jaUnitTypes.some((t) => battle.komae.title.includes(t))).toBe(
+        true,
+      );
 
       // Should complete quickly in test env
       expect(endTime - startTime).toBeLessThan(100);
     });
 
     it('accepts delay parameter in constructor', async () => {
-      const repo = new DemoBattleReportRepository({ delay: 1000 });
+      const repo = new DemoJaBattleReportRepository({ delay: 1000 });
 
       const battle = await repo.generateReport();
 
-      expect(battle.title).toBe('Demo-2 Battle');
+      // Title is dynamic now; ensure it exists and is in Japanese-ish form (non-empty)
+      expect(typeof battle.title).toBe('string');
+      expect(battle.title.length).toBeGreaterThan(0);
       // In test env, delay should be skipped, so this should still be fast
     });
 
     it('supports AbortSignal in generateReport', async () => {
-      const repo = new DemoBattleReportRepository({
+      const repo = new DemoJaBattleReportRepository({
         delay: { min: 100, max: 200 },
       });
       const controller = new AbortController();
@@ -58,11 +67,17 @@ describe('Demo repositories with delay support', () => {
     });
 
     it('generates random power values', async () => {
-      const repo = new DemoBattleReportRepository();
+      const repo = new DemoJaBattleReportRepository();
 
       const battle1 = await repo.generateReport();
       const battle2 = await repo.generateReport();
-
+      // subtitles are randomized; ensure they are present
+      expect(typeof battle1.subtitle).toBe('string');
+      expect(battle1.subtitle.length).toBeGreaterThan(0);
+      expect(typeof battle1.yono.subtitle).toBe('string');
+      expect(battle1.yono.subtitle.length).toBeGreaterThan(0);
+      expect(typeof battle1.komae.subtitle).toBe('string');
+      expect(battle1.komae.subtitle.length).toBeGreaterThan(0);
       // Powers are random, so they might be different
       expect(battle1.yono.power).toBeGreaterThanOrEqual(0);
       expect(battle1.yono.power).toBeLessThanOrEqual(100);
@@ -75,9 +90,9 @@ describe('Demo repositories with delay support', () => {
     });
   });
 
-  describe('DemoJudgementRepository', () => {
+  describe('DemoJaJudgementRepository', () => {
     it('determines winner based on power comparison', async () => {
-      const repo = new DemoJudgementRepository();
+      const repo = new DemoJaJudgementRepository();
 
       const battle = {
         id: 'b-1',
@@ -110,7 +125,7 @@ describe('Demo repositories with delay support', () => {
     });
 
     it('returns DRAW when powers are equal', async () => {
-      const repo = new DemoJudgementRepository({ delay: 500 });
+      const repo = new DemoJaJudgementRepository({ delay: 500 });
 
       const battle = {
         id: 'b-2',
@@ -143,7 +158,7 @@ describe('Demo repositories with delay support', () => {
     });
 
     it('supports AbortSignal in determineWinner', async () => {
-      const repo = new DemoJudgementRepository({
+      const repo = new DemoJaJudgementRepository({
         delay: { min: 200, max: 400 },
       });
       const controller = new AbortController();
