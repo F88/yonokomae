@@ -17,7 +17,7 @@ export type Props = {
 export const HistoricalScene: FC<Props> = ({ battle }) => {
   return (
     <Card className="w-full">
-      <CardHeader className="text-center">
+      <CardHeader className="text-center px-4 lg:px-6">
         <div className="space-y-6">
           <div className="space-y-2">
             <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -87,7 +87,7 @@ export const HistoricalScene: FC<Props> = ({ battle }) => {
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 px-4 lg:px-6">
         <Field yono={battle.yono} komae={battle.komae} />
       </CardContent>
     </Card>

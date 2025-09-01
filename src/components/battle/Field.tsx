@@ -13,7 +13,7 @@ export const Field: FC<FieldProps> = ({ yono, komae }) => {
   const Placeholder: FC = () => (
     <div
       data-testid="placeholder"
-      className="flex min-w-72 max-w-80 flex-1 flex-col items-center rounded-lg border bg-card p-6"
+      className="flex h-full flex-1 flex-col items-stretch rounded-lg border bg-card p-6"
     >
       <div className="w-full space-y-4">
         <div className="text-center">
@@ -33,20 +33,21 @@ export const Field: FC<FieldProps> = ({ yono, komae }) => {
 
   return (
     <div className="w-full space-y-8">
-      <div className="flex flex-row items-start justify-center gap-8 md:gap-12">
+      {/* Full-width band; stretch cards to edges so side strips are hidden */}
+      <div className="flex w-full items-stretch justify-between gap-2 md:gap-3 px-0">
         {/* YONO */}
         <div
           data-testid="slot-yono"
-          className="flex flex-col items-center space-y-4"
+          className="flex flex-1 flex-col items-stretch space-y-4"
         >
-          {yono ? <NetaView {...yono} /> : <Placeholder />}
+          {yono ? <NetaView {...yono} fluid fullHeight /> : <Placeholder />}
         </div>
         {/* KOMAE */}
         <div
           data-testid="slot-komae"
-          className="flex flex-col items-center space-y-4"
+          className="flex flex-1 flex-col items-stretch space-y-4"
         >
-          {komae ? <NetaView {...komae} /> : <Placeholder />}
+          {komae ? <NetaView {...komae} fluid fullHeight /> : <Placeholder />}
         </div>
       </div>
     </div>
