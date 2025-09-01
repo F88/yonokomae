@@ -14,7 +14,7 @@ const battle = {
     'YONO は都市化により農地が極少で、市民農園や家庭菜園等の小規模・非営利的営みが中心。' +
     'KOMAE は都市農業の維持・発展を掲げ、防災・環境・景観と両立させた農の機能が評価される。',
   komae: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE の農業',
     subtitle: '小規模都市農業/生産額約4.3億円(2020)/耕地約42ha',
     description:
@@ -24,7 +24,7 @@ const battle = {
     power: 50,
   },
   yono: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'YONO の農業',
     subtitle: '畑作の歴史/宅地化で農地は極少/市民農園など',
     description:
@@ -35,7 +35,7 @@ const battle = {
   },
   provenance: [
     {
-      label: 'ユーザー提供の比較表(2025-09-01)',
+      label: 'KWSK River-Crossing Integration Division',
       note:
         '歴史: 与野は畑作中心→戦後宅地化で農地減少。こまえは養蚕・野菜・花卉が盛ん。' +
         '現況: 与野は農家数・農地とも極少で市民農園等が中心。こまえは都市農業が残り生産額約4.3億円(2020)。' +

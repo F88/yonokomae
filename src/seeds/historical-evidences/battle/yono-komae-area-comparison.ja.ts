@@ -3,7 +3,7 @@ import type { Battle } from '@/types/types';
 // Yono (Saitama-shi Chuo-ku) vs Komae: area size comparison (Japanese)
 const battle = {
   id: 'yono-komae-area-comparison-geo-2025-ja',
-  title: '面積比較',
+  title: '面積',
   subtitle: 'よのとこまえの地理的スケール',
   overview:
     'よのの面積は 8.39 km²、こまえは 6.39 km²。よのの方が約 2 km² 広い。' +
@@ -13,7 +13,7 @@ const battle = {
     'YONO(現・よの)は 8.39 km² とこまえ(6.39 km²)より広く、よの(8.29 km²)からの小幅な拡大が背景にある。' +
     'こまえは全国で 2 番目に面積が小さい市として知られ、緻密な市街と沿線の機能集積が特徴とされる。',
   komae: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE の面積',
     subtitle: '6.39 km² (全国で 2 番目に小さい市)',
     description:
@@ -21,7 +21,7 @@ const battle = {
     power: 50,
   },
   yono: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'YONO(よの連合国よの) の面積',
     subtitle: '8.39 km² (よの主要部 + 編入による微増)',
     description:
@@ -31,7 +31,7 @@ const battle = {
   },
   provenance: [
     {
-      label: 'ユーザー提供の比較メモ(2025-09-01)',
+      label: '高尾山測量クラブ',
       note: 'よの 8.39 km²、こまえ 6.39 km²、差約 2 km²。よのは 8.29 km² → 編入で 8.39 km²。こまえは全国 2 位の小面積。',
     },
   ],

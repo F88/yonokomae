@@ -10,7 +10,7 @@ const battle = {
   scenario:
     'YONOでは1928に繊維工業が拡大(松本産業など)。2020には(よの連合国全体で)第3次産業の就業者が8割超で、2001の合併/さいたま新都心開発と整合的。KOMAEは昭和期に農業・養蚕が中心で、2020の就業構成は第1次296、第2次5,045、第3次26,818。鉄道/路線(YONO: 駅4/路線3、KOMAE: 駅2/路線1)は接続規模の差を示す。',
   komae: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAEの産業',
     subtitle: '畑からサービスへ',
     description:
@@ -18,7 +18,7 @@ const battle = {
     power: 54,
   },
   yono: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'YONOの産業',
     subtitle: '都市サービスの集中',
     description:
@@ -27,7 +27,7 @@ const battle = {
   },
   provenance: [
     {
-      label: 'ユーザー提供の比較表(2025-08-27)',
+      label: 'Arakawa Crossing Council, Komae HQ',
       note: '産業構成(2020)、歴史的注記(1928の繊維/昭和期の農業・養蚕)、鉄道数、成長シグナル。',
     },
   ],

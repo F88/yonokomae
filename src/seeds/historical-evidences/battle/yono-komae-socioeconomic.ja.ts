@@ -10,7 +10,7 @@ const battle = {
   scenario:
     'YONOは20世紀を通じて着実に人口が増加し、合併後の都市開発(2001)とサービス業中心(2020時点で第3次産業が8割超)により成長が加速した。KOMAEは農業や養蚕業といった農村的基盤から郊外都市へ転換し、1955-1975にかけて人口が約3.4倍と急増、その後は安定化し、2020には第3次産業が優勢となった。これらは都市化の経路、インフラ、経済構造の違いを反映している。',
   komae: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE',
     subtitle: '農村的基盤から郊外都市へ',
     description:
@@ -18,7 +18,7 @@ const battle = {
     power: 55,
   },
   yono: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'YONO',
     subtitle: 'サービス業優位の都市成長',
     description:
@@ -27,7 +27,7 @@ const battle = {
   },
   provenance: [
     {
-      label: 'ユーザー提供の比較表(2025-08-27)',
+      label: 'Arakawa Crossing Council, Komae HQ',
       note: '1920-2050の人口系列、産業構成、鉄道数、ガバナンスに関する注記。',
     },
   ],

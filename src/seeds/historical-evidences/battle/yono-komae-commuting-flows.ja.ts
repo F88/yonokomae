@@ -13,7 +13,7 @@ const battle = {
     '駅近の商業利便性の向上で日常の購買行動は域内シフトが進行。双方ともにピーク分散・在宅比率の上昇により、' +
     '直近では朝夕ピークが緩和される傾向。',
   komae: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE のモビリティ',
     subtitle: '沿線ベッドタウンの都心アクセス',
     description:
@@ -22,7 +22,7 @@ const battle = {
     power: 53,
   },
   yono: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'YONO のモビリティ',
     subtitle: '広域ハブと駅前再開発',
     description:
@@ -32,7 +32,7 @@ const battle = {
   },
   provenance: [
     {
-      label: 'ユーザー提供の比較表(2025-08-27)',
+      label: 'Arakawa Crossing Council, Komae HQ',
       note: '通勤・通学・購買行動の傾向整理。推定を含む参考値。',
     },
   ],

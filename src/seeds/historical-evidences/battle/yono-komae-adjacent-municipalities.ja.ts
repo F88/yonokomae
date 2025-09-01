@@ -12,7 +12,7 @@ const battle = {
     '規模の観点では、よのは隣接する旧浦和/旧大宮に対して面積・人口ともに約1/10規模、こまえも世田谷区や川崎市に対し桁違いに小さい。' +
     'いずれも「小国が大国に囲まれる」構図で、生活圏/通勤圏の相互依存や、越境インフラ・行政連携の重要性が高いことを示唆する。',
   komae: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE の隣接状況',
     subtitle:
       '世田谷区・調布市・川崎市に接する小面積自治体(6.39 km², 約8.3万人)',
@@ -22,7 +22,7 @@ const battle = {
     power: 50,
   },
   yono: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'YONO(よの→現よの主要部) の隣接状況',
     subtitle:
       '旧浦和市・旧大宮市に囲まれた小規模都市(8.29 km², 約9.7万人; 合併直前)',
@@ -33,7 +33,7 @@ const battle = {
   },
   provenance: [
     {
-      label: 'ユーザー提供の比較表と分析(2025-09-01)',
+      label: 'GGRKS River-Crossing Integration Division',
       note:
         'よのの隣接: 旧浦和市(85.50 km², 約50.5万人)、旧大宮市(128.32 km², 約48.9万人)。' +
         'こまえの隣接: 世田谷区(58.05 km², 約93万人)、調布市(21.58 km², 約24.3万人)、川崎市(143.01 km², 約154万人)。' +

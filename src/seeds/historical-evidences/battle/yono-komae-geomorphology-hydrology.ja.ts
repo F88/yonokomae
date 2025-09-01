@@ -14,7 +14,7 @@ const battle = {
     '街路の接続性や自転車移動のしやすさ、面的更新の計画余地に寄与しうる。KOMAE は多摩川低地と台地のコントラストが強く、' +
     '河川景観や親水空間、防災(堤防・内水対策)と一体のまちづくりが重要となる。',
   komae: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE の地形・水系',
     subtitle: '武蔵野台地の南端/多摩川低地/標高 10〜20m',
     description:
@@ -23,7 +23,7 @@ const battle = {
     power: 50,
   },
   yono: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'YONO の地形・水系',
     subtitle: '大宮台地南部/全体になだらかな平坦地/西側に荒川',
     description:
@@ -33,7 +33,7 @@ const battle = {
   },
   provenance: [
     {
-      label: 'ユーザー提供の比較表(2025-09-01)',
+      label: 'KWSK River-Crossing Integration Division',
       note:
         'よの(よの)は大宮台地南部の平坦地/旧中山道沿いに市街。大きな河川は少ないが西側を荒川が流れる。' +
         'こまえは武蔵野台地南端で、多摩川低地と北側台地から成る。標高 10〜20m。南部を多摩川が東西に流れ、堤防整備。',

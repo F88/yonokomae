@@ -15,7 +15,7 @@ const battle = {
     '産業としての水産は地域構造から限定的。YONO は荒川近接の親水・防災文脈、' +
     'KOMAE は多摩川沿いの景観・文化資源の活用が主眼となる。',
   komae: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE の水産業',
     subtitle: '内陸/海なし/多摩川沿い/統計対象外',
     description:
@@ -24,7 +24,7 @@ const battle = {
     power: 50,
   },
   yono: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'YONO の水産業',
     subtitle: '内陸/海なし/荒川近接/統計対象外',
     description:
@@ -34,7 +34,7 @@ const battle = {
   },
   provenance: [
     {
-      label: 'ユーザー提供の比較表(2025-09-01)',
+      label: 'KWSK River-Crossing Integration Division',
       note:
         '地理: 双方とも内陸・海なし。水産業の有無: 統計データはなし。' +
         '備考: 与野は荒川近接だが主要産業ではない。こまえは多摩川沿いだが大規模な漁業・養殖は行われていない。',

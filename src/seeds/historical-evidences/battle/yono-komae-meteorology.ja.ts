@@ -14,7 +14,7 @@ const battle = {
     '気象は都市活動・防災・健康・エネルギー需要に直結する。YONO は内陸性で夏季の熱ストレスや冬季の乾燥対策が重要。' +
     'KOMAE は多摩川沿いの微気候と都心近接の影響を受け、夏季の暑熱対策や水辺空間の活用、冬季の寒冷対策のバランスが鍵となる。',
   komae: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE の気象',
     subtitle: '年平均約16.5℃/年降水量約1,500mm/南東〜南西風が優勢',
     description:
@@ -23,7 +23,7 @@ const battle = {
     power: 50,
   },
   yono: {
-    imageUrl: 'about:blank',
+    imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'YONO の気象',
     subtitle: '年平均約15.5℃/年降水量約1,400mm/南よりの風が優勢',
     description:
@@ -33,7 +33,7 @@ const battle = {
   },
   provenance: [
     {
-      label: 'ユーザー提供の比較表(2025-09-01)',
+      label: 'KWSK River-Crossing Integration Division',
       note:
         '平均気温: 与野 約15.5℃(よの連合国)、こまえ 約16.5℃(近隣地域)。' +
         '降水量: 与野 約1,400mm、こまえ 約1,500mm。' +
