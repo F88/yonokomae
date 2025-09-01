@@ -12,9 +12,71 @@ import { Separator } from '@/components/ui/separator';
 
 export type Props = {
   battle: Battle;
+  /** When true, render images in cropped-top banner style. */
+  cropTopBanner?: boolean;
+  /**
+   * Optional banner aspect ratio (W/H) used only when `cropTopBanner` is true.
+   * Format: 'W/H' (e.g. '16/7'). Default is '16/7'.
+   * Smaller denominator (H) = taller banner.
+   */
+  cropAspectRatio?:
+    | '32/1'
+    | '32/2'
+    | '32/3'
+    | '32/4'
+    | '32/5'
+    | '32/6'
+    | '32/7'
+    | '32/8'
+    | '32/9'
+    | '32/10'
+    | '32/11'
+    | '32/12'
+    | '32/13'
+    | '32/14'
+    | '32/15'
+    | '32/16'
+    | '32/17'
+    | '32/18'
+    | '32/19'
+    | '32/20'
+    | '32/21'
+    | '32/22'
+    | '32/23'
+    | '32/24'
+    | '32/25'
+    | '32/26'
+    | '32/27'
+    | '32/28'
+    | '32/29'
+    | '32/30'
+    | '32/31';
+  /**
+   * Optional vertical focal point for cropped banner. See NetaView Props `cropFocusY`.
+   */
+  cropFocusY?:
+    | 'top'
+    | 'center'
+    | 'bottom'
+    | 'y-0'
+    | 'y-10'
+    | 'y-20'
+    | 'y-30'
+    | 'y-40'
+    | 'y-50'
+    | 'y-60'
+    | 'y-70'
+    | 'y-80'
+    | 'y-90'
+    | 'y-100';
 };
 
-export const HistoricalScene: FC<Props> = ({ battle }) => {
+export const HistoricalScene: FC<Props> = ({
+  battle,
+  cropTopBanner = false,
+  cropAspectRatio,
+  cropFocusY,
+}) => {
   return (
     <Card className="w-full">
       <CardHeader className="text-center px-4 lg:px-6">
@@ -88,7 +150,13 @@ export const HistoricalScene: FC<Props> = ({ battle }) => {
       </CardHeader>
 
       <CardContent className="pt-0 px-4 lg:px-6">
-        <Field yono={battle.yono} komae={battle.komae} />
+        <Field
+          yono={battle.yono}
+          komae={battle.komae}
+          cropTopBanner={cropTopBanner}
+          cropAspectRatio={cropAspectRatio}
+          cropFocusY={cropFocusY}
+        />
       </CardContent>
     </Card>
   );
