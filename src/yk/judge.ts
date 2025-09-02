@@ -8,20 +8,30 @@ import { getJudgementRepository } from '@/yk/repo/core/repository-provider';
 import type { Winner } from '@/yk/repo/core/repositories';
 
 export class Judge {
+  id: string;
   name: string;
+  codeName: string;
 
-  // Play mode (e.g. single-player, multiplayer)
-  mode: PlayMode;
-
-  constructor(name: string, mode: PlayMode) {
+  constructor(id: string, name: string, codeName: string) {
+    this.id = id;
     this.name = name;
-    this.mode = mode;
+    this.codeName = codeName;
   }
 
   // Async to allow future API calls; delay is handled in repository layer now
-  async determineWinner({ battle }: { battle: Battle }): Promise<Winner> {
+  async determineWinner({
+    battle,
+    mode,
+  }: {
+    battle: Battle;
+    mode: PlayMode;
+  }): Promise<Winner> {
     // Delegate to repository layer (handles delays and strategy per mode)
-    const repo = await getJudgementRepository(this.mode);
-    return repo.determineWinner({ battle, mode: this.mode });
+    const repo = await getJudgementRepository(mode);
+    // Propagate judge identifier to allow per-judge individuality downstream
+    return repo.determineWinner({
+      battle,
+      judge: { id: this.id, name: this.name, codeName: this.codeName },
+    });
   }
 }

@@ -3,6 +3,7 @@ import type { Battle } from '@/types/types';
 import type { PlayMode } from '@/yk/play-mode';
 import { getJudgementRepository } from '@/yk/repo/core/repository-provider';
 import type { Winner } from '@/yk/repo/core/repositories';
+import { findJudgeByCodeName } from '@/yk/judges';
 import { useRepositoriesOptional } from '@/yk/repo/core/repository-context';
 
 export type JudgementState =
@@ -12,7 +13,7 @@ export type JudgementState =
   | { status: 'error'; data: null; error: Error };
 
 export function useJudgement(
-  nameOfJudge: string,
+  codeNameOfJudge: string,
   battle: Battle,
   mode: PlayMode,
 ): JudgementState {
@@ -25,12 +26,12 @@ export function useJudgement(
 
   const inputs = useMemo(
     () => ({
-      nameOfJudge,
+      codeNameOfJudge,
       battleId: battle.id,
       yono: battle.yono,
       komae: battle.komae,
     }),
-    [nameOfJudge, battle.id, battle.yono, battle.komae],
+    [codeNameOfJudge, battle.id, battle.yono, battle.komae],
   );
 
   useEffect(() => {
@@ -43,11 +44,15 @@ export function useJudgement(
         const repo =
           provided?.judgement ?? (await getJudgementRepository(mode));
         timer = setTimeout(() => controller.abort(), 10_000);
+        const judgeIdentity = findJudgeByCodeName(codeNameOfJudge) ?? {
+          id: `judge-${codeNameOfJudge}`,
+          name: `Judge ${codeNameOfJudge}`,
+          codeName: codeNameOfJudge,
+        };
         const result = await repo.determineWinner(
           {
             battle: { ...battle, yono: inputs.yono, komae: inputs.komae },
-            mode,
-            extra: undefined,
+            judge: judgeIdentity,
           },
           { signal: controller.signal },
         );
@@ -72,7 +77,7 @@ export function useJudgement(
     return () => {
       cancelled = true;
     };
-  }, [inputs, mode, provided, battle]);
+  }, [inputs, mode, provided, battle, codeNameOfJudge]);
 
   return state;
 }
