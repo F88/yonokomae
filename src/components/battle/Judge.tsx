@@ -83,7 +83,7 @@ function WinnerBadge({ winner }: { winner: Winner }) {
     case 'YONO':
       return (
         <Badge
-          variant="default"
+          variant="secondary"
           aria-label="Winner: YONO"
           className="px-2 py-0.5 text-xs"
         >

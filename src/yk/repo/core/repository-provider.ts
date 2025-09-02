@@ -234,6 +234,22 @@ export async function getJudgementRepository(
       { enabled: cfg.enabled, cacheTtlMs: cfg.ttlMs, maxSize: cfg.maxSize },
     );
   }
+  if (mode?.id === 'historical-research') {
+    const { HistoricalEvidencesJudgementRepository } = await import(
+      '@/yk/repo/historical-evidences/repositories.historical-evidences'
+    );
+    const { getJudgementCollapseConfigFor } = await import(
+      './judgement-config'
+    );
+    const judgementDelay = defaultDelayForMode(mode, 'judgement');
+    const cfg = getJudgementCollapseConfigFor('historical');
+    return withJudgementCollapsing(
+      withJudgementTiming(
+        new HistoricalEvidencesJudgementRepository({ delay: judgementDelay }),
+      ),
+      { enabled: cfg.enabled, cacheTtlMs: cfg.ttlMs, maxSize: cfg.maxSize },
+    );
+  }
   const { getJudgementCollapseConfigFor } = await import('./judgement-config');
   const cfg = getJudgementCollapseConfigFor('fake');
   return withJudgementCollapsing(

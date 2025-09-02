@@ -1,6 +1,11 @@
 import { uid } from '@/lib/id';
 import type { Battle, Neta } from '@/types/types';
-import type { BattleReportRepository } from '@/yk/repo/core/repositories';
+import type {
+  BattleReportRepository,
+  JudgementRepository,
+  PlayMode,
+  Winner,
+} from '@/yk/repo/core/repositories';
 import { z } from 'zod';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 
@@ -196,3 +201,36 @@ const BattleSchema = z.object({
     .optional(),
   status: z.enum(['loading', 'success', 'error']).optional(),
 });
+
+/**
+ * HistoricalEvidencesJudgementRepository
+ *
+ * Dedicated judging strategy for the `historical-research` mode.
+ *
+ * Current rule set:
+ * - Uses deterministic power comparison identical to demo/fake repos
+ * - Tie results in 'DRAW'
+ * - Includes artificial delay via applyDelay for UX consistency
+ *
+ * Rationale:
+ * - Keeps behaviour stable with existing tests while isolating future
+ *   historical heuristics (e.g., provenance weighting, scenario modifiers)
+ */
+export class HistoricalEvidencesJudgementRepository
+  implements JudgementRepository
+{
+  private readonly delay?: DelayOption;
+  constructor(options?: { delay?: DelayOption }) {
+    this.delay = options?.delay;
+  }
+
+  async determineWinner(
+    input: { battle: Battle; mode: PlayMode; extra?: Record<string, unknown> },
+    options?: { signal?: AbortSignal },
+  ): Promise<Winner> {
+    await applyDelay(this.delay, options?.signal);
+    const { yono, komae } = input.battle;
+    if (yono.power === komae.power) return 'DRAW';
+    return yono.power > komae.power ? 'YONO' : 'KOMAE';
+  }
+}

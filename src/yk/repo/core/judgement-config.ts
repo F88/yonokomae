@@ -19,6 +19,8 @@ const perRepo: Record<RepoId, JudgementCollapseConfig | undefined> = {
   fake: { enabled: true, ttlMs: 20_000, maxSize: 100 },
   // API repo can keep longer TTL
   api: { enabled: true, ttlMs: 60_000, maxSize: 200 },
+  // Historical research can be a bit shorter to reflect frequent data edits
+  historical: { enabled: true, ttlMs: 30_000, maxSize: 150 },
 };
 
 export function getJudgementCollapseConfigFor(
