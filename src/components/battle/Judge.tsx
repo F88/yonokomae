@@ -54,6 +54,10 @@ export const JudgeCard: FC<JudgeCardProps> = ({
     setRevealed(false);
   }, [judgement.status, delayMs]);
 
+  // if (judgement.status === 'success') {
+  //   console.log( judgement );
+  // }
+
   return (
     <Card className="h-full min-w-0 overflow-hidden text-center gap-2 px-0 py-0">
       <CardHeader className="px-0 pt-4">
