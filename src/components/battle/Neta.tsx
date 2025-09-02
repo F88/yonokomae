@@ -5,14 +5,6 @@ import { Badge } from '@/components/ui/badge';
 
 export type Props = Neta & {
   /**
-   * When true, card stretches to container width (no max-width cap).
-   */
-  fluid?: boolean;
-  /**
-   * When true, remove top border radius so adjacent cards meet with no notch.
-   */
-  squareTop?: boolean;
-  /**
    * When true, makes the card take full available height to match siblings.
    */
   fullHeight?: boolean;
@@ -109,8 +101,6 @@ export const NetaView: FC<Props> = ({
   subtitle,
   description,
   power,
-  fluid = false,
-  squareTop = false,
   fullHeight = false,
   cropTopBanner = false,
   cropFocusY,
@@ -317,11 +307,11 @@ export const NetaView: FC<Props> = ({
     <Card
       className={[
         'w-full overflow-hidden',
-        fluid ? 'max-w-none' : 'max-w-sm',
-        squareTop ? 'rounded-t-none' : '',
+        'max-w-none',
         fullHeight ? 'h-full' : '',
       ].join(' ')}
     >
+      {/* Image */}
       {hasImage && (
         <div className={['w-full overflow-hidden', ratioClass].join(' ')}>
           <img
@@ -334,18 +324,20 @@ export const NetaView: FC<Props> = ({
           />
         </div>
       )}
-      <CardContent className="p-6 flex-1 flex flex-col">
-        <div className="flex h-full flex-col gap-3">
+      {/* Content */}
+      <CardContent className="px-2 pt-2 pb-0 flex-1 flex flex-col">
+        <div className="flex h-full min-w-0 flex-col gap-3">
           <div className="text-center">
             <h3 className="text-xl font-bold">{title}</h3>
             <p className="text-sm text-muted-foreground italic">{subtitle}</p>
           </div>
 
-          <p className="text-sm text-center text-muted-foreground">
+          <p className="text-sm text-center text-muted-foreground break-words">
             {description}
           </p>
 
-          <div className="mt-auto flex justify-center">
+          {/* Power */}
+          <div className="mt-auto flex justify-center ">
             <Badge variant="secondary" className="gap-1 px-3 py-1">
               <span className="text-lg">💥</span>
               <span className="font-bold">Power: {power}</span>

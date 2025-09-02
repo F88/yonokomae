@@ -10,6 +10,11 @@ export type { Battle, Neta, PlayMode };
  * - `'DRAW'`: Battle ends in a tie
  */
 export type Winner = 'YONO' | 'KOMAE' | 'DRAW';
+export type JudgeIdentity = {
+  id: string;
+  name: string;
+  codeName: string;
+};
 /**
  * BattleReportRepository
  *
@@ -88,7 +93,10 @@ export interface BattleReportRepository {
  * **Usage Pattern**:
  * ```typescript
  * const repository = await getJudgementRepository(mode);
- * const winner = await repository.determineWinner({ battle, mode });
+ * const winner = await repository.determineWinner({
+ *   battle,
+ *   judge: { id: 'j-1', name: 'Judge Judy', codeName: 'JUDY' },
+ * });
  * ```
  *
  * **Implementations**:
@@ -109,10 +117,9 @@ export interface JudgementRepository {
    * - Battle context and scenario elements
    * - Random factors (implementation-dependent)
    *
-   * @param input Battle participants and context
-   * @param input.mode PlayMode affecting judging rules
-   * @param input.yono Yono character with power and attributes
-   * @param input.komae Komae character with power and attributes
+   * @param input Battle and judge identity
+   * @param input.battle Complete Battle object for evaluation
+   * @param input.judge Identity of the judge performing the evaluation
    * @param options Optional configuration
    * @param options.signal AbortSignal for cancelling long-running judgements
    * @returns Promise resolving to battle Winner
@@ -121,8 +128,7 @@ export interface JudgementRepository {
   determineWinner(
     input: {
       battle: Battle;
-      mode: PlayMode;
-      extra?: Record<string, unknown>;
+      judge: JudgeIdentity;
     },
     options?: {
       signal?: AbortSignal;

@@ -29,12 +29,7 @@ describe('repository-provider mapping for demo-de', () => {
     });
     const winner = await judge.determineWinner(
       {
-        mode: {
-          id: 'demo-de',
-          title: 'DEMO(de)',
-          description: '',
-          enabled: true,
-        },
+        judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
         battle: {
           id: 'b',
           title: 'Demo-DE Schlacht',

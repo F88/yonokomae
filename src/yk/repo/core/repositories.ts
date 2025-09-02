@@ -15,6 +15,19 @@ export type { Battle, Neta, PlayMode };
 export type Winner = 'YONO' | 'KOMAE' | 'DRAW';
 
 /**
+ * JudgeIdentity
+ *
+ * Lightweight identity DTO for a Judge. Prefer passing this across
+ * repository boundaries over class instances to keep interfaces stable
+ * and serialization-friendly.
+ */
+export type JudgeIdentity = {
+  id: string;
+  name: string;
+  codeName: string;
+};
+
+/**
  * BattleReportRepository
  *
  * **Core interface for battle report generation and retrieval.**
@@ -93,7 +106,10 @@ export interface BattleReportRepository {
  * **Usage Pattern**:
  * ```typescript
  * const repository = await getJudgementRepository(mode);
- * const winner = await repository.determineWinner({ battle, mode });
+ * const winner = await repository.determineWinner({
+ *   battle,
+ *   judge: { id: 'j-1', name: 'Judge Judy', codeName: 'JUDY' },
+ * });
  * ```
  *
  * **Implementations**:
@@ -114,10 +130,9 @@ export interface JudgementRepository {
    * - Battle context and scenario elements
    * - Random factors (implementation-dependent)
    *
-   * @param input Battle participants and context
-   * @param input.mode PlayMode affecting judging rules
-   * @param input.yono Yono character with power and attributes
-   * @param input.komae Komae character with power and attributes
+   * @param input Battle and judge identity
+   * @param input.battle Complete Battle object for evaluation
+   * @param input.judge Identity of the judge performing the evaluation
    * @param options Optional configuration
    * @param options.signal AbortSignal for cancelling long-running judgements
    * @returns Promise resolving to battle Winner
@@ -125,11 +140,8 @@ export interface JudgementRepository {
    */
   determineWinner(
     input: {
-      // Preferred shape: pass the whole battle and mode
       battle: Battle;
-      mode: PlayMode;
-      // Future extension point
-      extra?: Record<string, unknown>;
+      judge: JudgeIdentity;
     },
     options?: { signal?: AbortSignal },
   ): Promise<Winner>;

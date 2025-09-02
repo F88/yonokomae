@@ -1,4 +1,3 @@
-import type { PlayMode } from '@/yk/play-mode';
 import type { JudgementRepository, Winner } from '../core/repositories';
 import type { Battle } from '@/types/types';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
@@ -11,8 +10,7 @@ export class FakeJudgementRepository implements JudgementRepository {
   async determineWinner(
     input: {
       battle: Battle;
-      mode: PlayMode;
-      extra?: Record<string, unknown>;
+      judge: { id: string; name: string; codeName: string };
     },
     options?: { signal?: AbortSignal },
   ): Promise<Winner> {

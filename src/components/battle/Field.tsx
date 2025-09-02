@@ -102,12 +102,11 @@ export const Field: FC<FieldProps> = ({
         {/* YONO */}
         <div
           data-testid="slot-yono"
-          className="flex flex-1 flex-col items-stretch space-y-4"
+          className="flex min-w-0 flex-1 flex-col items-stretch space-y-4"
         >
           {yono ? (
             <NetaView
               {...yono}
-              fluid
               fullHeight
               cropTopBanner={cropTopBanner}
               cropFocusY={cropFocusY}
@@ -120,12 +119,11 @@ export const Field: FC<FieldProps> = ({
         {/* KOMAE */}
         <div
           data-testid="slot-komae"
-          className="flex flex-1 flex-col items-stretch space-y-4"
+          className="flex min-w-0 flex-1 flex-col items-stretch space-y-4"
         >
           {komae ? (
             <NetaView
               {...komae}
-              fluid
               fullHeight
               cropTopBanner={cropTopBanner}
               cropFocusY={cropFocusY}

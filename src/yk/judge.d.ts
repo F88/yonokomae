@@ -5,8 +5,15 @@ import type { Battle } from 'src/types/types';
 import type { PlayMode } from './play-mode';
 import type { Winner } from '@/yk/repo/core/repositories';
 export declare class Judge {
+  id: string;
   name: string;
-  mode: PlayMode;
-  constructor(name: string, mode: PlayMode);
-  determineWinner({ battle }: { battle: Battle }): Promise<Winner>;
+  codeName: string;
+  constructor(id: string, name: string, codeName: string);
+  determineWinner({
+    battle,
+    mode,
+  }: {
+    battle: Battle;
+    mode: PlayMode;
+  }): Promise<Winner>;
 }

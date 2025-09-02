@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { FakeJudgementRepository } from '@/yk/repo/mock/repositories.fake';
-import { playMode } from '@/yk/play-mode';
 
 describe('Fake repositories - delay capping', () => {
   let warnSpy: ReturnType<typeof vi.spyOn>;
@@ -18,7 +17,6 @@ describe('Fake repositories - delay capping', () => {
       delay: { min: 3_000, max: 8_000 },
     });
     const result = await repo.determineWinner({
-      mode: playMode[0],
       battle: {
         id: 'b-1',
         title: 't',
@@ -40,6 +38,7 @@ describe('Fake repositories - delay capping', () => {
           power: 5,
         },
       },
+      judge: { id: 'fake-judge-1', name: 'Fake', codeName: 'FAKE' },
     });
     expect(result).toBe('YONO');
     expect(warnSpy).toHaveBeenCalled();
@@ -52,7 +51,6 @@ describe('Fake repositories - delay capping', () => {
   it('does not warn when delay is negative (clamped to 0)', async () => {
     const repo = new FakeJudgementRepository({ delay: -100 });
     const res = await repo.determineWinner({
-      mode: playMode[0],
       battle: {
         id: 'b-2',
         title: 't',
@@ -74,6 +72,7 @@ describe('Fake repositories - delay capping', () => {
           power: 2,
         },
       },
+      judge: { id: 'fake-judge-2', name: 'Fake', codeName: 'FAKE' },
     });
     expect(res).toBe('KOMAE');
     expect(warnSpy).not.toHaveBeenCalled();

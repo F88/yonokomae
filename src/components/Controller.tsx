@@ -69,10 +69,10 @@ export const Controller: FC<ControllerProps> = ({
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <KeyChip label="←" />
           <KeyChip label="↑" />
-          <KeyChip label="k" />
+          <KeyChip label="K" />
           {/* <span className="mx-1">prev</span> */}|
           {/* <span className="mx-1">next</span> */}
-          <KeyChip label="j" />
+          <KeyChip label="J" />
           <KeyChip label="↓" />
           <KeyChip label="→" />
         </div>

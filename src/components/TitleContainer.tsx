@@ -4,8 +4,8 @@ import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyChip } from '@/components/ui/key-chip';
 import { isEditable } from '@/lib/dom-utils';
-import { historicalSeeds } from '@/yk/repo/seed-system';
-import { useHistoricalSeedSelection } from '@/yk/repo/seed-system';
+// import { historicalSeeds } from '@/yk/repo/seed-system';
+// import { useHistoricalSeedSelection } from '@/yk/repo/seed-system';
 
 export type TitleContainerProps = {
   modes?: PlayMode[];
@@ -24,7 +24,7 @@ export function TitleContainer({
   onSelect,
   title = 'SELECT MODE',
 }: TitleContainerProps) {
-  const seedSelection = useHistoricalSeedSelection();
+  // const seedSelection = useHistoricalSeedSelection();
   const options = useMemo(() => modes ?? defaultPlayModes, [modes]);
   const [index, setIndex] = useState(0);
 
@@ -152,8 +152,9 @@ export function TitleContainer({
           <CardTitle className="text-3xl font-bold tracking-wide">
             {title}
           </CardTitle>
-          {/* <div className="text-sm text-muted-foreground">{subtitle}</div> */}
-          {options[index]?.id === 'historical-research' && (
+
+          {/* Seed selection */}
+          {/* {options[index]?.id === 'historical-research' && (
             <div className="mt-2 flex flex-col items-center gap-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
                 <span>Seed:</span>
@@ -182,7 +183,7 @@ export function TitleContainer({
                 </button>
               </div>
             </div>
-          )}
+          )} */}
         </CardHeader>
         <CardContent>
           {/** Key hint chips (>= sm) */}

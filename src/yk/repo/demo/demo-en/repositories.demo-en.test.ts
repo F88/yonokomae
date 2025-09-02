@@ -48,12 +48,7 @@ describe('demo-en repositories', () => {
     // YONO wins
     let winner = await judge.determineWinner(
       {
-        mode: {
-          id: 'demo-en',
-          title: 'DEMO(en)',
-          description: '',
-          enabled: true,
-        },
+        judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
         battle: {
           ...battleBase,
           yono: {
@@ -79,12 +74,7 @@ describe('demo-en repositories', () => {
     // KOMAE wins
     winner = await judge.determineWinner(
       {
-        mode: {
-          id: 'demo-en',
-          title: 'DEMO(en)',
-          description: '',
-          enabled: true,
-        },
+        judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
         battle: {
           ...battleBase,
           yono: {
@@ -110,12 +100,7 @@ describe('demo-en repositories', () => {
     // DRAW
     winner = await judge.determineWinner(
       {
-        mode: {
-          id: 'demo-en',
-          title: 'DEMO(en)',
-          description: '',
-          enabled: true,
-        },
+        judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
         battle: {
           ...battleBase,
           yono: {

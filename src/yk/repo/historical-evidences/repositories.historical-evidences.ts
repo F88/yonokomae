@@ -1,53 +1,19 @@
 import { uid } from '@/lib/id';
 import type { Battle, Neta } from '@/types/types';
-import type { BattleReportRepository } from '@/yk/repo/core/repositories';
+import type {
+  BattleReportRepository,
+  JudgementRepository,
+  Winner,
+} from '@/yk/repo/core/repositories';
 import { z } from 'zod';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 
 /**
- * HistoricalEvidencesBattleReportRepository
+ * BattleReportRepository that loads battle data from historical evidence seeds.
  *
- * **Purpose**: Historical evidence repository for loading complete, curated battle data files.
- *
- * **Data Source**:
- * - **Uses dedicated evidence files**: Loads from `/seeds/historical-evidences/battle/` directory
- * - Supports both JSON and TypeScript battle files (.json, .ts)
- * - Each file contains complete Battle objects with full historical context
- * - More comprehensive than seed-system scenarios (complete battles vs. scenario templates)
- *
- * **File Discovery**:
- * - Automatically discovers battle files at build time via Vite glob imports
- * - Searches in both `/seeds/historical-evidences/battle/` and `/src/seeds/historical-evidences/battle/`
- * - Each file exports a Battle-compatible object as default export
- *
- * **Features**:
- * - Complete battle data loading (not generation)
- * - Rich historical documentation with full battle context
- * - Supports file-specific loading or random selection
- * - Higher fidelity historical content than scenario-based generation
- * - Ready-to-use Battle objects with all fields populated
- * - Zod validation for battle data integrity
- *
- * **Use Cases**:
- * - 'historical-evidences' PlayMode - Authentic historical battles
- * - Educational content with verified historical accuracy
- * - Museum/archive integration scenarios
- * - High-quality content showcasing
- *
- * **File Format**:
- * ```typescript
- * // battle-name.ts
- * export default {
- *   id: "historical-battle-001",
- *   title: "Battle Title",
- *   // ... complete Battle object
- * } satisfies Battle;
- * ```
- *
- * **Dependencies**: Vite glob imports, Zod validation
- *
- * @see {@link BattleReportRepository} for interface definition
- * @see Battle type for complete battle data structure
+ * It discovers seed files under `seeds/historical-evidences/battle/` or
+ * `src/seeds/historical-evidences/battle/`, loads one (optionally specified),
+ * normalizes its shape, validates via zod, and returns a Battle.
  */
 export class HistoricalEvidencesBattleReportRepository
   implements BattleReportRepository
@@ -55,11 +21,24 @@ export class HistoricalEvidencesBattleReportRepository
   private readonly file?: string;
   private readonly delay?: DelayOption;
 
+  /**
+   * @param opts Optional configuration
+   * @param opts.file Optional seed file name to load (e.g. `001.json`).
+   *                  When omitted, a random file will be chosen.
+   * @param opts.delay Optional artificial delay configuration for UX simulation.
+   */
   constructor(opts?: { file?: string; delay?: DelayOption }) {
     this.file = opts?.file;
     this.delay = opts?.delay;
   }
 
+  /**
+   * Generates a battle by loading and validating a seed file.
+   *
+   * @param options.signal AbortSignal to cancel the operation.
+   * @returns A validated Battle object derived from a seed.
+   * @throws Error when no battle files are found or when validation fails.
+   */
   async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
     await applyDelay(this.delay, options?.signal);
     const all = discoverBattleFiles();
@@ -72,7 +51,6 @@ export class HistoricalEvidencesBattleReportRepository
     const file = this.file ?? all[Math.floor(Math.random() * all.length)];
     const mod = await loadBattleModule(file);
     const data = normalizeBattle(mod);
-    // Validate with Zod to enforce minimum shape; surface helpful errors.
     const result = BattleSchema.safeParse(data);
     if (!result.success) {
       throw new Error(
@@ -86,10 +64,13 @@ export class HistoricalEvidencesBattleReportRepository
   }
 }
 
-// ---- internals ----
-
 type BattleModule = { default?: Partial<Battle> } | Partial<Battle>;
 
+/**
+ * Discover available battle seed files from supported locations.
+ *
+ * @returns Sorted list of file names (without the absolute prefix paths).
+ */
 function discoverBattleFiles(): string[] {
   const mods = {
     ...import.meta.glob('/seeds/historical-evidences/battle/*', {
@@ -101,7 +82,6 @@ function discoverBattleFiles(): string[] {
   } as Record<string, unknown>;
   const files: string[] = [];
   for (const abs of Object.keys(mods)) {
-    // Normalize to relative from each base
     if (abs.startsWith('/seeds/historical-evidences/battle/')) {
       files.push(abs.replace('/seeds/historical-evidences/battle/', ''));
     } else if (abs.startsWith('/src/seeds/historical-evidences/battle/')) {
@@ -111,6 +91,13 @@ function discoverBattleFiles(): string[] {
   return files.sort();
 }
 
+/**
+ * Loads the esm module for a given seed file name.
+ *
+ * @param file File name relative to the battle seeds folder.
+ * @returns The loaded module shape.
+ * @throws Error when the module cannot be found.
+ */
 async function loadBattleModule(file: string): Promise<BattleModule> {
   const mods = {
     ...import.meta.glob('/seeds/historical-evidences/battle/*', {
@@ -127,6 +114,15 @@ async function loadBattleModule(file: string): Promise<BattleModule> {
   return mod;
 }
 
+/**
+ * Normalizes possibly-partial battle seed data into a complete Battle shape.
+ *
+ * - Fills defaults for missing fields.
+ * - Ensures `id` is present (generated when missing).
+ *
+ * @param mod Loaded module export.
+ * @returns A Battle value (not yet validated by zod schema).
+ */
 function normalizeBattle(mod: BattleModule): Battle {
   const raw: Partial<Battle> = hasDefault(mod)
     ? (mod.default ?? {})
@@ -153,6 +149,12 @@ function normalizeBattle(mod: BattleModule): Battle {
   } satisfies Battle;
 }
 
+/**
+ * Normalizes a partial Neta to a fully-populated value.
+ *
+ * @param n Partial Neta value from seed.
+ * @returns Neta with defaults for any missing fields.
+ */
 function normalizeNeta(n?: Partial<Neta> | undefined): Neta {
   const imageUrl = n?.imageUrl ?? 'about:blank';
   const title = n?.title ?? '';
@@ -162,13 +164,15 @@ function normalizeNeta(n?: Partial<Neta> | undefined): Neta {
   return { imageUrl, title, subtitle, description, power } satisfies Neta;
 }
 
+/**
+ * Type guard for modules exporting a default battle.
+ */
 function hasDefault(x: unknown): x is { default?: Partial<Battle> } {
   return (
     !!x && typeof x === 'object' && 'default' in (x as Record<string, unknown>)
   );
 }
 
-// Zod schema for Battle
 const NetaSchema = z.object({
   imageUrl: z.string().min(1),
   title: z.string(),
@@ -196,3 +200,115 @@ const BattleSchema = z.object({
     .optional(),
   status: z.enum(['loading', 'success', 'error']).optional(),
 });
+
+// (intentionally empty between schemas and class)
+
+/**
+ * JudgementRepository for historical research mode.
+ *
+ * The decision is based on judge-specific probabilities with a deterministic
+ * fallback to power comparison for the remaining probability mass.
+ *
+ * Probability policy by judge code:
+ * - O, U: 20% -> YONO; otherwise fallback to power
+ * - S, C: 20% -> KOMAE; otherwise fallback to power
+ * - KK: 90% -> KOMAE; otherwise fallback to power
+ * - unknown: fallback to power
+ *
+ * Use the injected RNG to allow deterministic unit tests.
+ */
+export class HistoricalEvidencesJudgementRepository
+  implements JudgementRepository
+{
+  private readonly delay?: DelayOption;
+  private readonly rng: () => number;
+  /**
+   * @param options Optional configuration
+   * @param options.delay Artificial delay for UX simulation.
+   * @param options.rng Random number generator returning [0, 1). Defaults to Math.random.
+   */
+  constructor(options?: { delay?: DelayOption; rng?: () => number }) {
+    this.delay = options?.delay;
+    this.rng = options?.rng ?? Math.random;
+  }
+
+  /**
+   * Determines winner using per-judge probability, then falls back to power.
+   *
+   * Contract:
+   * - Inputs: Battle (yono, komae) and Judge (id, name, codeName)
+   * - Output: Winner string literal: 'YONO' | 'KOMAE' | 'DRAW'
+   *
+   * @param input.battle The battle context containing both neta and power values.
+   * @param input.judge The judging entity identity (codeName is used).
+   * @param options.signal AbortSignal to cancel the operation.
+   * @returns The decided Winner.
+   */
+  async determineWinner(
+    input: {
+      battle: Battle;
+      judge: { id: string; name: string; codeName: string };
+    },
+    options?: { signal?: AbortSignal },
+  ): Promise<Winner> {
+    await applyDelay(this.delay, options?.signal);
+    const r = this.rng();
+    return computeWinnerWithProbAndFallback(
+      input.judge.codeName,
+      r,
+      input.battle.yono,
+      input.battle.komae,
+    );
+  }
+}
+
+/**
+ * Fallback decision: simple power comparison.
+ *
+ * @param yono YONO side neta
+ * @param komae KOMAE side neta
+ * @returns 'YONO' when yono.power > komae.power, 'KOMAE' when less, otherwise 'DRAW'.
+ */
+function decideByPower(yono: Neta, komae: Neta): Winner {
+  if (yono.power > komae.power) return 'YONO';
+  if (yono.power < komae.power) return 'KOMAE';
+  return 'DRAW';
+}
+
+/**
+ * Computes the winner using a judge-specific probability and power fallback.
+ *
+ * Rules:
+ * - O, U: 20% -> YONO; else -> decideByPower
+ * - S, C: 20% -> KOMAE; else -> decideByPower
+ * - KK: 90% -> KOMAE; else -> decideByPower
+ * - default: decideByPower
+ *
+ * @param judgeCode Code name of the judge (case-insensitive; trimmed).
+ * @param r Random number in [0, 1) from RNG injection.
+ * @param yono YONO neta
+ * @param komae KOMAE neta
+ * @returns Winner after applying probability and fallback rules.
+ */
+function computeWinnerWithProbAndFallback(
+  judgeCode: string,
+  r: number,
+  yono: Neta,
+  komae: Neta,
+): Winner {
+  const code = (judgeCode ?? '').trim().toUpperCase();
+  switch (code) {
+    case 'O':
+      return r < 0.2 ? 'YONO' : decideByPower(yono, komae);
+    case 'U':
+      return r < 0.2 ? 'YONO' : decideByPower(yono, komae);
+    case 'S':
+      return r < 0.2 ? 'KOMAE' : decideByPower(yono, komae);
+    case 'C':
+      return r < 0.2 ? 'KOMAE' : decideByPower(yono, komae);
+    case 'KK':
+      return r < 0.9 ? 'KOMAE' : decideByPower(yono, komae);
+    default:
+      return decideByPower(yono, komae);
+  }
+}
