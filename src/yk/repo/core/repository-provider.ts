@@ -21,11 +21,12 @@ import type { PlayMode } from '@/yk/play-mode';
  * - Handles dependency injection and configuration
  *
  * **PlayMode Mapping**:
+ * - `'demo' | 'demo-en' | 'demo-de'` → language-specific Demo repositories
  * - `'api'` → {@link ApiBattleReportRepository} with REST API client
- * - `'historical-evidences'` → {@link HistoricalEvidencesBattleReportRepository}
- * - `'historical-evidence'` → {@link BattleReportRandomDataRepository} with seed-system
- * - `'mixed-nuts'` → {@link BattleReportRandomDataRepository} with seed-system
- * - **Default** → {@link BattleReportRandomDataRepository} with seed-system
+ * - `'historical-research'` → {@link HistoricalEvidencesBattleReportRepository}
+ * - `'historical-evidence'` → {@link BattleReportRandomDataRepository} with seed system
+ * - `'mixed-nuts'` → {@link BattleReportRandomDataRepository} with seed system
+ * - **Default** → {@link BattleReportRandomDataRepository} with seed system
  *
  * **Dynamic Import Benefits**:
  * - Code splitting: Only loads required implementation modules
@@ -170,6 +171,11 @@ export async function getBattleReportRepository(
 export async function getJudgementRepository(
   mode?: PlayMode,
 ): Promise<JudgementRepository> {
+  /**
+   * Note: FakeJudgementRepository is the baseline implementation. It is
+   * decorated with timing and request-collapsing below unless a mode-specific
+   * repository is selected first.
+   */
   const { FakeJudgementRepository } = await import(
     '@/yk/repo/mock/repositories.fake'
   );
@@ -290,51 +296,41 @@ type DelayKind = 'report' | 'judgement';
  * - Supports both battle report generation and judgement delays
  *
  * **Delay Strategy**:
- * - **Demo mode**: Moderate delays for presentation feel (0.8-1.6s)
- * - **API mode**: Longer delays to simulate network calls (1.5-3.0s)
- * - **Historical modes**: Processing delays for data-heavy operations (1.0-2.5s)
- * - **Default**: Moderate delays for unknown modes (0.8-1.5s)
+ * - Demo modes: Moderate delays for presentation feel (0.8–1.6s)
+ * - API mode: Longer delays to simulate network calls (1.5–3.0s)
+ * - Historical/mixed modes: Data-heavy feel (1.0–2.5s)
+ * - Default: Moderate delays for unknown modes (0.8–1.5s)
+ * - Judgement: Uniform across modes (1.0–3.0s)
  *
  * @param mode Optional PlayMode determining delay characteristics
  * @param kind Type of operation being delayed
- * @returns Delay configuration object with min/max ms, or 0 for no delay
+ * @returns `{ min: number; max: number }` delay range in milliseconds
  *
  * @internal
  */
 function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
-  // Uniformly apply 0-5000ms delay for all judgement operations
+  // Uniform delay range for judgement operations
   if (kind === 'judgement') {
-    return { min: 0, max: 5000 };
+    return { min: 1_000, max: 3_000 };
   }
-  if (!mode)
-    return kind === 'report' ? { min: 800, max: 1500 } : { min: 150, max: 400 };
+  // From here on, kind is 'report' only.
+  if (!mode) return { min: 800, max: 1500 };
 
   switch (mode.id) {
     case 'demo':
-      return kind === 'report'
-        ? { min: 800, max: 1600 }
-        : { min: 0, max: 5000 };
+      return { min: 800, max: 1600 };
     case 'api':
-      return kind === 'report'
-        ? { min: 1500, max: 3000 } // API calls feel more realistic with longer delays
-        : { min: 0, max: 5000 };
+      // API calls feel more realistic with longer delays
+      return { min: 1500, max: 3000 };
     case 'historical-evidences':
-      return kind === 'report'
-        ? { min: 1200, max: 2500 }
-        : { min: 0, max: 5000 };
+      return { min: 1200, max: 2500 };
     case 'historical-evidence': // Single form
-      return kind === 'report'
-        ? { min: 1000, max: 2000 }
-        : { min: 0, max: 5000 };
+      return { min: 1000, max: 2000 };
     case 'mixed-nuts':
-      return kind === 'report'
-        ? { min: 1200, max: 2500 }
-        : { min: 0, max: 5000 };
+      return { min: 1200, max: 2500 };
     default:
       // Apply moderate delay for unknown modes
-      return kind === 'report'
-        ? { min: 800, max: 1500 }
-        : { min: 0, max: 5000 };
+      return { min: 800, max: 1500 };
   }
 }
 
@@ -348,6 +344,16 @@ function isTestEnv(): boolean {
   return env?.NODE_ENV === 'test';
 }
 
+/**
+ * Decorate a JudgementRepository to log timing and duplicate invocations.
+ *
+ * - Logs a collapsed console group per request with a short, deterministic id
+ * - Warns on duplicate invocations of the same logical request
+ * - Measures and logs duration; disabled when `NODE_ENV === 'test'`
+ *
+ * This decorator is side-effect-only (logging); it does not modify
+ * control flow or add artificial delays.
+ */
 function withJudgementTiming<T extends JudgementRepository>(repo: T): T {
   // structural typing allows us to return a decorated object as T
   const shouldLog = !isTestEnv();
@@ -410,6 +416,13 @@ type CacheEntry = {
   expiresAt: number;
 };
 
+/**
+ * Minimal LRU cache used by request-collapsing layer.
+ *
+ * - Updates recency on get/set
+ * - Evicts the least-recently used entry when `maxSize` is exceeded
+ * - Not thread-safe; intended for single-process/browser usage
+ */
 class LruCache<K, V> {
   private map = new Map<K, V>();
   private maxSize: number;
@@ -454,6 +467,13 @@ function getJudgementCache(maxSize: number): LruCache<string, CacheEntry> {
   return judgementCache;
 }
 
+/**
+ * Compute a stable, JSON-based key for a judgement request.
+ *
+ * The key includes mode id, battle id, and reduced fighter descriptors
+ * (title, power). It is designed to be deterministic across equivalent
+ * requests so that identical calls can be collapsed and cached.
+ */
 function computeJudgementKey(
   input: Parameters<JudgementRepository['determineWinner']>[0],
 ): string {
@@ -466,6 +486,11 @@ function computeJudgementKey(
   });
 }
 
+/**
+ * Produce a short, human-friendly hash string for logging/grouping.
+ *
+ * Uses a simplified 32-bit FNV-1a and base36 encoding.
+ */
 function shortHash(input: string): string {
   // Fowler–Noll–Vo (FNV-1a) 32-bit simplified, then base36 shorten
   let h = 0x811c9dc5;
@@ -476,6 +501,25 @@ function shortHash(input: string): string {
   return h.toString(36);
 }
 
+/**
+ * Decorate a JudgementRepository to collapse concurrent identical requests
+ * and memoize recent results with a TTL.
+ *
+ * Behavior:
+ * - If an equal request is in-flight, all callers await the same promise
+ * - On success, the value is cached until `ttl` expires (LRU-bounded)
+ * - Caller-provided AbortSignal aborts that caller only (not the shared call)
+ * - Errors clear the cache entry so subsequent attempts can retry
+ *
+ * Diagnostics:
+ * - Maintains simple module-scoped hit/miss counters and logs a hit rate
+ *
+ * @param repo Base repository to decorate
+ * @param opts.enabled Enable/disable collapsing (default: true)
+ * @param opts.cacheTtlMs Cache TTL in ms (default: 60s, or 0 in tests)
+ * @param opts.keyFn Key function (default: {@link computeJudgementKey})
+ * @param opts.maxSize LRU maximum size (default: 100)
+ */
 function withJudgementCollapsing<T extends JudgementRepository>(
   repo: T,
   opts?: {
@@ -599,10 +643,23 @@ function withJudgementCollapsing<T extends JudgementRepository>(
 }
 
 // ---- cache management API ----
+/**
+ * Clear all cached judgement results and in-flight entries.
+ *
+ * Useful in tests or when underlying data changes and stale results
+ * must not be served.
+ */
 export function clearAllJudgementCache(): void {
   if (judgementCache) judgementCache.clear();
 }
 
+/**
+ * Bust a specific cached judgement entry by recomputing its key
+ * from the provided input shape.
+ *
+ * @param input Parameters passed to determineWinner; used to compute the key
+ * @param opts.maxSize LRU size hint when lazily creating the cache (default 100)
+ */
 export function bustJudgementCacheFor(
   input: Parameters<JudgementRepository['determineWinner']>[0],
   opts?: { maxSize?: number },

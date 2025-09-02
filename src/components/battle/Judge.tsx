@@ -1,10 +1,18 @@
 import type { FC } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Battle } from '@/types/types';
 import { useJudgement } from '@/hooks/use-judgement';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import type { Winner } from '@/yk/repo/core/repositories';
 import type { PlayMode } from '@/yk/play-mode';
+import { prefersReducedMotion } from '@/lib/reduced-motion';
+
+// Base reveal delay to avoid all Judges appearing at once (in milliseconds).
+const REVEAL_DELAY_BASE_MS = 1_000;
+// Maximum random jitter added to the base to randomize reveal order per Judge.
+// Effective random delay range becomes [BASE, BASE + JITTER_MAX].
+const REVEAL_DELAY_JITTER_MAX_MS = 3_000;
 
 export type JudgeCardProps = {
   nameOfJudge: string;
@@ -18,6 +26,34 @@ export const JudgeCard: FC<JudgeCardProps> = ({
   mode,
 }) => {
   const judgement = useJudgement(nameOfJudge, battle, mode);
+  // Staggered reveal per Judge to display results at different times.
+  const reduced = prefersReducedMotion();
+  const delayMs = useMemo(() => {
+    if (reduced) return 0;
+    // Randomized per mount; reveal resets on battle/name change.
+    const jitter = Math.floor(Math.random() * REVEAL_DELAY_JITTER_MAX_MS);
+    return REVEAL_DELAY_BASE_MS + jitter;
+  }, [reduced]);
+
+  const [revealed, setRevealed] = useState(false);
+  // Reset reveal when context changes (new battle or judge name)
+  useEffect(() => {
+    setRevealed(false);
+  }, [battle.id, nameOfJudge]);
+
+  // When we have a result, reveal it after a randomized delay.
+  useEffect(() => {
+    if (judgement.status === 'success') {
+      if (delayMs === 0) {
+        setRevealed(true);
+        return;
+      }
+      const id = setTimeout(() => setRevealed(true), delayMs);
+      return () => clearTimeout(id);
+    }
+    // For loading/error states keep revealed=false so UI shows spinner/error immediately.
+    setRevealed(false);
+  }, [judgement.status, delayMs]);
 
   return (
     <Card className="h-full min-w-0 overflow-hidden text-center gap-2 px-0 py-0">
@@ -33,9 +69,8 @@ export const JudgeCard: FC<JudgeCardProps> = ({
             {judgement.status === 'error' && (
               <span className="text-destructive">Failed</span>
             )}
-            {judgement.status === 'success' && (
-              <WinnerBadge winner={judgement.data} />
-            )}
+            {judgement.status === 'success' &&
+              (revealed ? <WinnerBadge winner={judgement.data} /> : '…')}
           </div>
         </div>
       </CardContent>
