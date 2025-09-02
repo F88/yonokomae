@@ -40,7 +40,8 @@ test.describe('Battle container visibility', () => {
     await page.goto('/');
 
     // select mode (game start)
-    await page.getByText('DEMO', { exact: true }).click();
+    await page.getByRole('radiogroup', { name: 'Play modes' }).focus();
+    await page.keyboard.press('Enter');
     await page.getByRole('button', { name: 'Battle' }).click();
 
     // test: one container and its internals exist
@@ -56,7 +57,8 @@ test.describe('Battle container visibility', () => {
     await page.goto('/');
 
     // select mode (game start)
-    await page.getByText('DEMO', { exact: true }).click();
+    await page.getByRole('radiogroup', { name: 'Play modes' }).focus();
+    await page.keyboard.press('Enter');
 
     // generate first
     await page.getByRole('button', { name: 'Battle' }).click();
@@ -80,7 +82,8 @@ test.describe('Battle container visibility', () => {
     await page.goto('/');
 
     // select mode (game start)
-    await page.getByText('DEMO', { exact: true }).click();
+    await page.getByRole('radiogroup', { name: 'Play modes' }).focus();
+    await page.keyboard.press('Enter');
 
     // click Battle 10 times, verifying counts increment each time
     for (let i = 1; i <= 10; i++) {
@@ -107,7 +110,8 @@ test.describe('Battle container visibility', () => {
       await page.goto('/');
 
       // select mode (game start)
-      await page.getByText('DEMO', { exact: true }).click();
+      await page.getByRole('radiogroup', { name: 'Play modes' }).focus();
+      await page.keyboard.press('Enter');
 
       const battleBtn = page.getByRole('button', { name: 'Battle' });
 
