@@ -13,7 +13,7 @@ export type Props = {
   mode: PlayMode;
 };
 
-const judgesName: string[] = ['O', 'U', 'S', 'C'];
+const judgesCodeName: string[] = ['O', 'U', 'S', 'C', 'K'];
 
 export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
   // 画面最下部までスクロール（新しい Battle が表示されたタイミング）
@@ -31,7 +31,7 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
   }
 
   // 週休2日（その日の担当をランダムに抽出）
-  const todaysJudges = judgesName.filter(() => Math.random() < 5 / 7);
+  const todaysJudges = judgesCodeName.filter(() => Math.random() < 5 / 7);
 
   return (
     <Card className="w-full">
@@ -74,7 +74,7 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
         <div className="flex flex-row flex-nowrap items-stretch gap-4">
           {todaysJudges.map((judge) => (
             <div key={judge} className="flex-1 basis-0 shrink min-w-0">
-              <JudgeCard nameOfJudge={judge} battle={battle} mode={mode} />
+              <JudgeCard codeNameOfJudge={judge} battle={battle} mode={mode} />
             </div>
           ))}
         </div>

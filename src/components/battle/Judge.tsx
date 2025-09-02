@@ -15,17 +15,17 @@ const REVEAL_DELAY_BASE_MS = 1_000;
 const REVEAL_DELAY_JITTER_MAX_MS = 3_000;
 
 export type JudgeCardProps = {
-  nameOfJudge: string;
+  codeNameOfJudge: string;
   battle: Battle;
   mode: PlayMode;
 };
 
 export const JudgeCard: FC<JudgeCardProps> = ({
-  nameOfJudge,
+  codeNameOfJudge: codeNameOfJudge,
   battle,
   mode,
 }) => {
-  const judgement = useJudgement(nameOfJudge, battle, mode);
+  const judgement = useJudgement(codeNameOfJudge, battle, mode);
   // Staggered reveal per Judge to display results at different times.
   const reduced = prefersReducedMotion();
   const delayMs = useMemo(() => {
@@ -39,7 +39,7 @@ export const JudgeCard: FC<JudgeCardProps> = ({
   // Reset reveal when context changes (new battle or judge name)
   useEffect(() => {
     setRevealed(false);
-  }, [battle.id, nameOfJudge]);
+  }, [battle.id, codeNameOfJudge]);
 
   // When we have a result, reveal it after a randomized delay.
   useEffect(() => {
@@ -59,7 +59,7 @@ export const JudgeCard: FC<JudgeCardProps> = ({
     <Card className="h-full min-w-0 overflow-hidden text-center gap-2 px-0 py-0">
       <CardHeader className="px-0 pt-4">
         <CardTitle className="text-xs font-medium">
-          Judge {nameOfJudge}
+          Judge {codeNameOfJudge}
         </CardTitle>
       </CardHeader>
       <CardContent className="min-w-0 pt-0 pb-2 flex items-center justify-center">
