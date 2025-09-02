@@ -64,8 +64,8 @@ export class DemoJudgementRepository implements JudgementRepository {
     await applyDelay(this.delay, options?.signal);
     const { yono, komae } = input.battle;
     const powerDiff = yono.power - komae.power;
-  const winner: 'YONO' | 'KOMAE' | 'DRAW' =
-    powerDiff === 0 ? 'DRAW' : powerDiff > 0 ? 'YONO' : 'KOMAE';
+    const winner: 'YONO' | 'KOMAE' | 'DRAW' =
+      powerDiff === 0 ? 'DRAW' : powerDiff > 0 ? 'YONO' : 'KOMAE';
     return { winner, reason: 'power', powerDiff };
   }
 }

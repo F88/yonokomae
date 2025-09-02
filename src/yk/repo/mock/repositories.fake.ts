@@ -19,7 +19,7 @@ export class FakeJudgementRepository implements JudgementRepository {
     const komae = input.battle.komae;
     const powerDiff = yono.power - komae.power;
     const winner: 'YONO' | 'KOMAE' | 'DRAW' =
-    powerDiff === 0 ? 'DRAW' : powerDiff > 0 ? 'YONO' : 'KOMAE';
+      powerDiff === 0 ? 'DRAW' : powerDiff > 0 ? 'YONO' : 'KOMAE';
     return { winner, reason: 'power', powerDiff };
   }
 }
