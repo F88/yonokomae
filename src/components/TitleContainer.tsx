@@ -4,8 +4,8 @@ import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyChip } from '@/components/ui/key-chip';
 import { isEditable } from '@/lib/dom-utils';
-import { historicalSeeds } from '@/yk/repo/seed-system';
-import { useHistoricalSeedSelection } from '@/yk/repo/seed-system';
+// import { historicalSeeds } from '@/yk/repo/seed-system';
+// import { useHistoricalSeedSelection } from '@/yk/repo/seed-system';
 
 export type TitleContainerProps = {
   modes?: PlayMode[];
@@ -24,7 +24,7 @@ export function TitleContainer({
   onSelect,
   title = 'SELECT MODE',
 }: TitleContainerProps) {
-  const seedSelection = useHistoricalSeedSelection();
+  // const seedSelection = useHistoricalSeedSelection();
   const options = useMemo(() => modes ?? defaultPlayModes, [modes]);
   const [index, setIndex] = useState(0);
 
