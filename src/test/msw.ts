@@ -42,9 +42,16 @@ export const handlers = [
   }),
   // Default handler for external Open-Meteo endpoint used by news reporter repo.
   http.get('https://api.open-meteo.com/v1/forecast', () => {
-    // Return minimal current_weather payload
+    // Return minimal daily payload for two locations
     return HttpResponse.json({
-      current_weather: { temperature: 22.3, windspeed: 3.8 },
+      daily: {
+        time: ['2025-09-01', '2025-09-02'],
+        temperature_2m_max: [23.1, 24.2],
+        daylight_duration: [43_200, 43_500],
+        sunshine_duration: [30_000, 31_000],
+        rain_sum: [1.2, 0.0],
+        wind_speed_10m_max: [4.2, 6.8],
+      },
     });
   }),
 ];
