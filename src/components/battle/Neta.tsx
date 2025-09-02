@@ -306,7 +306,8 @@ export const NetaView: FC<Props> = ({
   return (
     <Card
       className={[
-        'w-full overflow-hidden',
+        'w-full overflow-hidden pt-0',
+        'bg-amber-400',
         'max-w-none',
         fullHeight ? 'h-full' : '',
       ].join(' ')}
