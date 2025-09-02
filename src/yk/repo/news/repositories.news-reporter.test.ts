@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { MultiSourceBattleReportRepository } from './multi-source-battle-report';
-import type { BattleReportRepository } from './repositories';
+import { NewsReporterMultiSourceReportRepository } from './repositories.news-reporter';
+import type { BattleReportRepository } from '../core/repositories';
 import type { Battle } from '@/types/types';
 
 class StubRepo implements BattleReportRepository {
@@ -34,9 +34,9 @@ class StubRepo implements BattleReportRepository {
   }
 }
 
-describe('MultiSourceBattleReportRepository', () => {
+describe('NewsReporterMultiSourceReportRepository', () => {
   it('selects local when rng >= weightApi', async () => {
-    const repo = new MultiSourceBattleReportRepository({
+    const repo = new NewsReporterMultiSourceReportRepository({
       local: new StubRepo('local'),
       api: new StubRepo('api'),
       weightApi: 0.3,
@@ -47,7 +47,7 @@ describe('MultiSourceBattleReportRepository', () => {
   });
 
   it('selects api when rng < weightApi', async () => {
-    const repo = new MultiSourceBattleReportRepository({
+    const repo = new NewsReporterMultiSourceReportRepository({
       local: new StubRepo('local'),
       api: new StubRepo('api'),
       weightApi: 0.7,

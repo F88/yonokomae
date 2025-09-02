@@ -1,9 +1,9 @@
-import type { BattleReportRepository } from './repositories';
+import type { BattleReportRepository } from '../core/repositories';
 import type { Battle } from '@/types/types';
-import { applyDelay, type DelayOption } from './delay-utils';
+import { applyDelay, type DelayOption } from '../core/delay-utils';
 
 /**
- * MultiSourceBattleReportRepository
+ * NewsReporterMultiSourceReportRepository
  *
  * A wrapper repository that selects one of two underlying data sources
  * ("local" or "api") each time generateReport is called.
@@ -13,7 +13,7 @@ import { applyDelay, type DelayOption } from './delay-utils';
  * - Only one underlying repository is invoked per call.
  * - No network is required if the provided "api" repo is a local simulator.
  */
-export class MultiSourceBattleReportRepository
+export class NewsReporterMultiSourceReportRepository
   implements BattleReportRepository
 {
   private readonly local: BattleReportRepository;

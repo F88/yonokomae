@@ -84,9 +84,10 @@ export async function getBattleReportRepository(
     return new DemoDeBattleReportRepository({ delay });
   }
   if (mode?.id === 'api') {
-    const { ApiClient, ApiBattleReportRepository } = await import(
+    const { ApiBattleReportRepository } = await import(
       '@/yk/repo/api/repositories.api'
     );
+    const { ApiClient } = await import('@/lib/api-client');
     const base: string = getApiBaseUrl();
     const api = new ApiClient(base);
     const delay = defaultDelayForMode(mode, 'report');
@@ -96,7 +97,7 @@ export async function getBattleReportRepository(
   // Play mode 'yk-now'
   if (mode?.id === 'yk-now') {
     const { NewsReporterMultiSourceReportRepository } = await import(
-      '@/yk/repo/core/multi-source-battle-report'
+      '@/yk/repo/news/repositories.news-reporter'
     );
     const { NewsReporterApiBattleReportRepository } = await import(
       '@/yk/repo/news/repositories.news-reporter.api'
@@ -104,12 +105,20 @@ export async function getBattleReportRepository(
     const { NewsReporterFileiBattleReportRepository } = await import(
       '@/yk/repo/news/repositories.news-reporter.file'
     );
-    const { ApiClient } = await import('@/yk/repo/api/repositories.api');
+    const { ApiClient } = await import('@/lib/api-client');
     const base: string = getApiBaseUrl();
     const api = new ApiClient(base);
     const delay = defaultDelayForMode(mode, 'report');
     const local = new NewsReporterFileiBattleReportRepository({ delay });
-    const remote = new NewsReporterApiBattleReportRepository(api, { delay });
+    const ttlStr = getViteEnvVar('VITE_NEWS_REPORT_CACHE_TTL_MS');
+    const ttlParsed = ttlStr ? Number(ttlStr) : NaN;
+    const cacheTtlMs = Number.isFinite(ttlParsed)
+      ? Math.max(0, ttlParsed)
+      : 30_000;
+    const remote = new NewsReporterApiBattleReportRepository(api, {
+      delay,
+      cacheTtlMs,
+    });
     const w = Number(getViteEnvVar('VITE_BATTLE_RANDOM_WEIGHT_API') ?? '0.5');
     const weightApi = Number.isFinite(w) ? w : 0.5;
     return new NewsReporterMultiSourceReportRepository({
@@ -376,13 +385,13 @@ function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
       return { min: 1500, max: 3000 };
     case 'historical-research':
       return { min: 1200, max: 2500 };
-    case 'historical-evidence': // Single form
-      return { min: 1000, max: 2000 };
+    case 'yk-now':
+      return { min: 0, max: 0 };
     case 'mixed-nuts':
       return { min: 1200, max: 2500 };
     default:
       // Apply moderate delay for unknown modes
-      return { min: 800, max: 1500 };
+      return { min: 0, max: 0 };
   }
 }
 

@@ -13,6 +13,7 @@ import type { Battle } from './types/types';
 import { playMode, type PlayMode } from './yk/play-mode';
 import { isEditable } from '@/lib/dom-utils';
 import { scrollByY, scrollToY } from '@/lib/reduced-motion';
+import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
 
 function App() {
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
@@ -281,86 +282,88 @@ function App() {
   };
 
   return (
-    <main className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 items-center">
-          <Header mode={mode} />
-        </div>
-      </header>
+    <RepositoryProvider mode={mode}>
+      <main className="min-h-screen bg-background">
+        {/* Header */}
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container flex h-14 items-center">
+            <Header mode={mode} />
+          </div>
+        </header>
 
-      <br />
+        <br />
 
-      {/* Information */}
-      <div className="grid gap-3 py-0 border-0 border-orange-400 ">
-        <UserVoicesMarquee
-          shuffle={true}
-          speed={60}
-          pauseOnHover={true}
-          fadeWidth={'w-24'}
-        />
-        {/* <UserVoicesCarousel
+        {/* Information */}
+        <div className="grid gap-3 py-0 border-0 border-orange-400 ">
+          <UserVoicesMarquee
+            shuffle={true}
+            speed={60}
+            pauseOnHover={true}
+            fadeWidth={'w-24'}
+          />
+          {/* <UserVoicesCarousel
           intervalMs={3000}
           pauseOnHover
           orientation="vertical"
         /> */}
-        {/* <UserVoicesCarousel intervalMs={3000} pauseOnHover orientation="vertical" /> */}
-        {/* <UsageExamplesCarousel intervalMs={3000} pauseOnHover orientation="vertical"/> */}
-        {/* <UsageExamplesMarquee speed={60} /> */}
-      </div>
+          {/* <UserVoicesCarousel intervalMs={3000} pauseOnHover orientation="vertical" /> */}
+          {/* <UsageExamplesCarousel intervalMs={3000} pauseOnHover orientation="vertical"/> */}
+          {/* <UsageExamplesMarquee speed={60} /> */}
+        </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col gap-0 py-0 pb-32 px-4">
-        {/* Intro Section */}
-        <section className="flex flex-col items-center text-center m-2">
-          <Intro />
-          <TheStartOfTheWar />
-        </section>
-
-        {/* Title Container (shown only before a mode is selected) */}
-        {!mode && (
-          <div
-            ref={modeSelectionRef}
-            id="mode-selection"
-            className="scroll-mt-[72px] lg:scroll-mt-[96px]"
-          >
-            <TitleContainer
-              modes={playMode}
-              onSelect={(mode) => setMode(mode)}
-            />
-          </div>
-        )}
-
-        {/* Battle Reports */}
-        {mode != null && reports.length > 0 && (
-          <section className="mx-auto w-full max-w-[2800px]">
-            <div className={`${gridCols} gap-4 lg:gap-6`}>
-              {reports.map((battle: Battle) => (
-                <div
-                  key={battle.id}
-                  id={battle.id}
-                  className="scroll-mt-[72px] lg:scroll-mt-[96px]"
-                >
-                  <BattleContainer battle={battle} mode={mode} />
-                </div>
-              ))}
-            </div>
+        {/* Main Content */}
+        <div className="flex flex-col gap-0 py-0 pb-32 px-4">
+          {/* Intro Section */}
+          <section className="flex flex-col items-center text-center m-2">
+            <Intro />
+            <TheStartOfTheWar />
           </section>
-        )}
-      </div>
 
-      {/* Fixed Controller */}
-      {mode && (
-        <footer className="sticky bottom-0 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container py-4">
-            <Controller
-              onGenerateReport={handleGenerateReport}
-              onClearReports={handleClearReports}
-            />
-          </div>
-        </footer>
-      )}
-    </main>
+          {/* Title Container (shown only before a mode is selected) */}
+          {!mode && (
+            <div
+              ref={modeSelectionRef}
+              id="mode-selection"
+              className="scroll-mt-[72px] lg:scroll-mt-[96px]"
+            >
+              <TitleContainer
+                modes={playMode}
+                onSelect={(mode) => setMode(mode)}
+              />
+            </div>
+          )}
+
+          {/* Battle Reports */}
+          {mode != null && reports.length > 0 && (
+            <section className="mx-auto w-full max-w-[2800px]">
+              <div className={`${gridCols} gap-4 lg:gap-6`}>
+                {reports.map((battle: Battle) => (
+                  <div
+                    key={battle.id}
+                    id={battle.id}
+                    className="scroll-mt-[72px] lg:scroll-mt-[96px]"
+                  >
+                    <BattleContainer battle={battle} mode={mode} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        {/* Fixed Controller */}
+        {mode && (
+          <footer className="sticky bottom-0 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container py-4">
+              <Controller
+                onGenerateReport={handleGenerateReport}
+                onClearReports={handleClearReports}
+              />
+            </div>
+          </footer>
+        )}
+      </main>
+    </RepositoryProvider>
   );
 }
 

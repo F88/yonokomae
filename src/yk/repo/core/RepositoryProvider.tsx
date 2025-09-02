@@ -61,12 +61,18 @@ export function RepositoryProvider({
 }) {
   const seedSelection = useHistoricalSeedSelection();
   const value = useMemo<RepoContextValue>(() => {
+    // Lazily create and persist the underlying repository instance so that
+    // any internal cache (e.g., TTL memoization) survives across calls.
+    let repoPromise: Promise<BattleReportRepository> | null = null;
+    const getOrCreateBattleReportRepo = async () => {
+      if (!repoPromise) {
+        repoPromise = getBattleReportRepository(mode, seedSelection?.seedFile);
+      }
+      return repoPromise;
+    };
     const battleReport = {
       generateReport: async (opts?: { signal?: AbortSignal }) => {
-        const repo = await getBattleReportRepository(
-          mode,
-          seedSelection?.seedFile,
-        );
+        const repo = await getOrCreateBattleReportRepo();
         return repo.generateReport(opts);
       },
     } as BattleReportRepository;
