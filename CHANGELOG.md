@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.1.0
+
+### Minor Changes
+
+- c052628: Remove Space from shortcut that triggers handleGenerate
+
 ## 1.0.0 (2025-09-02)
 
 ### Major Changes
