@@ -1,7 +1,6 @@
 import type {
   BattleReportRepository,
   JudgementRepository,
-  PlayMode,
   Winner,
 } from '@/yk/repo/core/repositories';
 import type { Battle } from '@/types/types';
@@ -56,7 +55,10 @@ export class DemoJudgementRepository implements JudgementRepository {
   }
 
   async determineWinner(
-    input: { battle: Battle; mode: PlayMode; extra?: Record<string, unknown> },
+    input: {
+      battle: Battle;
+      judge: { id: string; name: string; codeName: string };
+    },
     options?: { signal?: AbortSignal },
   ): Promise<Winner> {
     await applyDelay(this.delay, options?.signal);

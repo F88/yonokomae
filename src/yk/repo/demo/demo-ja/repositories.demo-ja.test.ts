@@ -3,7 +3,6 @@ import {
   DemoJaBattleReportRepository,
   DemoJaJudgementRepository,
 } from './repositories.demo-ja';
-import { playMode } from '@/yk/play-mode';
 
 describe('Demo repositories with delay support', () => {
   let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
@@ -112,7 +111,7 @@ describe('Demo repositories with delay support', () => {
 
       const winner = await repo.determineWinner({
         battle,
-        mode: playMode.find((m) => m.id === 'demo')!,
+        judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
       });
 
       expect(winner).toBe('YONO');
@@ -145,7 +144,7 @@ describe('Demo repositories with delay support', () => {
 
       const winner = await repo.determineWinner({
         battle,
-        mode: playMode.find((m) => m.id === 'demo')!,
+        judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
       });
 
       expect(winner).toBe('DRAW');
@@ -183,7 +182,10 @@ describe('Demo repositories with delay support', () => {
       };
 
       const winner = await repo.determineWinner(
-        { battle, mode: playMode.find((m) => m.id === 'demo')! },
+        {
+          battle,
+          judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
+        },
         { signal: controller.signal },
       );
 
