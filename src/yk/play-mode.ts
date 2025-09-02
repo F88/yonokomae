@@ -37,6 +37,13 @@ export const playMode: PlayMode[] = [
     enabled: true,
   },
   {
+    id: 'yk-now',
+    title: 'よのこまライブ',
+    description:
+      'よーのとこみまがよのこまの今に鋭く切り込む。ジャッジは気にしない。',
+    enabled: true,
+  },
+  {
     id: 'demo',
     title: 'デモ (ja)',
     description: 'デモモード',
@@ -61,12 +68,6 @@ export const playMode: PlayMode[] = [
     enabled: true,
   },
 
-  {
-    id: 'multi-source',
-    title: 'MULTI SOURCE',
-    description: 'Randomly selects local or API-like (no network) per report.',
-    enabled: true,
-  },
   {
     id: 'ai-mode',
     title: 'AI MODE',

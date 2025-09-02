@@ -92,29 +92,35 @@ export async function getBattleReportRepository(
     const delay = defaultDelayForMode(mode, 'report');
     return new ApiBattleReportRepository(api, { delay });
   }
-  if (mode?.id === 'multi-source') {
-    const { BattleReportRandomDataRepository } = await import(
-      '@/yk/repo/random-jokes/repositories.random-jokes'
-    );
-    const { LocalApiBattleReportRepository } = await import(
-      '@/yk/repo/api/repositories.api.local-sim'
-    );
-    const { MultiSourceBattleReportRepository } = await import(
+
+  // Play mode 'yk-now'
+  if (mode?.id === 'yk-now') {
+    const { NewsReporterMultiSourceReportRepository } = await import(
       '@/yk/repo/core/multi-source-battle-report'
     );
+    const { NewsReporterApiBattleReportRepository } = await import(
+      '@/yk/repo/news/repositories.news-reporter.api'
+    );
+    const { NewsReporterFileiBattleReportRepository } = await import(
+      '@/yk/repo/news/repositories.news-reporter.file'
+    );
+    const { ApiClient } = await import('@/yk/repo/api/repositories.api');
+    const base: string = getApiBaseUrl();
+    const api = new ApiClient(base);
     const delay = defaultDelayForMode(mode, 'report');
-    const local = new BattleReportRandomDataRepository({ seedFile, delay });
-    const apiLike = new LocalApiBattleReportRepository({ delay });
-    // Weight can be future-configured via env; default 0.5 for dev
+    const local = new NewsReporterFileiBattleReportRepository({ delay });
+    const remote = new NewsReporterApiBattleReportRepository(api, { delay });
     const w = Number(getViteEnvVar('VITE_BATTLE_RANDOM_WEIGHT_API') ?? '0.5');
     const weightApi = Number.isFinite(w) ? w : 0.5;
-    return new MultiSourceBattleReportRepository({
+    return new NewsReporterMultiSourceReportRepository({
       local,
-      api: apiLike,
+      api: remote,
       weightApi,
       delay,
     });
   }
+
+  // Play mode 'historical-research'
   if (mode?.id === 'historical-research') {
     const { HistoricalEvidencesBattleReportRepository } = await import(
       '@/yk/repo/historical-evidences/repositories.historical-evidences'
