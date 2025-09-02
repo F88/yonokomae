@@ -32,6 +32,18 @@ Please use half-width characters for numbers, letters, and symbols.
 - フック: リポジトリとのやり取りのロジックをカプセル化したカスタムフック。
 - リポジトリ: 基盤データソースを抽象化するデータアクセス層。
 
+### マルチソースのバトルレポート(local + API風)
+
+GitHub Pages のような静的ホスティングでも、実ネットワーク無しで API 風の経路を試せます。
+`multi-source` モードを使うと、レポート生成ごとにローカルデータソースと API 風(ローカル委譲)の
+どちらかをランダムに選びます。
+
+- PlayMode id: `multi-source`
+- Env: `VITE_BATTLE_RANDOM_WEIGHT_API`(0..1, 既定 `0.5`)
+- 外部サーバーへは接続しません(API 風の実装はローカルデータへ委譲)
+
+将来的に実 API に置き換える際も、呼び出し側の変更は最小で済みます。
+
 ## 新しい Play Mode または Repository の追加方法
 
 このセクションは開発者向けです。ExampleRepo と ExampleMode を例に、Repository 実装の追加方法と Play Mode の追加方法を説明します。コード例は TypeScript で、TSDoc コメント付きです。
