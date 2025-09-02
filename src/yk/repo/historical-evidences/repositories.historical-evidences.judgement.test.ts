@@ -37,10 +37,10 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
     });
     await expect(
       repoForced.determineWinner({ battle, judge: judgeO }),
-    ).resolves.toBe('YONO');
+    ).resolves.toMatchObject({ winner: 'YONO' });
     await expect(
       repoForced.determineWinner({ battle, judge: judgeU }),
-    ).resolves.toBe('YONO');
+    ).resolves.toMatchObject({ winner: 'YONO' });
 
     const repoFallback = new HistoricalEvidencesJudgementRepository({
       rng: () => 0.2,
@@ -51,19 +51,19 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
         battle: makeBattle(40, 60),
         judge: judgeO,
       }),
-    ).resolves.toBe('KOMAE');
+    ).resolves.toMatchObject({ winner: 'KOMAE' });
     await expect(
       repoFallback.determineWinner({
         battle: makeBattle(60, 40),
         judge: judgeU,
       }),
-    ).resolves.toBe('YONO');
+    ).resolves.toMatchObject({ winner: 'YONO' });
     await expect(
       repoFallback.determineWinner({
         battle: makeBattle(50, 50),
         judge: judgeO,
       }),
-    ).resolves.toBe('DRAW');
+    ).resolves.toMatchObject({ winner: 'DRAW' });
   });
 
   it('S/C: 20% forces KOMAE; otherwise compare by power', async () => {
@@ -75,10 +75,10 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
     });
     await expect(
       repoForced.determineWinner({ battle: makeBattle(90, 10), judge: judgeS }),
-    ).resolves.toBe('KOMAE');
+    ).resolves.toMatchObject({ winner: 'KOMAE' });
     await expect(
       repoForced.determineWinner({ battle: makeBattle(10, 90), judge: judgeC }),
-    ).resolves.toBe('KOMAE');
+    ).resolves.toMatchObject({ winner: 'KOMAE' });
 
     const repoFallback = new HistoricalEvidencesJudgementRepository({
       rng: () => 0.2,
@@ -88,19 +88,19 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
         battle: makeBattle(40, 60),
         judge: judgeS,
       }),
-    ).resolves.toBe('KOMAE');
+    ).resolves.toMatchObject({ winner: 'KOMAE' });
     await expect(
       repoFallback.determineWinner({
         battle: makeBattle(60, 40),
         judge: judgeC,
       }),
-    ).resolves.toBe('YONO');
+    ).resolves.toMatchObject({ winner: 'YONO' });
     await expect(
       repoFallback.determineWinner({
         battle: makeBattle(50, 50),
         judge: judgeS,
       }),
-    ).resolves.toBe('DRAW');
+    ).resolves.toMatchObject({ winner: 'DRAW' });
   });
 
   it('KK: 90% forces KOMAE; otherwise compare by power', async () => {
@@ -111,7 +111,7 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
     });
     await expect(
       repoForced.determineWinner({ battle: makeBattle(99, 1), judge: judgeKK }),
-    ).resolves.toBe('KOMAE');
+    ).resolves.toMatchObject({ winner: 'KOMAE' });
 
     const repoFallback = new HistoricalEvidencesJudgementRepository({
       rng: () => 0.9,
@@ -121,19 +121,19 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
         battle: makeBattle(60, 40),
         judge: judgeKK,
       }),
-    ).resolves.toBe('YONO');
+    ).resolves.toMatchObject({ winner: 'YONO' });
     await expect(
       repoFallback.determineWinner({
         battle: makeBattle(40, 60),
         judge: judgeKK,
       }),
-    ).resolves.toBe('KOMAE');
+    ).resolves.toMatchObject({ winner: 'KOMAE' });
     await expect(
       repoFallback.determineWinner({
         battle: makeBattle(50, 50),
         judge: judgeKK,
       }),
-    ).resolves.toBe('DRAW');
+    ).resolves.toMatchObject({ winner: 'DRAW' });
   });
 
   it('Unknown code: no forcing; compare by power', async () => {
@@ -141,13 +141,13 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
     const repo = new HistoricalEvidencesJudgementRepository({ rng: () => 0 });
     await expect(
       repo.determineWinner({ battle: makeBattle(60, 40), judge: judgeX }),
-    ).resolves.toBe('YONO');
+    ).resolves.toMatchObject({ winner: 'YONO' });
     await expect(
       repo.determineWinner({ battle: makeBattle(40, 60), judge: judgeX }),
-    ).resolves.toBe('KOMAE');
+    ).resolves.toMatchObject({ winner: 'KOMAE' });
     await expect(
       repo.determineWinner({ battle: makeBattle(50, 50), judge: judgeX }),
-    ).resolves.toBe('DRAW');
+    ).resolves.toMatchObject({ winner: 'DRAW' });
   });
 
   it('Judge codeName is trimmed and case-insensitive', async () => {
@@ -162,7 +162,7 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
     });
     await expect(
       repoO.determineWinner({ battle: makeBattle(1, 99), judge: judge_o }),
-    ).resolves.toBe('YONO');
+    ).resolves.toMatchObject({ winner: 'YONO' });
 
     // r < 0.2 => KOMAE for S
     const repoS = new HistoricalEvidencesJudgementRepository({
@@ -170,7 +170,7 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
     });
     await expect(
       repoS.determineWinner({ battle: makeBattle(99, 1), judge: judge_s }),
-    ).resolves.toBe('KOMAE');
+    ).resolves.toMatchObject({ winner: 'KOMAE' });
 
     // r >= 0.9 => fallback for K
     const repoK = new HistoricalEvidencesJudgementRepository({
@@ -178,7 +178,7 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
     });
     await expect(
       repoK.determineWinner({ battle: makeBattle(60, 40), judge: judge_k }),
-    ).resolves.toBe('YONO');
+    ).resolves.toMatchObject({ winner: 'YONO' });
   });
 
   it('Caches by (battleId, judge.id) in historical-research mode (RNG fixed for pair)', async () => {
@@ -200,6 +200,6 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
       battle: { ...makeBattle(99, 1), id: 'test-battle' },
       judge,
     });
-    expect(second).toBe(first);
+    expect(second.winner).toBe(first.winner);
   });
 });

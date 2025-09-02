@@ -2,7 +2,7 @@ import type {
   BattleReportRepository,
   JudgementRepository,
 } from './repositories';
-import type { PlayMode } from '@/yk/play-mode';
+import type { PlayMode } from '../../play-mode';
 /**
  * Factory function for creating BattleReportRepository instances based on PlayMode.
  *
@@ -87,7 +87,7 @@ export declare function getBattleReportRepository(
  * const localJudge = await getJudgementRepository();
  *
  * // Usage in battle resolution
- * const winner = await judge.determineWinner({
+ * const verdict = await judge.determineWinner({
  *   mode,
  *   yono: battle.yono,
  *   komae: battle.komae

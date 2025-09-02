@@ -15,6 +15,26 @@ export type { Battle, Neta, PlayMode };
 export type Winner = 'YONO' | 'KOMAE' | 'DRAW';
 
 /**
+ * Verdict
+ *
+ * Rich result for a battle judgement. Contains the winner and
+ * lightweight metadata useful for UX, logging, and testing.
+ */
+export type Verdict = {
+  winner: Winner;
+  /** high-level reason of decision path */
+  reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
+  /** normalized judge code, if available */
+  judgeCode?: string;
+  /** random number sampled in [0,1), if applicable */
+  rng?: number;
+  /** yono.power - komae.power for quick inspection */
+  powerDiff?: number;
+  /** optional confidence score 0..1 for future models */
+  confidence?: number;
+};
+
+/**
  * JudgeIdentity
  *
  * Lightweight identity DTO for a Judge. Prefer passing this across
@@ -101,12 +121,12 @@ export interface BattleReportRepository {
  * - Separates battle outcome logic from battle generation
  * - Enables different judging strategies per PlayMode
  * - Supports both synchronous and asynchronous judging
- * - Provides consistent Winner type across implementations
+ * - Provides consistent Verdict type across implementations
  *
  * **Usage Pattern**:
  * ```typescript
  * const repository = await getJudgementRepository(mode);
- * const winner = await repository.determineWinner({
+ * const verdict = await repository.determineWinner({
  *   battle,
  *   judge: { id: 'j-1', name: 'Judge Judy', codeName: 'JUDY' },
  * });
@@ -117,7 +137,7 @@ export interface BattleReportRepository {
  * - {@link ApiJudgementRepository} - Remote API-based judging
  * - {@link DemoJaJudgementRepository} - Fixed demo outcomes
  *
- * @see {@link Winner} for possible battle outcomes
+ * @see {@link Verdict} for result detail and possible outcomes
  * @see {@link PlayMode} for mode-specific judging rules
  */
 export interface JudgementRepository {
@@ -135,7 +155,7 @@ export interface JudgementRepository {
    * @param input.judge Identity of the judge performing the evaluation
    * @param options Optional configuration
    * @param options.signal AbortSignal for cancelling long-running judgements
-   * @returns Promise resolving to battle Winner
+   * @returns Promise resolving to battle Verdict
    * @throws Error if judgement fails or is cancelled
    */
   determineWinner(
@@ -144,7 +164,7 @@ export interface JudgementRepository {
       judge: JudgeIdentity;
     },
     options?: { signal?: AbortSignal },
-  ): Promise<Winner>;
+  ): Promise<Verdict>;
 }
 
 /**

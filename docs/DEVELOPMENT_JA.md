@@ -64,7 +64,7 @@ flowchart TD
   D["Repos from Context"]
   E["Factories: get*Repository(mode)"]
   F["Implementation: Fake / Historical / Future API"]
-  G["Domain Data: Battle / Winner"]
+    G["Domain Data: Battle / Verdict"]
 
   A --> B
   A --> C
@@ -108,9 +108,9 @@ classDiagram
   class BattleReportRepository {
     +generateReport(options) Promise<Battle>
   }
-  class JudgementRepository {
-    +determineWinner(input, options) Promise<Winner>
-  }
+    class JudgementRepository {
+        +determineWinner(input, options) Promise<Verdict>
+    }
   class ScenarioRepository {
     +generateTitle() Promise<string>
     +generateSubtitle() Promise<string>
@@ -157,7 +157,7 @@ TSDoc 付きの例:
 import type {
     BattleReportRepository,
     JudgementRepository,
-    Winner,
+    Verdict,
 } from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { uid } from '@/lib/id';
@@ -206,31 +206,31 @@ export class ExampleJudgementRepository implements JudgementRepository {
      * 与えられた入力に基づいて勝者を決定します。
      * @param input 現在の mode と 2 体の競技者を含みます。
      * @param options キャンセル用の signal などのオプション。
-     * @returns 勝者 id: 'YONO'、'KOMAE'、または 'DRAW'。
+     * @returns Verdict(勝者と意思決定メタデータ)を返します。
      */
     async determineWinner(
         input: { mode: { id: string }; yono: Neta; komae: Neta },
         options?: { signal?: AbortSignal },
-    ): Promise<Winner> {
+    ): Promise<Verdict> {
         void options?.signal;
-        if (input.yono.power === input.komae.power) {
-            return 'DRAW';
-        }
-        return input.yono.power > input.komae.power ? 'YONO' : 'KOMAE';
+        const powerDiff = input.yono.power - input.komae.power;
+        const winner =
+            powerDiff === 0 ? 'DRAW' : powerDiff > 0 ? 'YONO' : 'KOMAE';
+        return { winner, reason: 'power', powerDiff };
     }
 }
 ```
 
-2. 既存モードに ExampleRepo を配線
+1. 既存モードに ExampleRepo を配線
 
 - ファイル: `src/yk/repo/core/repository-provider.ts`
 - `mode.id` が対象モード(例: `demo`)に一致する場合、`ExampleBattleReportRepository` と `ExampleJudgementRepository` を返す分岐を追加します。
 
-3. (任意) モードごとのデフォルト遅延を調整
+1. (任意) モードごとのデフォルト遅延を調整
 
 - ヘルパ `defaultDelayForMode` を調整して、モード/リポジトリ種別に応じた現実的なレイテンシを模擬します。
 
-4. 実装近傍にテストを追加
+1. 実装近傍にテストを追加
 
 - ファイル: `src/yk/repo/example/repositories.example.test.ts`
 - タイマー/乱数は必要に応じてモックし、ランダム値ではなく状態や相互作用を検証します。
@@ -254,11 +254,11 @@ type PlayMode = { id: string; title: string; description: string; enabled: boole
   description: 'A new mode powered by ExampleRepo',
   enabled: true,
 
-2. Repository を実装
+1. Repository を実装
 
 - 位置: `src/yk/repo/example/repositories.example.ts`(上記と同じ。必要であれば分割)
 
-3. プロバイダファクトリにモード配線を追加
+1. プロバイダファクトリにモード配線を追加
 
 - ファイル: `src/yk/repo/core/repository-provider.ts`
 - `getBattleReportRepository` と `getJudgementRepository` に分岐を追加:
@@ -279,11 +279,11 @@ if (mode?.id === 'example-mode') {
 }
 ````
 
-4. UI またはテストでモードを選択
+1. UI またはテストでモードを選択
 
 - ルートで `RepositoryProvider` に `mode={theExampleMode}` を渡す、または明示 DI を受け取るフック/コンポーネントへ `mode` を渡します。
 
-5. 非同期初期化(ある場合)
+1. 非同期初期化(ある場合)
 
 - ExampleRepo が非同期セットアップ(API ウォームアップやメタデータ取得)を必要とする場合、`RepositoryProviderSuspense` と `<Suspense>` を使ってアプリシェルでラップします。
 
@@ -379,3 +379,36 @@ test('a long-running performance check', async ({ page }) => {
 - ユニットテストがローカルで通過している。
 - 新モードがある場合、プロバイダファクトリの分岐が実装されている。
 - 必要に応じて README/DEVELOPMENT_EN を更新(概要は README、詳細は本ドキュメント)。
+
+## 移行ノート: Winner -> Verdict(破壊的変更)
+
+2025-09-02 時点で、`JudgementRepository.determineWinner` は `Winner` 文字列ではなく
+構造化された `Verdict` を返すようになりました。これは破壊的変更です。
+
+- 旧: `Promise<Winner>` (`Winner = 'YONO' | 'KOMAE' | 'DRAW'`)
+- 新: `Promise<Verdict>` の形:
+
+```ts
+type Verdict = {
+    winner: 'YONO' | 'KOMAE' | 'DRAW';
+    reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
+    judgeCode?: string;
+    rng?: number;
+    powerDiff?: number; // yono.power - komae.power
+    confidence?: number; // 将来拡張のための任意
+};
+```
+
+更新が必要な点:
+
+- 呼び出し側: 生の文字列ではなく `verdict.winner` を参照する。
+- 実装: 少なくとも `winner` と妥当な `reason`(例: ローカル比較なら `'power'`)を含む
+  `Verdict` オブジェクトを返す。
+- テスト/モック: 期待値を `verdict.winner` に合わせ、必要に応じて
+  `reason`/`powerDiff` を含めて検証する。
+- API/MSW: `/battle/judgement` のペイロードを `Verdict` 形にする。
+
+理由:
+
+- UI/テレメトリ向けに有用な意思決定メタデータを保持できる。
+- 将来の進化(信頼度やジャッジコードなど)を、さらに破壊的変更なく拡張しやすい。

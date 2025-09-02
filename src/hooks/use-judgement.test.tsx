@@ -48,7 +48,7 @@ function Probe({ repoKind }: { repoKind: 'provided' | 'factory' }) {
   return (
     <div>
       <span data-testid="status">{j.status}</span>
-      <span data-testid="data">{j.data ?? ''}</span>
+      <span data-testid="data">{j.data ? j.data.winner : ''}</span>
       <span data-testid="error">{j.error ? 'err' : ''}</span>
       <span data-testid="repoKind">{repoKind}</span>
     </div>
@@ -68,7 +68,12 @@ describe('useJudgement', () => {
       useRepositoriesOptional as unknown as ReturnType<typeof vi.fn>
     ).mockReturnValue({
       battleReport: undefined as unknown as never,
-      judgement: { determineWinner: vi.fn(async () => 'YONO') },
+      judgement: {
+        determineWinner: vi.fn(async () => ({
+          winner: 'YONO',
+          reason: 'power',
+        })),
+      },
     });
     render(<Probe repoKind="provided" />);
     expect(screen.getByTestId('status').textContent).toBe('loading');

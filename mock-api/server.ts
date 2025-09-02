@@ -38,7 +38,15 @@ const server = http.createServer((req, res) => {
   }
   if (req.url.startsWith('/api/battle/judgement')) {
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify('DRAW'));
+    res.end(
+      JSON.stringify({
+        winner: 'DRAW',
+        reason: 'api',
+        rng: 0.5,
+        judgeCode: 'API',
+        powerDiff: 0,
+      }),
+    );
     return;
   }
   res.writeHead(404);

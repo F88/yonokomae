@@ -1,9 +1,9 @@
 /**
  * Judge class for determining the winner between two fighters.
  */
-import type { Battle } from 'src/types/types';
+import type { Battle } from '../types/types';
 import type { PlayMode } from './play-mode';
-import type { Winner } from '@/yk/repo/core/repositories';
+import type { Verdict } from './repo/core/repositories';
 export declare class Judge {
   id: string;
   name: string;
@@ -15,5 +15,5 @@ export declare class Judge {
   }: {
     battle: Battle;
     mode: PlayMode;
-  }): Promise<Winner>;
+  }): Promise<Verdict>;
 }

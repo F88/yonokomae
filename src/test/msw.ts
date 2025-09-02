@@ -27,7 +27,13 @@ export const handlers = [
     });
   }),
   http.get('/api/battle/judgement', () => {
-    return HttpResponse.json('DRAW');
+    return HttpResponse.json({
+      winner: 'DRAW',
+      reason: 'api',
+      rng: 0.5,
+      judgeCode: 'MSW',
+      powerDiff: 0,
+    });
   }),
 ];
 

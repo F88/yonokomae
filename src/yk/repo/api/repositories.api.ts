@@ -1,7 +1,7 @@
 import type {
   BattleReportRepository,
   JudgementRepository,
-  Winner,
+  Verdict,
 } from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
@@ -102,7 +102,7 @@ export class ApiJudgementRepository implements JudgementRepository {
       judge: { id: string; name: string; codeName: string };
     },
     opts?: { signal?: AbortSignal },
-  ): Promise<Winner> {
+  ): Promise<Verdict> {
     await applyDelay(this.delay, opts?.signal);
     // For now, API endpoint is mode-agnostic in this client; include judge id in idempotency key.
     const reqKey = JSON.stringify({
@@ -111,7 +111,7 @@ export class ApiJudgementRepository implements JudgementRepository {
     });
     const idempotencyKey = fnv1a32(reqKey);
     const path = `/battle/judgement`;
-    return getWithRetry<Winner>(this.api, path, opts?.signal, {
+    return getWithRetry<Verdict>(this.api, path, opts?.signal, {
       'X-Idempotency-Key': idempotencyKey,
     });
   }

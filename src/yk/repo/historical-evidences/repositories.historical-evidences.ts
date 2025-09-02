@@ -4,6 +4,7 @@ import type {
   BattleReportRepository,
   JudgementRepository,
   Winner,
+  Verdict,
 } from '@/yk/repo/core/repositories';
 import { z } from 'zod';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
@@ -250,15 +251,26 @@ export class HistoricalEvidencesJudgementRepository
       judge: { id: string; name: string; codeName: string };
     },
     options?: { signal?: AbortSignal },
-  ): Promise<Winner> {
+  ): Promise<Verdict> {
     await applyDelay(this.delay, options?.signal);
     const r = this.rng();
-    return computeWinnerWithProbAndFallback(
+    const winner = computeWinnerWithProbAndFallback(
       input.judge.codeName,
       r,
       input.battle.yono,
       input.battle.komae,
     );
+    const code = (input.judge.codeName ?? '').trim().toUpperCase();
+    const powerDiff = input.battle.yono.power - input.battle.komae.power;
+    const reason: Verdict['reason'] =
+      (code === 'O' || code === 'U') && r < 0.2
+        ? 'bias-hit'
+        : (code === 'S' || code === 'C') && r < 0.2
+          ? 'bias-hit'
+          : code === 'KK' && r < 0.9
+            ? 'bias-hit'
+            : 'power';
+    return { winner, reason, rng: r, judgeCode: code, powerDiff };
   }
 }
 
