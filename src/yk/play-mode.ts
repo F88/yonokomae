@@ -33,14 +33,15 @@ export const playMode: PlayMode[] = [
     id: 'historical-research',
     title: 'よの ⚔️ こまえ',
     description:
-      '[WIP] A mode that generates battles based on historical events.',
+      '[WIP] ' + '歴史的な出来事に基づいてよのこまを分析、眠れない夜のおともに',
     enabled: true,
   },
   {
     id: 'yk-now',
     title: 'よのこまライブ',
     description:
-      'よーのとこみまがよのこまの今に鋭く切り込む。ジャッジは気にしない。',
+      '[WIP] ' +
+      '🥷😼 よーのとこみまが今日のよのこまに鋭く斬り込む。ジャッジはいらない。',
     enabled: true,
   },
   {
