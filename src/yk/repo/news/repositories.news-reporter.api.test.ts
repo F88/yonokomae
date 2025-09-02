@@ -207,7 +207,14 @@ describe('NewsReporterApiBattleReportRepository', () => {
     server.use(
       http.get('https://api.open-meteo.com/v1/forecast', () =>
         HttpResponse.json({
-          current_weather: { temperature: 19.9, windspeed: 7.1 },
+          daily: {
+            time: ['2025-09-01', '2025-09-02'],
+            temperature_2m_max: [19.9, 21.0],
+            daylight_duration: [43200, 43300],
+            sunshine_duration: [30000, 30500],
+            rain_sum: [0.0, 0.5],
+            wind_speed_10m_max: [3.2, 7.1],
+          },
         }),
       ),
     );
