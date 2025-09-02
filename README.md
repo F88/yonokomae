@@ -11,7 +11,7 @@ This thought-provoking game explores the outcomes for two countries after 'The W
 Note: This game is full of humorous jokes, but to be clear, it is not a deepfake or a mere fabrication.
 ```
 
-![ykwar.png](imgs/ykwar.png)
+![ykwar.png](./imgs/ykwar.png)
 
 ## 「よのこまえ」の活用術10選
 
@@ -60,10 +60,6 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
     - Usage examples showcase with category-based organization
     - User testimonials with marquee animation effects
     - TSV export functionality for usage data and user voices
-- Keyboard shortcuts for improved accessibility
-    - Enter/Space/B: Generate battle report
-    - R: Reset battle state
-    - Tab: Rotate historical seed (in Historical Evidence mode)
 - Robust loading and error states
     - Async judgement with simulated latency
     - Shadcn skeleton placeholders on the battle field
@@ -81,7 +77,7 @@ achieve full SR support across core flows. We commit to:
 
 - Stable, concise accessible names for interactive controls
 - Proper roles, labels, and descriptions (aria-label / aria-describedby)
-- Keyboard-first operation with documented shortcuts
+- Keyboard-first operation with in-UI hints for shortcuts
 - Landmarks and focus management for predictable navigation
 - Tests that assert accessibility surfaces (getByRole with name), not visuals
 - Respect reduced-motion preferences and avoid information conveyed by visuals only
@@ -140,36 +136,11 @@ Historical Evidence mode
 - Testing
 - Add E2E tests (e.g., Playwright) for key flows
 - Optional visual regression for core components
-    - Expand repositories with curated event data (JSON/seed files) and
-      deterministic generation rules
-    - Surface provenance/notes in the UI (citations, links, disclaimers)
-    - Replace placeholder images with licensed assets and show attribution
-    - Add unit tests for deterministic historical paths
-- AI Mode (later)
-    - Evaluate model/provider and on-device vs API trade-offs
-    - Add safety guardrails and content filters
-    - Provide offline mock/stub for tests and local dev
-- API-backed mode (optional)
-    - Wire Api repositories under a dedicated mode (e.g., `api`) using
-      `VITE_API_BASE_URL`
-    - Provide a mock server and integration tests
-    - Add provider branching and a feature flag
-- Battle UX polish
-    - Add progress indicator for async judgement (per-step animation)
-    - Make judgement cancellable with user feedback
-    - Respect reduced-motion preferences for scroll/animation
-- Accessibility and i18n
-    - A11y audit (labels, focus management, contrast)
-    - Improve keyboard flow after generating a report (focus return/announce)
-    - Localize UI strings (EN/JA alignment with docs)
-- Testing
-    - Add E2E tests (e.g., Playwright) for key flows
-    - Optional visual regression for core components
 
 ## Project notes
 
 See the developer guides linked above for technical implementation details.
 
-| Icon 1                                       | Icon 2                                       | Icon 3                                       |
-| -------------------------------------------- | -------------------------------------------- | -------------------------------------------- |
-| ![ykw-icon-6.png](imgs/icons/ykw-icon-6.png) | ![ykw-icon-4.png](imgs/icons/ykw-icon-4.png) | ![ykw-icon-7.png](imgs/icons/ykw-icon-7.png) |
+| Icon 1                                         | Icon 2                                         | Icon 3                                         |
+| ---------------------------------------------- | ---------------------------------------------- | ---------------------------------------------- |
+| ![ykw-icon-6.png](./imgs/icons/ykw-icon-6.png) | ![ykw-icon-4.png](./imgs/icons/ykw-icon-4.png) | ![ykw-icon-7.png](./imgs/icons/ykw-icon-7.png) |

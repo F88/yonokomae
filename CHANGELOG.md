@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## Unreleased
+## 1.0.0 (2025-09-02)
+
+### Major Changes
+
+- bbfcdff: BREAKING CHANGE: Judgeの判定結果をWinnerからVerdictに変更
 
 ### Breaking Changes
 

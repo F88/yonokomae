@@ -29,16 +29,16 @@ English is the single source of truth; the Japanese file is a translation.
 ## Scope
 
 - Applies only to HISTORICAL_EVIDENCE mode repositories and seed data.
-- Other modes (DEMO, DEMO-2, API, etc.) are not constrained by this document.
+- Other modes (DEMO, RANDOM-DATA, API, etc.) are not constrained by this document.
 
 ## Seed locations (TS preferred)
 
-- Preferred (TypeScript):
-    - `src/seeds/random-data/scenario/*.ts`
-    - `src/seeds/random-data/neta/{komae,yono}.ts`
-    - `src/seeds/random-data/report/config.ts`
+- Preferred (TypeScript, file-based Battle data):
+    - `src/seeds/historical-evidences/battle/*.ts`
 - Optional (JSON):
-    - `seeds/random-data/...` (auto-discovered; TS is preferred)
+    - `seeds/historical-evidences/battle/*.json` (auto-discovered; TS is preferred)
+
+Note: Random-data seeds under `src/seeds/random-data/**` are used by the RANDOM-DATA/DEMO modes and are out of scope for this document.
 
 ## Static-only loading policy (eager imports)
 
@@ -54,37 +54,27 @@ English is the single source of truth; the Japanese file is a translation.
 
 ## Schemas and types
 
-- Scenario seed shape (`HistoricalSeed`):
-    - `id: string` (unique)
-    - `title: string`
-    - `subtitle: string`
-    - `overview: string`
-    - `narrative: string`
-    - `provenance?: Array<{ label: string; url?: string; note?: string }>`
-- Neta options shape:
-    - `{options: Array<{ imageUrl: string; title: string; subtitle: string; description: string }>}`
-- Report config shape:
-    - `{ attribution: string; defaultPower: number }`
+- Battle file shape (module default export should be Battle-compatible):
+    - See `src/seeds/historical-evidences/README.md` for a minimal example and the expected `Battle` fields.
 
 ## Uniqueness and validation
 
-- IDs must be unique across all scenario seeds.
+- Battle `id` values must be unique across all historical battles.
     - Enforced in two places:
         - CI test: `npm run -s test:seeds` (Vitest + Zod)
         - Loader at build-time: duplicate IDs throw an error
 
-## How to add or update a seed
+## How to add or update a battle (TS recommended)
 
-1. Create or edit a TS file under `src/seeds/random-data/...`.
-    - Example (scenario):
-    - `src/seeds/random-data/scenario/my-scenario.ts`
-        - `export default { id, title, ... } satisfies HistoricalSeed;`
+1. Create or edit a TS file under `src/seeds/historical-evidences/battle/`.
+    - Example: `src/seeds/historical-evidences/battle/my-battle.ts`
+    - Export `default` as a `Battle`-compatible object.
 1. Ensure `id` is globally unique.
 1. Run validation locally:
     - `npm run -s test:seeds`
 1. Commit with a clear Conventional Commit message.
     - Examples:
-        - `feat(seeds): add scenario my-scenario`
+        - `feat(seeds): add historical battle my-battle`
         - `fix(seeds): correct provenance url for tama-river`
 
 ## CI checks
@@ -95,7 +85,7 @@ English is the single source of truth; the Japanese file is a translation.
 ## Troubleshooting
 
 - Duplicate ID error
-    - Search for the ID across `src/seeds/random-data/scenario/` and fix conflicts.
+    - Search under `src/seeds/historical-evidences/battle/` and fix conflicts.
 - Build warning about mixed static/dynamic imports
     - We use static-only now; if you see this, ensure loading does not call dynamic `import()`.
 - Large bundle warnings
@@ -107,8 +97,8 @@ The historical seed system integrates with the TSV export functionality:
 
 - Export scripts can process seed-based data for external analysis
 - Usage examples and user voices can be exported via:
-    - `npm run build:usage-examples-tsv`
-    - `npm run build:users-voice-tsv`
+    - `npm run ops:export-usage-examples-to-tsv`
+    - `npm run ops:export-users-voice-to-tsv`
 - Export data sources:
     - `src/data/usage-examples.ts` - Usage examples with categories
     - `src/data/users-voice.ts` - User testimonials and feedback
@@ -117,5 +107,6 @@ The historical seed system integrates with the TSV export functionality:
 
 - Implementation: `src/yk/repo/seed-system/seeds.ts`
 - Validation tests: `src/yk/repo/seed-system/seeds.validation.test.ts`
+- Historical Battle authoring: `src/seeds/historical-evidences/README.md`
 - Mode overview: `docs/DEVELOPMENT_EN.md` (Historical Seed System)
 - Export scripts: `src/ops/export-*-to-tsv.ts`

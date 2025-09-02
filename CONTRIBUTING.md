@@ -73,14 +73,14 @@ The project is configured for GitHub Actions CI/CD, though workflow files are no
 #### Planned CI Pipeline (on PRs)
 
 1. **Lint Check**: Ensures code follows project style guidelines
-2. **Type Check**: Verifies TypeScript compilation without errors
+2. **Build (type checks)**: Ensures the project builds successfully and types check
 3. **Unit Tests**: Runs the test suite with coverage reporting
-4. **Build Verification**: Ensures the project builds successfully
+4. **E2E Tests**: Runs Playwright tests for critical flows
 
 #### Current Deployment Process
 
 1. **GitHub Pages Deployment**:
-    - Manual deployment via `npm run deploy`
+    - Manual deployment via `npm run deploy:ghpages`
     - Builds the project with proper base path (`/yonokomae/`)
     - Uses `gh-pages` package to push to GitHub Pages branch
 
@@ -94,28 +94,26 @@ Before submitting a PR, run these commands locally:
 # Lint check
 npm run lint
 
-# Type check (TypeScript compilation)
-npm run typecheck
-
-# Run tests
-npm test
-
-# Build project
+# Build (includes type checks)
 npm run build
 
-# Build data exports (optional)
-npm run build:usage-examples-tsv
-npm run build:users-voice-tsv
-```
+# Run unit tests
+npm test
 
-Note: The `typecheck` script runs TypeScript compiler in check mode without emitting files, ensuring type safety across the codebase.
+# Run E2E tests
+npm run e2e
+
+# Optional: data export builds
+npm run ops:export-usage-examples-to-tsv
+npm run ops:export-users-voice-to-tsv
+```
 
 ### Data Export Scripts
 
 The project includes TSV export functionality for usage examples and user voices:
 
-- `npm run build:usage-examples-tsv` - Exports usage examples to TSV format
-- `npm run build:users-voice-tsv` - Exports user voices data to TSV format
+- `npm run ops:export-usage-examples-to-tsv` - Exports usage examples to TSV format
+- `npm run ops:export-users-voice-to-tsv` - Exports user voices data to TSV format
 
 These scripts use the TypeScript configurations in `tsconfig.ops.json` and process data from:
 

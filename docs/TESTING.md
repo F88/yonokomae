@@ -106,22 +106,23 @@ it('uses historical repository in historical mode', () => {
 
 For testing async provider initialization:
 
-````tsx
+```tsx
 import { Suspense } from 'react';
-import { RepositoryProviderSuspense } from '@/yk/repo/RepositoryProvider';
+import { RepositoryProviderSuspense } from '@/yk/repo/core/RepositoryProvider';
 
 it('handles async provider setup', async () => {
-  render(
-    <Suspense fallback={<div>Loading...</div>}>
-      <RepositoryProviderSuspense mode={mode}>
-        <YourComponent />
-      </RepositoryProviderSuspense>
-    </Suspense>
-  );
+    render(
+        <Suspense fallback={<div>Loading...</div>}>
+            <RepositoryProviderSuspense mode={mode}>
+                <YourComponent />
+            </RepositoryProviderSuspense>
+        </Suspense>,
+    );
 
-  // Wait for suspension to resolve
-  await screen.findByText('Expected content');
+    // Wait for suspension to resolve
+    await screen.findByText('Expected content');
 });
+```
 
 ## UI testing
 
@@ -174,18 +175,19 @@ it('renders with provider', () => {
   });
   expect(screen.getByText('hello')).toBeInTheDocument();
 });
-````
+```
 
 ## Determinism & delays
 
 - Delays are computed but skipped in test environment. Avoid `sleep` in tests.
-- Historical seeds live under `seeds/random-data/scenario/*.json` for reproducibility.
+- Random-data seeds live under `src/seeds/random-data/**` and are loaded via static eager imports for reproducibility.
+- Historical evidence battles live under `src/seeds/historical-evidences/battle/**` and are discovered eagerly as file-based Battle data.
 - Provider `defaultDelayForMode` returns ranges for UX, but tests shouldn’t wait because repo code bypasses delays under `NODE_ENV=test`.
 
 ## Environment & config
 
 - API base URL: `VITE_API_BASE_URL` (tests set to `/api`).
-- Vite may warn about dynamic import vars for seeds; it’s harmless for tests. For production, consider mapping files via a static registry.
+- Vite may warn about dynamic import vars for seeds; we use static eager maps to avoid mixed import modes in tests.
 
 ## Coverage (optional)
 
