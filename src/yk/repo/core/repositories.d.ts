@@ -1,9 +1,8 @@
 import type { Battle, Neta } from '../../../types/types';
 import type { PlayMode } from '../../../yk/play-mode';
 export type { Battle, Neta, PlayMode };
-export type Winner = 'YONO' | 'KOMAE' | 'DRAW';
 export type Verdict = {
-  winner: Winner;
+  winner: 'YONO' | 'KOMAE' | 'DRAW';
   reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
   judgeCode?: string;
   rng?: number;

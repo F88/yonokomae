@@ -5,23 +5,13 @@ import type { PlayMode } from '@/yk/play-mode';
 export type { Battle, Neta, PlayMode };
 
 /**
- * Winner result for a battle judgement
- *
- * Represents the possible outcomes of a Yono vs Komae battle.
- * - `'YONO'`: Yono wins the battle
- * - `'KOMAE'`: Komae wins the battle
- * - `'DRAW'`: Battle ends in a tie
- */
-export type Winner = 'YONO' | 'KOMAE' | 'DRAW';
-
-/**
  * Verdict
  *
  * Rich result for a battle judgement. Contains the winner and
  * lightweight metadata useful for UX, logging, and testing.
  */
 export type Verdict = {
-  winner: Winner;
+  winner: 'YONO' | 'KOMAE' | 'DRAW';
   /** high-level reason of decision path */
   reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
   /** normalized judge code, if available */

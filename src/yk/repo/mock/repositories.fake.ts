@@ -1,8 +1,4 @@
-import type {
-  JudgementRepository,
-  Winner,
-  Verdict,
-} from '../core/repositories';
+import type { JudgementRepository, Verdict } from '../core/repositories';
 import type { Battle } from '@/types/types';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 
@@ -22,8 +18,8 @@ export class FakeJudgementRepository implements JudgementRepository {
     const yono = input.battle.yono;
     const komae = input.battle.komae;
     const powerDiff = yono.power - komae.power;
-    const winner: Winner =
-      powerDiff === 0 ? 'DRAW' : powerDiff > 0 ? 'YONO' : 'KOMAE';
+    const winner: 'YONO' | 'KOMAE' | 'DRAW' =
+    powerDiff === 0 ? 'DRAW' : powerDiff > 0 ? 'YONO' : 'KOMAE';
     return { winner, reason: 'power', powerDiff };
   }
 }

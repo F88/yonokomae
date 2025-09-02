@@ -3,7 +3,6 @@ import type { Battle, Neta } from '@/types/types';
 import type {
   BattleReportRepository,
   JudgementRepository,
-  Winner,
   Verdict,
 } from '@/yk/repo/core/repositories';
 import { z } from 'zod';
@@ -238,12 +237,12 @@ export class HistoricalEvidencesJudgementRepository
    *
    * Contract:
    * - Inputs: Battle (yono, komae) and Judge (id, name, codeName)
-   * - Output: Winner string literal: 'YONO' | 'KOMAE' | 'DRAW'
+   * - Output: 'YONO' | 'KOMAE' | 'DRAW'
    *
    * @param input.battle The battle context containing both neta and power values.
    * @param input.judge The judging entity identity (codeName is used).
    * @param options.signal AbortSignal to cancel the operation.
-   * @returns The decided Winner.
+   * @returns The decided literal winner value.
    */
   async determineWinner(
     input: {
@@ -281,7 +280,7 @@ export class HistoricalEvidencesJudgementRepository
  * @param komae KOMAE side neta
  * @returns 'YONO' when yono.power > komae.power, 'KOMAE' when less, otherwise 'DRAW'.
  */
-function decideByPower(yono: Neta, komae: Neta): Winner {
+function decideByPower(yono: Neta, komae: Neta): 'YONO' | 'KOMAE' | 'DRAW' {
   if (yono.power > komae.power) return 'YONO';
   if (yono.power < komae.power) return 'KOMAE';
   return 'DRAW';
@@ -300,14 +299,14 @@ function decideByPower(yono: Neta, komae: Neta): Winner {
  * @param r Random number in [0, 1) from RNG injection.
  * @param yono YONO neta
  * @param komae KOMAE neta
- * @returns Winner after applying probability and fallback rules.
+ * @returns Literal winner value after applying rules.
  */
 function computeWinnerWithProbAndFallback(
   judgeCode: string,
   r: number,
   yono: Neta,
   komae: Neta,
-): Winner {
+): 'YONO' | 'KOMAE' | 'DRAW' {
   const code = (judgeCode ?? '').trim().toUpperCase();
   switch (code) {
     case 'O':
