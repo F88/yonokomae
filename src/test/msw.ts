@@ -35,6 +35,18 @@ export const handlers = [
       powerDiff: 0,
     });
   }),
+  // Default handler for external ipify endpoint used by news reporter repo.
+  // Tests can override per-case with server.use(...)
+  http.get('https://api.ipify.org', () => {
+    return HttpResponse.json({ ip: '198.51.100.1' });
+  }),
+  // Default handler for external Open-Meteo endpoint used by news reporter repo.
+  http.get('https://api.open-meteo.com/v1/forecast', () => {
+    // Return minimal current_weather payload
+    return HttpResponse.json({
+      current_weather: { temperature: 22.3, windspeed: 3.8 },
+    });
+  }),
 ];
 
 export const server = setupServer(...handlers);

@@ -46,6 +46,35 @@ each report generation.
 This keeps callers stable today and enables a future swap to real APIs with no
 UI changes.
 
+### Shared battle seed loader (news + historical)
+
+Use a single, shared loader to discover, load, normalize, and validate Battle
+seed files across repositories.
+
+- File: `src/yk/repo/core/battle-seed-loader.ts`
+- Consumers: HistoricalEvidencesBattleReportRepository, file-based News repo
+- Inputs
+    - `roots: string[]` (e.g., `['/seeds/historical-evidences/battle/', '/src/seeds/historical-evidences/battle/']`)
+    - `file?: string` optional file name (relative to a root) to load deterministically
+- Output: `Promise<Battle>` (fully normalized and Zod-validated)
+- Behavior
+    - Discovers modules via static eager globs:
+        - `/seeds/**/*.{ts,js,json}` and `/src/seeds/**/*.{ts,js,json}`
+        - Filters to the provided `roots` and then chooses `file` or a random one
+    - Applies normalization defaults and validates with the shared `BattleSchema`
+    - Ignores non-code content like markdown; only ts/js/json are considered
+- Seed authoring rules
+    - Default-export a Battle-compatible object (TypeScript preferred)
+    - Locations by repo kind:
+        - News: `src/seeds/news/*.ts`
+        - Historical battles: `src/seeds/historical-evidences/battle/*.ts`
+            - Optional JSON mirror: `seeds/historical-evidences/battle/*.json`
+
+Why shared
+
+- One place to maintain normalization and schema validation
+- Identical behavior across repos; easier to test and evolve
+
 ## How to add a new Play Mode or Repository
 
 This section is intended for developers. It explains how to add a new

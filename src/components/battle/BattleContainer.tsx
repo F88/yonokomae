@@ -30,6 +30,11 @@ const cropSettings = {
     // const aspect = '32/15';
     focusY: 'y-50',
   },
+  'yk-now': {
+    enableCropTopBanner: true,
+    aspect: '32/9',
+    focusY: 'y-50',
+  },
 } as const;
 
 type CropSettingsKey = keyof typeof cropSettings;
