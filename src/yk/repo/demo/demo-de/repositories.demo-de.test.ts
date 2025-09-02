@@ -46,81 +46,81 @@ describe('demo-de repositories', () => {
     };
 
     // YONO wins
-  let winner = await judge.determineWinner(
-    {
-      judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
-      battle: {
-        ...battleBase,
-        yono: {
-          title: 'Y',
-          subtitle: 's',
-          description: 'd',
-          imageUrl: 'u',
-          power: 10,
-        },
-        komae: {
-          title: 'K',
-          subtitle: 's',
-          description: 'd',
-          imageUrl: 'u',
-          power: 1,
+    let winner = await judge.determineWinner(
+      {
+        judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
+        battle: {
+          ...battleBase,
+          yono: {
+            title: 'Y',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 10,
+          },
+          komae: {
+            title: 'K',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 1,
+          },
         },
       },
-    },
-    { signal: undefined },
-  );
+      { signal: undefined },
+    );
     expect(winner).toBe('YONO');
 
     // KOMAE wins
-  winner = await judge.determineWinner(
-    {
-      judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
-      battle: {
-        ...battleBase,
-        yono: {
-          title: 'Y',
-          subtitle: 's',
-          description: 'd',
-          imageUrl: 'u',
-          power: 2,
-        },
-        komae: {
-          title: 'K',
-          subtitle: 's',
-          description: 'd',
-          imageUrl: 'u',
-          power: 9,
+    winner = await judge.determineWinner(
+      {
+        judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
+        battle: {
+          ...battleBase,
+          yono: {
+            title: 'Y',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 2,
+          },
+          komae: {
+            title: 'K',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 9,
+          },
         },
       },
-    },
-    { signal: undefined },
-  );
+      { signal: undefined },
+    );
     expect(winner).toBe('KOMAE');
 
     // DRAW
-  winner = await judge.determineWinner(
-    {
-      judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
-      battle: {
-        ...battleBase,
-        yono: {
-          title: 'Y',
-          subtitle: 's',
-          description: 'd',
-          imageUrl: 'u',
-          power: 5,
-        },
-        komae: {
-          title: 'K',
-          subtitle: 's',
-          description: 'd',
-          imageUrl: 'u',
-          power: 5,
+    winner = await judge.determineWinner(
+      {
+        judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
+        battle: {
+          ...battleBase,
+          yono: {
+            title: 'Y',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 5,
+          },
+          komae: {
+            title: 'K',
+            subtitle: 's',
+            description: 'd',
+            imageUrl: 'u',
+            power: 5,
+          },
         },
       },
-    },
-    { signal: undefined },
-  );
+      { signal: undefined },
+    );
     expect(winner).toBe('DRAW');
   });
 });

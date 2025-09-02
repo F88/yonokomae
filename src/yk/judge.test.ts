@@ -40,15 +40,15 @@ describe('Judge', () => {
         yono: y,
         komae: k,
       });
-    it('should return "YONO" when yonoPower is greater than komaePower', async () => {
-      const judge = new Judge('id', 'T', 'T');
-      const battle = dummyBattle(dummyNeta(100), dummyNeta(50));
-      const result = await judge.determineWinner({
-        battle,
-        mode: demoMode,
+      it('should return "YONO" when yonoPower is greater than komaePower', async () => {
+        const judge = new Judge('id', 'T', 'T');
+        const battle = dummyBattle(dummyNeta(100), dummyNeta(50));
+        const result = await judge.determineWinner({
+          battle,
+          mode: demoMode,
+        });
+        expect(result).toBe('YONO');
       });
-      expect(result).toBe('YONO');
-    });
 
       it('should return "KOMAE" when komaePower is greater than yonoPower', async () => {
         const judge = new Judge('id', 'T', 'T');
@@ -127,35 +127,35 @@ describe('Judge', () => {
         expect(typeof judge.determineWinner).toBe('function');
       });
 
-    it('should work with maximum safe integer values', async () => {
-      const judge = new Judge('id', 'T', 'T');
-      const result1 = await judge.determineWinner({
-        battle: dummyBattle(
-          dummyNeta(Number.MAX_SAFE_INTEGER),
-          dummyNeta(Number.MAX_SAFE_INTEGER - 1),
-        ),
-        mode: demoMode,
-      });
-      expect(result1).toBe('YONO');
+      it('should work with maximum safe integer values', async () => {
+        const judge = new Judge('id', 'T', 'T');
+        const result1 = await judge.determineWinner({
+          battle: dummyBattle(
+            dummyNeta(Number.MAX_SAFE_INTEGER),
+            dummyNeta(Number.MAX_SAFE_INTEGER - 1),
+          ),
+          mode: demoMode,
+        });
+        expect(result1).toBe('YONO');
 
-      const result2 = await judge.determineWinner({
-        battle: dummyBattle(
-          dummyNeta(Number.MAX_SAFE_INTEGER - 1),
-          dummyNeta(Number.MAX_SAFE_INTEGER),
-        ),
-        mode: demoMode,
-      });
-      expect(result2).toBe('KOMAE');
+        const result2 = await judge.determineWinner({
+          battle: dummyBattle(
+            dummyNeta(Number.MAX_SAFE_INTEGER - 1),
+            dummyNeta(Number.MAX_SAFE_INTEGER),
+          ),
+          mode: demoMode,
+        });
+        expect(result2).toBe('KOMAE');
 
-      const result3 = await judge.determineWinner({
-        battle: dummyBattle(
-          dummyNeta(Number.MAX_SAFE_INTEGER),
-          dummyNeta(Number.MAX_SAFE_INTEGER),
-        ),
-        mode: demoMode,
+        const result3 = await judge.determineWinner({
+          battle: dummyBattle(
+            dummyNeta(Number.MAX_SAFE_INTEGER),
+            dummyNeta(Number.MAX_SAFE_INTEGER),
+          ),
+          mode: demoMode,
+        });
+        expect(result3).toBe('DRAW');
       });
-      expect(result3).toBe('DRAW');
-    });
     });
   });
 });

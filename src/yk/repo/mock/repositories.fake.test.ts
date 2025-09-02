@@ -16,30 +16,30 @@ describe('Fake repositories - delay capping', () => {
     const repo = new FakeJudgementRepository({
       delay: { min: 3_000, max: 8_000 },
     });
-  const result = await repo.determineWinner({
-    battle: {
-      id: 'b-1',
-      title: 't',
-      subtitle: 's',
-      overview: 'o',
-      scenario: 'sc',
-      yono: {
-        imageUrl: '',
-        title: 'Y',
-        subtitle: '',
-        description: '',
-        power: 10,
+    const result = await repo.determineWinner({
+      battle: {
+        id: 'b-1',
+        title: 't',
+        subtitle: 's',
+        overview: 'o',
+        scenario: 'sc',
+        yono: {
+          imageUrl: '',
+          title: 'Y',
+          subtitle: '',
+          description: '',
+          power: 10,
+        },
+        komae: {
+          imageUrl: '',
+          title: 'K',
+          subtitle: '',
+          description: '',
+          power: 5,
+        },
       },
-      komae: {
-        imageUrl: '',
-        title: 'K',
-        subtitle: '',
-        description: '',
-        power: 5,
-      },
-    },
-    judge: { id: 'fake-judge-1', name: 'Fake', codeName: 'FAKE' },
-  });
+      judge: { id: 'fake-judge-1', name: 'Fake', codeName: 'FAKE' },
+    });
     expect(result).toBe('YONO');
     expect(warnSpy).toHaveBeenCalled();
     const messages = warnSpy.mock.calls.map((c) => String(c[0]));
@@ -50,30 +50,30 @@ describe('Fake repositories - delay capping', () => {
 
   it('does not warn when delay is negative (clamped to 0)', async () => {
     const repo = new FakeJudgementRepository({ delay: -100 });
-  const res = await repo.determineWinner({
-    battle: {
-      id: 'b-2',
-      title: 't',
-      subtitle: 's',
-      overview: 'o',
-      scenario: 'sc',
-      yono: {
-        imageUrl: '',
-        title: 'Y',
-        subtitle: '',
-        description: '',
-        power: 1,
+    const res = await repo.determineWinner({
+      battle: {
+        id: 'b-2',
+        title: 't',
+        subtitle: 's',
+        overview: 'o',
+        scenario: 'sc',
+        yono: {
+          imageUrl: '',
+          title: 'Y',
+          subtitle: '',
+          description: '',
+          power: 1,
+        },
+        komae: {
+          imageUrl: '',
+          title: 'K',
+          subtitle: '',
+          description: '',
+          power: 2,
+        },
       },
-      komae: {
-        imageUrl: '',
-        title: 'K',
-        subtitle: '',
-        description: '',
-        power: 2,
-      },
-    },
-    judge: { id: 'fake-judge-2', name: 'Fake', codeName: 'FAKE' },
-  });
+      judge: { id: 'fake-judge-2', name: 'Fake', codeName: 'FAKE' },
+    });
     expect(res).toBe('KOMAE');
     expect(warnSpy).not.toHaveBeenCalled();
   });
