@@ -29,7 +29,6 @@ describe('api mode repositories (msw)', () => {
   it('fetches judgement from API', async () => {
     const repo = await getJudgementRepository(apiMode);
     const winner = await repo.determineWinner({
-      mode: apiMode,
       battle: {
         id: 'msw-battle-1',
         title: 't',
@@ -51,6 +50,7 @@ describe('api mode repositories (msw)', () => {
           power: 1,
         },
       },
+      judge: { id: 'api-test-judge', name: 'Test', codeName: 'TEST' },
     });
     expect(winner).toBe('DRAW');
   });

@@ -31,12 +31,7 @@ describe('repository-provider mapping for demo-en', () => {
     // Use trivial battle to assert algorithm and that call works
     const winner = await judge.determineWinner(
       {
-        mode: {
-          id: 'demo-en',
-          title: 'DEMO(en)',
-          description: '',
-          enabled: true,
-        },
+        judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
         battle: {
           id: 'b',
           title: 'Demo-2 Battle',

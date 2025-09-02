@@ -391,7 +391,7 @@ function withJudgementTiming<T extends JudgementRepository>(repo: T): T {
       }
       if (shouldLog) {
         console.groupCollapsed(
-          `Judgement#${reqId} ${input.mode.id} battle=${'battle' in input ? input.battle.id : '?'}`,
+          `Judgement#${reqId} battle=${'battle' in input ? input.battle.id : '?'}`,
         );
         console.log('start');
       }
@@ -495,7 +495,7 @@ function computeJudgementKey(
 ): string {
   const b = input.battle;
   return JSON.stringify({
-    mode: input.mode.id,
+    judge: input.judge?.id ?? null,
     battleId: b.id,
     yono: { title: b.yono.title, power: b.yono.power },
     komae: { title: b.komae.title, power: b.komae.power },

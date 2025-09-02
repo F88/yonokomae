@@ -99,16 +99,18 @@ export class ApiJudgementRepository implements JudgementRepository {
   async determineWinner(
     input: {
       battle: { id: string; yono: Neta; komae: Neta };
-      mode: { id: string };
-      extra?: Record<string, unknown>;
+      judge: { id: string; name: string; codeName: string };
     },
     opts?: { signal?: AbortSignal },
   ): Promise<Winner> {
     await applyDelay(this.delay, opts?.signal);
-    const mode = input.mode.id;
-    const reqKey = JSON.stringify({ battleId: input.battle.id, mode });
+    // For now, API endpoint is mode-agnostic in this client; include judge id in idempotency key.
+    const reqKey = JSON.stringify({
+      battleId: input.battle.id,
+      judge: input.judge.id,
+    });
     const idempotencyKey = fnv1a32(reqKey);
-    const path = `/battle/judgement?mode=${encodeURIComponent(mode)}`;
+    const path = `/battle/judgement`;
     return getWithRetry<Winner>(this.api, path, opts?.signal, {
       'X-Idempotency-Key': idempotencyKey,
     });
