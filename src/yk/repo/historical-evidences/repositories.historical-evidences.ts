@@ -212,7 +212,7 @@ const BattleSchema = z.object({
  * Probability policy by judge code:
  * - O, U: 20% -> YONO; otherwise fallback to power
  * - S, C: 20% -> KOMAE; otherwise fallback to power
- * - K: 90% -> KOMAE; otherwise fallback to power
+ * - KK: 90% -> KOMAE; otherwise fallback to power
  * - unknown: fallback to power
  *
  * Use the injected RNG to allow deterministic unit tests.
@@ -281,7 +281,7 @@ function decideByPower(yono: Neta, komae: Neta): Winner {
  * Rules:
  * - O, U: 20% -> YONO; else -> decideByPower
  * - S, C: 20% -> KOMAE; else -> decideByPower
- * - K: 90% -> KOMAE; else -> decideByPower
+ * - KK: 90% -> KOMAE; else -> decideByPower
  * - default: decideByPower
  *
  * @param judgeCode Code name of the judge (case-insensitive; trimmed).
@@ -306,7 +306,7 @@ function computeWinnerWithProbAndFallback(
       return r < 0.2 ? 'KOMAE' : decideByPower(yono, komae);
     case 'C':
       return r < 0.2 ? 'KOMAE' : decideByPower(yono, komae);
-    case 'K':
+    case 'KK':
       return r < 0.9 ? 'KOMAE' : decideByPower(yono, komae);
     default:
       return decideByPower(yono, komae);
