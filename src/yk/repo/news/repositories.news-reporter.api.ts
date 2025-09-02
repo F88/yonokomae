@@ -47,8 +47,7 @@ export class NewsReporterApiBattleReportRepository
       const battle =
         source === 'ipify'
           ? await this.generateFromIpify(options?.signal)
-          : await this.generateFromIpify(options?.signal);
-      // : await this.generateWeatherForecast(options?.signal);
+          : await this.generateWeatherForecast(options?.signal);
       this.maybeStoreCache(battle);
       return battle;
     } catch {
@@ -121,75 +120,73 @@ export class NewsReporterApiBattleReportRepository
     return battle;
   }
 
-  // /**
-  //  * Build a Battle report from current weather fetched via Open-Meteo.
-  //  * GET https://api.open-meteo.com/v1/forecast?latitude=35.68&longitude=139.76&current_weather=true
-  //  * If the fetch fails, an error is thrown.
-  //  */
-  // private async generateWeatherForecast(signal?: AbortSignal): Promise<Battle> {
-  //   // Yono: 35.88445483617253, 139.6262162096776
-  //   // Komae: 35.63497080831211, 139.5789225059554
+  /**
+   * Build a Battle report from current weather fetched via Open-Meteo.
+   *
+   * 🌦️ Docs | Open-Meteo.com
+   * https://open-meteo.com/en/docs
+   *
+   *
+   * City: Long, Lat
+   * Yono: 35.88445483617253, 139.6262162096776
+   * Komae: 35.63497080831211, 139.5789225059554
+   */
+  private async generateWeatherForecast(signal?: AbortSignal): Promise<Battle> {
+    type OpenMeteo = {
+      current_weather?: { temperature?: number; windspeed?: number };
+    };
+    const baseUrl = 'https://api.open-meteo.com/v1/forecast';
+    const qs = new URLSearchParams({
+      latitude: '35.88445483617253,35.63497080831211',
+      longitude: '139.6262162096776,139.5789225059554',
+      current_weather: 'true',
+      timezone: 'Asia/Tokyo',
+    });
+    const res = await fetch(`${baseUrl}?${qs.toString()}`, {
+      headers: { Accept: 'application/json' },
+      signal,
+    });
+    if (!res.ok) throw new Error(`open-meteo HTTP ${res.status}`);
+    const data = (await res.json()) as OpenMeteo;
+    const temp = Math.round(Number(data?.current_weather?.temperature ?? 20));
+    const wind = Math.round(Number(data?.current_weather?.windspeed ?? 5));
 
-  //   const params = {
-  //     latitude: [35.88445483617253, 35.63497080831211],
-  //     longitude: [139.6262162096776, 139.5789225059554],
-  //     hourly: 'temperature_2m',
-  //     timezone: 'Asia/Tokyo',
-  //     past_days: 1,
-  //     forecast_days: 1,
-  //   };
+    // Map weather to semi-stable powers
+    const powerYono = Math.max(25, Math.min(90, 30 + temp)); // temp-biased
+    const powerKomae = Math.max(25, Math.min(90, 25 + wind * 2)); // wind-biased
 
-  //   type OpenMeteo = {
-  //     current_weather?: { temperature?: number; windspeed?: number };
-  //   };
-  //   // const url = 'https://api.open-meteo.com/v1/forecast?latitude=35.68&longitude=139.76&current_weather=true';
-  //   const url =
-  //     'https://api.open-meteo.com/v1/forecast?latitude=35.88445483617253,35.63497080831211&longitude=139.626216209677,139.57892250595546&current_weather=true';
-  //   const res = await fetch(url, {
-  //     headers: { Accept: 'application/json' },
-  //     signal,
-  //   });
-  //   if (!res.ok) throw new Error(`open-meteo HTTP ${res.status}`);
-  //   const data = (await res.json()) as OpenMeteo;
-  //   const temp = Math.round(Number(data?.current_weather?.temperature ?? 20));
-  //   const wind = Math.round(Number(data?.current_weather?.windspeed ?? 5));
-
-  //   // Map weather to semi-stable powers
-  //   const powerYono = Math.max(25, Math.min(90, 30 + temp)); // temp-biased
-  //   const powerKomae = Math.max(25, Math.min(90, 25 + wind * 2)); // wind-biased
-
-  //   const battle: Battle = {
-  //     id: uid('battle'),
-  //     title: `Weather Tokyo (temp ${temp}°C, wind ${wind} m/s)`,
-  //     subtitle: 'Generated from open-meteo.com',
-  //     overview:
-  //       'A weather-sourced battle report generated from current Tokyo conditions.',
-  //     scenario: 'Meteorological factors stir a sudden clash in the skies.',
-  //     provenance: [
-  //       {
-  //         label: 'Open-Meteo - Free Weather API',
-  //         url: 'https://open-meteo.com',
-  //         note: 'Current weather used to generate this report.',
-  //       },
-  //     ],
-  //     yono: {
-  //       imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-  //       title: 'Yono - Temperature Front',
-  //       subtitle: 'Warm front advance',
-  //       description: '気温の上昇は士気を高める。',
-  //       power: powerYono,
-  //     },
-  //     komae: {
-  //       imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-  //       title: 'Komae - Wind Gust',
-  //       subtitle: 'Gusty tailwinds',
-  //       description: '風のうねりが戦況を揺さぶる。',
-  //       power: powerKomae,
-  //     },
-  //     status: 'success',
-  //   };
-  //   return battle;
-  // }
+    const battle: Battle = {
+      id: uid('battle'),
+      title: `Weather Tokyo (temp ${temp}°C, wind ${wind} m/s)`,
+      subtitle: 'Generated from open-meteo.com',
+      overview:
+        'A weather-sourced battle report generated from current Tokyo conditions.',
+      scenario: 'Meteorological factors stir a sudden clash in the skies.',
+      provenance: [
+        {
+          label: 'Open-Meteo - Free Weather API',
+          url: 'https://open-meteo.com',
+          note: 'Current weather used to generate this report.',
+        },
+      ],
+      yono: {
+        imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
+        title: 'Yono - Temperature Front',
+        subtitle: 'Warm front advance',
+        description: '気温の上昇は士気を高める。',
+        power: powerYono,
+      },
+      komae: {
+        imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
+        title: 'Komae - Wind Gust',
+        subtitle: 'Gusty tailwinds',
+        description: '風のうねりが戦況を揺さぶる。',
+        power: powerKomae,
+      },
+      status: 'success',
+    };
+    return battle;
+  }
 
   /**
    * 🌤️ Free Open-Source Weather API | Open-Meteo.com
