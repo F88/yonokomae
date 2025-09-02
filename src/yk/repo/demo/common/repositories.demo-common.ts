@@ -1,7 +1,7 @@
 import type {
   BattleReportRepository,
   JudgementRepository,
-  Winner,
+  Verdict,
 } from '@/yk/repo/core/repositories';
 import type { Battle } from '@/types/types';
 import { uid } from '@/lib/id';
@@ -60,10 +60,12 @@ export class DemoJudgementRepository implements JudgementRepository {
       judge: { id: string; name: string; codeName: string };
     },
     options?: { signal?: AbortSignal },
-  ): Promise<Winner> {
+  ): Promise<Verdict> {
     await applyDelay(this.delay, options?.signal);
     const { yono, komae } = input.battle;
-    if (yono.power === komae.power) return 'DRAW';
-    return yono.power > komae.power ? 'YONO' : 'KOMAE';
+    const powerDiff = yono.power - komae.power;
+    const winner: 'YONO' | 'KOMAE' | 'DRAW' =
+      powerDiff === 0 ? 'DRAW' : powerDiff > 0 ? 'YONO' : 'KOMAE';
+    return { winner, reason: 'power', powerDiff };
   }
 }

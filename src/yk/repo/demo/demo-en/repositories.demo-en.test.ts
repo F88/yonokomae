@@ -46,7 +46,7 @@ describe('demo-en repositories', () => {
     };
 
     // YONO wins
-    let winner = await judge.determineWinner(
+    let verdict = await judge.determineWinner(
       {
         judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
         battle: {
@@ -69,10 +69,10 @@ describe('demo-en repositories', () => {
       },
       { signal: undefined },
     );
-    expect(winner).toBe('YONO');
+    expect(verdict.winner).toBe('YONO');
 
     // KOMAE wins
-    winner = await judge.determineWinner(
+    verdict = await judge.determineWinner(
       {
         judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
         battle: {
@@ -95,10 +95,10 @@ describe('demo-en repositories', () => {
       },
       { signal: undefined },
     );
-    expect(winner).toBe('KOMAE');
+    expect(verdict.winner).toBe('KOMAE');
 
     // DRAW
-    winner = await judge.determineWinner(
+    verdict = await judge.determineWinner(
       {
         judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
         battle: {
@@ -121,6 +121,6 @@ describe('demo-en repositories', () => {
       },
       { signal: undefined },
     );
-    expect(winner).toBe('DRAW');
+    expect(verdict.winner).toBe('DRAW');
   });
 });

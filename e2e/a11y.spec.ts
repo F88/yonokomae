@@ -22,7 +22,9 @@ test.describe('Accessibility (axe-core)', () => {
     expectNoA11yBlockers,
   }) => {
     await page.goto('/');
-    await page.getByText('DEMO', { exact: true }).click();
+    // Confirm the currently highlighted mode via keyboard
+    await page.getByRole('radiogroup', { name: 'Play modes' }).focus();
+    await page.keyboard.press('Enter');
     await expect(page.getByRole('button', { name: 'Battle' })).toBeVisible();
 
     const results = await analyzeA11y();
@@ -35,7 +37,9 @@ test.describe('Accessibility (axe-core)', () => {
     expectNoA11yBlockers,
   }) => {
     await page.goto('/');
-    await page.getByText('DEMO', { exact: true }).click();
+    // Confirm the currently highlighted mode via keyboard
+    await page.getByRole('radiogroup', { name: 'Play modes' }).focus();
+    await page.keyboard.press('Enter');
     await page.getByRole('button', { name: 'Battle' }).click();
 
     const results = await analyzeA11y();

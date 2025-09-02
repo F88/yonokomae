@@ -61,7 +61,7 @@ Core interfaces:
 
 High-level flow of data and DI:
 
-```mermaid
+````mermaid
 flowchart TD
   A["Components / App"]
   B["RepositoryProvider (Context)"]
@@ -69,7 +69,7 @@ flowchart TD
   D["Repos from Context"]
   E["Factories: get*Repository(mode)"]
   F["Implementation: Fake / Historical / Future API"]
-  G["Domain Data: Battle / Winner"]
+  G["Domain Data: Battle / Verdict"]
 
   A --> B
   A --> C
@@ -79,7 +79,7 @@ flowchart TD
   F --> G
   G --> C
   C --> A
-```
+```ts
 
 Sequence for generating a battle report:
 
@@ -104,7 +104,7 @@ sequenceDiagram
   end
   R-->>H: Battle
   H-->>UI: setState(success)
-```
+````
 
 Interfaces and implementations:
 
@@ -114,7 +114,7 @@ classDiagram
     +generateReport(options) Promise<Battle>
   }
   class JudgementRepository {
-    +determineWinner(input, options) Promise<Winner>
+    +determineWinner(input, options) Promise<Verdict>
   }
   class ScenarioRepository {
     +generateTitle() Promise<string>
@@ -163,7 +163,7 @@ Example with TSDoc:
 import type {
     BattleReportRepository,
     JudgementRepository,
-    Winner,
+    Verdict,
 } from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { uid } from '@/lib/id';
@@ -212,17 +212,17 @@ export class ExampleJudgementRepository implements JudgementRepository {
      * Decide the winner based on provided input.
      * @param input Includes the current mode and the two combatants.
      * @param options Optional signal for cancellation.
-     * @returns The winner id: 'YONO', 'KOMAE', or 'DRAW'.
+     * @returns A Verdict containing the winner and decision metadata.
      */
     async determineWinner(
         input: { mode: { id: string }; yono: Neta; komae: Neta },
         options?: { signal?: AbortSignal },
-    ): Promise<Winner> {
+    ): Promise<Verdict> {
         void options?.signal;
-        if (input.yono.power === input.komae.power) {
-            return 'DRAW';
-        }
-        return input.yono.power > input.komae.power ? 'YONO' : 'KOMAE';
+        const powerDiff = input.yono.power - input.komae.power;
+        const winner =
+            powerDiff === 0 ? 'DRAW' : powerDiff > 0 ? 'YONO' : 'KOMAE';
+        return { winner, reason: 'power', powerDiff };
     }
 }
 ```
@@ -398,6 +398,40 @@ test('a long-running performance check', async ({ page }) => {
 ### Acceptance Checklist
 
 - TypeScript compiles with no new errors.
+
+## Migration Notes: Winner -> Verdict (Breaking change)
+
+As of 2025-09-02, `JudgementRepository.determineWinner` now returns a
+structured `Verdict` instead of a `Winner` string. This is a breaking change.
+
+- Old: `Promise<Winner>` where `Winner = 'YONO' | 'KOMAE' | 'DRAW'`.
+- New: `Promise<Verdict>` with shape:
+
+```ts
+type Verdict = {
+    winner: 'YONO' | 'KOMAE' | 'DRAW';
+    reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
+    judgeCode?: string;
+    rng?: number;
+    powerDiff?: number; // yono.power - komae.power
+    confidence?: number; // optional future extension
+};
+```
+
+What you need to update:
+
+- Call sites: read `verdict.winner` instead of using the raw string.
+- Implementations: return a `Verdict` object with at least `winner` and a
+  reasonable `reason` (e.g., `'power'` for local comparison).
+- Tests/mocks: update expectations to assert `verdict.winner` and include
+  `reason`/`powerDiff` where meaningful.
+- API/MSW: make sure `/battle/judgement` payloads are `Verdict`-shaped.
+
+Rationale:
+
+- Carries useful decision metadata for UI/telemetry.
+- Enables future evolution (confidence, judge code) without another breaking
+  change.
 - Unit tests pass locally.
 - Provider factory branches implemented for the new mode if applicable.
 - README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper

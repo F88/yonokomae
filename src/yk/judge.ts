@@ -5,7 +5,7 @@
 import type { Battle } from 'src/types/types';
 import type { PlayMode } from './play-mode';
 import { getJudgementRepository } from '@/yk/repo/core/repository-provider';
-import type { Winner } from '@/yk/repo/core/repositories';
+import type { Verdict } from '@/yk/repo/core/repositories';
 
 export class Judge {
   id: string;
@@ -25,7 +25,7 @@ export class Judge {
   }: {
     battle: Battle;
     mode: PlayMode;
-  }): Promise<Winner> {
+  }): Promise<Verdict> {
     // Delegate to repository layer (handles delays and strategy per mode)
     const repo = await getJudgementRepository(mode);
     // Propagate judge identifier to allow per-judge individuality downstream

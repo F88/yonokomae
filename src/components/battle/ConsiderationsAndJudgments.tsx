@@ -9,31 +9,23 @@ import { scrollToAnchor } from '@/lib/scroll';
 import { BREAKPOINTS } from '@/hooks/use-breakpoint';
 import { JUDGES } from '@/yk/judges';
 
+/**
+ * Props for ConsiderationsAndJudgments.
+ *
+ * Judges displayed in this card are chosen per render by
+ * {@link pickTodaysJudgeCodeNames}. The selection is non-deterministic on
+ * purpose and does not depend on battle id or date.
+ */
 export type Props = {
   battle?: Battle;
   mode: PlayMode;
 };
 
-// Deterministic RNG based on battle id to avoid flicker across re-renders.
-function hashString32(input: string): number {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < input.length; i++) {
-    h ^= input.charCodeAt(i);
-    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
-  }
-  return h >>> 0;
-}
+// RNG helpers for shuffling are handled by Math.random() in this mode.
 
-function mulberry32(seed: number): () => number {
-  let t = seed >>> 0;
-  return () => {
-    t += 0x6d2b79f5;
-    let r = Math.imul(t ^ (t >>> 15), 1 | t);
-    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
-    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
+/**
+ * In-place Fisher–Yates shuffle.
+ */
 function shuffleInPlace<T>(arr: T[], rnd: () => number): void {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(rnd() * (i + 1));
@@ -41,15 +33,42 @@ function shuffleInPlace<T>(arr: T[], rnd: () => number): void {
   }
 }
 
-function pickTodaysJudgeCodeNames(battleId: string): string[] {
+/**
+ * Select judges to display for the current battle render.
+ *
+ * Contract
+ * - Input: none (no dependency on battle id nor calendar date)
+ * - Process:
+ *   - For each judge in {@link JUDGES}, select independently with probability
+ *     p = 4/7.
+ *   - If more than 4 judges were selected, shuffle and keep the first 4.
+ * - Output: An array of judge code names with length in [0, min(4, JUDGES.length)].
+ *
+ * Properties
+ * - Non-deterministic: results may differ across renders; the same battle can
+ *   show different judges.
+ * - Expected size: roughly |JUDGES| * (4/7), upper-bounded at 4.
+ * - Rationale: models the "3 days off" metaphor with a simple, memoryless
+ *   random policy.
+ *
+ * @returns Array of judge code names to render.
+ * @example
+ * const judges = pickTodaysJudgeCodeNames();
+ * // judges.length is between 0 and 4 inclusively.
+ */
+function pickTodaysJudgeCodeNames(): string[] {
+  // Simple, non-deterministic selection per render:
+  // - Each judge is independently selected with probability p = 4/7
+  // - Cap the total number of selected judges at 4 (max)
   const base = JUDGES.map((j) => j.codeName);
-  const rnd = mulberry32(hashString32(battleId));
-  const arr = [...base];
-  shuffleInPlace(arr, rnd);
-  const maxCount = Math.min(4, arr.length);
-  const minCount = 0;
-  const count = minCount + Math.floor(rnd() * (maxCount - minCount + 1));
-  return arr.slice(0, count);
+  // 週休3日をイメージ
+  const p = 4 / 7;
+  const chosen = base.filter(() => Math.random() < p);
+  if (chosen.length <= 4) return chosen;
+  // If more than 4 selected, shuffle and take first 4 to enforce the cap
+  const arr = [...chosen];
+  shuffleInPlace(arr, Math.random);
+  return arr.slice(0, 4);
 }
 
 export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
@@ -68,9 +87,7 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
   }
 
   // Judges
-  // - 週休3日 (その日の担当をランダムに抽出)
-  // - 最大4人まで (5人全員は多すぎる)
-  const todaysJudges = pickTodaysJudgeCodeNames(battle.id);
+  const todaysJudges = pickTodaysJudgeCodeNames();
 
   return (
     <Card className="w-full">

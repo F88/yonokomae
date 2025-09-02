@@ -29,7 +29,7 @@ describe('repository-provider mapping for demo-en', () => {
       enabled: true,
     });
     // Use trivial battle to assert algorithm and that call works
-    const winner = await judge.determineWinner(
+    const verdict = await judge.determineWinner(
       {
         judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
         battle: {
@@ -57,6 +57,6 @@ describe('repository-provider mapping for demo-en', () => {
       },
       { signal: undefined },
     );
-    expect(winner).toBe('YONO');
+    expect(verdict.winner).toBe('YONO');
   });
 });

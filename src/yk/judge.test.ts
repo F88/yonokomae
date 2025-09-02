@@ -47,7 +47,7 @@ describe('Judge', () => {
           battle,
           mode: demoMode,
         });
-        expect(result).toBe('YONO');
+        expect(result.winner).toBe('YONO');
       });
 
       it('should return "KOMAE" when komaePower is greater than yonoPower', async () => {
@@ -57,7 +57,7 @@ describe('Judge', () => {
           battle,
           mode: demoMode,
         });
-        expect(result).toBe('KOMAE');
+        expect(result.winner).toBe('KOMAE');
       });
 
       it('should return "DRAW" when powers are equal', async () => {
@@ -67,7 +67,7 @@ describe('Judge', () => {
           battle,
           mode: demoMode,
         });
-        expect(result).toBe('DRAW');
+        expect(result.winner).toBe('DRAW');
       });
 
       it('should handle edge case with zero powers', async () => {
@@ -77,49 +77,49 @@ describe('Judge', () => {
           battle,
           mode: demoMode,
         });
-        expect(result).toBe('DRAW');
+        expect(result.winner).toBe('DRAW');
       });
 
       it('should handle edge case with negative powers', async () => {
         const judge = new Judge('id', 'T', 'T');
-        const result1 = await judge.determineWinner({
+        const resA = await judge.determineWinner({
           battle: dummyBattle(dummyNeta(-10), dummyNeta(-5)),
           mode: demoMode,
         });
-        expect(result1).toBe('KOMAE');
+        expect(resA.winner).toBe('KOMAE');
 
-        const result2 = await judge.determineWinner({
+        const resB = await judge.determineWinner({
           battle: dummyBattle(dummyNeta(-5), dummyNeta(-10)),
           mode: demoMode,
         });
-        expect(result2).toBe('YONO');
+        expect(resB.winner).toBe('YONO');
 
-        const result3 = await judge.determineWinner({
+        const resC = await judge.determineWinner({
           battle: dummyBattle(dummyNeta(-5), dummyNeta(-5)),
           mode: demoMode,
         });
-        expect(result3).toBe('DRAW');
+        expect(resC.winner).toBe('DRAW');
       });
 
       it('should handle decimal powers', async () => {
         const judge = new Judge('id', 'T', 'T');
-        const result1 = await judge.determineWinner({
+        const res1 = await judge.determineWinner({
           battle: dummyBattle(dummyNeta(50.5), dummyNeta(50.4)),
           mode: demoMode,
         });
-        expect(result1).toBe('YONO');
+        expect(res1.winner).toBe('YONO');
 
         const result2 = await judge.determineWinner({
           battle: dummyBattle(dummyNeta(50.4), dummyNeta(50.5)),
           mode: demoMode,
         });
-        expect(result2).toBe('KOMAE');
+        expect(result2.winner).toBe('KOMAE');
 
         const result3 = await judge.determineWinner({
           battle: dummyBattle(dummyNeta(50.5), dummyNeta(50.5)),
           mode: demoMode,
         });
-        expect(result3).toBe('DRAW');
+        expect(result3.winner).toBe('DRAW');
       });
 
       it('should be an instance async method now', () => {
@@ -136,7 +136,7 @@ describe('Judge', () => {
           ),
           mode: demoMode,
         });
-        expect(result1).toBe('YONO');
+        expect(result1.winner).toBe('YONO');
 
         const result2 = await judge.determineWinner({
           battle: dummyBattle(
@@ -145,7 +145,7 @@ describe('Judge', () => {
           ),
           mode: demoMode,
         });
-        expect(result2).toBe('KOMAE');
+        expect(result2.winner).toBe('KOMAE');
 
         const result3 = await judge.determineWinner({
           battle: dummyBattle(
@@ -154,7 +154,7 @@ describe('Judge', () => {
           ),
           mode: demoMode,
         });
-        expect(result3).toBe('DRAW');
+        expect(result3.winner).toBe('DRAW');
       });
     });
   });

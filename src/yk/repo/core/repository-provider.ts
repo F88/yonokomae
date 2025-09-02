@@ -430,12 +430,12 @@ function withJudgementTiming<T extends JudgementRepository>(repo: T): T {
 }
 
 // ---- request collapsing + short-term memoization for judgements ----
-type Winner = import('./repositories').Winner;
+type Verdict = import('./repositories').Verdict;
 // reserved for future use
 
 type CacheEntry = {
-  promise: Promise<Winner> | null;
-  value?: Winner;
+  promise: Promise<Verdict> | null;
+  value?: Verdict;
   expiresAt: number;
 };
 
@@ -614,7 +614,7 @@ function withJudgementCollapsing<T extends JudgementRepository>(
           if (options.signal.aborted) {
             throw new DOMException('Aborted', 'AbortError');
           }
-          return new Promise<Winner>((resolve, reject) => {
+          return new Promise<Verdict>((resolve, reject) => {
             const onAbort = () =>
               reject(new DOMException('Aborted', 'AbortError'));
             options.signal!.addEventListener('abort', onAbort, { once: true });
@@ -643,7 +643,7 @@ function withJudgementCollapsing<T extends JudgementRepository>(
             value,
             expiresAt: Date.now() + ttl,
           });
-          return value as Winner;
+          return value as Verdict;
         })
         .catch((err) => {
           // clear entry on error so future attempts can retry
@@ -662,7 +662,7 @@ function withJudgementCollapsing<T extends JudgementRepository>(
         if (options.signal.aborted) {
           throw new DOMException('Aborted', 'AbortError');
         }
-        return new Promise<Winner>((resolve, reject) => {
+        return new Promise<Verdict>((resolve, reject) => {
           const onAbort = () =>
             reject(new DOMException('Aborted', 'AbortError'));
           options.signal!.addEventListener('abort', onAbort, { once: true });

@@ -1,7 +1,7 @@
 import type {
   BattleReportRepository,
   JudgementRepository,
-  Winner,
+  Verdict,
 } from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { type DelayOption } from '../core/delay-utils';
@@ -84,5 +84,5 @@ export declare class ApiJudgementRepository implements JudgementRepository {
     opts?: {
       signal?: AbortSignal;
     },
-  ): Promise<Winner>;
+  ): Promise<Verdict>;
 }

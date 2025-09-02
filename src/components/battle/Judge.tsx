@@ -4,7 +4,6 @@ import type { Battle } from '@/types/types';
 import { useJudgement } from '@/hooks/use-judgement';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import type { Winner } from '@/yk/repo/core/repositories';
 import type { PlayMode } from '@/yk/play-mode';
 import { prefersReducedMotion } from '@/lib/reduced-motion';
 
@@ -55,6 +54,10 @@ export const JudgeCard: FC<JudgeCardProps> = ({
     setRevealed(false);
   }, [judgement.status, delayMs]);
 
+  // if (judgement.status === 'success') {
+  //   console.log( judgement );
+  // }
+
   return (
     <Card className="h-full min-w-0 overflow-hidden text-center gap-2 px-0 py-0">
       <CardHeader className="px-0 pt-4">
@@ -70,7 +73,7 @@ export const JudgeCard: FC<JudgeCardProps> = ({
               <span className="text-destructive">Failed</span>
             )}
             {judgement.status === 'success' &&
-              (revealed ? <WinnerBadge winner={judgement.data} /> : '…')}
+              (revealed ? <WinnerBadge winner={judgement.data.winner} /> : '…')}
           </div>
         </div>
       </CardContent>
@@ -78,7 +81,11 @@ export const JudgeCard: FC<JudgeCardProps> = ({
   );
 };
 
-function WinnerBadge({ winner }: { winner: Winner }) {
+function WinnerBadge({
+  winner,
+}: {
+  winner: import('@/yk/repo/core/repositories').Verdict['winner'];
+}) {
   switch (winner) {
     case 'YONO':
       return (

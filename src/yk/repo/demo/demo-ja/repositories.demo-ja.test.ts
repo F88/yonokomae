@@ -109,12 +109,12 @@ describe('Demo repositories with delay support', () => {
         },
       };
 
-      const winner = await repo.determineWinner({
+      const verdict = await repo.determineWinner({
         battle,
         judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
       });
 
-      expect(winner).toBe('YONO');
+      expect(verdict.winner).toBe('YONO');
     });
 
     it('returns DRAW when powers are equal', async () => {
@@ -142,12 +142,12 @@ describe('Demo repositories with delay support', () => {
         },
       };
 
-      const winner = await repo.determineWinner({
+      const verdict = await repo.determineWinner({
         battle,
         judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
       });
 
-      expect(winner).toBe('DRAW');
+      expect(verdict.winner).toBe('DRAW');
     });
 
     it('supports AbortSignal in determineWinner', async () => {
@@ -181,7 +181,7 @@ describe('Demo repositories with delay support', () => {
         },
       };
 
-      const winner = await repo.determineWinner(
+      const verdict = await repo.determineWinner(
         {
           battle,
           judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
@@ -189,7 +189,7 @@ describe('Demo repositories with delay support', () => {
         { signal: controller.signal },
       );
 
-      expect(winner).toBe('YONO');
+      expect(verdict.winner).toBe('YONO');
     });
   });
 });

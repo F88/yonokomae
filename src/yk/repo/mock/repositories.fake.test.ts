@@ -40,7 +40,7 @@ describe('Fake repositories - delay capping', () => {
       },
       judge: { id: 'fake-judge-1', name: 'Fake', codeName: 'FAKE' },
     });
-    expect(result).toBe('YONO');
+    expect(result.winner).toBe('YONO');
     expect(warnSpy).toHaveBeenCalled();
     const messages = warnSpy.mock.calls.map((c) => String(c[0]));
     expect(
@@ -74,7 +74,7 @@ describe('Fake repositories - delay capping', () => {
       },
       judge: { id: 'fake-judge-2', name: 'Fake', codeName: 'FAKE' },
     });
-    expect(res).toBe('KOMAE');
+    expect(res.winner).toBe('KOMAE');
     expect(warnSpy).not.toHaveBeenCalled();
   });
 });

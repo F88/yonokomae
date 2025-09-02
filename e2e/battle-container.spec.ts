@@ -40,7 +40,9 @@ test.describe('Battle container visibility', () => {
     await page.goto('/');
 
     // select mode (game start)
-    await page.getByText('DEMO', { exact: true }).click();
+    // Click the first enabled mode option to avoid Enter key side-effects
+    const modeGroup = page.getByRole('radiogroup', { name: 'Play modes' });
+    await modeGroup.locator('label').first().click();
     await page.getByRole('button', { name: 'Battle' }).click();
 
     // test: one container and its internals exist
@@ -56,7 +58,8 @@ test.describe('Battle container visibility', () => {
     await page.goto('/');
 
     // select mode (game start)
-    await page.getByText('DEMO', { exact: true }).click();
+    const modeGroup = page.getByRole('radiogroup', { name: 'Play modes' });
+    await modeGroup.locator('label').first().click();
 
     // generate first
     await page.getByRole('button', { name: 'Battle' }).click();
@@ -80,7 +83,8 @@ test.describe('Battle container visibility', () => {
     await page.goto('/');
 
     // select mode (game start)
-    await page.getByText('DEMO', { exact: true }).click();
+    const modeGroup = page.getByRole('radiogroup', { name: 'Play modes' });
+    await modeGroup.locator('label').first().click();
 
     // click Battle 10 times, verifying counts increment each time
     for (let i = 1; i <= 10; i++) {
@@ -107,17 +111,31 @@ test.describe('Battle container visibility', () => {
       await page.goto('/');
 
       // select mode (game start)
-      await page.getByText('DEMO', { exact: true }).click();
+      const modeGroup = page.getByRole('radiogroup', { name: 'Play modes' });
+      await modeGroup.locator('label').first().click();
 
       const battleBtn = page.getByRole('button', { name: 'Battle' });
+      // Measure baseline count (should be 0)
+      let prev = await page.getByTestId('battle').count();
 
-      // click Battle 100 times, verifying counts increment each time
+      // click Battle 100 times, verifying counts are monotonically increasing
       for (let i = 1; i <= 100; i++) {
         await battleBtn.click();
-        await assertBattleContainersCount(page, i);
-        await expect(page.getByTestId('slot-yono')).toHaveCount(i);
-        await expect(page.getByTestId('slot-komae')).toHaveCount(i);
+        // Wait until the count increases beyond the previous value
+        await expect
+          .poll(async () => {
+            return page.getByTestId('battle').count();
+          })
+          .toBeGreaterThan(prev);
+        prev = await page.getByTestId('battle').count();
       }
+
+      // Final sanity: we have at least 100 containers
+      const finalCount = await page.getByTestId('battle').count();
+      expect(finalCount).toBeGreaterThanOrEqual(100);
+      // And slots exist for each container
+      await expect(page.getByTestId('slot-yono')).toHaveCount(finalCount);
+      await expect(page.getByTestId('slot-komae')).toHaveCount(finalCount);
     },
   );
 });

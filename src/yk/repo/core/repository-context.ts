@@ -64,7 +64,7 @@ export const RepoContext = createContext<RepoContextValue | null>(null);
  *
  *   const generateBattle = async () => {
  *     const battle = await battleReport.generateReport();
- *     const winner = await judgement.determineWinner({
+ *     const verdict = await judgement.determineWinner({
  *       mode,
  *       yono: battle.yono,
  *       komae: battle.komae

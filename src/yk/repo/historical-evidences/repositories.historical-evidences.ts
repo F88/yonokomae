@@ -3,7 +3,7 @@ import type { Battle, Neta } from '@/types/types';
 import type {
   BattleReportRepository,
   JudgementRepository,
-  Winner,
+  Verdict,
 } from '@/yk/repo/core/repositories';
 import { z } from 'zod';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
@@ -237,12 +237,12 @@ export class HistoricalEvidencesJudgementRepository
    *
    * Contract:
    * - Inputs: Battle (yono, komae) and Judge (id, name, codeName)
-   * - Output: Winner string literal: 'YONO' | 'KOMAE' | 'DRAW'
+   * - Output: 'YONO' | 'KOMAE' | 'DRAW'
    *
    * @param input.battle The battle context containing both neta and power values.
    * @param input.judge The judging entity identity (codeName is used).
    * @param options.signal AbortSignal to cancel the operation.
-   * @returns The decided Winner.
+   * @returns The decided literal winner value.
    */
   async determineWinner(
     input: {
@@ -250,15 +250,26 @@ export class HistoricalEvidencesJudgementRepository
       judge: { id: string; name: string; codeName: string };
     },
     options?: { signal?: AbortSignal },
-  ): Promise<Winner> {
+  ): Promise<Verdict> {
     await applyDelay(this.delay, options?.signal);
     const r = this.rng();
-    return computeWinnerWithProbAndFallback(
+    const winner = computeWinnerWithProbAndFallback(
       input.judge.codeName,
       r,
       input.battle.yono,
       input.battle.komae,
     );
+    const code = (input.judge.codeName ?? '').trim().toUpperCase();
+    const powerDiff = input.battle.yono.power - input.battle.komae.power;
+    const reason: Verdict['reason'] =
+      (code === 'O' || code === 'U') && r < 0.2
+        ? 'bias-hit'
+        : (code === 'S' || code === 'C') && r < 0.2
+          ? 'bias-hit'
+          : code === 'KK' && r < 0.9
+            ? 'bias-hit'
+            : 'power';
+    return { winner, reason, rng: r, judgeCode: code, powerDiff };
   }
 }
 
@@ -269,7 +280,7 @@ export class HistoricalEvidencesJudgementRepository
  * @param komae KOMAE side neta
  * @returns 'YONO' when yono.power > komae.power, 'KOMAE' when less, otherwise 'DRAW'.
  */
-function decideByPower(yono: Neta, komae: Neta): Winner {
+function decideByPower(yono: Neta, komae: Neta): 'YONO' | 'KOMAE' | 'DRAW' {
   if (yono.power > komae.power) return 'YONO';
   if (yono.power < komae.power) return 'KOMAE';
   return 'DRAW';
@@ -288,14 +299,14 @@ function decideByPower(yono: Neta, komae: Neta): Winner {
  * @param r Random number in [0, 1) from RNG injection.
  * @param yono YONO neta
  * @param komae KOMAE neta
- * @returns Winner after applying probability and fallback rules.
+ * @returns Literal winner value after applying rules.
  */
 function computeWinnerWithProbAndFallback(
   judgeCode: string,
   r: number,
   yono: Neta,
   komae: Neta,
-): Winner {
+): 'YONO' | 'KOMAE' | 'DRAW' {
   const code = (judgeCode ?? '').trim().toUpperCase();
   switch (code) {
     case 'O':
