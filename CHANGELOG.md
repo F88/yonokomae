@@ -2,7 +2,22 @@
 
 ## Unreleased
 
-### Minor Changes
+### Breaking Changes
+
+- refactor(core)!: migrate `determineWinner` to return a structured
+    `Verdict` and remove the legacy `Winner` alias entirely. The literal union
+    for the winner field is inlined (`'YONO' | 'KOMAE' | 'DRAW'`). This impacts
+    all call sites and implementations.
+    - API: `JudgementRepository.determineWinner` now returns `Promise<Verdict>`
+        instead of `Promise<Winner>`.
+    - Call sites: read `verdict.winner` instead of using a raw string.
+    - Implementations/Mocks: return a `Verdict` object with `winner` and
+        a valid `reason` (e.g. `'power'`).
+    - Tests: expectations updated to assert `verdict.winner`.
+    - Docs: DEVELOPMENT_EN.md updated with migration notes and DEVELOPMENT_JA.md
+        synced.
+
+### Enhancements
 
 - feat(usage): Add UsageExamples and UserVoices components with interactive displays
 - feat(export): Add TSV export functionality for usage examples and user voices data
