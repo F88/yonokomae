@@ -5,42 +5,8 @@ import type {
 } from '@/yk/repo/core/repositories';
 import type { Battle, Neta } from '@/types/types';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
-
-/** Custom HTTP error with status code for robust error handling */
-class HttpError extends Error {
-  readonly status: number;
-  constructor(message: string, status: number) {
-    super(message);
-    this.name = 'HttpError';
-    this.status = status;
-  }
-}
-
-/** Lightweight fetch wrapper. Adapt as needed. */
-export class ApiClient {
-  private readonly baseUrl: string;
-  private readonly token?: string;
-  constructor(baseUrl: string, token?: string) {
-    this.baseUrl = baseUrl;
-    this.token = token;
-  }
-
-  async get<T>(
-    path: string,
-    signal?: AbortSignal,
-    headers?: Record<string, string>,
-  ): Promise<T> {
-    const res = await fetch(`${this.baseUrl}${path}`, {
-      headers: {
-        ...(this.token ? { Authorization: `Bearer ${this.token}` } : undefined),
-        ...headers,
-      },
-      signal,
-    });
-    if (!res.ok) throw new HttpError(`HTTP ${res.status}`, res.status);
-    return res.json() as Promise<T>;
-  }
-}
+import { ApiClient, HttpError } from '@/lib/api-client';
+export { ApiClient } from '@/lib/api-client';
 
 /**
  * ApiBattleReportRepository
