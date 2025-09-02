@@ -129,7 +129,7 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
         {/* Judges: always horizontal, no scroll; fit within viewport */}
         <div className="flex flex-row flex-nowrap items-start gap-4">
           {todaysJudges.map((judge) => (
-            <div key={judge} className="flex-1 basis-0 shrink min-w-0">
+            <div key={judge} className="flex-1 basis-0 shrink min-w-0 py-0">
               <JudgeCard codeNameOfJudge={judge} battle={battle} mode={mode} />
             </div>
           ))}
