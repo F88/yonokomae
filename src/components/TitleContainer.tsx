@@ -16,7 +16,7 @@ export type TitleContainerProps = {
 /**
  * TitleContainer
  * - Shows a simple title screen with vertically stacked play modes.
- * - Users can navigate with ArrowUp/ArrowDown and confirm with Enter/Space.
+ * - Users can navigate with ArrowUp/ArrowDown and confirm with Enter or B.
  * - Clicking an item also selects and confirms.
  */
 export function TitleContainer({
@@ -195,7 +195,7 @@ export function TitleContainer({
               <KeyChip label="K" />
               <KeyChip label="S" />
               <KeyChip label="W" />
-              <KeyChip label="Space" />
+              {/* Space removed from shortcuts */}
               <KeyChip label="Enter" />
             </div>
           </div>
@@ -217,7 +217,7 @@ export function TitleContainer({
           >
             {/* SR-only hint for keyboard interaction */}
             <div id="play-modes-hint" className="sr-only">
-              Use Arrow keys to choose a mode and press Enter or Space to start.
+              Use Arrow keys to choose a mode and press Enter or B to start.
             </div>
             {options.map((m, i) => {
               const selected = i === index;

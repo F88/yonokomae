@@ -129,7 +129,7 @@ it('handles async provider setup', async () => {
 - `HistoricalScene` renders provenance list when `battle.provenance` is provided.
 - `Field` shows placeholders when sides are missing; asserts based on roles/labels.
 - `TitleContainer` supports keyboard navigation and (in historical mode) minimal seed selection UI.
-- `Controller` wires keyboard shortcuts (Enter/Space/B for Battle, R for Reset).
+- `Controller` wires keyboard shortcuts (Enter/B for Battle, R for Reset).
 - `UsageExamples` component renders categorized usage examples with interactive cards.
 - `UserVoices` component displays user testimonials with marquee animation effects.
 

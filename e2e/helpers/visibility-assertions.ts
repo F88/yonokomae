@@ -60,7 +60,7 @@ export async function assertModeSelectorAbsent(page: Page): Promise<void> {
  * Assert that the fixed controller footer is visible with key controls.
  * - Footer (role=contentinfo)
  * - Reset (R) button
- * - Battle (Enter, Space, or B) button
+ * - Battle (Enter or B) button
  */
 export async function assertControllerPresent(page: Page): Promise<void> {
   await expect(page.locator('footer.sticky')).toBeVisible();
