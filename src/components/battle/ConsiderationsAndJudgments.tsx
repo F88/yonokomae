@@ -7,6 +7,7 @@ import { type FC, useEffect } from 'react';
 import { scrollToY } from '@/lib/reduced-motion';
 import { scrollToAnchor } from '@/lib/scroll';
 import { BREAKPOINTS } from '@/hooks/use-breakpoint';
+
 export type Props = {
   battle?: Battle;
   mode: PlayMode;
@@ -17,9 +18,7 @@ const judgesName: string[] = ['O', 'U', 'S', 'C'];
 export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
   // 画面最下部までスクロール（新しい Battle が表示されたタイミング）
   useEffect(() => {
-    // Defer until layout is painted so height is correct
     const id = requestAnimationFrame(() => {
-      // Use documentElement to cover the whole page height
       const doc = document.documentElement;
       const top = Math.max(doc.scrollHeight - window.innerHeight, 0);
       scrollToY(top);
@@ -30,12 +29,13 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
   if (battle === undefined) {
     return null;
   }
-  // 週休2日
+
+  // 週休2日（その日の担当をランダムに抽出）
   const todaysJudges = judgesName.filter(() => Math.random() < 5 / 7);
 
   return (
     <Card className="w-full">
-      <CardHeader className="text-center">
+      <CardHeader className="text-center pb-2">
         <CardTitle className="text-2xl font-semibold">
           Judge's Comments
         </CardTitle>
@@ -54,7 +54,6 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
                   extraGapLarge: 20,
                   extraGapSmall: 12,
                 });
-                // update hash without default jump
                 if (
                   typeof window !== 'undefined' &&
                   window.history &&
@@ -70,9 +69,11 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
             </a>
           </h3>
         </div>
+
+        {/* Judges: always horizontal, no scroll; fit within viewport */}
         <div className="flex flex-row flex-nowrap items-stretch gap-4">
           {todaysJudges.map((judge) => (
-            <div key={judge} className="flex-1 basis-0 min-w-0">
+            <div key={judge} className="flex-1 basis-0 shrink min-w-0">
               <JudgeCard nameOfJudge={judge} battle={battle} mode={mode} />
             </div>
           ))}

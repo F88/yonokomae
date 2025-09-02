@@ -20,21 +20,23 @@ export const JudgeCard: FC<JudgeCardProps> = ({
   const judgement = useJudgement(nameOfJudge, battle, mode);
 
   return (
-    <Card className="h-full min-w-0 text-center gap-2 py-2">
-      <CardHeader className="py-0">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
+    <Card className="h-full min-w-0 overflow-hidden text-center gap-2 px-0 py-0">
+      <CardHeader className="px-0 pt-4">
+        <CardTitle className="text-xs font-medium">
           Judge {nameOfJudge}
         </CardTitle>
       </CardHeader>
-      <CardContent className="min-w-0">
-        <div className="font-semibold break-words whitespace-normal min-w-0">
-          {judgement.status === 'loading' && '…'}
-          {judgement.status === 'error' && (
-            <span className="text-destructive">Failed</span>
-          )}
-          {judgement.status === 'success' && (
-            <WinnerBadge winner={judgement.data} />
-          )}
+      <CardContent className="min-w-0 pt-0 pb-2 flex items-center justify-center">
+        <div className="min-w-0 font-semibold break-words whitespace-normal">
+          <div className="min-h-[28px] flex items-center justify-center">
+            {judgement.status === 'loading' && '…'}
+            {judgement.status === 'error' && (
+              <span className="text-destructive">Failed</span>
+            )}
+            {judgement.status === 'success' && (
+              <WinnerBadge winner={judgement.data} />
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -45,13 +47,21 @@ function WinnerBadge({ winner }: { winner: Winner }) {
   switch (winner) {
     case 'YONO':
       return (
-        <Badge variant="default" aria-label="Winner: YONO">
+        <Badge
+          variant="default"
+          aria-label="Winner: YONO"
+          className="px-2 py-0.5 text-xs"
+        >
           YONO
         </Badge>
       );
     case 'KOMAE':
       return (
-        <Badge variant="secondary" aria-label="Winner: KOMAE">
+        <Badge
+          variant="secondary"
+          aria-label="Winner: KOMAE"
+          className="px-2 py-0.5 text-xs"
+        >
           KOMAE
         </Badge>
       );
@@ -60,7 +70,7 @@ function WinnerBadge({ winner }: { winner: Winner }) {
         <Badge
           variant="outline"
           aria-label="Result: DRAW"
-          className="border-muted-foreground/40 text-muted-foreground"
+          className="px-2 py-0.5 text-xs border-muted-foreground/40 text-muted-foreground"
         >
           DRAW
         </Badge>
