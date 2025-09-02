@@ -32,6 +32,20 @@ The architecture is based on a modular design, with a clear separation of concer
 - **Hooks**: Custom hooks that encapsulate the logic for interacting with the repositories.
 - **Repositories**: The data access layer that abstracts the underlying data sources.
 
+### Multi-source battle report (local + API-like)
+
+When hosting statically on GitHub Pages, you can still exercise an API-shaped
+path without real network calls. Use the multi-source repository mode which
+randomly picks between a local data source and an API-like local simulator for
+each report generation.
+
+- PlayMode id: `multi-source`
+- Env: `VITE_BATTLE_RANDOM_WEIGHT_API` (0..1, default `0.5`)
+- No external servers are contacted; the API-like source delegates to local data.
+
+This keeps callers stable today and enables a future swap to real APIs with no
+UI changes.
+
 ## How to add a new Play Mode or Repository
 
 This section is intended for developers. It explains how to add a new
@@ -86,7 +100,7 @@ Sequence for generating a battle report:
 ```mermaid
 sequenceDiagram
   participant U as User
-  participant UI as UI (Button)
+```
   participant H as use-generate-report
   participant X as Repo Context (optional)
   participant F as Factory (getBattleReportRepository)

@@ -92,6 +92,29 @@ export async function getBattleReportRepository(
     const delay = defaultDelayForMode(mode, 'report');
     return new ApiBattleReportRepository(api, { delay });
   }
+  if (mode?.id === 'multi-source') {
+    const { BattleReportRandomDataRepository } = await import(
+      '@/yk/repo/random-jokes/repositories.random-jokes'
+    );
+    const { LocalApiBattleReportRepository } = await import(
+      '@/yk/repo/api/repositories.api.local-sim'
+    );
+    const { MultiSourceBattleReportRepository } = await import(
+      '@/yk/repo/core/multi-source-battle-report'
+    );
+    const delay = defaultDelayForMode(mode, 'report');
+    const local = new BattleReportRandomDataRepository({ seedFile, delay });
+    const apiLike = new LocalApiBattleReportRepository({ delay });
+    // Weight can be future-configured via env; default 0.5 for dev
+    const w = Number(getViteEnvVar('VITE_BATTLE_RANDOM_WEIGHT_API') ?? '0.5');
+    const weightApi = Number.isFinite(w) ? w : 0.5;
+    return new MultiSourceBattleReportRepository({
+      local,
+      api: apiLike,
+      weightApi,
+      delay,
+    });
+  }
   if (mode?.id === 'historical-research') {
     const { HistoricalEvidencesBattleReportRepository } = await import(
       '@/yk/repo/historical-evidences/repositories.historical-evidences'

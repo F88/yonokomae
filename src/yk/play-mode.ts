@@ -62,6 +62,12 @@ export const playMode: PlayMode[] = [
   },
 
   {
+    id: 'multi-source',
+    title: 'MULTI SOURCE',
+    description: 'Randomly selects local or API-like (no network) per report.',
+    enabled: true,
+  },
+  {
     id: 'ai-mode',
     title: 'AI MODE',
     description:
