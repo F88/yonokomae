@@ -90,14 +90,14 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
   const todaysJudges = pickTodaysJudgeCodeNames();
 
   return (
-    <Card className="w-full">
-      <CardHeader className="text-center pb-2">
-        <CardTitle className="text-2xl font-semibold">
+    <Card className="w-full overflow-hidden py-0 pb-2 gap-0 max-w-none h-full">
+      <CardHeader className="text-center py-2 gap-0 ">
+        <CardTitle className="text-2xl font-semibold my-0">
           Judge's Comments
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="mb-4">
+      <CardContent className="pt-0">
+        <div className="mt-0 mb-2">
           <h3 className="text-lg font-semibold">
             <a
               href={`#${battle.id}`}
@@ -127,7 +127,7 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
         </div>
 
         {/* Judges: always horizontal, no scroll; fit within viewport */}
-        <div className="flex flex-row flex-nowrap items-stretch gap-4">
+        <div className="flex flex-row flex-nowrap items-start gap-4">
           {todaysJudges.map((judge) => (
             <div key={judge} className="flex-1 basis-0 shrink min-w-0">
               <JudgeCard codeNameOfJudge={judge} battle={battle} mode={mode} />
