@@ -247,7 +247,14 @@ export async function getJudgementRepository(
       withJudgementTiming(
         new HistoricalEvidencesJudgementRepository({ delay: judgementDelay }),
       ),
-      { enabled: cfg.enabled, cacheTtlMs: cfg.ttlMs, maxSize: cfg.maxSize },
+      {
+        enabled: cfg.enabled,
+        cacheTtlMs: cfg.ttlMs,
+        maxSize: cfg.maxSize,
+        // Historical mode uses RNG; key on (battle, judge) only so the
+        // first random outcome is reused for that pair within TTL.
+        keyFn: computeHistoricalJudgementKey,
+      },
     );
   }
   const { getJudgementCollapseConfigFor } = await import('./judgement-config');
@@ -338,7 +345,7 @@ function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
     case 'api':
       // API calls feel more realistic with longer delays
       return { min: 1500, max: 3000 };
-    case 'historical-evidences':
+    case 'historical-research':
       return { min: 1200, max: 2500 };
     case 'historical-evidence': // Single form
       return { min: 1000, max: 2000 };
@@ -499,6 +506,21 @@ function computeJudgementKey(
     battleId: b.id,
     yono: { title: b.yono.title, power: b.yono.power },
     komae: { title: b.komae.title, power: b.komae.power },
+  });
+}
+
+/**
+ * Compute a cache key for historical-research judgement.
+ *
+ * Intentionally ignores fighter titles/power to ensure the RNG-based
+ * result is fixed per (battle, judge) pair within the cache TTL.
+ */
+function computeHistoricalJudgementKey(
+  input: Parameters<JudgementRepository['determineWinner']>[0],
+): string {
+  return JSON.stringify({
+    judge: input.judge?.id ?? null,
+    battleId: input.battle.id,
   });
 }
 

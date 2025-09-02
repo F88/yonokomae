@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { HistoricalEvidencesJudgementRepository } from './repositories.historical-evidences';
+import { getJudgementRepository } from '@/yk/repo/core/repository-provider';
 
 function makeBattle(yonoPower: number, komaePower: number) {
   return {
@@ -178,5 +179,27 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
     await expect(
       repoK.determineWinner({ battle: makeBattle(60, 40), judge: judge_k }),
     ).resolves.toBe('YONO');
+  });
+
+  it('Caches by (battleId, judge.id) in historical-research mode (RNG fixed for pair)', async () => {
+    const mode = {
+      id: 'historical-research',
+      title: 't',
+      description: 'd',
+      enabled: true,
+    } as const;
+    const repo = await getJudgementRepository(mode);
+
+    const judge = { id: 'j-1', name: 'Judge O', codeName: 'O' };
+    const first = await repo.determineWinner({
+      battle: makeBattle(10, 90),
+      judge,
+    });
+    // Change powers but keep same battle id to simulate subsequent request for same match
+    const second = await repo.determineWinner({
+      battle: { ...makeBattle(99, 1), id: 'test-battle' },
+      judge,
+    });
+    expect(second).toBe(first);
   });
 });
