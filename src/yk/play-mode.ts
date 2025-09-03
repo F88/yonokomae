@@ -11,17 +11,18 @@ export interface PlayMode {
 /**
  * Play modes available in the game.
  *
- * DEMO
- * - A quick demonstration mode with placeholder data.
- * - repo: `repositories.fake.ts`
+ * DEMO (ja / en / de)
+ * - Quick demonstration modes with fixed/demo data.
+ * - repos: language-specific Demo repositories
+ *   - DemoJaBattleReportRepository / DemoEnBattleReportRepository / DemoDeBattleReportRepository
  *
- * HISTORICAL RESEARCH (Not implemented)
- * - A mode that generates battles based on historical events.
- * - repo: (reserved; will be separate from Random Joke Data)
+ * HISTORICAL RESEARCH
+ * - Seed-based curated historical evidences (default experience).
+ * - repo: HistoricalEvidencesBattleReportRepository (via RepositoryProvider)
  *
- * RANDOM JOKES
- * - A mode that generates random, humorous battle scenarios.
- * - repo: `repositories.random-jokes.ts`
+ * YK-NOW
+ * - News-driven current-events mode.
+ * - repo: NewsReporterApiBattleReportRepository (API-backed)
  *
  * AI MODE (MAYBE LATER)
  * - A mode that uses AI to generate unique battle scenarios.
@@ -65,12 +66,6 @@ export const playMode: PlayMode[] = [
     title: 'AI MODE',
     description:
       'A mode that uses AI to generate unique battle scenarios. (Maybe later)',
-    enabled: false,
-  },
-  {
-    id: 'api',
-    title: 'API MODE',
-    description: 'Backed by a remote API (mockable in dev/test).',
     enabled: false,
   },
 ];
