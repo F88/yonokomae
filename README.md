@@ -55,7 +55,7 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
     - Async judgement with simulated latency
     - Shadcn skeleton placeholders on the battle field
 - Modern UI stack
-    - React + Vite + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
+    - React 19 + Vite 7 + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
     - Dark mode toggle via class-based theme
     - Responsive design with breakpoint-aware layouts
 - Zero-SSR SPA optimized for client-side rendering
@@ -108,6 +108,7 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 - ✅ Multiple play modes: demo (JA/EN/DE), historical-research, yk-now
 - ✅ Repository pattern with lazy-loading and code splitting
 - ✅ Seed system for deterministic battle generation
+- ✅ E2E tests for key flows (Playwright)
 
 ### In Progress
 
@@ -123,7 +124,6 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 - Internationalization
     - Localize UI strings (EN/JA alignment with docs)
 - Testing enhancements
-    - Add E2E tests (e.g., Playwright) for key flows
     - Optional visual regression for core components
 
 ## Project notes
