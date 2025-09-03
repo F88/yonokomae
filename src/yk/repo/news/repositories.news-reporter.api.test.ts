@@ -206,16 +206,28 @@ describe('NewsReporterApiBattleReportRepository', () => {
   it('builds a Battle from Open-Meteo (MSW)', async () => {
     server.use(
       http.get('https://api.open-meteo.com/v1/forecast', () =>
-        HttpResponse.json({
-          daily: {
-            time: ['2025-09-01', '2025-09-02'],
-            temperature_2m_max: [19.9, 21.0],
-            daylight_duration: [43200, 43300],
-            sunshine_duration: [30000, 30500],
-            rain_sum: [0.0, 0.5],
-            wind_speed_10m_max: [3.2, 7.1],
+        HttpResponse.json([
+          {
+            daily: {
+              time: ['2025-09-01', '2025-09-02'],
+              temperature_2m_max: [19.9, 21.0],
+              daylight_duration: [43200, 43300],
+              sunshine_duration: [30000, 30500],
+              rain_sum: [0.0, 0.5],
+              wind_speed_10m_max: [3.2, 7.1],
+            },
           },
-        }),
+          {
+            daily: {
+              time: ['2025-09-01', '2025-09-02'],
+              temperature_2m_max: [22.5, 23.0],
+              daylight_duration: [43100, 43250],
+              sunshine_duration: [29800, 30200],
+              rain_sum: [0.2, 0.0],
+              wind_speed_10m_max: [4.5, 6.0],
+            },
+          },
+        ]),
       ),
     );
     const apiStub = {
@@ -226,7 +238,7 @@ describe('NewsReporterApiBattleReportRepository', () => {
     });
     const battle = await repo.generateReport();
     expect(battle.status).toBe('success');
-    expect(battle.title).toContain('Weather Tokyo');
+    expect(battle.title).toContain('最高気温');
     expect(apiStub.get).not.toHaveBeenCalled();
   });
 

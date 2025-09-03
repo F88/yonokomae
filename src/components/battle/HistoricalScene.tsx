@@ -83,6 +83,9 @@ export const HistoricalScene: FC<Props> = ({
         <div className="space-y-6">
           <div className="space-y-2">
             <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              ID: {battle.id}
+            </div>
+            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Overview
             </div>
             <CardDescription className="text-base">

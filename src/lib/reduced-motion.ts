@@ -106,7 +106,15 @@ export const scrollToY = (
   } = {},
 ) => {
   const behavior = pickScrollBehavior(opts.behavior ?? 'smooth');
-  window.scrollTo({ top, ...opts, behavior });
+  // In non-browser/test environments (e.g., jsdom), scroll APIs may be missing
+  if (typeof window === 'undefined' || typeof window.scrollTo !== 'function') {
+    return;
+  }
+  try {
+    window.scrollTo({ top, ...opts, behavior });
+  } catch {
+    // Silently ignore unsupported option shapes in non-standard environments
+  }
 };
 
 /**
@@ -133,5 +141,26 @@ export const scrollByY = (
   } = {},
 ) => {
   const behavior = pickScrollBehavior(opts.behavior ?? 'smooth');
-  window.scrollBy({ top: deltaY, ...opts, behavior });
+  if (typeof window === 'undefined') {
+    return;
+  }
+  // Prefer native scrollBy when available
+  if (typeof window.scrollBy === 'function') {
+    try {
+      window.scrollBy({ top: deltaY, ...opts, behavior });
+    } catch {
+      // ignore in non-standard environments
+    }
+    return;
+  }
+  // Fallback to scrollTo if scrollBy is unavailable
+  // Note: window.scrollY may be undefined in some environments; treat as 0
+  const currentY = typeof window.scrollY === 'number' ? window.scrollY : 0;
+  if (typeof window.scrollTo === 'function') {
+    try {
+      window.scrollTo({ top: currentY + deltaY, behavior });
+    } catch {
+      // ignore in non-standard environments
+    }
+  }
 };

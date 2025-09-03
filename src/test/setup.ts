@@ -62,3 +62,11 @@ afterEach(() => {
 afterAll(() => {
   server.close();
 });
+
+// jsdom: Polyfill scroll APIs with no-ops to avoid noisy "Not implemented" errors
+if (typeof window !== 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).scrollTo = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).scrollBy = () => {};
+}

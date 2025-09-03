@@ -39,9 +39,7 @@ export const playMode: PlayMode[] = [
   {
     id: 'yk-now',
     title: 'よのこまライブ',
-    description:
-      '[WIP] ' +
-      '🥷😼 よーのとこみまが今日のよのこまに鋭く斬り込む。ジャッジはいらない。',
+    description: '[WIP] ' + '🥷😼 よーのとこみまが今日のよのこまに鋭く斬り込む',
     enabled: true,
   },
   {
@@ -58,7 +56,7 @@ export const playMode: PlayMode[] = [
   },
   {
     id: 'demo-de',
-    title: 'Demo (de)',
+    title: 'DEMO (de)',
     description: 'Demonstrationsmodus',
     enabled: true,
   },
