@@ -14,28 +14,31 @@ import type { PlayMode } from '@/yk/play-mode';
 /**
  * Factory function for creating BattleReportRepository instances based on PlayMode.
  *
- * **Core Factory Pattern Implementation**:
- * - Encapsulates repository instantiation logic
- * - Provides dynamic import loading for code splitting
- * - Maps PlayMode configurations to concrete implementations
- * - Handles dependency injection and configuration
+ * Core responsibilities:
+ * - Encapsulate repository instantiation logic
+ * - Use dynamic imports for code splitting and lazy loading
+ * - Map PlayMode to concrete implementations
+ * - Wire configuration and dependency injection
  *
- * **PlayMode Mapping**:
- * - `'demo' | 'demo-en' | 'demo-de'` → language-specific Demo repositories
- * - `'api'` → {@link ApiBattleReportRepository} with REST API client
- * - `'historical-research'` → {@link HistoricalEvidencesBattleReportRepository}
- * - `'historical-evidence'` → {@link BattleReportRandomDataRepository} with seed system
- * - **Default** → {@link BattleReportRandomDataRepository} with seed system
+ * PlayMode mapping (runtime reachability):
+ * - `demo | demo-en | demo-de` → language-specific Demo repositories
+ * - `historical-research` → {@link HistoricalEvidencesBattleReportRepository}
+ * - `yk-now` → {@link NewsReporterMultiSourceReportRepository} (merges local file + API)
+ * - `historical-evidence` → {@link HistoricalEvidencesBattleReportRepository}
+ *   - Internal/unexposed in current play modes; kept for seed-system callers
+ * - Default/others → {@link HistoricalEvidencesBattleReportRepository}
  *
- * **Dynamic Import Benefits**:
- * - Code splitting: Only loads required implementation modules
- * - Lazy loading: Reduces initial bundle size
- * - Tree shaking: Eliminates unused repository code
+ * Dynamic import benefits:
+ * - Code splitting: load only the required implementation modules
+ * - Lazy loading: reduce initial bundle size
+ * - Tree shaking: eliminate unused repository code
  *
- * **Configuration**:
- * - Environment variables: API base URLs, feature flags
- * - Seed file selection: For seed-based implementations
- * - Delay simulation: For development/demo modes
+ * Configuration:
+ * - `VITE_API_BASE_URL`: REST base URL for API-backed repos (news reporter)
+ * - `VITE_NEWS_REPORT_CACHE_TTL_MS`: cache TTL for news API results (ms)
+ * - `VITE_BATTLE_RANDOM_WEIGHT_API`: blending weight (0..1) for news API vs local
+ * - Seed file selection: for seed-based implementations
+ * - Delay simulation: per-mode ranges for a realistic UX
  *
  * @param mode Optional PlayMode determining repository type
  * @param seedFile Optional seed file for seed-based repositories
@@ -43,9 +46,6 @@ import type { PlayMode } from '@/yk/play-mode';
  *
  * @example
  * ```typescript
- * // API mode with REST endpoint
- * const apiRepo = await getBattleReportRepository({ id: 'api' });
- *
  * // Seed-based with specific file
  * const seedRepo = await getBattleReportRepository(
  *   { id: 'historical-evidence' },
@@ -82,16 +82,7 @@ export async function getBattleReportRepository(
     const delay = defaultDelayForMode(mode, 'report');
     return new DemoDeBattleReportRepository({ delay });
   }
-  if (mode?.id === 'api') {
-    const { ApiBattleReportRepository } = await import(
-      '@/yk/repo/api/repositories.api'
-    );
-    const { ApiClient } = await import('@/lib/api-client');
-    const base: string = getApiBaseUrl();
-    const api = new ApiClient(base);
-    const delay = defaultDelayForMode(mode, 'report');
-    return new ApiBattleReportRepository(api, { delay });
-  }
+  // Note: legacy 'api' battle-report mode has been removed; it falls back to default.
 
   // Play mode 'yk-now'
   if (mode?.id === 'yk-now') {
@@ -139,54 +130,43 @@ export async function getBattleReportRepository(
       delay,
     });
   }
-  if (mode?.id === 'historical-evidence') {
-    const { BattleReportRandomDataRepository } = await import(
-      '@/yk/repo/random-jokes/repositories.random-jokes'
-    );
-    // Selected seed is provided via context; callers pass it here.
-    const delay = defaultDelayForMode(mode, 'report');
-    return new BattleReportRandomDataRepository({ seedFile, delay });
-  }
 
   // Default: Use seed-based repository with random selection
-  const { BattleReportRandomDataRepository } = await import(
-    '@/yk/repo/random-jokes/repositories.random-jokes'
+  const { HistoricalEvidencesBattleReportRepository } = await import(
+    '@/yk/repo/historical-evidences/repositories.historical-evidences'
   );
   const delay = defaultDelayForMode(mode, 'report');
-  return new BattleReportRandomDataRepository({ seedFile, delay });
+  return new HistoricalEvidencesBattleReportRepository({
+    file: seedFile,
+    delay,
+  });
 }
 
 /**
  * Factory function for creating JudgementRepository instances based on PlayMode.
  *
- * **Judgement Factory Implementation**:
- * - Creates repository instances for battle outcome determination
- * - Maps PlayMode to appropriate judging strategies
- * - Handles configuration and dependency injection
- * - Supports both local and remote judging systems
+ * Judgement factory responsibilities:
+ * - Instantiate outcome determination repositories
+ * - Map PlayMode to judging strategies
+ * - Apply timing and request-collapsing decorators
+ * - Support both local and remote judging systems
  *
- * **PlayMode Mapping**:
- * - `'api'` → {@link ApiJudgementRepository} with remote AI/ML judging
- * - **Default** → {@link FakeJudgementRepository} with algorithmic judging
+ * PlayMode mapping:
+ * - `demo | demo-en | demo-de` → corresponding Demo*JudgementRepository
+ * - `historical-research` → {@link HistoricalEvidencesJudgementRepository}
+ * - Legacy `api` (removed) → fell back to {@link FakeJudgementRepository}
+ * - Default/others (e.g., `yk-now`) → {@link FakeJudgementRepository}
  *
- * **Judging Strategies**:
- * - **Algorithmic**: Local rule-based power comparison
- * - **Remote API**: Server-side ML models or complex engines
- * - **Configurable Delay**: Simulates processing time for UX
- *
- * **Future Extensions**:
- * - Mode-specific judging rules (different algorithms per mode)
- * - ML model integration for sophisticated battle outcomes
- * - Historical data analysis for context-aware judging
+ * Judging strategies:
+ * - Algorithmic: local rule-based power comparison (Fake)
+ * - Remote API: server-side/ML judging (legacy)
+ * - Decorators: configurable timing + request collapsing with TTL
  *
  * @param mode Optional PlayMode determining judging strategy
  * @returns Promise resolving to configured JudgementRepository instance
  *
  * @example
  * ```typescript
- * // API-based judging with ML models
- * const apiJudge = await getJudgementRepository({ id: 'api' });
- *
  * // Default algorithmic judging
  * const localJudge = await getJudgementRepository();
  *
@@ -244,26 +224,7 @@ export async function getJudgementRepository(
       ),
     );
   }
-  if (mode?.id === 'api') {
-    const { ApiClient, ApiJudgementRepository } = await import(
-      '@/yk/repo/api/repositories.api'
-    );
-    const { getJudgementCollapseConfigFor } = await import(
-      './judgement-config'
-    );
-    const base: string = getApiBaseUrl();
-    const api = new ApiClient(base);
-    const judgementDelay = defaultDelayForMode(mode, 'judgement');
-    // Order matters: timing wraps underlying call; collapsing ensures
-    // only one underlying call happens and all subscribers share it.
-    const cfg = getJudgementCollapseConfigFor('api');
-    return withJudgementCollapsing(
-      withJudgementTiming(
-        new ApiJudgementRepository(api, { delay: judgementDelay }),
-      ),
-      { enabled: cfg.enabled, cacheTtlMs: cfg.ttlMs, maxSize: cfg.maxSize },
-    );
-  }
+  // Legacy 'api' judgement mode removed: no special handling.
   if (mode?.id === 'historical-research') {
     const { HistoricalEvidencesJudgementRepository } = await import(
       '@/yk/repo/historical-evidences/repositories.historical-evidences'
@@ -343,17 +304,18 @@ type DelayKind = 'report' | 'judgement';
 /**
  * Calculate artificial delay configuration based on PlayMode and operation type.
  *
- * **Purpose**:
- * - Simulates realistic processing times for better UX
- * - Provides different delays per PlayMode for appropriate feel
- * - Supports both battle report generation and judgement delays
+ * Purpose:
+ * - Simulate realistic processing times for better UX
+ * - Provide different delays per PlayMode for appropriate feel
+ * - Support both battle report generation and judgement delays
  *
- * **Delay Strategy**:
- * - Demo modes: Moderate delays for presentation feel (0.8–1.6s)
- * - API mode: Longer delays to simulate network calls (1.5–3.0s)
- * - Historical/mixed modes: Data-heavy feel (1.0–2.5s)
- * - Default: Moderate delays for unknown modes (0.8–1.5s)
- * - Judgement: Uniform across modes (1.0–3.0s)
+ * Delay strategy (matches implementation):
+ * - Judgement (all modes): 1.0–3.0s
+ * - Report/demo: 0.8–1.6s
+ * - Report/api: 1.5–3.0s (legacy mode baseline)
+ * - Report/historical-research: 1.2–2.5s
+ * - Report/yk-now: 0–0 (no artificial delay)
+ * - Report/default/others: 0–0
  *
  * @param mode Optional PlayMode determining delay characteristics
  * @param kind Type of operation being delayed
@@ -373,7 +335,7 @@ function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
     case 'demo':
       return { min: 800, max: 1600 };
     case 'api':
-      // API calls feel more realistic with longer delays
+      // Legacy mode; keep mapping for compatibility though unused
       return { min: 1500, max: 3000 };
     case 'historical-research':
       return { min: 1200, max: 2500 };

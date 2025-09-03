@@ -62,10 +62,8 @@ export type JudgeIdentity = {
  * ```
  *
  * **Implementations**:
- * - {@link BattleReportRandomDataRepository} - Seed-based scenarios (default)
- * - {@link ApiBattleReportRepository} - REST API client
+ * - {@link HistoricalEvidencesBattleReportRepository} - Curated historical seeds (default)
  * - {@link DemoJaBattleReportRepository} - Fixed demo scenarios
- * - {@link HistoricalEvidencesBattleReportRepository} - Curated historical data
  *
  * @see {@link Battle} for complete battle data structure
  * @see {@link PlayMode} for mode-based repository selection
@@ -103,7 +101,7 @@ export interface BattleReportRepository {
  *
  * **Implementation Strategies**:
  * - **Pure/Local**: Algorithm-based rules using character stats
- * - **Remote/API**: Server-side ML models or complex rule engines
+ * - **Remote/API**: Server-side ML models or complex rule engines (legacy)
  * - **Random**: Probabilistic outcomes with weighted chances
  * - **Fixed**: Predetermined outcomes for testing/demo
  *
@@ -124,7 +122,7 @@ export interface BattleReportRepository {
  *
  * **Implementations**:
  * - {@link FakeJudgementRepository} - Random/algorithmic judging
- * - {@link ApiJudgementRepository} - Remote API-based judging
+ * - Remote API-based judging (legacy)
  * - {@link DemoJaJudgementRepository} - Fixed demo outcomes
  *
  * @see {@link Verdict} for result detail and possible outcomes

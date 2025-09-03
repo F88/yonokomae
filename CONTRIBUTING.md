@@ -126,8 +126,11 @@ Export scripts are located in `src/ops/` directory and generate TSV files suitab
 
 For deployment, ensure these environment variables are configured:
 
-- `VITE_API_BASE_URL`: API endpoint base URL (optional, for API mode)
-- GitHub Pages requires repository settings to enable Pages deployment
+- GitHub Pages: enable Pages deployment in repository settings
+
+Notes:
+
+- `VITE_API_BASE_URL` was previously used for API mode and is no longer required.
 
 ## References
 

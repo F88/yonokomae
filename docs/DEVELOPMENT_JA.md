@@ -32,15 +32,20 @@ Please use half-width characters for numbers, letters, and symbols.
 - フック: リポジトリとのやり取りのロジックをカプセル化したカスタムフック。
 - リポジトリ: 基盤データソースを抽象化するデータアクセス層。
 
-### マルチソースのバトルレポート(local + API風)
+### yk-now: ニュース駆動・マルチソース バトルレポート
 
-GitHub Pages のような静的ホスティングでも、実ネットワーク無しで API 風の経路を試せます。マルチソースリポジトリモードを使うと、各レポート生成時にローカルデータソースと API 風ローカルシミュレータのいずれかをランダムに選びます。
+GitHub Pages のような静的ホスティングでも、ニュース駆動の経路をローカル(ファイル)と API バックエンドをブレンドして試せます。ファクトリはローカルとリモート結果を重み付きで合成するマルチソースリポジトリを返します。
 
-- PlayMode id: `multi-source`
-- Env: `VITE_BATTLE_RANDOM_WEIGHT_API`(0..1、既定 `0.5`)
-- 外部サーバーへは接続しません。API 風ソースはローカルデータへ委譲します。
+- PlayMode id: `yk-now`
+- Env:
+    - `VITE_BATTLE_RANDOM_WEIGHT_API`(0..1、既定 `0.5`) — API とローカルのブレンド比
+    - `VITE_NEWS_REPORT_CACHE_TTL_MS` — ニュース API 結果のメモ化 TTL(ms)
+    - `VITE_API_BASE_URL` — API のベース URL。既定は `/api`
+- Notes:
+    - 静的ホスティングでは `VITE_API_BASE_URL` をスタブやプロキシへ向けてもよいです。ローカルのみでもファイルソースで動作します。
+    - 初期バンドルを小さく保つため、実装は動的 import で遅延読み込みされます。
 
-これにより、呼び出し側は今日の時点でも安定し、将来は UI の変更なく実 API へ置き換え可能です。
+これにより、呼び出し側は現状でも安定し、将来は UI の変更なく実 API へスワップ可能です。
 
 ### 共有バトルシードローダー(news + historical)
 
@@ -94,7 +99,7 @@ GitHub Pages のような静的ホスティングでも、実ネットワーク�
 
 データと DI の高レベルフロー:
 
-```mermaid
+````mermaid
 flowchart TD
   A["Components / App"]
   B["RepositoryProvider (Context)"]
@@ -112,7 +117,7 @@ flowchart TD
   F --> G
   G --> C
   C --> A
-```
+```ts
 
 バトルレポート生成のシーケンス:
 
@@ -137,7 +142,7 @@ sequenceDiagram
     end
     R-->>H: Battle
     H-->>UI: setState(success)
-```
+````
 
 インターフェイスと実装:
 
@@ -163,7 +168,7 @@ classDiagram
   class FakeJudgementRepository
   class HistoricalNetaRepository
 
-  BattleReportRandomDataRepository ..|> BattleReportRepository
+    HistoricalEvidencesBattleReportRepository ..|> BattleReportRepository
   FakeJudgementRepository ..|> JudgementRepository
     %% NetaRepository は現在、random-data seeds をヘルパ関数経由で供給
 ```
@@ -179,7 +184,7 @@ classDiagram
 - `demo/` - デモ/固定データリポジトリ
 - `historical-evidences/` - 厳選された歴史データリポジトリ
 - `mock/` - テスト/偽リポジトリ(FakeJudgementRepository のみ)
-- `random-jokes/` - シードベースのランダムデータリポジトリ(デフォルト)
+- `historical-evidences/` - シードベースの歴史的エビデンスリポジトリ(デフォルト)
 - `seed-system/` - 歴史的シード管理システム
 
 1. Repository 実装ファイルを作成
@@ -280,15 +285,20 @@ export class ExampleJudgementRepository implements JudgementRepository {
 - ファイル: `src/yk/play-mode.ts`
 - `playMode` に項目を追加:
 
-```
+```ts
 // @ts-nocheck
 // Adjust the type to your project definition
-type PlayMode = { id: string; title: string; description: string; enabled: boolean };
+type PlayMode = {
+    id: string;
+    title: string;
+    description: string;
+    enabled: boolean;
+};
 export const exampleMode: PlayMode = {
-  id: 'example-mode',
-  title: 'EXAMPLE MODE',
-  description: 'A new mode powered by ExampleRepo',
-  enabled: true,
+    id: 'example-mode',
+    title: 'EXAMPLE MODE',
+    description: 'A new mode powered by ExampleRepo',
+    enabled: true,
 };
 ```
 

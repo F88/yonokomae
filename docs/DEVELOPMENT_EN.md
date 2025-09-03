@@ -32,19 +32,27 @@ The architecture is based on a modular design, with a clear separation of concer
 - **Hooks**: Custom hooks that encapsulate the logic for interacting with the repositories.
 - **Repositories**: The data access layer that abstracts the underlying data sources.
 
-### Multi-source battle report (local + API-like)
+### yk-now: news-driven, multi-source battle report
 
-When hosting statically on GitHub Pages, you can still exercise an API-shaped
-path without real network calls. Use the multi-source repository mode which
-randomly picks between a local data source and an API-like local simulator for
-each report generation.
+When hosting statically (e.g., GitHub Pages), you can still exercise a
+news-driven path that blends a local file-backed source and an API-backed
+source. The factory returns a multi-source repository that merges local and
+remote results with a tunable weight.
 
-- PlayMode id: `multi-source`
-- Env: `VITE_BATTLE_RANDOM_WEIGHT_API` (0..1, default `0.5`)
-- No external servers are contacted; the API-like source delegates to local data.
+- PlayMode id: `yk-now`
+- Env:
+    - `VITE_BATTLE_RANDOM_WEIGHT_API` (0..1, default `0.5`) — blend weight for
+      API vs local
+    - `VITE_NEWS_REPORT_CACHE_TTL_MS` — memoization TTL for news API results (ms)
+    - `VITE_API_BASE_URL` — base URL for API; defaults to `/api`
+- Notes:
+    - In static hosting, you can point `VITE_API_BASE_URL` to a stub or proxy;
+      local-only continues to work using the file-backed source.
+    - Modules are lazy-loaded via dynamic import to keep the initial bundle
+      small.
 
-This keeps callers stable today and enables a future swap to real APIs with no
-UI changes.
+This keeps call sites stable today and enables a future swap to real APIs with
+no UI changes.
 
 ### Shared battle seed loader (news + historical)
 
@@ -104,7 +112,7 @@ Core interfaces:
 
 High-level flow of data and DI:
 
-````mermaid
+```mermaid
 flowchart TD
   A["Components / App"]
   B["RepositoryProvider (Context)"]
@@ -122,15 +130,11 @@ flowchart TD
   F --> G
   G --> C
   C --> A
-````
-
-
-Sequence for generating a battle report:
+```
 
 ```mermaid
 sequenceDiagram
   participant U as User
-```
   participant H as use-generate-report
   participant X as Repo Context (optional)
   participant F as Factory (getBattleReportRepository)
@@ -148,7 +152,7 @@ sequenceDiagram
   end
   R-->>H: Battle
   H-->>UI: setState(success)
-````
+```
 
 Interfaces and implementations:
 
@@ -174,7 +178,7 @@ classDiagram
   class FakeJudgementRepository
   class HistoricalNetaRepository
 
-  BattleReportRandomDataRepository ..|> BattleReportRepository
+  HistoricalEvidencesBattleReportRepository ..|> BattleReportRepository
   FakeJudgementRepository ..|> JudgementRepository
   %% NetaRepository currently provided by random-data seeds via helper functions
 ```
@@ -191,7 +195,7 @@ Note: Repository implementations are organized by type under `src/yk/repo/`:
 - `demo/` - Demo/fixed data repositories
 - `historical-evidences/` - Curated historical data repositories
 - `mock/` - Test/fake repositories (FakeJudgementRepository only)
-- `random-jokes/` - Seed-based random data repositories (default)
+- `historical-evidences/` - Seed-based historical evidence repositories (default)
 - `seed-system/` - Historical seed management system
 
 1. Create the Repository implementation file
@@ -296,15 +300,20 @@ Use this path when you introduce a brand-new `ExampleMode` and new repositories.
 - File: `src/yk/play-mode.ts`
 - Add an item to `playMode`:
 
-```
+```ts
 // @ts-nocheck
 // Adjust the type to your project definition
-type PlayMode = { id: string; title: string; description: string; enabled: boolean };
+type PlayMode = {
+    id: string;
+    title: string;
+    description: string;
+    enabled: boolean;
+};
 export const exampleMode: PlayMode = {
-  id: 'example-mode',
-  title: 'EXAMPLE MODE',
-  description: 'A new mode powered by ExampleRepo',
-  enabled: true,
+    id: 'example-mode',
+    title: 'EXAMPLE MODE',
+    description: 'A new mode powered by ExampleRepo',
+    enabled: true,
 };
 ```
 

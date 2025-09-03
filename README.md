@@ -7,7 +7,7 @@ Yono Komae War
 This thought-provoking game explores the outcomes for two countries after 'The World Merger Battle' of the Heisei era (
 平成の大合併大戦).
 
-```text
+```txt
 Note: This game is full of humorous jokes, but to be clear, it is not a deepfake or a mere fabrication.
 ```
 
@@ -46,15 +46,6 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 | 🌌 Oooh, aaah.                                                                                                                                                                                                                                                                                                                  | 👶 宇宙の真理を悟りし者(0歳)          |
 | 🐶 Wouf ! Wouf wouf !                                                                                                                                                                                                                                                                                                           | 🐕 食後の散歩を要求する柴犬(年齢不詳) |
 
-## Key Features
-
-- Multiple play modes with clear status
-    - DEMO: quick demonstration with placeholder data (enabled)
-    - HISTORICAL RESEARCH: deterministic mode based on historical seeds (enabled)
-        - Seed-based reproducible generation
-        - Tab key to rotate through available seeds
-        - Provenance tracking and display
-    - AI MODE: planned, AI-generated scenarios (disabled)
 - One-click battle report generation with smooth auto-scroll to latest
 - Interactive user engagement components
     - Usage examples showcase with category-based organization
@@ -117,17 +108,7 @@ Historical Evidence mode
 - Replace placeholder images with licensed assets and show attribution
 - Add unit tests for deterministic historical paths
 - AI Mode (later)
-- Evaluate model/provider and on-device vs API trade-offs
-- Add safety guardrails and content filters
-- Provide offline mock/stub for tests and local dev
-- API-backed mode (optional)
-- Wire Api repositories under a dedicated mode (e.g., `api`) using
-  `VITE_API_BASE_URL`
-- Provide a mock server and integration tests
-- Add provider branching and a feature flag
-- Battle UX polish
-- Add progress indicator for async judgement (per-step animation)
-- Make judgement cancellable with user feedback
+
 - Respect reduced-motion preferences for scroll/animation
 - Accessibility and i18n
 - A11y audit (labels, focus management, contrast)

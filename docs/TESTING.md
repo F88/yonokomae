@@ -31,12 +31,12 @@ See `package.json` for available scripts.
 - Co-locate tests with code using `*.test.ts` or `*.test.tsx`.
 - Shared helpers live under `src/test/`:
     - `src/test/setup.ts`: global setup (jest-dom, MSW server lifecycle)
-    - `src/test/msw.ts`: default handlers for API mode
+    - `src/test/msw.ts`: default handlers for API endpoints used by tests
     - `src/test/renderWithProviders.tsx`: render helper with repository providers
 
 Vitest references `src/test/setup.ts` via `vitest.config.ts`.
 
-## Setup: MSW for API mode
+## Setup: MSW for API endpoints
 
 File: `src/test/msw.ts`
 
@@ -54,8 +54,8 @@ Override per test by calling `server.use(...)` with additional handlers.
 ## Repositories testing
 
 - Fake repos (`repositories.fake.ts`): test deterministic logic; avoid actual delays (code already skips delays under `NODE_ENV=test`).
-- Random Joke repos (`repositories.random-jokes.ts`): seed-backed deterministic generation. Assert structure and `provenance` presence.
-- API repos (`repositories.api.ts`): prefer provider-level tests with MSW (see `repository-provider.api.test.ts`).
+- Historical-evidences repos: seed-backed deterministic generation. Assert structure and `provenance` presence.
+  // API repos were removed. Provider-level MSW tests remain for news-reporter API only.
 
 ### Testing Historical Seed System
 
@@ -99,7 +99,7 @@ it('uses historical repository in historical mode', () => {
         },
     });
 
-    // Component will receive BattleReportRandomDataRepository
+    // Component will receive HistoricalEvidencesBattleReportRepository (via provider)
     // Assert on historical-specific behavior
 });
 ```

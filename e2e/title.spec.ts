@@ -130,7 +130,7 @@ test.describe('Title', () => {
       await page.keyboard.press('ArrowDown');
       await expect(group.getByRole('radio').nth(1)).toBeChecked();
 
-      // End jumps to the last enabled option (adjusted: last enabled is API MODE disabled -> previous one)
+      // End jumps to the last enabled option
       await page.keyboard.press('End');
       // The last enabled option should be focused; assert it's a radio and is checked
       const lastIndex = (await group.getByRole('radio').count()) - 1;

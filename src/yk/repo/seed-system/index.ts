@@ -36,7 +36,7 @@
  *
  * **Integration Points**:
  * - **RepositoryProvider**: Automatically passes selected seed to repositories
- * - **BattleReportRandomDataRepository**: Uses seed files for scenario generation
+ * - **HistoricalEvidencesBattleReportRepository**: Uses seed files for scenario generation
  * - **PlayMode Integration**: Different modes can use seed system differently
  * - **User Selection**: UI components allow users to choose specific seed files
  *
