@@ -55,14 +55,16 @@ const applyThemeClass = (theme?: string) => {
       typeof window !== 'undefined' &&
       typeof window.matchMedia === 'function' &&
       window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const effective =
-      theme && (theme === 'dark' || theme === 'light')
-        ? theme
-        : saved === 'dark' || saved === 'light'
-          ? saved
-          : prefersDark
-            ? 'dark'
-            : 'light';
+    const getEffectiveTheme = (): 'light' | 'dark' => {
+      if (theme === 'dark' || theme === 'light') {
+        return theme;
+      }
+      if (saved === 'dark' || saved === 'light') {
+        return saved;
+      }
+      return prefersDark ? 'dark' : 'light';
+    };
+    const effective = getEffectiveTheme();
     const root = document.documentElement;
     root.classList.remove('dark', 'light');
     root.classList.add(effective);
