@@ -1,72 +1,42 @@
-# Random Data Seeds (Random Joke Data)
+# Random Data Seeds (for Demo & Prototyping)
 
-This folder hosts type-safe seed modules used by the Random Joke Data repository
-and related prototyping flows. These are non-historical, demo-style seeds for
-character bases (neta) and report defaults.
+This folder contains non-historical, demo-style seed data used for character bases (`neta`) and report defaults. This data is primarily used in `demo` modes and for prototyping.
+
 Seeds are discovered at build time using static, eager imports via `import.meta.glob`.
 
-- TS modules are preferred for authoring and live under:
-    - `src/seeds/random-data/neta/{komae,yono}.ts`
+- **TypeScript (Preferred):**
+    - `src/seeds/random-data/neta/komae.ts`
+    - `src/seeds/random-data/neta/yono.ts`
     - `src/seeds/random-data/report/config.ts`
-
-- Optional JSON seeds are supported under the project root `seeds/` mirror:
-    - `seeds/random-data/neta/{komae,yono}.json`
+- **JSON (Optional):**
+    - `seeds/random-data/neta/komae.json`
+    - `seeds/random-data/neta/yono.json`
     - `seeds/random-data/report/config.json`
 
-## Scenario seeds have moved (historical-evidences)
+## How to Update Neta Base Profiles (Komae/Yono)
 
-Scenario authoring under `random-data/scenario` is deprecated and no longer
-used. Please place historical scenario seeds under:
+Edit the TypeScript files under `src/seeds/random-data/neta/` to update the base profiles for Komae and Yono. These files export simple objects that are consumed by the demo repositories.
 
-- `src/seeds/historical-evidences/battle/*.ts` (preferred)
-- `seeds/historical-evidences/battle/*.json` (optional)
+## How to Configure Report Defaults
 
-See `src/yk/repo/core/battle-seed-loader.ts` and the historical-evidences
-README for details. Use `npm test` to validate seeds and schema.
+Edit `src/seeds/random-data/report/config.ts` to adjust default values like `attribution` and `defaultPower`.
 
-## How to update Neta base profiles (komae/yono)
+## Scenario Seeds Have Moved
 
-- Preferred (TS): edit files under `src/seeds/random-data/neta/`:
-    - `komae.ts`, `yono.ts` exporting simple objects consumed by the repo
+**Note:** Scenario authoring is no longer done in this directory. All battle scenarios are considered historical evidence.
 
-- Optional (JSON): provide `seeds/random-data/neta/*.json` equivalents
+Please place all battle scenario seeds under:
 
-## How to configure report defaults
+- `src/seeds/historical-evidences/battle/*.ts`
 
-- Preferred (TS): `src/seeds/random-data/report/config.ts` exporting `{ attribution, defaultPower }`
+See the `README.md` in that directory for instructions.
 
-- Optional (JSON): `seeds/random-data/report/config.json`
+## Validation
 
-## Naming conventions
+To ensure all seeds are correctly structured, you can run the validation tests:
 
-- Scenario filenames: `kebab-case` matching the seed id prefix (e.g., `tama-river.ts`)
-- Seed IDs: prefix with the filename stem and a 3-digit counter (e.g., `tama-river-001`)
-- Keep titles in Title Case; keep code identifiers in English
-- Use ISO 8601 dates where applicable
-
-## Schema (HistoricalSeed)
-
-The `HistoricalSeed` shape is enforced at build/test time. Minimal schema:
-
-```ts
-export interface HistoricalSeed {
-    id: string; // unique across all seeds
-    title: string;
-    subtitle?: string;
-    overview?: string;
-    narrative?: string;
-    provenance?: Array<string | { label: string; url?: string; note?: string }>;
-}
+```bash
+npm run test:seeds
 ```
 
-Notes:
-
-- IDs must be globally unique; tests will fail if duplicates are detected.
-- Prefer TS modules to catch type errors early; JSON is supported but not preferred.
-- No manual registration: files are auto-discovered by `import.meta.glob`.
-
-## Troubleshooting
-
-- If a new seed doesn't appear, ensure the file path matches one of the glob patterns and the default export exists.
-- Vite may warn about dynamic imports if paths change; we use eager static imports to avoid mixed static/dynamic references.
-- Use `npm run test` for the full suite; see `docs/TESTING.md` for details.
+See `docs/TESTING.md` for more details on testing.
