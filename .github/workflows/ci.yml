@@ -17,13 +17,21 @@ jobs:
           cache: npm
       - name: Install deps
         run: npm ci
+
       #- name: Format check
       #  run: npm run format:check
+
       - name: Lint
         run: npm run lint
+
       - name: Typecheck
         run: npx tsc -b --pretty false
-      - name: Unit tests
-        run: npm test --silent
+
+      - name: Unit tests (unit)
+        run: npm run test:unit --silent
+
+      #- name: Unit tests (storybook)
+      #  run: npm run test:storybook --silent
+
       - name: Seed schema validation
         run: npm run -s test:seeds

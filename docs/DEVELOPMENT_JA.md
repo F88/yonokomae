@@ -25,25 +25,63 @@ Please use half-width characters for numbers, letters, and symbols.
 
 ## アーキテクチャ概要
 
-このアーキテクチャはモジュラーデザインを採用し、コンポーネント、リポジトリ、プレイモード間の関心を明確に分離します。主な構成要素は次のとおりです:
+アーキテクチャはモジュラーデザインを採用し、コンポーネント、リポジトリ、プレイモード間の関心を明確に分離します。主な構成要素は次のとおりです:
 
 - コンポーネント: ユーザーと対話する UI コンポーネント。
-- RepositoryProvider: コンポーネントへ適切なリポジトリ実装を供給するコンテキストプロバイダ。
+- RepositoryProvider: コンテキストプロバイダ。コンポーネントへ適切なリポジトリ実装を供給します。
 - フック: リポジトリとのやり取りのロジックをカプセル化したカスタムフック。
 - リポジトリ: 基盤データソースを抽象化するデータアクセス層。
 
+### マルチソースのバトルレポート(local + API風)
+
+GitHub Pages のような静的ホスティングでも、実ネットワーク無しで API 風の経路を試せます。マルチソースリポジトリモードを使うと、各レポート生成時にローカルデータソースと API 風ローカルシミュレータのいずれかをランダムに選びます。
+
+- PlayMode id: `multi-source`
+- Env: `VITE_BATTLE_RANDOM_WEIGHT_API`(0..1、既定 `0.5`)
+- 外部サーバーへは接続しません。API 風ソースはローカルデータへ委譲します。
+
+これにより、呼び出し側は今日の時点でも安定し、将来は UI の変更なく実 API へ置き換え可能です。
+
+### 共有バトルシードローダー(news + historical)
+
+単一の共有ローダーを使って、複数のリポジトリに跨る Battle シードファイルの探索、読込、正規化、検証を行います。
+
+- ファイル: `src/yk/repo/core/battle-seed-loader.ts`
+- 利用者: HistoricalEvidencesBattleReportRepository、ファイルベース News リポジトリ
+- 入力
+    - `roots: string[]`(例: `['/seeds/historical-evidences/battle/', '/src/seeds/historical-evidences/battle/']`)
+    - `file?: string` 任意。特定のファイル名(ルートからの相対)を指定して決定的に読み込む
+- 出力: `Promise<Battle>`(完全に正規化され、Zod で検証済み)
+- 振る舞い
+    - 静的 eager グロブでモジュールを探索:
+        - `/seeds/**/*.{ts,js,json}` と `/src/seeds/**/*.{ts,js,json}`
+        - 渡された `roots` にフィルタし、`file` があればそれ、なければランダムに選択
+    - 正規化デフォルトを適用し、共有 `BattleSchema` で検証
+    - markdown などコード以外は無視。ts/js/json のみ対象
+- シード作成ルール
+    - Battle 互換オブジェクトを default export(TypeScript 推奨)
+    - リポジトリ種別ごとの配置:
+        - News: `src/seeds/news/*.ts`
+        - 歴史バトル: `src/seeds/historical-evidences/battle/*.ts`
+            - 任意の JSON ミラー: `seeds/historical-evidences/battle/*.json`
+
+なぜ共有するか
+
+- 正規化とスキーマ検証を 1 箇所で保守
+- リポジトリ間で同一の振る舞い。テストしやすく、進化させやすい
+
 ## 新しい Play Mode または Repository の追加方法
 
-このセクションは開発者向けです。ExampleRepo と ExampleMode を例に、Repository 実装の追加方法と Play Mode の追加方法を説明します。コード例は TypeScript で、TSDoc コメント付きです。
+このセクションは開発者向けです。ExampleRepo と ExampleMode を例に、Repository 実装の追加方法と Play Mode の追加方法を説明します。すべてのコード例は TypeScript で、TSDoc コメント付きです。
 
 注: アプリは CSR の SPA(SSR なし)です。依存性注入(DI)は `RepositoryProvider`(非同期初期化には `RepositoryProviderSuspense`)で提供されます。
 
 ### 目標と契約(Contracts)
 
-- 明確なリポジトリ契約は `src/yk/repo/core/repositories.ts` に定義されています。
-- 実装は `src/yk/repo/*` 配下に置きます。
-- Play Mode は `src/yk/play-mode.ts` で定義されます。
-- 具体的なリポジトリを返すプロバイダファクトリは `src/yk/repo/core/repository-provider.ts` にあります。
+- 明確なリポジトリ契約は `src/yk/repo/core/repositories.ts` に定義。
+- 実装は `src/yk/repo/*` 配下に配置。
+- Play Mode は `src/yk/play-mode.ts` に定義。
+- 具体的なリポジトリを返すプロバイダファクトリは `src/yk/repo/core/repository-provider.ts` に配置。
 
 コアインターフェイス:
 
@@ -64,7 +102,7 @@ flowchart TD
   D["Repos from Context"]
   E["Factories: get*Repository(mode)"]
   F["Implementation: Fake / Historical / Future API"]
-    G["Domain Data: Battle / Verdict"]
+  G["Domain Data: Battle / Verdict"]
 
   A --> B
   A --> C
@@ -80,25 +118,25 @@ flowchart TD
 
 ```mermaid
 sequenceDiagram
-  participant U as User
-  participant UI as UI (Button)
-  participant H as use-generate-report
-  participant X as Repo Context (optional)
-  participant F as Factory (getBattleReportRepository)
-  participant R as Repo Impl (Fake/Historical)
+    participant U as User
+    participant UI as UI (Button)
+    participant H as use-generate-report
+    participant X as Repo Context (optional)
+    participant F as Factory (getBattleReportRepository)
+    participant R as Repo Impl (Fake/Historical)
 
-  U->>UI: Click "Battle"
-  UI->>H: generateReport()
-  H->>X: useRepositoriesOptional()
-  alt Provider present
-    H->>R: battleReport.generateReport({ signal })
-  else No provider
-    H->>F: getBattleReportRepository(mode)
-    F-->>H: Repo instance
-    H->>R: generateReport({ signal })
-  end
-  R-->>H: Battle
-  H-->>UI: setState(success)
+    U->>UI: Click "Battle"
+    UI->>H: generateReport()
+    H->>X: useRepositoriesOptional()
+    alt Provider present
+        H->>R: battleReport.generateReport({ signal })
+    else No provider
+        H->>F: getBattleReportRepository(mode)
+        F-->>H: Repo instance
+        H->>R: generateReport({ signal })
+    end
+    R-->>H: Battle
+    H-->>UI: setState(success)
 ```
 
 インターフェイスと実装:
@@ -108,9 +146,9 @@ classDiagram
   class BattleReportRepository {
     +generateReport(options) Promise<Battle>
   }
-    class JudgementRepository {
-        +determineWinner(input, options) Promise<Verdict>
-    }
+  class JudgementRepository {
+    +determineWinner(input, options) Promise<Verdict>
+  }
   class ScenarioRepository {
     +generateTitle() Promise<string>
     +generateSubtitle() Promise<string>
@@ -165,16 +203,16 @@ import { uid } from '@/lib/id';
 /**
  * ExampleBattleReportRepository
  * @public
- * Battle エンティティを生成するサンプル実装。
+ * A sample repository that demonstrates how to produce a Battle entity.
  */
 export class ExampleBattleReportRepository implements BattleReportRepository {
     /**
-     * バトルレポートを生成または取得します。
-     * @param options キャンセル用の signal などのオプション。
-     * @returns 完全に構築された Battle エンティティ。
+     * Generate or fetch a battle report.
+     * @param options Optional signal for cancellation.
+     * @returns A fully-populated Battle entity.
      */
     async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
-        // 実使用まで lint 回避のため options を参照
+        // touch options to satisfy lint until real use is added
         void options?.signal;
         const makeNeta = (title: string): Neta => ({
             title,
@@ -199,14 +237,14 @@ export class ExampleBattleReportRepository implements BattleReportRepository {
 /**
  * ExampleJudgementRepository
  * @public
- * 勝者を決定する単純なルールのデモ。
+ * Demonstrates a simple rule for determining the winner.
  */
 export class ExampleJudgementRepository implements JudgementRepository {
     /**
-     * 与えられた入力に基づいて勝者を決定します。
-     * @param input 現在の mode と 2 体の競技者を含みます。
-     * @param options キャンセル用の signal などのオプション。
-     * @returns Verdict(勝者と意思決定メタデータ)を返します。
+     * Decide the winner based on provided input.
+     * @param input Includes the current mode and the two combatants.
+     * @param options Optional signal for cancellation.
+     * @returns A Verdict containing the winner and decision metadata.
      */
     async determineWinner(
         input: { mode: { id: string }; yono: Neta; komae: Neta },
@@ -228,7 +266,7 @@ export class ExampleJudgementRepository implements JudgementRepository {
 
 1. (任意) モードごとのデフォルト遅延を調整
 
-- ヘルパ `defaultDelayForMode` を調整して、モード/リポジトリ種別に応じた現実的なレイテンシを模擬します。
+- ヘルパ `defaultDelayForMode` を調整し、モード/リポジトリ種別に応じた現実的なレイテンシを模擬します。
 
 1. 実装近傍にテストを追加
 
@@ -244,15 +282,17 @@ export class ExampleJudgementRepository implements JudgementRepository {
 - ファイル: `src/yk/play-mode.ts`
 - `playMode` に項目を追加:
 
-````ts
+```
 // @ts-nocheck
-{
+// Adjust the type to your project definition
 type PlayMode = { id: string; title: string; description: string; enabled: boolean };
-    title: 'EXAMPLE MODE',
+export const exampleMode: PlayMode = {
   id: 'example-mode',
   title: 'EXAMPLE MODE',
   description: 'A new mode powered by ExampleRepo',
   enabled: true,
+};
+```
 
 1. Repository を実装
 
@@ -277,7 +317,7 @@ if (mode?.id === 'example-mode') {
     );
     return new ExampleJudgementRepository();
 }
-````
+```
 
 1. UI またはテストでモードを選択
 
@@ -295,7 +335,7 @@ if (mode?.id === 'example-mode') {
 
 ### アプリでの Provider 利用(Suspense)
 
-基本のプロバイダ(同期/遅延作成):
+基本のプロバイダ(同期または遅延作成):
 
 ```tsx
 import React from 'react';
@@ -332,14 +372,14 @@ export function Root({ mode }: { mode: PlayMode }) {
 
 ## End-to-End(E2E) テスト方針
 
-E2E は Playwright を使用して、主要なユーザーフローとアクセシビリティ表面をカバーします。テストは速く、決定的で、ユーザーが体験する振る舞いに集中させます。
+E2E は Playwright を用いて、主要ユーザーフローとアクセシビリティ表面をカバーします。テストは速く、決定的で、ユーザーが体験する振る舞いに集中させます。
 
 原則
 
-- スコープ: spec は `e2e/` 配下に配置し、タスク指向に保つ。
-- ロケータ: `getByRole(..., { name })` を優先; セマンティクスがないコンテナ(例: `battle`、`slot-yono`、`slot-komae`)にのみ `data-testid` を使用。脆い CSS/XPath は避ける。
-- 決定性: 恣意的な待機は避け、`expect(...).toHave*` アサーションに依拠。`prefers-reduced-motion` を尊重し、必要に応じてテストでエミュレート。
-- パフォーマンステスト: 長時間/高回数のフローは slow マークと `@performance` タグを付け、個別にフィルタ可能にする。
+- スコープ: spec は `e2e/` 配下に配置し、タスク指向を保つ。
+- ロケータ: `getByRole(..., { name })` を優先。セマンティクスがないコンテナ(例: `battle`、`slot-yono`、`slot-komae`)にのみ `data-testid` を使用。脆い CSS/XPath は避ける。
+- 決定性: 恣意的な待機は避け、`expect(...).toHave*` に依存。`prefers-reduced-motion` を尊重し、必要に応じてテストでエミュレート。
+- パフォーマンス: 長時間/高回数フローは slow マークと `@performance` タグを付け、個別にフィルタ可能にする。
 - アクセシビリティ: 重要なコントロールの role とアクセシブルネームを検証。
 
 アノテーションとタグ
@@ -376,16 +416,12 @@ test('a long-running performance check', async ({ page }) => {
 ### 受け入れチェックリスト
 
 - TypeScript のコンパイルで新しいエラーがない。
-- ユニットテストがローカルで通過している。
-- 新モードがある場合、プロバイダファクトリの分岐が実装されている。
-- 必要に応じて README/DEVELOPMENT_EN を更新(概要は README、詳細は本ドキュメント)。
 
 ## 移行ノート: Winner -> Verdict(破壊的変更)
 
-2025-09-02 時点で、`JudgementRepository.determineWinner` は `Winner` 文字列ではなく
-構造化された `Verdict` を返すようになりました。これは破壊的変更です。
+2025-09-02 時点で、`JudgementRepository.determineWinner` は `Winner` 文字列ではなく、構造化された `Verdict` を返すようになりました。これは破壊的変更です。
 
-- 旧: `Promise<Winner>` (`Winner = 'YONO' | 'KOMAE' | 'DRAW'`)
+- 旧: `Promise<Winner>`(`Winner = 'YONO' | 'KOMAE' | 'DRAW'`)
 - 新: `Promise<Verdict>` の形:
 
 ```ts
@@ -395,20 +431,18 @@ type Verdict = {
     judgeCode?: string;
     rng?: number;
     powerDiff?: number; // yono.power - komae.power
-    confidence?: number; // 将来拡張のための任意
+    confidence?: number; // 任意の将来拡張
 };
 ```
 
 更新が必要な点:
 
 - 呼び出し側: 生の文字列ではなく `verdict.winner` を参照する。
-- 実装: 少なくとも `winner` と妥当な `reason`(例: ローカル比較なら `'power'`)を含む
-  `Verdict` オブジェクトを返す。
-- テスト/モック: 期待値を `verdict.winner` に合わせ、必要に応じて
-  `reason`/`powerDiff` を含めて検証する。
+- 実装: 少なくとも `winner` と妥当な `reason`(例: ローカル比較なら `'power'`)を含む `Verdict` を返す。
+- テスト/モック: 期待値を `verdict.winner` に合わせ、必要に応じて `reason`/`powerDiff` を含めて検証する。
 - API/MSW: `/battle/judgement` のペイロードを `Verdict` 形にする。
 
 理由:
 
 - UI/テレメトリ向けに有用な意思決定メタデータを保持できる。
-- 将来の進化(信頼度やジャッジコードなど)を、さらに破壊的変更なく拡張しやすい。
+- 将来の進化(信頼度やジャッジコードなど)を、さらなる破壊的変更なく拡張しやすい。

@@ -3,20 +3,30 @@ import { Controller } from '@/components/Controller';
 import { Intro } from '@/components/Intro';
 import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
 import { useGenerateReport } from '@/hooks/use-generate-report';
+import { isEditable } from '@/lib/dom-utils';
 import { uid } from '@/lib/id';
+import { scrollByY, scrollToY } from '@/lib/reduced-motion';
 import { Placeholders } from '@/yk/placeholder';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { BattleMetrics } from './components/BattleMetrics';
 import { Header } from './components/Header';
 import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
-import type { Battle } from './types/types';
+import type { Battle, BattleReportMetrics } from './types/types';
 import { playMode, type PlayMode } from './yk/play-mode';
-import { isEditable } from '@/lib/dom-utils';
-import { scrollByY, scrollToY } from '@/lib/reduced-motion';
 
 function App() {
+  const MAX_CONCURRENT = 6;
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
   const [reports, setReports] = useState<Battle[]>([]);
+  // Minimal aggregated metrics for the current reports list (MVP scope)
+  const [reportMetrics, setReportMetrics] = useState<BattleReportMetrics>({
+    totalReports: 0,
+    generatingCount: 0,
+    generationSuccessCount: 0,
+    generationErrorCount: 0,
+  });
   const shouldScrollAfterAppendRef = useRef(false);
   const scrollTargetIdRef = useRef<string | null>(null);
   const modeSelectionRef = useRef<HTMLDivElement | null>(null);
@@ -111,6 +121,25 @@ function App() {
     }
   }, [reports.length, scrollInsertedToTop]);
 
+  // Keep BattleReportMetrics up to date when reports change
+  useEffect(() => {
+    const totalReports = reports.length;
+    const generatingCount = reports.filter(
+      (r) => r.status === 'loading',
+    ).length;
+    const generationErrorCount = reports.filter(
+      (r) => r.status === 'error',
+    ).length;
+    const generationSuccessCount =
+      totalReports - generatingCount - generationErrorCount;
+    setReportMetrics({
+      totalReports,
+      generatingCount,
+      generationSuccessCount,
+      generationErrorCount,
+    });
+  }, [reports]);
+
   // Faster animated scroll for keyboard navigation
   // === Speed knob ===
   // Adjust the duration below to change KB navigation scroll speed.
@@ -145,6 +174,27 @@ function App() {
       requestAnimationFrame(step);
     },
     [prefersReducedMotion],
+  );
+
+  // Scroll a specific element id so that its top sits just below the sticky header
+  const scrollIdUnderStickyHeader = useCallback(
+    (id: string) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const header = document.querySelector(
+        'header.sticky',
+      ) as HTMLElement | null;
+      const headerRect = header?.getBoundingClientRect();
+      const headerBottom = headerRect ? headerRect.bottom : 0;
+      const isWide = isWideViewport();
+      const extraGap = isWide ? 20 : 12; // breathing space under header
+      const rect = el.getBoundingClientRect();
+      const delta = rect.top - headerBottom - extraGap;
+      if (Math.abs(delta) > 1) {
+        scrollByAnimated(delta);
+      }
+    },
+    [isWideViewport, scrollByAnimated],
   );
 
   // Keyboard navigation between BattleContainers
@@ -208,6 +258,11 @@ function App() {
   }, [mode, reports, isWideViewport, scrollByAnimated]);
 
   const handleGenerateReport = async () => {
+    // Concurrency guard: ignore requests when pending >= MAX
+    const currentPending = reports.filter((r) => r.status === 'loading').length;
+    if (currentPending >= MAX_CONCURRENT) {
+      return;
+    }
     // Insert a loading placeholder immediately
     let insertedIndex = -1;
     const loadingBattle: Battle = {
@@ -232,9 +287,24 @@ function App() {
     try {
       const next = await generateReport();
       // Replace the placeholder at the captured index
-      setReports((prev) =>
-        prev.map((b, i) => (i === insertedIndex ? next : b)),
-      );
+      let lastIdAfterUpdate: string | undefined;
+      setReports((prev) => {
+        const updated = prev.map((b, i) =>
+          i === insertedIndex ? { ...next, id: b.id } : b,
+        );
+        lastIdAfterUpdate =
+          updated.length > 0 ? updated[updated.length - 1].id : undefined;
+        return updated;
+      });
+      // If the real content is taller than the placeholder, it may end up overlapped by the header.
+      // Scroll to the latest report (last item) to keep the view stable with concurrent generations.
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (lastIdAfterUpdate) {
+            scrollIdUnderStickyHeader(lastIdAfterUpdate);
+          }
+        });
+      });
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       const errorBattle: Battle = {
@@ -248,7 +318,9 @@ function App() {
         status: 'error',
       };
       setReports((prev) =>
-        prev.map((b, i) => (i === insertedIndex ? errorBattle : b)),
+        prev.map((b, i) =>
+          i === insertedIndex ? { ...errorBattle, id: b.id } : b,
+        ),
       );
     }
   };
@@ -281,86 +353,92 @@ function App() {
   };
 
   return (
-    <main className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 items-center">
-          <Header mode={mode} />
-        </div>
-      </header>
+    <RepositoryProvider mode={mode}>
+      <main className="min-h-screen bg-background">
+        {/* Header */}
+        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <div className="container flex h-14 items-center">
+            <Header mode={mode} />
+          </div>
+        </header>
 
-      <br />
+        <br />
 
-      {/* Information */}
-      <div className="grid gap-3 py-0 border-0 border-orange-400 ">
-        <UserVoicesMarquee
-          shuffle={true}
-          speed={60}
-          pauseOnHover={true}
-          fadeWidth={'w-24'}
-        />
-        {/* <UserVoicesCarousel
+        {/* Information */}
+        <div className="grid gap-3 py-0 border-0 border-orange-400 ">
+          <UserVoicesMarquee
+            shuffle={true}
+            speed={60}
+            pauseOnHover={true}
+            fadeWidth={'w-24'}
+          />
+          {/* <UserVoicesCarousel
           intervalMs={3000}
           pauseOnHover
           orientation="vertical"
         /> */}
-        {/* <UserVoicesCarousel intervalMs={3000} pauseOnHover orientation="vertical" /> */}
-        {/* <UsageExamplesCarousel intervalMs={3000} pauseOnHover orientation="vertical"/> */}
-        {/* <UsageExamplesMarquee speed={60} /> */}
-      </div>
+          {/* <UserVoicesCarousel intervalMs={3000} pauseOnHover orientation="vertical" /> */}
+          {/* <UsageExamplesCarousel intervalMs={3000} pauseOnHover orientation="vertical"/> */}
+          {/* <UsageExamplesMarquee speed={60} /> */}
+        </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col gap-0 py-0 pb-32 px-4">
-        {/* Intro Section */}
-        <section className="flex flex-col items-center text-center m-2">
-          <Intro />
-          <TheStartOfTheWar />
-        </section>
-
-        {/* Title Container (shown only before a mode is selected) */}
-        {!mode && (
-          <div
-            ref={modeSelectionRef}
-            id="mode-selection"
-            className="scroll-mt-[72px] lg:scroll-mt-[96px]"
-          >
-            <TitleContainer
-              modes={playMode}
-              onSelect={(mode) => setMode(mode)}
-            />
-          </div>
-        )}
-
-        {/* Battle Reports */}
-        {mode != null && reports.length > 0 && (
-          <section className="mx-auto w-full max-w-[2800px]">
-            <div className={`${gridCols} gap-4 lg:gap-6`}>
-              {reports.map((battle: Battle) => (
-                <div
-                  key={battle.id}
-                  id={battle.id}
-                  className="scroll-mt-[72px] lg:scroll-mt-[96px]"
-                >
-                  <BattleContainer battle={battle} mode={mode} />
-                </div>
-              ))}
-            </div>
+        {/* Main Content */}
+        <div className="flex flex-col gap-0 py-0 pb-32 px-4">
+          {/* Intro Section */}
+          <section className="flex flex-col items-center text-center m-2">
+            <Intro />
+            <TheStartOfTheWar />
           </section>
-        )}
-      </div>
 
-      {/* Fixed Controller */}
-      {mode && (
-        <footer className="sticky bottom-0 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="container py-4">
-            <Controller
-              onGenerateReport={handleGenerateReport}
-              onClearReports={handleClearReports}
-            />
-          </div>
-        </footer>
-      )}
-    </main>
+          {/* Title Container (shown only before a mode is selected) */}
+          {!mode && (
+            <div
+              ref={modeSelectionRef}
+              id="mode-selection"
+              className="scroll-mt-[72px] lg:scroll-mt-[96px]"
+            >
+              <TitleContainer
+                modes={playMode}
+                onSelect={(mode) => setMode(mode)}
+              />
+            </div>
+          )}
+
+          {/* Battle Reports */}
+          {mode != null && reports.length > 0 && (
+            <section className="mx-auto w-full max-w-[2800px]">
+              <div className={`${gridCols} gap-4 lg:gap-6`}>
+                {reports.map((battle: Battle) => (
+                  <div
+                    key={battle.id}
+                    id={battle.id}
+                    className="scroll-mt-[72px] lg:scroll-mt-[96px]"
+                  >
+                    <BattleContainer battle={battle} mode={mode} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        {/* Fixed Controller */}
+        {mode && (
+          <footer className="sticky bottom-0 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container py-4">
+              <Controller
+                onGenerateReport={handleGenerateReport}
+                onClearReports={handleClearReports}
+                canBattle={reportMetrics.generatingCount < MAX_CONCURRENT}
+              />
+              <div className="mt-2">
+                <BattleMetrics metrics={reportMetrics} />
+              </div>
+            </div>
+          </footer>
+        )}
+      </main>
+    </RepositoryProvider>
   );
 }
 

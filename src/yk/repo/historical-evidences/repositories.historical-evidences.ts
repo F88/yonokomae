@@ -1,12 +1,11 @@
-import { uid } from '@/lib/id';
 import type { Battle, Neta } from '@/types/types';
 import type {
   BattleReportRepository,
   JudgementRepository,
   Verdict,
 } from '@/yk/repo/core/repositories';
-import { z } from 'zod';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
+import { loadBattleFromSeeds } from '../core/battle-seed-loader';
 
 /**
  * BattleReportRepository that loads battle data from historical evidence seeds.
@@ -41,167 +40,15 @@ export class HistoricalEvidencesBattleReportRepository
    */
   async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
     await applyDelay(this.delay, options?.signal);
-    const all = discoverBattleFiles();
-    if (all.length === 0) {
-      throw new Error(
-        'No historical battle files found under seeds/historical-evidences/battle or src/seeds/historical-evidences/battle',
-      );
-    }
-
-    const file = this.file ?? all[Math.floor(Math.random() * all.length)];
-    const mod = await loadBattleModule(file);
-    const data = normalizeBattle(mod);
-    const result = BattleSchema.safeParse(data);
-    if (!result.success) {
-      throw new Error(
-        'Invalid Battle data: ' +
-          result.error.issues
-            .map((i) => `${i.path.join('.')}: ${i.message}`)
-            .join('; '),
-      );
-    }
-    return result.data;
+    // Reuse shared loader: discovers, normalizes, and validates seeds.
+    const roots = [
+      '/seeds/historical-evidences/battle/',
+      '/src/seeds/historical-evidences/battle/',
+    ];
+    return loadBattleFromSeeds({ roots, file: this.file });
   }
 }
-
-type BattleModule = { default?: Partial<Battle> } | Partial<Battle>;
-
-/**
- * Discover available battle seed files from supported locations.
- *
- * @returns Sorted list of file names (without the absolute prefix paths).
- */
-function discoverBattleFiles(): string[] {
-  const mods = {
-    ...import.meta.glob('/seeds/historical-evidences/battle/*', {
-      eager: true,
-    }),
-    ...import.meta.glob('/src/seeds/historical-evidences/battle/*', {
-      eager: true,
-    }),
-  } as Record<string, unknown>;
-  const files: string[] = [];
-  for (const abs of Object.keys(mods)) {
-    if (abs.startsWith('/seeds/historical-evidences/battle/')) {
-      files.push(abs.replace('/seeds/historical-evidences/battle/', ''));
-    } else if (abs.startsWith('/src/seeds/historical-evidences/battle/')) {
-      files.push(abs.replace('/src/seeds/historical-evidences/battle/', ''));
-    }
-  }
-  return files.sort();
-}
-
-/**
- * Loads the esm module for a given seed file name.
- *
- * @param file File name relative to the battle seeds folder.
- * @returns The loaded module shape.
- * @throws Error when the module cannot be found.
- */
-async function loadBattleModule(file: string): Promise<BattleModule> {
-  const mods = {
-    ...import.meta.glob('/seeds/historical-evidences/battle/*', {
-      eager: true,
-    }),
-    ...import.meta.glob('/src/seeds/historical-evidences/battle/*', {
-      eager: true,
-    }),
-  } as Record<string, unknown>;
-  const jsonKey = `/seeds/historical-evidences/battle/${file}`;
-  const tsKey = `/src/seeds/historical-evidences/battle/${file}`;
-  const mod = (mods[jsonKey] ?? mods[tsKey]) as BattleModule | undefined;
-  if (!mod) throw new Error(`Battle not found: ${file}`);
-  return mod;
-}
-
-/**
- * Normalizes possibly-partial battle seed data into a complete Battle shape.
- *
- * - Fills defaults for missing fields.
- * - Ensures `id` is present (generated when missing).
- *
- * @param mod Loaded module export.
- * @returns A Battle value (not yet validated by zod schema).
- */
-function normalizeBattle(mod: BattleModule): Battle {
-  const raw: Partial<Battle> = hasDefault(mod)
-    ? (mod.default ?? {})
-    : (mod as Partial<Battle>);
-  const id = raw.id ?? uid('battle');
-  const title = raw.title ?? '';
-  const subtitle = raw.subtitle ?? '';
-  const overview = raw.overview ?? '';
-  const scenario = raw.scenario ?? '';
-  const komae = normalizeNeta(raw.komae);
-  const yono = normalizeNeta(raw.yono);
-  const provenance = Array.isArray(raw.provenance) ? raw.provenance : [];
-  const status = raw.status ?? 'success';
-  return {
-    id,
-    title,
-    subtitle,
-    overview,
-    scenario,
-    komae,
-    yono,
-    provenance,
-    status,
-  } satisfies Battle;
-}
-
-/**
- * Normalizes a partial Neta to a fully-populated value.
- *
- * @param n Partial Neta value from seed.
- * @returns Neta with defaults for any missing fields.
- */
-function normalizeNeta(n?: Partial<Neta> | undefined): Neta {
-  const imageUrl = n?.imageUrl ?? 'about:blank';
-  const title = n?.title ?? '';
-  const subtitle = n?.subtitle ?? '';
-  const description = n?.description ?? '';
-  const power = typeof n?.power === 'number' ? n.power : 50;
-  return { imageUrl, title, subtitle, description, power } satisfies Neta;
-}
-
-/**
- * Type guard for modules exporting a default battle.
- */
-function hasDefault(x: unknown): x is { default?: Partial<Battle> } {
-  return (
-    !!x && typeof x === 'object' && 'default' in (x as Record<string, unknown>)
-  );
-}
-
-const NetaSchema = z.object({
-  imageUrl: z.string().min(1),
-  title: z.string(),
-  subtitle: z.string(),
-  description: z.string(),
-  power: z.number(),
-});
-
-const BattleSchema = z.object({
-  id: z.string().min(1),
-  title: z.string().min(1),
-  subtitle: z.string(),
-  overview: z.string(),
-  scenario: z.string(),
-  komae: NetaSchema,
-  yono: NetaSchema,
-  provenance: z
-    .array(
-      z.object({
-        label: z.string().min(1),
-        url: z.string().url().optional(),
-        note: z.string().optional(),
-      }),
-    )
-    .optional(),
-  status: z.enum(['loading', 'success', 'error']).optional(),
-});
-
-// (intentionally empty between schemas and class)
+// (intentionally empty between loader import and class)
 
 /**
  * JudgementRepository for historical research mode.

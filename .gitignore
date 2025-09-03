@@ -41,3 +41,6 @@ playwright-results/
 playwright-report/
 
 
+
+*storybook.log
+storybook-static

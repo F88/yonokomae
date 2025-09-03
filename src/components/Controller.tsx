@@ -8,15 +8,20 @@ import { isEditable } from '@/lib/dom-utils';
 interface ControllerProps {
   onGenerateReport: () => void | Promise<void>;
   onClearReports: () => void | Promise<void>;
+  /** Whether the user can trigger a new battle. Defaults to true. */
+  canBattle?: boolean;
 }
 
 export const Controller: FC<ControllerProps> = ({
   onGenerateReport,
   onClearReports,
+  canBattle = true,
 }) => {
+  const disabled = !canBattle;
   const handleGenerate = useCallback(() => {
+    if (disabled) return;
     void onGenerateReport();
-  }, [onGenerateReport]);
+  }, [onGenerateReport, disabled]);
 
   // Using shared <KeyChip /> from ui and shared isEditable util
 
@@ -32,7 +37,7 @@ export const Controller: FC<ControllerProps> = ({
       const key = e.key;
       if (key === 'Enter' || key === 'b' || key === 'B') {
         e.preventDefault();
-        handleGenerate();
+        if (!disabled) handleGenerate();
       } else if (key === 'r' || key === 'R') {
         e.preventDefault();
         handleReset();
@@ -41,7 +46,7 @@ export const Controller: FC<ControllerProps> = ({
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [handleGenerate, handleReset]);
+  }, [handleGenerate, handleReset, disabled]);
 
   return (
     <div className="flex w-full justify-center gap-8">
@@ -86,6 +91,7 @@ export const Controller: FC<ControllerProps> = ({
           title="Battle (Enter or B)"
           aria-label="Battle"
           aria-describedby="kbd-battle-hint"
+          disabled={disabled}
         >
           <GiInvertedDice3 className="h-5 w-5" />
           BATTLE

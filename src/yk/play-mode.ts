@@ -33,7 +33,13 @@ export const playMode: PlayMode[] = [
     id: 'historical-research',
     title: 'よの ⚔️ こまえ',
     description:
-      '[WIP] A mode that generates battles based on historical events.',
+      '[WIP] ' + '歴史的な出来事に基づいてよのこまを分析、眠れない夜のおともに',
+    enabled: true,
+  },
+  {
+    id: 'yk-now',
+    title: 'よのこまライブ',
+    description: '[WIP] ' + '🥷😼 よーのとこみまが今日のよのこまに鋭く斬り込む',
     enabled: true,
   },
   {
@@ -50,7 +56,7 @@ export const playMode: PlayMode[] = [
   },
   {
     id: 'demo-de',
-    title: 'Demo (de)',
+    title: 'DEMO (de)',
     description: 'Demonstrationsmodus',
     enabled: true,
   },
