@@ -174,11 +174,14 @@ classDiagram
     +getKomaeBase() Promise<...>
     +getYonoBase() Promise<...>
   }
-  class FakeBattleReportRepository
+  class HistoricalEvidencesBattleReportRepository
   class FakeJudgementRepository
-  class HistoricalNetaRepository
+  class DemoJaBattleReportRepository
+  class NewsReporterMultiSourceReportRepository
 
   HistoricalEvidencesBattleReportRepository ..|> BattleReportRepository
+  DemoJaBattleReportRepository ..|> BattleReportRepository
+  NewsReporterMultiSourceReportRepository ..|> BattleReportRepository
   FakeJudgementRepository ..|> JudgementRepository
   %% NetaRepository currently provided by random-data seeds via helper functions
 ```
@@ -190,13 +193,13 @@ it under an existing mode (e.g., `demo`).
 
 Note: Repository implementations are organized by type under `src/yk/repo/`:
 
-- `api/` - REST API client implementations
+- `api/` - API client implementations (judgement only)
 - `core/` - Repository interfaces and provider logic
-- `demo/` - Demo/fixed data repositories
-- `historical-evidences/` - Curated historical data repositories
-- `mock/` - Test/fake repositories (FakeJudgementRepository only)
+- `demo/` - Demo/fixed data repositories (demo-ja, demo-en, demo-de)
 - `historical-evidences/` - Seed-based historical evidence repositories (default)
-- `seed-system/` - Historical seed management system
+- `mock/` - Test/fake repositories (FakeJudgementRepository only)
+- `news/` - News reporter repositories (multi-source for yk-now mode)
+- `seed-system/` - Historical seed management system with React context
 
 1. Create the Repository implementation file
 
@@ -446,7 +449,7 @@ test('a long-running performance check', async ({ page }) => {
 });
 ```
 
-### Acceptance Checklist
+## Development Checklist
 
 - TypeScript compiles with no new errors.
 
@@ -483,6 +486,21 @@ Rationale:
 - Carries useful decision metadata for UI/telemetry.
 - Enables future evolution (confidence, judge code) without another breaking
   change.
+
+## Current Play Modes
+
+Active play modes and their repository mappings:
+
+- `demo` - Japanese demo with fixed scenarios (DemoJaBattleReportRepository)
+- `demo-en` - English demo variant (DemoEnBattleReportRepository)  
+- `demo-de` - German demo variant (DemoDeBattleReportRepository)
+- `historical-research` - Historical evidence-based scenarios (HistoricalEvidencesBattleReportRepository)
+- `yk-now` - News-driven multi-source mode (NewsReporterMultiSourceReportRepository)
+
+Note: The `api` mode has been removed. For judgement, all modes except `historical-research` use FakeJudgementRepository as the default.
+
+## Acceptance Checklist
+
 - Unit tests pass locally.
 - Provider factory branches implemented for the new mode if applicable.
 - README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper

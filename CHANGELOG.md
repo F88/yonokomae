@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## Unreleased
+
+### Breaking Changes
+
+- refactor(play-mode): remove mixed-nuts mode
+- refactor(provider): drop mixed-nuts mapping and delay case
+- refactor(api): remove dedicated api battle report repository mode
+- refactor: streamline documentation and remove unused scenario repositories
+
+### Changes
+
+- refactor: update repository provider documentation to reflect current implementation
+- docs: update play mode documentation to clarify available modes
+- test(e2e): update title navigation tests without mixed-nuts mode
+- docs(types): clean JSDoc references to removed modes
+
 ## 1.1.0
 
 ### Minor Changes

@@ -164,13 +164,16 @@ classDiagram
     +getKomaeBase() Promise<...>
     +getYonoBase() Promise<...>
   }
-  class FakeBattleReportRepository
+  class HistoricalEvidencesBattleReportRepository
   class FakeJudgementRepository
-  class HistoricalNetaRepository
+  class DemoJaBattleReportRepository
+  class NewsReporterMultiSourceReportRepository
 
-    HistoricalEvidencesBattleReportRepository ..|> BattleReportRepository
+  HistoricalEvidencesBattleReportRepository ..|> BattleReportRepository
+  DemoJaBattleReportRepository ..|> BattleReportRepository
+  NewsReporterMultiSourceReportRepository ..|> BattleReportRepository
   FakeJudgementRepository ..|> JudgementRepository
-    %% NetaRepository は現在、random-data seeds をヘルパ関数経由で供給
+  %% NetaRepository は現在、random-data seeds をヘルパ関数経由で供給
 ```
 
 ### 既存 Play Mode 向けに新しい Repository を追加する
@@ -179,13 +182,13 @@ classDiagram
 
 注: リポジトリ実装は `src/yk/repo/` 配下で種類別に整理されています:
 
-- `api/` - REST API クライアント実装
+- `api/` - API クライアント実装（judgement のみ）
 - `core/` - Repository インターフェイスとプロバイダロジック
-- `demo/` - デモ/固定データリポジトリ
-- `historical-evidences/` - 厳選された歴史データリポジトリ
-- `mock/` - テスト/偽リポジトリ(FakeJudgementRepository のみ)
-- `historical-evidences/` - シードベースの歴史的エビデンスリポジトリ(デフォルト)
-- `seed-system/` - 歴史的シード管理システム
+- `demo/` - デモ/固定データリポジトリ（demo-ja, demo-en, demo-de）
+- `historical-evidences/` - シードベースの歴史的エビデンスリポジトリ（デフォルト）
+- `mock/` - テスト/偽リポジトリ（FakeJudgementRepository のみ）
+- `news/` - ニュースレポーターリポジトリ（yk-now モード用マルチソース）
+- `seed-system/` - React context 付き歴史的シード管理システム
 
 1. Repository 実装ファイルを作成
 
@@ -421,7 +424,7 @@ test('a long-running performance check', async ({ page }) => {
 });
 ```
 
-### 受け入れチェックリスト
+## 開発チェックリスト
 
 - TypeScript のコンパイルで新しいエラーがない。
 
@@ -454,3 +457,21 @@ type Verdict = {
 
 - UI/テレメトリ向けに有用な意思決定メタデータを保持できる。
 - 将来の進化(信頼度やジャッジコードなど)を、さらなる破壊的変更なく拡張しやすい。
+
+## 現在のプレイモード
+
+アクティブなプレイモードとそのリポジトリマッピング:
+
+- `demo` - 日本語デモ、固定シナリオ（DemoJaBattleReportRepository）
+- `demo-en` - 英語デモバリアント（DemoEnBattleReportRepository）
+- `demo-de` - ドイツ語デモバリアント（DemoDeBattleReportRepository）
+- `historical-research` - 歴史的エビデンスベースのシナリオ（HistoricalEvidencesBattleReportRepository）
+- `yk-now` - ニュース駆動マルチソースモード（NewsReporterMultiSourceReportRepository）
+
+注: `api` モードは削除されました。judgement については、`historical-research` 以外のすべてのモードはデフォルトで FakeJudgementRepository を使用します。
+
+## 受け入れチェックリスト
+
+- ユニットテストがローカルでパスする。
+- 新しいモードに該当する場合は、プロバイダファクトリ分岐が実装されている。
+- 必要に応じて README/DEVELOPMENT_EN が更新されている（README には高レベル概要、ここにはより詳細な手順）。

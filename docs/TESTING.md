@@ -55,7 +55,9 @@ Override per test by calling `server.use(...)` with additional handlers.
 
 - Fake repos (`repositories.fake.ts`): test deterministic logic; avoid actual delays (code already skips delays under `NODE_ENV=test`).
 - Historical-evidences repos: seed-backed deterministic generation. Assert structure and `provenance` presence.
-  // API repos were removed. Provider-level MSW tests remain for news-reporter API only.
+- Demo repos (`demo-ja`, `demo-en`, `demo-de`): test localized content and fixed scenarios.
+- News reporter repos: test multi-source blending and caching behavior.
+- Note: API mode has been removed; MSW tests remain for news-reporter API component only.
 
 ### Testing Historical Seed System
 
@@ -89,11 +91,11 @@ The `renderWithProviders` helper simplifies testing with repository providers:
 import { renderWithProviders } from '@/test/renderWithProviders';
 import { screen } from '@testing-library/react';
 
-it('uses historical repository in historical mode', () => {
+it('uses historical repository in historical-research mode', () => {
     renderWithProviders(<YourComponent />, {
         mode: {
-            id: 'historical',
-            title: 'HISTORICAL',
+            id: 'historical-research',
+            title: 'HISTORICAL RESEARCH',
             description: '',
             enabled: true,
         },

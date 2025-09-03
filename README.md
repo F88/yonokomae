@@ -100,23 +100,31 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 [Testing guide (EN)](./docs/TESTING.md)
 [Contributing guide](./CONTRIBUTING.md)
 
-Historical Evidence mode
+## Roadmap
 
-- Expand repositories with curated event data (JSON/seed files) and
-  deterministic generation rules
+### Completed Features
+
+- ✅ Historical Evidence mode with curated event data (JSON/seed files)
+- ✅ Multiple play modes: demo (JA/EN/DE), historical-research, yk-now
+- ✅ Repository pattern with lazy-loading and code splitting
+- ✅ Seed system for deterministic battle generation
+
+### In Progress
+
 - Surface provenance/notes in the UI (citations, links, disclaimers)
 - Replace placeholder images with licensed assets and show attribution
 - Add unit tests for deterministic historical paths
-- AI Mode (later)
 
-- Respect reduced-motion preferences for scroll/animation
-- Accessibility and i18n
-- A11y audit (labels, focus management, contrast)
-- Improve keyboard flow after generating a report (focus return/announce)
-- Localize UI strings (EN/JA alignment with docs)
-- Testing
-- Add E2E tests (e.g., Playwright) for key flows
-- Optional visual regression for core components
+### Planned
+
+- Accessibility improvements
+    - A11y audit (labels, focus management, contrast)
+    - Improve keyboard flow after generating a report (focus return/announce)
+- Internationalization
+    - Localize UI strings (EN/JA alignment with docs)
+- Testing enhancements
+    - Add E2E tests (e.g., Playwright) for key flows
+    - Optional visual regression for core components
 
 ## Project notes
 

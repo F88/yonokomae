@@ -59,10 +59,11 @@ Follow these conventions for clear commit history:
 
 Examples:
 
-- `feat(repo): add ExampleRepo repositories and provider wiring`
+- `feat(repo): add news reporter multi-source repository`
 - `fix(ui): correct battle report scroll behavior`
-- `docs(dev): add developer guide for ExampleMode`
-- `test(repo): add unit tests for ExampleRepo behavior`
+- `docs(dev): update play mode documentation`
+- `test(repo): add unit tests for historical evidences repository`
+- `refactor(play-mode): remove unused api mode`
 
 ## CI/CD Pipeline
 
