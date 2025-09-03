@@ -1,47 +1,12 @@
-import type {
-  ScenarioRepository,
-  NetaRepository,
-  BattleReportRepository,
-} from '../core/repositories';
+import type { BattleReportRepository } from '../core/repositories';
 import type { Battle, Neta } from '@/types/types';
 // Seed loaders
 import { historicalSeeds, loadSeedByFile } from '../seed-system/seeds';
 import { uid } from '@/lib/id';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 
-export class RandomJokeScenarioRepository implements ScenarioRepository {
-  async generateTitle(): Promise<string> {
-    const seed = await pickAnySeed();
-    return seed?.title ?? 'Random Joke Data';
-  }
-  async generateSubtitle(): Promise<string> {
-    const seed = await pickAnySeed();
-    return seed?.subtitle ?? '';
-  }
-  async generateOverview(): Promise<string> {
-    const seed = await pickAnySeed();
-    return seed?.overview ?? '';
-  }
-  async generateNarrative(): Promise<string> {
-    const seed = await pickAnySeed();
-    return seed?.narrative ?? '';
-  }
-}
-
-export class RandomJokeNetaRepository implements NetaRepository {
-  async getKomaeBase(): Promise<
-    Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>
-  > {
-    const options = await loadNetaOptions('komae');
-    return options[Math.floor(Math.random() * options.length)];
-  }
-  async getYonoBase(): Promise<
-    Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>
-  > {
-    const options = await loadNetaOptions('yono');
-    return options[Math.floor(Math.random() * options.length)];
-  }
-}
+// RandomJokeScenarioRepository was removed as scenario generation is handled
+// directly in BattleReportRandomDataRepository via the seed-system.
 
 /**
  * BattleReportRandomDataRepository
@@ -49,10 +14,10 @@ export class RandomJokeNetaRepository implements NetaRepository {
  * **Purpose**: Seed-based historical battle scenario generator using curated historical data.
  *
  * **Data Source**:
- * - **Uses seed-system**: Loads battle scenarios from `/seeds/random-data/scenario/` directory
- * - Supports both JSON and TypeScript seed files (.json, .en.ts, .ja.ts)
- * - Falls back to random joke scenarios when no seeds are available
- * - Each seed contains historical battle narratives, titles, and provenance
+ * - Uses the shared seed-system for historical-evidence seeds
+ * - Discovers scenarios under historical seed roots (not random-data/scenario)
+ * - Falls back to a minimal built-in stub when no seeds are available
+ * - Seeds contain narratives, titles, subtitles, and provenance
  *
  * **Seed System Integration**:
  * - Imports `historicalSeeds` and `loadSeedByFile` from seed-system
@@ -65,7 +30,8 @@ export class RandomJokeNetaRepository implements NetaRepository {
  * - Rich historical narratives with provenance information
  * - Supports both specific seed selection and random seed picking
  * - Multilingual content support (EN/JA variants)
- * - Uses RandomJokeScenarioRepository and RandomJokeNetaRepository for content generation
+ * - Uses random-data neta seeds for base character content
+ * - ScenarioRepository interface remains for future use; no active impl here
  * - Generates battles with historical context and source attribution
  *
  * **Use Cases**:
@@ -134,10 +100,9 @@ export class BattleReportRandomDataRepository
     }
 
     // Build basic Netas using historical base repos (titles/images can remain placeholders)
-    const netaRepo = new RandomJokeNetaRepository();
     const [komaeBase, yonoBase] = await Promise.all([
-      netaRepo.getKomaeBase(),
-      netaRepo.getYonoBase(),
+      getRandomNetaBase('komae'),
+      getRandomNetaBase('yono'),
     ]);
     // Strengthen attribution: include a short note in descriptions
     const cfg = await loadReportConfig();
@@ -175,22 +140,6 @@ export class BattleReportRandomDataRepository
 }
 
 // Helpers
-type HistoricalSeed = {
-  id: string;
-  title: string;
-  subtitle: string;
-  overview: string;
-  narrative: string;
-  provenance?: Array<{ label: string; url?: string; note?: string }>;
-};
-
-async function pickAnySeed(): Promise<HistoricalSeed | undefined> {
-  if (historicalSeeds.length === 0) return undefined;
-  const file =
-    historicalSeeds[Math.floor(Math.random() * historicalSeeds.length)]?.file;
-  if (!file) return undefined;
-  return (await loadSeedByFile(file)).default;
-}
 
 type NetaBase = Pick<Neta, 'imageUrl' | 'title' | 'subtitle' | 'description'>;
 
@@ -218,6 +167,11 @@ async function loadNetaOptions(kind: 'komae' | 'yono'): Promise<NetaBase[]> {
       description: 'No neta seeds found.',
     },
   ];
+}
+
+async function getRandomNetaBase(kind: 'komae' | 'yono'): Promise<NetaBase> {
+  const options = await loadNetaOptions(kind);
+  return options[Math.floor(Math.random() * options.length)];
 }
 
 type ReportConfig = { attribution: string; defaultPower: number };

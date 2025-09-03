@@ -160,31 +160,19 @@ export interface JudgementRepository {
 /**
  * ScenarioRepository
  *
- * **Interface for generating battle narrative and contextual elements.**
+ * Interface for generating battle narrative and contextual elements.
  *
- * **Responsibility**:
- * Supply rich narrative content that provides context and storytelling for battles:
- * - Battle titles and subtitles for identification
- * - Overview summaries describing the conflict
- * - Detailed narrative text for immersive storytelling
+ * Status:
+ * - No concrete implementation is currently wired in this codebase.
+ * - Kept as a stable contract for future extensions (e.g., templates, faker, LLM).
  *
- * **Content Categories**:
- * - **Title**: Short, memorable battle identifier
- * - **Subtitle**: Additional context or tagline
- * - **Overview**: Brief summary of the battle situation
- * - **Narrative**: Full story text with rich details
+ * Responsibility:
+ * - Provide narrative content to enrich battles:
+ *   - Title, Subtitle, Overview, and full Narrative text
  *
- * **Implementation Sources**:
- * - Faker.js generators for random content
- * - Seed-based historical scenarios
- * - Template-based story generation
- * - Pre-written narrative collections
- *
- * **Usage in Battle Generation**:
- * Used by BattleReportRepository implementations to enrich
- * battle data with compelling narrative elements.
- *
- * @see {@link RandomJokeScenarioRepository} for seed-based implementation
+ * Notes:
+ * - Current BattleReportRepository implementations embed their own
+ *   narrative logic (seed-system/templates) without depending on this.
  */
 export interface ScenarioRepository {
   /**
@@ -242,7 +230,6 @@ export interface ScenarioRepository {
  * - Asset collections with character art
  *
  * @see {@link Neta} for complete character structure
- * @see {@link RandomJokeNetaRepository} for seed-based implementation
  */
 export interface NetaRepository {
   /**

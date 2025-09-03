@@ -161,13 +161,11 @@ classDiagram
   }
   class FakeBattleReportRepository
   class FakeJudgementRepository
-  class HistoricalScenarioRepository
   class HistoricalNetaRepository
 
   BattleReportRandomDataRepository ..|> BattleReportRepository
   FakeJudgementRepository ..|> JudgementRepository
-  RandomJokeScenarioRepository ..|> ScenarioRepository
-  RandomJokeNetaRepository ..|> NetaRepository
+    %% NetaRepository は現在、random-data seeds をヘルパ関数経由で供給
 ```
 
 ### 既存 Play Mode 向けに新しい Repository を追加する

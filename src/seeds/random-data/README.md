@@ -1,48 +1,28 @@
 # Random Data Seeds (Random Joke Data)
 
 This folder hosts type-safe seed modules used by the Random Joke Data repository
-and related prototyping flows. These are non-historical, demo-style seeds.
+and related prototyping flows. These are non-historical, demo-style seeds for
+character bases (neta) and report defaults.
 Seeds are discovered at build time using static, eager imports via `import.meta.glob`.
 
 - TS modules are preferred for authoring and live under:
-    - `src/seeds/random-data/scenario/*.ts`
     - `src/seeds/random-data/neta/{komae,yono}.ts`
     - `src/seeds/random-data/report/config.ts`
 
 - Optional JSON seeds are supported under the project root `seeds/` mirror:
-    - `seeds/random-data/scenario/*.json`
     - `seeds/random-data/neta/{komae,yono}.json`
     - `seeds/random-data/report/config.json`
 
-## How to add a new Scenario seed (TS recommended)
+## Scenario seeds have moved (historical-evidences)
 
-1. Create a new file in `src/seeds/random-data/scenario/`:
-    - Example: `src/seeds/random-data/scenario/tama-river.ts`
-1. Export a default object that satisfies the `HistoricalSeed` type:
+Scenario authoring under `random-data/scenario` is deprecated and no longer
+used. Please place historical scenario seeds under:
 
-```ts
-import type { HistoricalSeed } from '@/yk/repo/seed-system';
+- `src/seeds/historical-evidences/battle/*.ts` (preferred)
+- `seeds/historical-evidences/battle/*.json` (optional)
 
-export default {
-    id: 'tama-river-001',
-    title: 'Battle of Tama River',
-    subtitle: 'A Turning Point in Regional History',
-    overview: 'Based on documented events and testimonies.',
-    narrative:
-        'Eyewitness accounts describe a fierce clash near the river banks.',
-    provenance: [
-        { label: 'City Archives: Komae', url: 'https://example.org/...' },
-        {
-            label: 'Historical Society Bulletin 1999',
-            note: 'Vol. 12, pp. 45-48',
-        },
-    ],
-} satisfies HistoricalSeed;
-```
-
-1. Run tests to validate seeds and schema:
-
-- `npm run test:seeds`
+See `src/yk/repo/core/battle-seed-loader.ts` and the historical-evidences
+README for details. Use `npm test` to validate seeds and schema.
 
 ## How to update Neta base profiles (komae/yono)
 

@@ -122,7 +122,8 @@ flowchart TD
   F --> G
   G --> C
   C --> A
-```ts
+````
+
 
 Sequence for generating a battle report:
 
@@ -171,13 +172,11 @@ classDiagram
   }
   class FakeBattleReportRepository
   class FakeJudgementRepository
-  class HistoricalScenarioRepository
   class HistoricalNetaRepository
 
   BattleReportRandomDataRepository ..|> BattleReportRepository
   FakeJudgementRepository ..|> JudgementRepository
-  RandomJokeScenarioRepository ..|> ScenarioRepository
-  RandomJokeNetaRepository ..|> NetaRepository
+  %% NetaRepository currently provided by random-data seeds via helper functions
 ```
 
 ### Add a new Repository for an existing Play Mode

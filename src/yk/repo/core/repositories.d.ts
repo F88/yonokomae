@@ -137,6 +137,12 @@ export interface JudgementRepository {
 /**
  * ScenarioRepository
  *
+ * Interface for generating battle narrative and contextual elements.
+ *
+ * Status:
+ * - No concrete implementation is currently wired in this codebase.
+ * - Kept as a stable contract for future extensions (templates/faker/LLM, etc.).
+ *
  * **Interface for generating battle narrative and contextual elements.**
  *
  * **Responsibility**:
@@ -161,7 +167,9 @@ export interface JudgementRepository {
  * Used by BattleReportRepository implementations to enrich
  * battle data with compelling narrative elements.
  *
- * @see {@link RandomJokeScenarioRepository} for seed-based implementation
+ * Note:
+ * Current BattleReportRepository implementations embed narrative logic
+ * directly (seed-system/templates) without depending on this interface.
  */
 export interface ScenarioRepository {
   /**
@@ -215,7 +223,6 @@ export interface ScenarioRepository {
  * - Asset collections with character art
  *
  * @see {@link Neta} for complete character structure
- * @see {@link RandomJokeNetaRepository} for seed-based implementation
  */
 export interface NetaRepository {
   /**
