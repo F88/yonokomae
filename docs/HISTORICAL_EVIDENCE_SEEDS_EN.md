@@ -23,90 +23,68 @@ Content within code fences may be written in languages other than English.
 
 # Historical Evidence Seeds: Contributor Guide
 
-This guide explains how to add or update data for the HISTORICAL_EVIDENCE mode.
-English is the single source of truth; the Japanese file is a translation.
+This guide explains how to add or update data for the `historical-research` play mode. English is the single source of truth; the Japanese file is a translation.
 
 ## Scope
 
-- Applies only to HISTORICAL_EVIDENCE mode repositories and seed data.
-- Other modes (DEMO, RANDOM-DATA, API, etc.) are not constrained by this document.
+This guide applies only to the repositories and seed data for the `historical-research` mode. Other modes like `demo` or `yk-now` are out of scope.
 
-## Seed locations (TS preferred)
+## Seed Locations
 
-- Preferred (TypeScript, file-based Battle data):
-    - `src/seeds/historical-evidences/battle/*.ts`
-- Optional (JSON):
-    - `seeds/historical-evidences/battle/*.json` (auto-discovered; TS is preferred)
+-   **TypeScript (Preferred):** `src/seeds/historical-evidences/battle/*.ts`
+-   **JSON (Optional):** `seeds/historical-evidences/battle/*.json`
 
-Note: Random-data seeds under `src/seeds/random-data/**` are used by the RANDOM-DATA/DEMO modes and are out of scope for this document.
+We recommend using TypeScript to benefit from type checking.
 
-## Static-only loading policy (eager imports)
+## Loading Policy: Static Eager Imports
 
-- We use static, eager imports for seed discovery and loading.
-    - Implementation uses `import.meta.glob(..., { eager: true })`.
-    - `loadSeedByFile(file)` resolves from the eager map (no `import()` at runtime).
-- Why
-    - Simplicity: sync access, no unnecessary async boundaries.
-    - Predictable bundling: avoids mixed static/dynamic import warnings.
-    - Early failure: schema/type issues surface at build/test time.
-- Trade-offs
-    - Slightly larger initial bundle. Acceptable for current seed volume.
+-   Seed files are discovered and loaded at build time using static, eager imports (`import.meta.glob(..., { eager: true })`).
+-   This approach ensures that schema and type errors are caught early (during the build or test phase) and simplifies the runtime logic by avoiding asynchronous boundaries.
+-   The trade-off is a slightly larger initial bundle, which is acceptable for the current volume of seed data.
 
-## Schemas and types
+## Schema and Types
 
-- Battle file shape (module default export should be Battle-compatible):
-    - See `src/seeds/historical-evidences/README.md` for a minimal example and the expected `Battle` fields.
+-   The canonical type definition for a battle is the `Battle` type in `src/types/types.ts`.
+-   Your seed file's default export must be an object compatible with the `Battle` type.
+-   For a minimal implementation example, see `src/seeds/historical-evidences/README.md`.
 
-## Uniqueness and validation
+## Uniqueness and Validation
 
-- Battle `id` values must be unique across all historical battles.
-    - Enforced in two places:
-        - CI test: `npm run -s test:seeds` (Vitest + Zod)
-        - Loader at build-time: duplicate IDs throw an error
+-   The `id` property of each battle must be unique across all historical battles.
+-   Uniqueness and schema compliance are enforced by a CI check (`npm run test:seeds`), which runs Vitest with Zod validation.
 
-## How to add or update a battle (TS recommended)
+## How to Add or Update a Battle
 
-1. Create or edit a TS file under `src/seeds/historical-evidences/battle/`.
-    - Example: `src/seeds/historical-evidences/battle/my-battle.ts`
-    - Export `default` as a `Battle`-compatible object.
-1. Ensure `id` is globally unique.
-1. Run validation locally:
-    - `npm run -s test:seeds`
-1. Commit with a clear Conventional Commit message.
-    - Examples:
-        - `feat(seeds): add historical battle my-battle`
-        - `fix(seeds): correct provenance url for tama-river`
+1.  **Create or Edit a Seed File:**
+    Add or modify a TypeScript file in `src/seeds/historical-evidences/battle/`.
+    Example: `my-battle.ts`
 
-## CI checks
+2.  **Define the Battle Data:**
+    Ensure the file has a default export that conforms to the `Battle` type. Make sure the `id` is unique.
 
-- `test:seeds` is part of CI and fails on schema errors or duplicate IDs.
-- Lint/Typecheck/Unit tests run on PRs by default.
+3.  **Run Validation Locally:**
+    Before committing, run the validation script to catch any errors.
+    ```bash
+    npm run test:seeds
+    ```
+
+4.  **Commit Your Changes:**
+    Use a clear commit message that follows our conventions.
+    -   `feat(seeds): add historical battle for my-battle`
+    -   `fix(seeds): correct provenance url for tama-river`
+
+## CI Checks
+
+The `test:seeds` command is part of our CI pipeline. Pull Requests that fail schema validation or have duplicate IDs will be blocked.
 
 ## Troubleshooting
 
-- Duplicate ID error
-    - Search under `src/seeds/historical-evidences/battle/` and fix conflicts.
-- Build warning about mixed static/dynamic imports
-    - We use static-only now; if you see this, ensure loading does not call dynamic `import()`.
-- Large bundle warnings
-    - Acceptable at present. We may revisit when seed volume grows.
-
-## Data Export Integration
-
-The historical seed system integrates with the TSV export functionality:
-
-- Export scripts can process seed-based data for external analysis
-- Usage examples and user voices can be exported via:
-    - `npm run ops:export-usage-examples-to-tsv`
-    - `npm run ops:export-users-voice-to-tsv`
-- Export data sources:
-    - `src/data/usage-examples.ts` - Usage examples with categories
-    - `src/data/users-voice.ts` - User testimonials and feedback
+-   **Duplicate ID Error:** Search within `src/seeds/historical-evidences/battle/` to find and resolve the conflicting ID.
+-   **Large Bundle Warnings:** This is acceptable for now. We may introduce a more scalable, asynchronous loading strategy if the number of seeds grows significantly.
 
 ## References
 
-- Implementation: `src/yk/repo/seed-system/seeds.ts`
-- Validation tests: `src/yk/repo/seed-system/seeds.validation.test.ts`
-- Historical Battle authoring: `src/seeds/historical-evidences/README.md`
-- Mode overview: `docs/DEVELOPMENT_EN.md` (Historical Seed System)
-- Export scripts: `src/ops/export-*-to-tsv.ts`
+-   **Implementation:** `src/yk/repo/seed-system/seeds.ts`
+-   **Validation Tests:** `src/yk/repo/seed-system/seeds.validation.test.ts`
+-   **Authoring Example:** `src/seeds/historical-evidences/README.md`
+-   **Development Overview:** `docs/DEVELOPMENT_EN.md`
