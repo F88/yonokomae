@@ -25,10 +25,12 @@ instructions-for-ais:
 
 ## シードの場所
 
-- **TypeScript (推奨):** `src/seeds/historical-evidences/battle/*.ts`
+- **TypeScript (推奨):**
+    - `src/seeds/historical-evidences/battle/*.ts` - 標準的な Battle
+    - `src/seeds/historical-evidences/battle/*.ja.ts` - 日本語ローカライズ版 Battle
 - **JSON (任意):** `seeds/historical-evidences/battle/*.json`
 
-型チェックの恩恵を受けるために、TypeScript の使用を推奨します。
+型チェックの恩恵を受けるために、TypeScript の使用を推奨します。ローカライズ版のコンテンツには言語固有のファイル拡張子 (`.ja.ts`) を使用してください。
 
 ## 読み込み方針: 静的な Eager Imports
 

@@ -184,13 +184,24 @@ This section explains how to extend the application with new repositories and Pl
 
 For detailed testing guidelines, see [TESTING.md](./TESTING.md).
 
-### End-to-End (E2E) Testing
+### End-to-End (E2E) Testing Policy
 
 We use Playwright for E2E testing. Specs are located in the `e2e/` directory.
 
-- **Locators**: Prefer role-based locators (`getByRole`) for accessibility. Use `data-testid` for elements without semantic roles.
-- **Determinism**: Avoid arbitrary waits. Use Playwright's web-first assertions.
+**Testing Principles:**
+
+- **Focus**: Test user-facing behaviors, not implementation details.
+- **Accessibility**: Assert accessible names and roles for critical controls using `getByRole`.
+- **Locators**: Prefer role-based locators for resilience. Use `data-testid` sparingly for elements without semantic roles.
+- **Determinism**: Avoid arbitrary waits. Use Playwright's web-first assertions and auto-waiting.
 - **Performance**: Long-running tests should be tagged with `@performance`.
+
+**Test Commands:**
+
+- `npm run e2e` - Run E2E tests (excluding @performance)
+- `npm run e2e:all` - Run all E2E tests (including @performance)
+- `npm run e2e:ui` - Interactive UI mode
+- `npm run e2e:headed` - Run in headed mode (Chromium)
 
 ## Migration Notes
 

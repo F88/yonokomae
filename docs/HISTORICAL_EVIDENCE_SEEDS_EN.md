@@ -31,10 +31,12 @@ This guide applies only to the repositories and seed data for the `historical-re
 
 ## Seed Locations
 
-- **TypeScript (Preferred):** `src/seeds/historical-evidences/battle/*.ts`
+- **TypeScript (Preferred):**
+    - `src/seeds/historical-evidences/battle/*.ts` - Standard battles
+    - `src/seeds/historical-evidences/battle/*.ja.ts` - Japanese localized battles
 - **JSON (Optional):** `seeds/historical-evidences/battle/*.json`
 
-We recommend using TypeScript to benefit from type checking.
+We recommend using TypeScript to benefit from type checking. For localized content, use language-specific file extensions (`.ja.ts`).
 
 ## Loading Policy: Static Eager Imports
 

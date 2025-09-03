@@ -104,17 +104,19 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 
 ### Completed Features
 
-- ✅ Historical Evidence mode with curated event data (JSON/seed files)
+- ✅ Historical Evidence mode with curated event data (TypeScript/JSON seed files)
 - ✅ Multiple play modes: demo (JA/EN/DE), historical-research, yk-now
 - ✅ Repository pattern with lazy-loading and code splitting
 - ✅ Seed system for deterministic battle generation
 - ✅ E2E tests for key flows (Playwright)
+- ✅ Comprehensive test coverage (unit, integration, E2E)
+- ✅ TSV export functionality for usage data and user voices
+- ✅ Seed validation system with CI checks
 
 ### In Progress
 
 - Surface provenance/notes in the UI (citations, links, disclaimers)
 - Replace placeholder images with licensed assets and show attribution
-- Add unit tests for deterministic historical paths
 
 ### Planned
 

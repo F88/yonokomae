@@ -1,6 +1,8 @@
 # RFC: Adopt pnpm monorepo and extract HISTORICAL_EVIDENCE seeds into a data package
 
-Status: Proposed
+Status: Deferred
+
+**Note:** This RFC is currently deferred. The project continues to use the current single-package structure with npm, which is working well for the current scale and contributor workflow.
 
 ## Context
 

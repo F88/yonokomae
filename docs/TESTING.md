@@ -21,17 +21,32 @@ This guide summarizes how tests are organized and run in this project, covering 
 
 ## How to Run Tests
 
+### All Tests
+
+- **Run all tests:** `npm test` or `npm run test`
+- **Watch mode:** `npm run test:watch`
+
 ### Unit & Integration Tests
 
-- **Run once:** `npm run test:unit`
+- **Run unit tests:** `npm run test:unit`
 - **Watch mode:** `npm run test:unit:watch`
 - **UI mode:** `npm run test:ui`
 - **Coverage:** `npm run test:coverage`
 
+### Seed Validation Tests
+
+- **Run seed validation:** `npm run test:seeds`
+
+### Storybook Tests
+
+- **Run Storybook tests:** `npm run test:storybook`
+
 ### End-to-End (E2E) Tests
 
-- **Run all E2E tests:** `npm run e2e`
+- **Run E2E tests (excluding @performance):** `npm run e2e`
+- **Run all E2E tests (including @performance):** `npm run e2e:all`
 - **Run in UI mode:** `npm run e2e:ui`
+- **Run in headed mode (Chromium only):** `npm run e2e:headed`
 - **Show report:** `npm run e2e:report`
 
 See `package.json` for all available scripts.
@@ -55,9 +70,14 @@ We use MSW to mock API requests in our tests.
 
 ## Repository Testing
 
-- **Fake Repositories:** Used to test deterministic logic without actual delays.
-- **Historical Repositories:** Test the seed-based generation of historical battles.
-- **Demo Repositories:** Test localized content and fixed scenarios for `demo-ja`, `demo-en`, and `demo-de` modes.
+The application uses different repository implementations for different play modes:
+
+- **Fake Repositories:** Used to test deterministic logic without actual delays or external dependencies.
+- **Historical Evidence Repositories:** Test the seed-based generation of historical battles from curated evidence files (`historical-research` mode).
+- **Demo Repositories:** Test localized content and fixed scenarios:
+    - `demo` - Japanese demonstration mode
+    - `demo-en` - English demonstration mode
+    - `demo-de` - German demonstration mode
 - **News Reporter Repository:** Tests the multi-source blending (local and API) and caching behavior for the `yk-now` mode.
 
 ### Provider Testing Patterns

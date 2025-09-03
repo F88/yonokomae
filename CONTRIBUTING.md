@@ -49,7 +49,7 @@ When you create a Pull Request, the following checks are automatically run:
 1.  **Lint**: Checks the code for style and formatting issues using ESLint.
 2.  **Typecheck**: Verifies the TypeScript types in the project.
 3.  **Unit tests**: Runs the unit test suite using Vitest.
-4.  **Seed schema validation**: Ensures that the data seeds are valid.
+4.  **Seed schema validation**: Ensures that the data seeds are valid and have unique IDs.
 
 All checks must pass before a Pull Request can be merged.
 
@@ -62,7 +62,7 @@ Before submitting a PR, please run these commands locally:
 npm run lint
 
 # Typecheck
-npx tsc -b --pretty false
+npm run typecheck
 
 # Run unit tests
 npm run test:unit
