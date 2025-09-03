@@ -75,7 +75,9 @@ export const ConsiderationsAndJudgments: FC<Props> = ({ battle, mode }) => {
   // 画面最下部までスクロール（新しい Battle が表示されたタイミング）
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      console.info('Scrolling to the bottom of the battle');
+      // nop
+      return;
+      // console.info('Scrolling to the bottom of the battle');
       // const doc = document.documentElement;
       // const top = Math.max(doc.scrollHeight - window.innerHeight, 0);
       // scrollToY(top); // temporarily disabled // do not delete this line

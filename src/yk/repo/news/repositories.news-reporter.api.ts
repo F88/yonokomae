@@ -313,34 +313,17 @@ export class NewsReporterApiBattleReportRepository
       headers: { Accept: 'application/json' },
       signal,
     });
-    console.debug(
-      '[NewsReporterApi] Open-Meteo snapshot (json):',
-      JSON.stringify(res, null, 2),
-    );
 
     if (!res.ok) throw new Error(`open-meteo HTTP ${res.status}`);
     const data = (await res.json()) as OpenMeteoItem[];
-
-    // Verbose logging only in development to inspect snapshot structure
-    if (import.meta.env.DEV) {
-      console.debug('[NewsReporterApi] Open-Meteo snapshot (object):', res);
-      try {
-        console.debug(
-          '[NewsReporterApi] Open-Meteo snapshot (json):',
-          JSON.stringify(data, null, 2),
-        );
-      } catch {
-        // no-op: circular structures shouldn't happen, but guard just in case
-      }
-    }
 
     const first = Array.isArray(data) && data.length > 0 ? data[0] : undefined;
     const second = Array.isArray(data) && data.length > 1 ? data[1] : undefined;
     const yono = this.pivotDailyFirstTwo({ daily: first?.daily }); // first element
     const komae = this.pivotDailyFirstTwo({ daily: second?.daily }); // second element
 
-    console.debug('yono', yono);
-    console.debug('komae', komae);
+    // console.debug('yono', yono);
+    // console.debug('komae', komae);
 
     return {
       yono: yono[1],
@@ -353,10 +336,6 @@ export class NewsReporterApiBattleReportRepository
     yono: DailyEntry;
     komae: DailyEntry;
   }): Battle[] {
-    // Verbose logging only in development to inspect normalized snapshot
-    if (import.meta.env.DEV) {
-      console.debug('[NewsReporterApi] Build variants from snapshot:', snap);
-    }
     const clamp = (n: number, min: number, max: number) =>
       Math.max(min, Math.min(max, n));
     const dailyTemperature: Battle = {
