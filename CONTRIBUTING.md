@@ -1,114 +1,92 @@
 # Contributing Guide
 
-## Release & Changelog Workflow
+This project uses [Changesets](https://github.com/changesets/changesets) to manage versioning and changelogs. We also follow the [Conventional Commits](https://www.conventionalcommits.org/) specification for our commit messages.
 
-This project uses Changesets to manage versioning and changelogs.
+## Development Workflow
 
-### Creating a Changeset
-
-After committing changes, create a changeset to describe them:
-
-```bash
-npx changeset
-```
-
-Follow the interactive prompts to:
-
-- Select the type of change (major, minor, patch)
-- Provide a summary of the changes
-- The changeset will be saved in `.changeset/` directory
-
-### Generating/Updating CHANGELOG
-
-When ready to release, generate or update the CHANGELOG.md:
-
-```bash
-npx changeset-changelog
-```
-
-Alternatively, update an existing CHANGELOG.md using Conventional Changelog:
-
-```bash
-npx conventional-changelog --infile CHANGELOG.md -r 0 --same-file --preset eslint
-```
-
-### Version Bumping
-
-To consume all changesets and bump versions:
-
-```bash
-npx changeset version
-```
-
-This will:
-
-- Update package versions based on changesets
-- Update CHANGELOG.md with all changes
-- Remove consumed changeset files
+1.  **Create a branch:** Create a new branch from `main` for your feature or bug fix.
+2.  **Make changes:** Make your changes to the codebase.
+3.  **Run checks locally:** Before committing, run the CI checks locally to ensure everything is in order. See the [Running CI Checks Locally](#running-ci-checks-locally) section.
+4.  **Commit your changes:** Follow the [Commit Message Conventions](#commit-message-conventions).
+5.  **Create a changeset:** If your changes are user-facing, create a changeset.
+    ```bash
+    npx changeset
+    ```
+    Follow the prompts to select the appropriate version bump (patch, minor, or major) and write a description of the change.
+6.  **Push and create a Pull Request:** Push your branch to GitHub and create a Pull Request against `main`.
 
 ## Commit Message Conventions
 
-Follow these conventions for clear commit history:
+This project follows the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/). This helps us automate versioning and changelog generation.
 
-- `feat(scope):` New features
-- `fix(scope):` Bug fixes
-- `docs(scope):` Documentation changes
-- `test(scope):` Test additions or modifications
-- `refactor(scope):` Code refactoring
-- `chore(scope):` Build process or auxiliary tool changes
+A commit message should be structured as follows:
 
-Examples:
+```
+<type>[optional scope]: <description>
 
-- `feat(repo): add ExampleRepo repositories and provider wiring`
-- `fix(ui): correct battle report scroll behavior`
-- `docs(dev): add developer guide for ExampleMode`
-- `test(repo): add unit tests for ExampleRepo behavior`
+[optional body]
+
+[optional footer(s)]
+```
+
+**Common types:**
+
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation only changes
+- `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- `refactor`: A code change that neither fixes a bug nor adds a feature
+- `perf`: A code change that improves performance
+- `test`: Adding missing tests or correcting existing tests
+- `chore`: Changes to the build process or auxiliary tools and libraries such as documentation generation
 
 ## CI/CD Pipeline
 
-### GitHub Actions Workflow
+We use GitHub Actions for our CI/CD pipeline. The workflow is defined in `.github/workflows/ci.yml`.
 
-The project is configured for GitHub Actions CI/CD, though workflow files are not yet present in `.github/workflows/`.
+When you create a Pull Request, the following checks are automatically run:
 
-#### Planned CI Pipeline (on PRs)
+1.  **Lint**: Checks the code for style and formatting issues using ESLint.
+2.  **Typecheck**: Verifies the TypeScript types in the project.
+3.  **Unit tests**: Runs the unit test suite using Vitest.
+4.  **Seed schema validation**: Ensures that the data seeds are valid and have unique IDs.
 
-1. **Lint Check**: Ensures code follows project style guidelines
-2. **Build (type checks)**: Ensures the project builds successfully and types check
-3. **Unit Tests**: Runs the test suite with coverage reporting
-4. **E2E Tests**: Runs Playwright tests for critical flows
-
-#### Current Deployment Process
-
-1. **GitHub Pages Deployment**:
-    - Manual deployment via `npm run deploy:ghpages`
-    - Builds the project with proper base path (`/yonokomae/`)
-    - Uses `gh-pages` package to push to GitHub Pages branch
-
-To set up automated CI/CD, create workflow files in `.github/workflows/` directory.
+All checks must pass before a Pull Request can be merged.
 
 ### Running CI Checks Locally
 
-Before submitting a PR, run these commands locally:
+Before submitting a PR, please run these commands locally:
 
 ```bash
 # Lint check
 npm run lint
 
-# Build (includes type checks)
-npm run build
+# Typecheck
+npm run typecheck
 
 # Run unit tests
-npm test
+npm run test:unit
 
-# Run E2E tests
-npm run e2e
-
-# Optional: data export builds
-npm run ops:export-usage-examples-to-tsv
-npm run ops:export-users-voice-to-tsv
+# Run seed validation tests
+npm run test:seeds
 ```
 
-### Data Export Scripts
+## Release Workflow
+
+When we're ready to release a new version, we follow these steps:
+
+1.  **Version bump:** The `changeset version` command is run. This consumes all changeset files, updates the package versions and the `CHANGELOG.md`.
+    ```bash
+    npx changeset version
+    ```
+2.  **Create a release commit and tag:** The changes are committed and a new version tag is created.
+3.  **Publish to npm (if applicable):** The package is published to the npm registry.
+4.  **Deploy to GitHub Pages:** The application is deployed to GitHub Pages.
+    ```bash
+    npm run deploy:ghpages
+    ```
+
+## Data Export Scripts
 
 The project includes TSV export functionality for usage examples and user voices:
 
@@ -121,16 +99,3 @@ These scripts use the TypeScript configurations in `tsconfig.ops.json` and proce
 - `src/data/users-voice.ts` - User testimonials and feedback
 
 Export scripts are located in `src/ops/` directory and generate TSV files suitable for data analysis and external use.
-
-### Environment Variables
-
-For deployment, ensure these environment variables are configured:
-
-- `VITE_API_BASE_URL`: API endpoint base URL (optional, for API mode)
-- GitHub Pages requires repository settings to enable Pages deployment
-
-## References
-
-- [Changesets Documentation](https://github.com/changesets/changesets)
-- [Conventional Changelog](https://github.com/conventional-changelog)
-- [GitHub Actions Documentation](https://docs.github.com/en/actions)

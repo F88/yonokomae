@@ -39,10 +39,9 @@ export type JudgeIdentity = {
  * ```
  *
  * **Implementations**:
- * - {@link BattleReportRandomDataRepository} - Seed-based scenarios (default)
- * - {@link ApiBattleReportRepository} - REST API client
+ * - {@link HistoricalEvidencesBattleReportRepository} - Curated historical data (default)
+ * - REST API client (legacy)
  * - {@link DemoJaBattleReportRepository} - Fixed demo scenarios
- * - {@link HistoricalEvidencesBattleReportRepository} - Curated historical data
  *
  * @see {@link Battle} for complete battle data structure
  * @see {@link PlayMode} for mode-based repository selection
@@ -100,7 +99,7 @@ export interface BattleReportRepository {
  *
  * **Implementations**:
  * - {@link FakeJudgementRepository} - Random/algorithmic judging
- * - {@link ApiJudgementRepository} - Remote API-based judging
+ * - Remote API-based judging (legacy)
  * - {@link DemoJaJudgementRepository} - Fixed demo outcomes
  *
  * @see {@link Verdict} for result shape and possible outcomes
@@ -137,6 +136,12 @@ export interface JudgementRepository {
 /**
  * ScenarioRepository
  *
+ * Interface for generating battle narrative and contextual elements.
+ *
+ * Status:
+ * - No concrete implementation is currently wired in this codebase.
+ * - Kept as a stable contract for future extensions (templates/faker/LLM, etc.).
+ *
  * **Interface for generating battle narrative and contextual elements.**
  *
  * **Responsibility**:
@@ -161,7 +166,9 @@ export interface JudgementRepository {
  * Used by BattleReportRepository implementations to enrich
  * battle data with compelling narrative elements.
  *
- * @see {@link RandomJokeScenarioRepository} for seed-based implementation
+ * Note:
+ * Current BattleReportRepository implementations embed narrative logic
+ * directly (seed-system/templates) without depending on this interface.
  */
 export interface ScenarioRepository {
   /**
@@ -215,7 +222,6 @@ export interface ScenarioRepository {
  * - Asset collections with character art
  *
  * @see {@link Neta} for complete character structure
- * @see {@link RandomJokeNetaRepository} for seed-based implementation
  */
 export interface NetaRepository {
   /**

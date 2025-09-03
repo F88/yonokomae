@@ -25,457 +25,212 @@ Content within code fences may be written in languages other than English.
 
 ## Architecture overview
 
-The architecture is based on a modular design, with a clear separation of concerns between components, repositories, and play modes. The main building blocks are:
+The application follows a modular architecture with a clear separation of concerns. The core concepts are:
 
-- **Components**: The UI components that interact with the user.
-- **RepositoryProvider**: A context provider that supplies the appropriate repository implementations to the components.
-- **Hooks**: Custom hooks that encapsulate the logic for interacting with the repositories.
-- **Repositories**: The data access layer that abstracts the underlying data sources.
+- **Components**: UI elements responsible for rendering and user interaction.
+- **Repositories**: Data access layer that abstracts data sources (e.g., local files, APIs).
+- **Play Modes**: Configurations that determine which repository implementations are used for a given scenario.
+- **RepositoryProvider**: A React context provider that injects the appropriate repository implementations based on the selected Play Mode.
+- **Hooks**: Custom React hooks (`use-generate-report`, `use-judgement`) that encapsulate the logic for interacting with repositories.
 
-### Multi-source battle report (local + API-like)
+### Data Flow and Dependency Injection
 
-When hosting statically on GitHub Pages, you can still exercise an API-shaped
-path without real network calls. Use the multi-source repository mode which
-randomly picks between a local data source and an API-like local simulator for
-each report generation.
+The `RepositoryProvider` is the central piece for dependency injection. It ensures that components receive the correct repository instances for the active Play Mode.
 
-- PlayMode id: `multi-source`
-- Env: `VITE_BATTLE_RANDOM_WEIGHT_API` (0..1, default `0.5`)
-- No external servers are contacted; the API-like source delegates to local data.
-
-This keeps callers stable today and enables a future swap to real APIs with no
-UI changes.
-
-### Shared battle seed loader (news + historical)
-
-Use a single, shared loader to discover, load, normalize, and validate Battle
-seed files across repositories.
-
-- File: `src/yk/repo/core/battle-seed-loader.ts`
-- Consumers: HistoricalEvidencesBattleReportRepository, file-based News repo
-- Inputs
-    - `roots: string[]` (e.g., `['/seeds/historical-evidences/battle/', '/src/seeds/historical-evidences/battle/']`)
-    - `file?: string` optional file name (relative to a root) to load deterministically
-- Output: `Promise<Battle>` (fully normalized and Zod-validated)
-- Behavior
-    - Discovers modules via static eager globs:
-        - `/seeds/**/*.{ts,js,json}` and `/src/seeds/**/*.{ts,js,json}`
-        - Filters to the provided `roots` and then chooses `file` or a random one
-    - Applies normalization defaults and validates with the shared `BattleSchema`
-    - Ignores non-code content like markdown; only ts/js/json are considered
-- Seed authoring rules
-    - Default-export a Battle-compatible object (TypeScript preferred)
-    - Locations by repo kind:
-        - News: `src/seeds/news/*.ts`
-        - Historical battles: `src/seeds/historical-evidences/battle/*.ts`
-            - Optional JSON mirror: `seeds/historical-evidences/battle/*.json`
-
-Why shared
-
-- One place to maintain normalization and schema validation
-- Identical behavior across repos; easier to test and evolve
-
-## How to add a new Play Mode or Repository
-
-This section is intended for developers. It explains how to add a new
-Repository implementation and how to add a new Play Mode, using
-ExampleRepo and ExampleMode as illustrative samples. All code examples are in
-TypeScript with TSDoc comments.
-
-Note: The app is a CSR SPA (no SSR). Dependency injection (DI) is provided via
-`RepositoryProvider` (and `RepositoryProviderSuspense` for async init).
-
-### Goals and Contracts
-
-- Clear repository contracts are defined in `src/yk/repo/core/repositories.ts`.
-- Implementations live under `src/yk/repo/*`.
-- Play Modes are defined in `src/yk/play-mode.ts`.
-- Provider factories that return concrete repos live in
-  `src/yk/repo/core/repository-provider.ts`.
-
-Core interfaces:
-
-- `BattleReportRepository`
-- `JudgementRepository`
-- `ScenarioRepository`
-- `NetaRepository`
-
-### Architecture diagrams (Mermaid)
-
-High-level flow of data and DI:
-
-````mermaid
+```mermaid
 flowchart TD
-  A["Components / App"]
-  B["RepositoryProvider (Context)"]
-  C["Hooks: use-generate-report / use-judgement"]
-  D["Repos from Context"]
-  E["Factories: get*Repository(mode)"]
-  F["Implementation: Fake / Historical / Future API"]
-  G["Domain Data: Battle / Verdict"]
+    A["Components / App"] -- "use hooks" --> C["Hooks (e.g., use-generate-report)"]
+    B["RepositoryProvider (Context)"] -- "provides repositories" --> C
+    C -- "calls" --> D["Repositories (from Context)"]
+    D -- "implemented by" --> F["Implementations (Fake, Historical, API)"]
+    F -- "return" --> G["Domain Data (Battle, Verdict)"]
+    C -- "return data to" --> A
+```
 
-  A --> B
-  A --> C
-  C -->|provided?| D
-  C -->|fallback| E
-  E --> F
-  F --> G
-  G --> C
-  C --> A
-```ts
-
-Sequence for generating a battle report:
+### Sequence Diagram: Generating a Battle Report
 
 ```mermaid
 sequenceDiagram
-  participant U as User
+    participant User
+    participant UI
+    participant Hook as use-generate-report
+    participant Provider as RepositoryProvider
+    participant Repo as BattleReportRepository
+
+    User->>UI: Clicks "Battle"
+    UI->>Hook: generateReport()
+    Hook->>Provider: Accesses context
+    Provider-->>Hook: Provides BattleReportRepository instance
+    Hook->>Repo: generateReport({ signal })
+    Repo-->>Hook: Returns Battle data
+    Hook-->>UI: Updates state with Battle data
 ```
-  participant H as use-generate-report
-  participant X as Repo Context (optional)
-  participant F as Factory (getBattleReportRepository)
-  participant R as Repo Impl (Fake/Historical)
 
-  U->>UI: Click "Battle"
-  UI->>H: generateReport()
-  H->>X: useRepositoriesOptional()
-  alt Provider present
-    H->>R: battleReport.generateReport({ signal })
-  else No provider
-    H->>F: getBattleReportRepository(mode)
-    F-->>H: Repo instance
-    H->>R: generateReport({ signal })
-  end
-  R-->>H: Battle
-  H-->>UI: setState(success)
-````
+### Repository Interfaces
 
-Interfaces and implementations:
+The core repository contracts are defined in `src/yk/repo/core/repositories.ts`.
 
 ```mermaid
 classDiagram
-  class BattleReportRepository {
-    +generateReport(options) Promise<Battle>
-  }
-  class JudgementRepository {
-    +determineWinner(input, options) Promise<Verdict>
-  }
-  class ScenarioRepository {
-    +generateTitle() Promise<string>
-    +generateSubtitle() Promise<string>
-    +generateOverview() Promise<string>
-    +generateNarrative() Promise<string>
-  }
-  class NetaRepository {
-    +getKomaeBase() Promise<...>
-    +getYonoBase() Promise<...>
-  }
-  class FakeBattleReportRepository
-  class FakeJudgementRepository
-  class HistoricalScenarioRepository
-  class HistoricalNetaRepository
-
-  BattleReportRandomDataRepository ..|> BattleReportRepository
-  FakeJudgementRepository ..|> JudgementRepository
-  RandomJokeScenarioRepository ..|> ScenarioRepository
-  RandomJokeNetaRepository ..|> NetaRepository
-```
-
-### Add a new Repository for an existing Play Mode
-
-Use this path when you want to add a new repository (ExampleRepo) and consume
-it under an existing mode (e.g., `demo`).
-
-Note: Repository implementations are organized by type under `src/yk/repo/`:
-
-- `api/` - REST API client implementations
-- `core/` - Repository interfaces and provider logic
-- `demo/` - Demo/fixed data repositories
-- `historical-evidences/` - Curated historical data repositories
-- `mock/` - Test/fake repositories (FakeJudgementRepository only)
-- `random-jokes/` - Seed-based random data repositories (default)
-- `seed-system/` - Historical seed management system
-
-1. Create the Repository implementation file
-
-- Location: `src/yk/repo/example/repositories.example.ts`
-
-Example with TSDoc:
-
-```ts
-// src/yk/repo/example/repositories.example.ts
-import type {
-    BattleReportRepository,
-    JudgementRepository,
-    Verdict,
-} from '@/yk/repo/core/repositories';
-import type { Battle, Neta } from '@/types/types';
-import { uid } from '@/lib/id';
-
-/**
- * ExampleBattleReportRepository
- * @public
- * A sample repository that demonstrates how to produce a Battle entity.
- */
-export class ExampleBattleReportRepository implements BattleReportRepository {
-    /**
-     * Generate or fetch a battle report.
-     * @param options Optional signal for cancellation.
-     * @returns A fully-populated Battle entity.
-     */
-    async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
-        // touch options to satisfy lint until real use is added
-        void options?.signal;
-        const makeNeta = (title: string): Neta => ({
-            title,
-            subtitle: 'Example Subtitle',
-            description: 'Generated by ExampleRepo',
-            imageUrl: 'about:blank',
-            power: 42,
-        });
-        return {
-            id: uid('battle'),
-            title: 'Example Battle',
-            subtitle: 'Showcase',
-            overview: 'An example implementation for Battle reports',
-            scenario: 'Two sides face off in a demonstration scenario.',
-            yono: makeNeta('Yono - Example'),
-            komae: makeNeta('Komae - Example'),
-            status: 'success',
-        };
+    class BattleReportRepository {
+        +generateReport(options): Promise<Battle>
     }
-}
-
-/**
- * ExampleJudgementRepository
- * @public
- * Demonstrates a simple rule for determining the winner.
- */
-export class ExampleJudgementRepository implements JudgementRepository {
-    /**
-     * Decide the winner based on provided input.
-     * @param input Includes the current mode and the two combatants.
-     * @param options Optional signal for cancellation.
-     * @returns A Verdict containing the winner and decision metadata.
-     */
-    async determineWinner(
-        input: { mode: { id: string }; yono: Neta; komae: Neta },
-        options?: { signal?: AbortSignal },
-    ): Promise<Verdict> {
-        void options?.signal;
-        const powerDiff = input.yono.power - input.komae.power;
-        const winner =
-            powerDiff === 0 ? 'DRAW' : powerDiff > 0 ? 'YONO' : 'KOMAE';
-        return { winner, reason: 'power', powerDiff };
+    class JudgementRepository {
+        +determineWinner(input, options): Promise<Verdict>
     }
-}
+    class ScenarioRepository {
+        +generateTitle(): Promise<string>
+        +generateSubtitle(): Promise<string>
+    }
+    class NetaRepository {
+        +getKomaeBase(): Promise<Neta>
+        +getYonoBase(): Promise<Neta>
+    }
+
+    HistoricalEvidencesBattleReportRepository --|> BattleReportRepository
+    DemoJaBattleReportRepository --|> BattleReportRepository
+    NewsReporterMultiSourceReportRepository --|> BattleReportRepository
+    FakeJudgementRepository --|> JudgementRepository
 ```
 
-1. Wire ExampleRepo into the existing mode
+## How to Add a New Play Mode or Repository
 
-- File: `src/yk/repo/core/repository-provider.ts`
-- Add a branch to return `ExampleBattleReportRepository` and
-  `ExampleJudgementRepository` when `mode.id` matches your target mode (e.g.,
-  `demo`).
+This section explains how to extend the application with new repositories and Play Modes.
 
-1. (Optional) Tune default delays per mode
+### Adding a New Repository
 
-- The helper `defaultDelayForMode` can be adjusted to emulate realistic latencies
-  for your mode and repository kind.
+1.  **Create the Repository Implementation:**
+    Create a new file under `src/yk/repo/`. For example, `src/yk/repo/example/repositories.example.ts`. Implement one or more of the repository interfaces.
 
-1. Add tests near the implementation
+    ```typescript
+    // src/yk/repo/example/repositories.example.ts
+    import type { BattleReportRepository } from '@/yk/repo/core/repositories';
+    import type { Battle } from '@/types/types';
+    import { uid } from '@/lib/id';
 
-- File: `src/yk/repo/example/repositories.example.test.ts`
-- Mock timers/random if needed; assert on states and interactions, not random
-  values.
-
-### Add a new Play Mode with its Repositories
-
-Use this path when you introduce a brand-new `ExampleMode` and new repositories.
-
-1. Register the Play Mode
-
-- File: `src/yk/play-mode.ts`
-- Add an item to `playMode`:
-
-```
-// @ts-nocheck
-// Adjust the type to your project definition
-type PlayMode = { id: string; title: string; description: string; enabled: boolean };
-export const exampleMode: PlayMode = {
-  id: 'example-mode',
-  title: 'EXAMPLE MODE',
-  description: 'A new mode powered by ExampleRepo',
-  enabled: true,
-};
-```
-
-1. Implement the Repositories
-
-- Location: `src/yk/repo/example/repositories.example.ts` (same as above) or split as
-  needed.
-
-1. Wire the new mode in provider factories
-
-- File: `src/yk/repo/core/repository-provider.ts`
-- Add branches in `getBattleReportRepository` and `getJudgementRepository`:
-
-```ts
-if (mode?.id === 'example-mode') {
-    const { ExampleBattleReportRepository } = await import(
-        '@/yk/repo/example/repositories.example'
-    );
-    return new ExampleBattleReportRepository();
-}
-// ...
-if (mode?.id === 'example-mode') {
-    const { ExampleJudgementRepository } = await import(
-        '@/yk/repo/example/repositories.example'
-    );
-    return new ExampleJudgementRepository();
-}
-```
-
-1. Select the mode in the UI or tests
-
-- Provide `mode={theExampleMode}` to `RepositoryProvider` at the root, or pass
-  `mode` to hooks/components that accept explicit DI.
-
-1. Async initialization (if any)
-
-- If your ExampleRepo needs async setup (API warm-up, metadata fetch), use
-  `RepositoryProviderSuspense` and wrap with `<Suspense>` in the app shell.
-
-### Wiring in the Provider Factories
-
-- Provider factories live in `src/yk/repo/core/repository-provider.ts`.
-- Add a branch per `mode.id` to instantiate the correct implementation.
-- Keep factories lightweight and avoid side effects; prefer async imports.
-
-### Using the Provider in the App (and Suspense)
-
-Basic provider (sync or lazy creation):
-
-```tsx
-import React from 'react';
-import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
-import { playMode, type PlayMode } from '@/yk/play-mode';
-
-export function Root() {
-    const [mode] = React.useState<PlayMode>(playMode[0]);
-    return <RepositoryProvider mode={mode}>{/* App */}</RepositoryProvider>;
-}
-```
-
-Suspense-ready provider (async initialization):
-
-```tsx
-import React, { Suspense } from 'react';
-import { RepositoryProviderSuspense } from '@/yk/repo/core/RepositoryProvider';
-import type { PlayMode } from '@/yk/play-mode';
-
-export function Root({ mode }: { mode: PlayMode }) {
-    return (
-        <Suspense fallback={<div>Initializing…</div>}>
-            <RepositoryProviderSuspense mode={mode}>
-                {/* App */}
-            </RepositoryProviderSuspense>
-        </Suspense>
-    );
-}
-```
-
-### Testing Helpers and Tips
-
-See [TESTING.md](./TESTING.md) for testing guidance.
-
-## End-to-End (E2E) testing policy
-
-We use Playwright for E2E coverage of core user flows and accessibility
-surfaces. Keep tests fast, deterministic, and focused on behavior users
-experience.
-
-Principles
-
-- Scope: place specs under `e2e/` and keep them task-oriented.
-- Locators: prefer `getByRole(..., { name })`; use `data-testid` only for
-  non-semantic containers (e.g., `battle`, `slot-yono`, `slot-komae`). Avoid
-  brittle CSS/XPath.
-- Determinism: avoid arbitrary waits; rely on `expect(...).toHave*` assertions.
-  Honor `prefers-reduced-motion`; emulate reduced motion in tests when helpful.
-- Performance tests: long-running or high-count flows should be marked as slow
-  and tagged `@performance` so they can be filtered separately.
-- Accessibility: assert accessible names and roles for critical controls.
-
-Annotations and tags
-
-- Tags are grep-able in Playwright (e.g., `@performance`, `@a11y`, `@smoke`).
-- Add report annotations where useful:
-  `test.info().annotations.push({ type: 'performance', description: '...' })`.
-- Reference: [Playwright Annotations](https://playwright.dev/docs/test-annotations)
-
-Examples
-
-```ts
-import { test } from '@playwright/test';
-
-test(
-    'appends up to 100 battle containers when Battle is clicked repeatedly',
+    export class ExampleBattleReportRepository
+        implements BattleReportRepository
     {
-        tag: ['@performance', '@slow'],
-    },
-    async ({ page }) => {
-        // ... test body ...
-    },
-);
+        async generateReport(): Promise<Battle> {
+            // Implementation...
+            return {
+                id: uid('battle'),
+                title: 'Example Battle',
+                // ... other properties
+            };
+        }
+    }
+    ```
 
-test('a long-running performance check', async ({ page }) => {
-    test.slow();
-    test.info().annotations.push({
-        type: 'performance',
-        description: 'Clicks Battle 100 times and verifies 100 containers',
-    });
-    // ... test body ...
-});
-```
+2.  **Wire into Provider Factory:**
+    In `src/yk/repo/core/repository-provider.ts`, update the factory functions (`getBattleReportRepository`, `getJudgementRepository`, etc.) to return your new repository implementation for the desired Play Mode.
 
-### Acceptance Checklist
+    ```typescript
+    // src/yk/repo/core/repository-provider.ts
+    import { ExampleBattleReportRepository } from '@/yk/repo/example/repositories.example';
 
-- TypeScript compiles with no new errors.
+    export async function getBattleReportRepository(
+        mode?: PlayMode,
+    ): Promise<BattleReportRepository> {
+        if (mode?.id === 'some-mode') {
+            return new ExampleBattleReportRepository();
+        }
+        // ... other modes
+    }
+    ```
 
-## Migration Notes: Winner -> Verdict (Breaking change)
+### Adding a New Play Mode
 
-As of 2025-09-02, `JudgementRepository.determineWinner` now returns a
-structured `Verdict` instead of a `Winner` string. This is a breaking change.
+1.  **Define the Play Mode:**
+    In `src/yk/play-mode.ts`, add a new `PlayMode` object.
 
-- Old: `Promise<Winner>` where `Winner = 'YONO' | 'KOMAE' | 'DRAW'`.
-- New: `Promise<Verdict>` with shape:
+    ```typescript
+    // src/yk/play-mode.ts
+    import type { PlayMode } from '@/types/types';
 
-```ts
+    export const exampleMode: PlayMode = {
+        id: 'example-mode',
+        title: 'EXAMPLE MODE',
+        description: 'A new mode powered by ExampleRepo',
+        enabled: true,
+    };
+    ```
+
+2.  **Implement Repositories:**
+    Create the repository implementations for your new mode as described above.
+
+3.  **Update Provider Factories:**
+    In `src/yk/repo/core/repository-provider.ts`, add a new branch in the factory functions to handle your new `example-mode`. Use dynamic imports to lazy-load the repositories.
+
+    ```typescript
+    // src/yk/repo/core/repository-provider.ts
+    export async function getBattleReportRepository(
+        mode?: PlayMode,
+    ): Promise<BattleReportRepository> {
+        if (mode?.id === 'example-mode') {
+            const { ExampleBattleReportRepository } = await import(
+                '@/yk/repo/example/repositories.example'
+            );
+            return new ExampleBattleReportRepository();
+        }
+        // ... other modes
+    }
+    ```
+
+4.  **Use the Mode in the UI:**
+    Update the UI to allow selecting the new Play Mode, which will then be passed to the `RepositoryProvider`.
+
+## Testing
+
+For detailed testing guidelines, see [TESTING.md](./TESTING.md).
+
+### End-to-End (E2E) Testing Policy
+
+We use Playwright for E2E testing. Specs are located in the `e2e/` directory.
+
+**Testing Principles:**
+
+- **Focus**: Test user-facing behaviors, not implementation details.
+- **Accessibility**: Assert accessible names and roles for critical controls using `getByRole`.
+- **Locators**: Prefer role-based locators for resilience. Use `data-testid` sparingly for elements without semantic roles.
+- **Determinism**: Avoid arbitrary waits. Use Playwright's web-first assertions and auto-waiting.
+- **Performance**: Long-running tests should be tagged with `@performance`.
+
+**Test Commands:**
+
+- `npm run e2e` - Run E2E tests (excluding @performance)
+- `npm run e2e:all` - Run all E2E tests (including @performance)
+- `npm run e2e:ui` - Interactive UI mode
+- `npm run e2e:headed` - Run in headed mode (Chromium)
+
+## Migration Notes
+
+### Breaking Change (2025-09-02): `Winner` -> `Verdict`
+
+The `JudgementRepository.determineWinner` method now returns a structured `Verdict` object instead of a simple `Winner` string.
+
+- **Old:** `Promise<'YONO' | 'KOMAE' | 'DRAW'>`
+- **New:** `Promise<Verdict>`
+
+```typescript
 type Verdict = {
     winner: 'YONO' | 'KOMAE' | 'DRAW';
     reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
     judgeCode?: string;
-    rng?: number;
-    powerDiff?: number; // yono.power - komae.power
-    confidence?: number; // optional future extension
+    powerDiff?: number;
 };
 ```
 
-What you need to update:
+**Action Required:**
 
-- Call sites: read `verdict.winner` instead of using the raw string.
-- Implementations: return a `Verdict` object with at least `winner` and a
-  reasonable `reason` (e.g., `'power'` for local comparison).
-- Tests/mocks: update expectations to assert `verdict.winner` and include
-  `reason`/`powerDiff` where meaningful.
-- API/MSW: make sure `/battle/judgement` payloads are `Verdict`-shaped.
+- Update all call sites to access the winner via `verdict.winner`.
+- Ensure all `JudgementRepository` implementations return a `Verdict` object.
+- Update tests and mocks to match the new return type.
 
-Rationale:
+## Current Play Modes
 
-- Carries useful decision metadata for UI/telemetry.
-- Enables future evolution (confidence, judge code) without another breaking
-  change.
-- Unit tests pass locally.
-- Provider factory branches implemented for the new mode if applicable.
-- README/DEVELOPMENT_EN updated as needed (high-level overview in README; deeper
-  steps here).
+- `demo`: Japanese demo with fixed scenarios.
+- `demo-en`: English demo variant.
+- `demo-de`: German demo variant.
+- `historical-research`: Scenarios based on historical evidence seeds.
+- `yk-now`: News-driven mode using a multi-source repository.

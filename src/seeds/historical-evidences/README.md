@@ -1,14 +1,14 @@
-# Historical Evidences Seeds (File-based Battle Data)
+# Historical Evidence Seeds (File-based Battle Data)
 
-This folder hosts authorable, file-based Battle data used by the
-HistoricalEvidencesBattleReportRepository. These are per-battle files, not
-random demo seeds, and are discovered at build/test time using eager
-`import.meta.glob`.
+This folder contains authorable, file-based Battle data used by the HistoricalEvidencesBattleReportRepository in the `historical-research` play mode. These are evidence-based battle scenarios with historical context, not random demo seeds. Files are discovered at build/test time using eager `import.meta.glob`.
 
-- TS modules (preferred) live under:
-    - `src/seeds/historical-evidences/battle/*.ts`
+## Supported Formats
 
-- Optional JSON files are supported under a project-root mirror path:
+- **TypeScript modules (preferred):**
+    - `src/seeds/historical-evidences/battle/*.ts` - Standard battles
+    - `src/seeds/historical-evidences/battle/*.ja.ts` - Japanese localized battles
+
+- **JSON files (optional):**
     - `seeds/historical-evidences/battle/*.json`
 
 Both TS and JSON must expose a Battle-compatible object as the module default export.

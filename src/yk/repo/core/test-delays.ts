@@ -2,7 +2,6 @@
  * Manual test to verify delay functionality works in practice
  * Run this file manually: npx tsx src/yk/repo/core/test-delays.ts
  */
-import { BattleReportRandomDataRepository } from '../random-jokes/repositories.random-jokes';
 import { DemoJaBattleReportRepository } from '../demo/demo-ja/repositories.demo-ja';
 import { getBattleReportRepository } from './repository-provider';
 
@@ -12,7 +11,7 @@ async function testDelays() {
   // Test 1: Manual delay
   console.log('1️⃣ Manual 2-second delay...');
   const start1 = Date.now();
-  const manualRepo = new BattleReportRandomDataRepository({ delay: 2000 });
+  const manualRepo = new DemoJaBattleReportRepository({ delay: 2000 });
   await manualRepo.generateReport();
   const elapsed1 = Date.now() - start1;
   console.log(`✅ Completed in ${elapsed1}ms (expected: ~2000ms)\n`);
@@ -40,22 +39,7 @@ async function testDelays() {
   const elapsed3 = Date.now() - start3;
   console.log(`✅ Completed in ${elapsed3}ms (expected: 1000-2000ms)\n`);
 
-  // Test 4: API mode delay
-  console.log('4️⃣ Auto delay via provider (API mode)...');
-  const start4 = Date.now();
-  try {
-    const apiRepo = await getBattleReportRepository({
-      id: 'api',
-      title: 'API',
-      description: 'API mode',
-      enabled: true,
-    });
-    await apiRepo.generateReport();
-    const elapsed4 = Date.now() - start4;
-    console.log(`✅ Completed in ${elapsed4}ms (expected: 1500-3000ms)\n`);
-  } catch (error) {
-    console.log(`⚠️  API test failed (expected - no server): ${error}\n`);
-  }
+  // Test 4 removed: API mode no longer supported for battle reports.
 
   console.log('🎉 Delay testing completed!');
 }

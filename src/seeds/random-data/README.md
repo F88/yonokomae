@@ -1,92 +1,57 @@
-# Random Data Seeds (Random Joke Data)
+# Random Data Seeds (for Demo & Prototyping)
 
-This folder hosts type-safe seed modules used by the Random Joke Data repository
-and related prototyping flows. These are non-historical, demo-style seeds.
+This folder contains non-historical, demo-style seed data used for character bases (`neta`), scenarios, and report defaults. This data is primarily used in `demo` modes (demo-ja, demo-en, demo-de) and for prototyping.
+
 Seeds are discovered at build time using static, eager imports via `import.meta.glob`.
 
-- TS modules are preferred for authoring and live under:
-    - `src/seeds/random-data/scenario/*.ts`
-    - `src/seeds/random-data/neta/{komae,yono}.ts`
-    - `src/seeds/random-data/report/config.ts`
+## Structure
 
-- Optional JSON seeds are supported under the project root `seeds/` mirror:
-    - `seeds/random-data/scenario/*.json`
-    - `seeds/random-data/neta/{komae,yono}.json`
-    - `seeds/random-data/report/config.json`
+### TypeScript Files (Preferred)
 
-## How to add a new Scenario seed (TS recommended)
+- **Neta (Character Profiles):**
+    - `src/seeds/random-data/neta/komae.ts` - Base Komae profile
+    - `src/seeds/random-data/neta/yono.ts` - Base Yono profile
+    - `src/seeds/random-data/neta/komae.ja.ts` - Japanese localized Komae profile
+    - `src/seeds/random-data/neta/yono.ja.ts` - Japanese localized Yono profile
+    - `src/seeds/random-data/neta/komae.en.ts` - English localized Komae profile
+    - `src/seeds/random-data/neta/yono.en.ts` - English localized Yono profile
 
-1. Create a new file in `src/seeds/random-data/scenario/`:
-    - Example: `src/seeds/random-data/scenario/tama-river.ts`
-1. Export a default object that satisfies the `HistoricalSeed` type:
+- **Scenarios (Battle Narratives):**
+    - `src/seeds/random-data/scenario/*.ts` - Base scenarios
+    - `src/seeds/random-data/scenario/*.ja.ts` - Japanese localized scenarios
+    - `src/seeds/random-data/scenario/*.en.ts` - English localized scenarios
 
-```ts
-import type { HistoricalSeed } from '@/yk/repo/seed-system';
+### JSON Files (Optional)
 
-export default {
-    id: 'tama-river-001',
-    title: 'Battle of Tama River',
-    subtitle: 'A Turning Point in Regional History',
-    overview: 'Based on documented events and testimonies.',
-    narrative:
-        'Eyewitness accounts describe a fierce clash near the river banks.',
-    provenance: [
-        { label: 'City Archives: Komae', url: 'https://example.org/...' },
-        {
-            label: 'Historical Society Bulletin 1999',
-            note: 'Vol. 12, pp. 45-48',
-        },
-    ],
-} satisfies HistoricalSeed;
+JSON alternatives can be placed under the project-root mirror path:
+
+- `seeds/random-data/neta/*.json`
+- `seeds/random-data/scenario/*.json`
+
+## How to Update Neta Base Profiles (Komae/Yono)
+
+Edit the TypeScript files under `src/seeds/random-data/neta/` to update the base profiles for Komae and Yono. These files export simple objects that are consumed by the demo repositories. For localized versions, edit the corresponding `.ja.ts` or `.en.ts` files.
+
+## How to Add or Update Scenarios
+
+Create or edit TypeScript files under `src/seeds/random-data/scenario/`. Each file should export a scenario object compatible with the demo mode requirements. Use language-specific file extensions (`.ja.ts`, `.en.ts`) for localized content.
+
+## Historical Evidence Seeds
+
+**Note:** Historical battle data based on real evidence is stored separately.
+
+For historical evidence data, please use:
+
+- `src/seeds/historical-evidences/battle/*.ts`
+
+See the `README.md` in that directory for instructions on contributing historical evidence.
+
+## Validation
+
+To ensure all seeds are correctly structured, you can run the validation tests:
+
+```bash
+npm run test:seeds
 ```
 
-1. Run tests to validate seeds and schema:
-
-- `npm run test:seeds`
-
-## How to update Neta base profiles (komae/yono)
-
-- Preferred (TS): edit files under `src/seeds/random-data/neta/`:
-    - `komae.ts`, `yono.ts` exporting simple objects consumed by the repo
-
-- Optional (JSON): provide `seeds/random-data/neta/*.json` equivalents
-
-## How to configure report defaults
-
-- Preferred (TS): `src/seeds/random-data/report/config.ts` exporting `{ attribution, defaultPower }`
-
-- Optional (JSON): `seeds/random-data/report/config.json`
-
-## Naming conventions
-
-- Scenario filenames: `kebab-case` matching the seed id prefix (e.g., `tama-river.ts`)
-- Seed IDs: prefix with the filename stem and a 3-digit counter (e.g., `tama-river-001`)
-- Keep titles in Title Case; keep code identifiers in English
-- Use ISO 8601 dates where applicable
-
-## Schema (HistoricalSeed)
-
-The `HistoricalSeed` shape is enforced at build/test time. Minimal schema:
-
-```ts
-export interface HistoricalSeed {
-    id: string; // unique across all seeds
-    title: string;
-    subtitle?: string;
-    overview?: string;
-    narrative?: string;
-    provenance?: Array<string | { label: string; url?: string; note?: string }>;
-}
-```
-
-Notes:
-
-- IDs must be globally unique; tests will fail if duplicates are detected.
-- Prefer TS modules to catch type errors early; JSON is supported but not preferred.
-- No manual registration: files are auto-discovered by `import.meta.glob`.
-
-## Troubleshooting
-
-- If a new seed doesn't appear, ensure the file path matches one of the glob patterns and the default export exists.
-- Vite may warn about dynamic imports if paths change; we use eager static imports to avoid mixed static/dynamic references.
-- Use `npm run test` for the full suite; see `docs/TESTING.md` for details.
+See `docs/TESTING.md` for more details on testing.

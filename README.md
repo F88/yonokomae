@@ -7,7 +7,7 @@ Yono Komae War
 This thought-provoking game explores the outcomes for two countries after 'The World Merger Battle' of the Heisei era (
 平成の大合併大戦).
 
-```text
+```txt
 Note: This game is full of humorous jokes, but to be clear, it is not a deepfake or a mere fabrication.
 ```
 
@@ -46,15 +46,6 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 | 🌌 Oooh, aaah.                                                                                                                                                                                                                                                                                                                  | 👶 宇宙の真理を悟りし者(0歳)          |
 | 🐶 Wouf ! Wouf wouf !                                                                                                                                                                                                                                                                                                           | 🐕 食後の散歩を要求する柴犬(年齢不詳) |
 
-## Key Features
-
-- Multiple play modes with clear status
-    - DEMO: quick demonstration with placeholder data (enabled)
-    - HISTORICAL RESEARCH: deterministic mode based on historical seeds (enabled)
-        - Seed-based reproducible generation
-        - Tab key to rotate through available seeds
-        - Provenance tracking and display
-    - AI MODE: planned, AI-generated scenarios (disabled)
 - One-click battle report generation with smooth auto-scroll to latest
 - Interactive user engagement components
     - Usage examples showcase with category-based organization
@@ -64,7 +55,7 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
     - Async judgement with simulated latency
     - Shadcn skeleton placeholders on the battle field
 - Modern UI stack
-    - React + Vite + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
+    - React 19 + Vite 7 + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
     - Dark mode toggle via class-based theme
     - Responsive design with breakpoint-aware layouts
 - Zero-SSR SPA optimized for client-side rendering
@@ -109,33 +100,33 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 [Testing guide (EN)](./docs/TESTING.md)
 [Contributing guide](./CONTRIBUTING.md)
 
-Historical Evidence mode
+## Roadmap
 
-- Expand repositories with curated event data (JSON/seed files) and
-  deterministic generation rules
+### Completed Features
+
+- ✅ Historical Evidence mode with curated event data (TypeScript/JSON seed files)
+- ✅ Multiple play modes: demo (JA/EN/DE), historical-research, yk-now
+- ✅ Repository pattern with lazy-loading and code splitting
+- ✅ Seed system for deterministic battle generation
+- ✅ E2E tests for key flows (Playwright)
+- ✅ Comprehensive test coverage (unit, integration, E2E)
+- ✅ TSV export functionality for usage data and user voices
+- ✅ Seed validation system with CI checks
+
+### In Progress
+
 - Surface provenance/notes in the UI (citations, links, disclaimers)
 - Replace placeholder images with licensed assets and show attribution
-- Add unit tests for deterministic historical paths
-- AI Mode (later)
-- Evaluate model/provider and on-device vs API trade-offs
-- Add safety guardrails and content filters
-- Provide offline mock/stub for tests and local dev
-- API-backed mode (optional)
-- Wire Api repositories under a dedicated mode (e.g., `api`) using
-  `VITE_API_BASE_URL`
-- Provide a mock server and integration tests
-- Add provider branching and a feature flag
-- Battle UX polish
-- Add progress indicator for async judgement (per-step animation)
-- Make judgement cancellable with user feedback
-- Respect reduced-motion preferences for scroll/animation
-- Accessibility and i18n
-- A11y audit (labels, focus management, contrast)
-- Improve keyboard flow after generating a report (focus return/announce)
-- Localize UI strings (EN/JA alignment with docs)
-- Testing
-- Add E2E tests (e.g., Playwright) for key flows
-- Optional visual regression for core components
+
+### Planned
+
+- Accessibility improvements
+    - A11y audit (labels, focus management, contrast)
+    - Improve keyboard flow after generating a report (focus return/announce)
+- Internationalization
+    - Localize UI strings (EN/JA alignment with docs)
+- Testing enhancements
+    - Optional visual regression for core components
 
 ## Project notes
 

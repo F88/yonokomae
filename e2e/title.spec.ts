@@ -20,7 +20,6 @@ const by = {
 // DOM ids used by TitleContainer for aria-activedescendant
 const MODE_IDS = {
   HISTORICAL: 'play-mode-historical-research',
-  MIXED: 'play-mode-mixed-nuts',
 } as const;
 
 // Helpers for viewport-conditional assertions
@@ -133,10 +132,9 @@ test.describe('Title', () => {
 
       // End jumps to the last enabled option
       await page.keyboard.press('End');
-      await expect(group).toHaveAttribute(
-        'aria-activedescendant',
-        MODE_IDS.MIXED,
-      );
+      // The last enabled option should be focused; assert it's a radio and is checked
+      const lastIndex = (await group.getByRole('radio').count()) - 1;
+      await expect(group.getByRole('radio').nth(lastIndex)).toBeChecked();
 
       // Home jumps back to the first enabled option
       await page.keyboard.press('Home');

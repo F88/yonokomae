@@ -13,11 +13,8 @@ import type { PlayMode } from '../../play-mode';
  * - Handles dependency injection and configuration
  *
  * **PlayMode Mapping**:
- * - `'api'` → {@link ApiBattleReportRepository} with REST API client
- * - `'historical-evidences'` → {@link HistoricalEvidencesBattleReportRepository}
- * - `'historical-evidence'` → {@link BattleReportRandomDataRepository} with seed-system
- * - `'mixed-nuts'` → {@link BattleReportRandomDataRepository} with seed-system
- * - **Default** → {@link BattleReportRandomDataRepository} with seed-system
+ * - `'historical-research'` → {@link HistoricalEvidencesBattleReportRepository}
+ * - **Default** → {@link HistoricalEvidencesBattleReportRepository}
  *
  * **Dynamic Import Benefits**:
  * - Code splitting: Only loads required implementation modules
@@ -35,9 +32,6 @@ import type { PlayMode } from '../../play-mode';
  *
  * @example
  * ```typescript
- * // API mode with REST endpoint
- * const apiRepo = await getBattleReportRepository({ id: 'api' });
- *
  * // Seed-based with specific file
  * const seedRepo = await getBattleReportRepository(
  *   { id: 'historical-evidence' },
@@ -62,7 +56,6 @@ export declare function getBattleReportRepository(
  * - Supports both local and remote judging systems
  *
  * **PlayMode Mapping**:
- * - `'api'` → {@link ApiJudgementRepository} with remote AI/ML judging
  * - **Default** → {@link FakeJudgementRepository} with algorithmic judging
  *
  * **Judging Strategies**:
@@ -80,9 +73,6 @@ export declare function getBattleReportRepository(
  *
  * @example
  * ```typescript
- * // API-based judging with ML models
- * const apiJudge = await getJudgementRepository({ id: 'api' });
- *
  * // Default algorithmic judging
  * const localJudge = await getJudgementRepository();
  *

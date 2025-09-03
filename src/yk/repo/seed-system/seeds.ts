@@ -68,7 +68,7 @@ function basename(path: string): string {
  * - **Attribution**: Optional provenance array with source references
  *
  * **Data Sources**:
- * Used by BattleReportRandomDataRepository to generate rich battle scenarios
+ * Used by HistoricalEvidencesBattleReportRepository to generate rich battle scenarios
  * with historical context and proper source attribution.
  *
  * **Provenance Structure**:

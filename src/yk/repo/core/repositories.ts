@@ -62,10 +62,8 @@ export type JudgeIdentity = {
  * ```
  *
  * **Implementations**:
- * - {@link BattleReportRandomDataRepository} - Seed-based scenarios (default)
- * - {@link ApiBattleReportRepository} - REST API client
+ * - {@link HistoricalEvidencesBattleReportRepository} - Curated historical seeds (default)
  * - {@link DemoJaBattleReportRepository} - Fixed demo scenarios
- * - {@link HistoricalEvidencesBattleReportRepository} - Curated historical data
  *
  * @see {@link Battle} for complete battle data structure
  * @see {@link PlayMode} for mode-based repository selection
@@ -103,7 +101,7 @@ export interface BattleReportRepository {
  *
  * **Implementation Strategies**:
  * - **Pure/Local**: Algorithm-based rules using character stats
- * - **Remote/API**: Server-side ML models or complex rule engines
+ * - **Remote/API**: Server-side ML models or complex rule engines (legacy)
  * - **Random**: Probabilistic outcomes with weighted chances
  * - **Fixed**: Predetermined outcomes for testing/demo
  *
@@ -124,7 +122,7 @@ export interface BattleReportRepository {
  *
  * **Implementations**:
  * - {@link FakeJudgementRepository} - Random/algorithmic judging
- * - {@link ApiJudgementRepository} - Remote API-based judging
+ * - Remote API-based judging (legacy)
  * - {@link DemoJaJudgementRepository} - Fixed demo outcomes
  *
  * @see {@link Verdict} for result detail and possible outcomes
@@ -160,31 +158,19 @@ export interface JudgementRepository {
 /**
  * ScenarioRepository
  *
- * **Interface for generating battle narrative and contextual elements.**
+ * Interface for generating battle narrative and contextual elements.
  *
- * **Responsibility**:
- * Supply rich narrative content that provides context and storytelling for battles:
- * - Battle titles and subtitles for identification
- * - Overview summaries describing the conflict
- * - Detailed narrative text for immersive storytelling
+ * Status:
+ * - No concrete implementation is currently wired in this codebase.
+ * - Kept as a stable contract for future extensions (e.g., templates, faker, LLM).
  *
- * **Content Categories**:
- * - **Title**: Short, memorable battle identifier
- * - **Subtitle**: Additional context or tagline
- * - **Overview**: Brief summary of the battle situation
- * - **Narrative**: Full story text with rich details
+ * Responsibility:
+ * - Provide narrative content to enrich battles:
+ *   - Title, Subtitle, Overview, and full Narrative text
  *
- * **Implementation Sources**:
- * - Faker.js generators for random content
- * - Seed-based historical scenarios
- * - Template-based story generation
- * - Pre-written narrative collections
- *
- * **Usage in Battle Generation**:
- * Used by BattleReportRepository implementations to enrich
- * battle data with compelling narrative elements.
- *
- * @see {@link RandomJokeScenarioRepository} for seed-based implementation
+ * Notes:
+ * - Current BattleReportRepository implementations embed their own
+ *   narrative logic (seed-system/templates) without depending on this.
  */
 export interface ScenarioRepository {
   /**
@@ -242,7 +228,6 @@ export interface ScenarioRepository {
  * - Asset collections with character art
  *
  * @see {@link Neta} for complete character structure
- * @see {@link RandomJokeNetaRepository} for seed-based implementation
  */
 export interface NetaRepository {
   /**

@@ -10,194 +10,128 @@ instructions-for-ais:
 
 # Testing Guide
 
-This guide summarizes how tests are organized and run in this project, with a focus on repositories, UI, and API-backed flows.
+This guide summarizes how tests are organized and run in this project, covering unit, integration, and end-to-end testing.
 
 ## Stack
 
-- Vitest (unit/integration runner)
-- React Testing Library + jsdom (component testing)
-- MSW (Mock Service Worker, node server mode) for API stubbing
+- **Unit/Integration:** [Vitest](https://vitest.dev/)
+- **Component Testing:** [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) with [jsdom](https://github.com/jsdom/jsdom)
+- **API Mocking:** [MSW (Mock Service Worker)](https://mswjs.io/) in node server mode
+- **End-to-End:** [Playwright](https://playwright.dev/)
 
-## How to run
+## How to Run Tests
 
-- All tests: `npm test`
-- Watch/UI (optional): `npm run test:ui`
-- Coverage (optional): `npm run test:coverage`
+### All Tests
 
-See `package.json` for available scripts.
+- **Run all tests:** `npm test` or `npm run test`
+- **Watch mode:** `npm run test:watch`
 
-## Test layout & conventions
+### Unit & Integration Tests
 
-- Co-locate tests with code using `*.test.ts` or `*.test.tsx`.
-- Shared helpers live under `src/test/`:
-    - `src/test/setup.ts`: global setup (jest-dom, MSW server lifecycle)
-    - `src/test/msw.ts`: default handlers for API mode
-    - `src/test/renderWithProviders.tsx`: render helper with repository providers
+- **Run unit tests:** `npm run test:unit`
+- **Watch mode:** `npm run test:unit:watch`
+- **UI mode:** `npm run test:ui`
+- **Coverage:** `npm run test:coverage`
 
-Vitest references `src/test/setup.ts` via `vitest.config.ts`.
+### Seed Validation Tests
 
-## Setup: MSW for API mode
+- **Run seed validation:** `npm run test:seeds`
 
-File: `src/test/msw.ts`
+### Storybook Tests
 
-- Handlers stub same-origin paths like `/api/battle/report` and `/api/battle/judgement`.
-- In tests, ensure `VITE_API_BASE_URL` points to `/api` (see `repository-provider.api.test.ts`).
+- **Run Storybook tests:** `npm run test:storybook`
 
-Global lifecycle in `src/test/setup.ts`:
+### End-to-End (E2E) Tests
 
-- beforeAll: `server.listen({ onUnhandledRequest: 'bypass' })`
-- afterEach: `server.resetHandlers()`
-- afterAll: `server.close()`
+- **Run E2E tests (excluding @performance):** `npm run e2e`
+- **Run all E2E tests (including @performance):** `npm run e2e:all`
+- **Run in UI mode:** `npm run e2e:ui`
+- **Run in headed mode (Chromium only):** `npm run e2e:headed`
+- **Show report:** `npm run e2e:report`
 
-Override per test by calling `server.use(...)` with additional handlers.
+See `package.json` for all available scripts.
 
-## Repositories testing
+## Test Layout & Conventions
 
-- Fake repos (`repositories.fake.ts`): test deterministic logic; avoid actual delays (code already skips delays under `NODE_ENV=test`).
-- Random Joke repos (`repositories.random-jokes.ts`): seed-backed deterministic generation. Assert structure and `provenance` presence.
-- API repos (`repositories.api.ts`): prefer provider-level tests with MSW (see `repository-provider.api.test.ts`).
+- **Co-location:** Tests are co-located with the source code, using `*.test.ts` or `*.test.tsx` file extensions.
+- **Shared Helpers:** Common test utilities are located in `src/test/`:
+    - `setup.ts`: Global setup for Vitest (e.g., `jest-dom`, MSW server lifecycle).
+    - `msw.ts`: Default MSW handlers for API endpoints.
+    - `renderWithProviders.tsx`: A custom render function that wraps components with necessary context providers.
+- **E2E Specs:** Playwright tests are located in the `e2e/` directory.
 
-### Testing Historical Seed System
+## API Mocking with MSW
 
-When testing components that use the Historical Seed System:
+We use MSW to mock API requests in our tests.
 
-```tsx
-import { HistoricalSeedProvider } from '@/yk/repo/seed-system/seed-provider';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+- **Handlers:** Mock implementations for API endpoints like `/api/battle/judgement` are defined in `src/test/msw.ts`.
+- **Lifecycle:** The MSW server is started before all tests and closed after all tests, with handlers reset between each test. This is configured in `src/test/setup.ts`.
+- **Overrides:** You can override default handlers within a specific test by using `server.use(...)`.
 
-it('rotates seeds on Tab key', async () => {
-    const user = userEvent.setup();
-    render(
-        <HistoricalSeedProvider>
-            <YourComponent />
-        </HistoricalSeedProvider>,
-    );
+## Repository Testing
 
-    // Press Tab to rotate seed
-    await user.keyboard('[Tab]');
+The application uses different repository implementations for different play modes:
 
-    // Assert on expected behavior after rotation
-});
-```
+- **Fake Repositories:** Used to test deterministic logic without actual delays or external dependencies.
+- **Historical Evidence Repositories:** Test the seed-based generation of historical battles from curated evidence files (`historical-research` mode).
+- **Demo Repositories:** Test localized content and fixed scenarios:
+    - `demo` - Japanese demonstration mode
+    - `demo-en` - English demonstration mode
+    - `demo-de` - German demonstration mode
+- **News Reporter Repository:** Tests the multi-source blending (local and API) and caching behavior for the `yk-now` mode.
 
 ### Provider Testing Patterns
 
-The `renderWithProviders` helper simplifies testing with repository providers:
+The `renderWithProviders` helper simplifies testing components that rely on our repository context.
 
 ```tsx
 import { renderWithProviders } from '@/test/renderWithProviders';
 import { screen } from '@testing-library/react';
+import { YourComponent } from '@/components/YourComponent';
+import { historicalResearchMode } from '@/yk/play-mode';
 
-it('uses historical repository in historical mode', () => {
-    renderWithProviders(<YourComponent />, {
-        mode: {
-            id: 'historical',
-            title: 'HISTORICAL',
-            description: '',
-            enabled: true,
-        },
-    });
+it('uses historical repository in historical-research mode', () => {
+    renderWithProviders(<YourComponent />, { mode: historicalResearchMode });
 
-    // Component will receive BattleReportRandomDataRepository
-    // Assert on historical-specific behavior
+    // The component will receive HistoricalEvidencesBattleReportRepository via the provider.
+    // Assert on behavior specific to this mode.
 });
 ```
 
-For testing async provider initialization:
+For components that require a provider with async initialization, wrap them with `Suspense`.
 
 ```tsx
 import { Suspense } from 'react';
+import { render } from '@testing-library/react';
 import { RepositoryProviderSuspense } from '@/yk/repo/core/RepositoryProvider';
 
 it('handles async provider setup', async () => {
     render(
         <Suspense fallback={<div>Loading...</div>}>
-            <RepositoryProviderSuspense mode={mode}>
+            <RepositoryProviderSuspense mode={someMode}>
                 <YourComponent />
             </RepositoryProviderSuspense>
         </Suspense>,
     );
 
-    // Wait for suspension to resolve
-    await screen.findByText('Expected content');
+    await screen.findByText('Expected content after async setup');
 });
 ```
 
-## UI testing
+## UI Testing
 
-- `HistoricalScene` renders provenance list when `battle.provenance` is provided.
-- `Field` shows placeholders when sides are missing; asserts based on roles/labels.
-- `TitleContainer` supports keyboard navigation and (in historical mode) minimal seed selection UI.
-- `Controller` wires keyboard shortcuts (Enter/B for Battle, R for Reset).
-- `UsageExamples` component renders categorized usage examples with interactive cards.
-- `UserVoices` component displays user testimonials with marquee animation effects.
+- Follow accessibility best practices by using queries from React Testing Library that are resilient to implementation changes (e.g., `getByRole`, `getByLabelText`).
+- `Controller` tests cover keyboard shortcuts (`Enter`/`B` for Battle, `R` for Reset).
+- `TitleContainer` tests include keyboard navigation.
 
-Use queries by role/label to keep tests resilient and accessible.
+## End-to-End (E2E) Testing
 
-### Testing Export Functionality
+E2E tests cover critical user flows from a user's perspective. For a detailed policy, see the [E2E testing policy in the Development Guide](./DEVELOPMENT_EN.md#end-to-end-e2e-testing-policy).
 
-For TSV export scripts testing:
-
-```tsx
-import { exportUsageExamplesToTsv } from '@/ops/export-usage-examples-to-tsv';
-import { exportUsersVoiceToTsv } from '@/ops/export-users-voice-to-tsv';
-
-it('exports usage examples to TSV format', () => {
-    const tsvOutput = exportUsageExamplesToTsv();
-
-    // Assert TSV structure
-    expect(tsvOutput).toContain('Category\tTitle\tDescription');
-    expect(tsvOutput.split('\n').length).toBeGreaterThan(1);
-});
-
-it('exports user voices to TSV format', () => {
-    const tsvOutput = exportUsersVoiceToTsv();
-
-    // Assert TSV structure
-    expect(tsvOutput).toContain('Quote\tAttribution');
-    expect(tsvOutput.split('\n').length).toBeGreaterThan(1);
-});
-```
-
-### Helper: renderWithProviders example
-
-A minimal example using the shared render helper:
-
-```ts
-import { renderWithProviders } from '@/test/renderWithProviders';
-import { screen } from '@testing-library/react';
-import React from 'react';
-
-it('renders with provider', () => {
-  renderWithProviders(<div>hello</div>, {
-    mode: { id: 'demo', title: 'DEMO', description: '', enabled: true },
-  });
-  expect(screen.getByText('hello')).toBeInTheDocument();
-});
-```
-
-## Determinism & delays
-
-- Delays are computed but skipped in test environment. Avoid `sleep` in tests.
-- Random-data seeds live under `src/seeds/random-data/**` and are loaded via static eager imports for reproducibility.
-- Historical evidence battles live under `src/seeds/historical-evidences/battle/**` and are discovered eagerly as file-based Battle data.
-- Provider `defaultDelayForMode` returns ranges for UX, but tests shouldn’t wait because repo code bypasses delays under `NODE_ENV=test`.
-
-## Environment & config
-
-- API base URL: `VITE_API_BASE_URL` (tests set to `/api`).
-- Vite may warn about dynamic import vars for seeds; we use static eager maps to avoid mixed import modes in tests.
-
-## Coverage (optional)
-
-- Run `npm run test:coverage` to generate coverage reports.
+- **Location:** `e2e/`
+- **Focus:** Test user-facing behaviors, not implementation details.
+- **Accessibility:** Assert accessible names and roles for critical controls.
 
 ## CI/CD
 
-See [CONTRIBUTING.md](../CONTRIBUTING.md) for CI/CD pipeline configuration and deployment details.
-
-## Troubleshooting
-
-- “fetch failed” in API tests: ensure MSW handlers match the requested paths; set `VITE_API_BASE_URL` to `/api` in tests.
-- jsdom image warnings: tests may emit warnings for empty `src`; they don’t fail tests. Prefer asserting roles/text rather than actual network images.
+Our CI pipeline runs all checks, including linting, type checking, and all forms of tests. For details, see the [CI/CD Pipeline section in CONTRIBUTING.md](../CONTRIBUTING.md).
