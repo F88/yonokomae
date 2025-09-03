@@ -16,7 +16,6 @@ import type { PlayMode } from '../../play-mode';
  * - `'api'` → {@link ApiBattleReportRepository} with REST API client
  * - `'historical-evidences'` → {@link HistoricalEvidencesBattleReportRepository}
  * - `'historical-evidence'` → {@link BattleReportRandomDataRepository} with seed-system
- * - `'mixed-nuts'` → {@link BattleReportRandomDataRepository} with seed-system
  * - **Default** → {@link BattleReportRandomDataRepository} with seed-system
  *
  * **Dynamic Import Benefits**:

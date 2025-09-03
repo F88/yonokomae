@@ -61,13 +61,6 @@ export const playMode: PlayMode[] = [
     enabled: true,
   },
   {
-    id: 'mixed-nuts',
-    title: 'MIXED NUTS',
-    description: 'Randomized, seed-backed battle generator (was historical).',
-    enabled: true,
-  },
-
-  {
     id: 'ai-mode',
     title: 'AI MODE',
     description:

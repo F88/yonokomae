@@ -70,7 +70,6 @@ export class RandomJokeNetaRepository implements NetaRepository {
  *
  * **Use Cases**:
  * - 'historical-evidence' PlayMode - Single seed battles
- * - 'mixed-nuts' PlayMode - Varied seed selection
  * - Educational content with historical references
  * - Content showcasing with source attribution
  *

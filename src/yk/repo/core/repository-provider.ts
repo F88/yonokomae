@@ -25,7 +25,6 @@ import type { PlayMode } from '@/yk/play-mode';
  * - `'api'` → {@link ApiBattleReportRepository} with REST API client
  * - `'historical-research'` → {@link HistoricalEvidencesBattleReportRepository}
  * - `'historical-evidence'` → {@link BattleReportRandomDataRepository} with seed system
- * - `'mixed-nuts'` → {@link BattleReportRandomDataRepository} with seed system
  * - **Default** → {@link BattleReportRandomDataRepository} with seed system
  *
  * **Dynamic Import Benefits**:
@@ -145,13 +144,6 @@ export async function getBattleReportRepository(
       '@/yk/repo/random-jokes/repositories.random-jokes'
     );
     // Selected seed is provided via context; callers pass it here.
-    const delay = defaultDelayForMode(mode, 'report');
-    return new BattleReportRandomDataRepository({ seedFile, delay });
-  }
-  if (mode?.id === 'mixed-nuts') {
-    const { BattleReportRandomDataRepository } = await import(
-      '@/yk/repo/random-jokes/repositories.random-jokes'
-    );
     const delay = defaultDelayForMode(mode, 'report');
     return new BattleReportRandomDataRepository({ seedFile, delay });
   }
@@ -387,8 +379,6 @@ function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
       return { min: 1200, max: 2500 };
     case 'yk-now':
       return { min: 0, max: 0 };
-    case 'mixed-nuts':
-      return { min: 1200, max: 2500 };
     default:
       // Apply moderate delay for unknown modes
       return { min: 0, max: 0 };
