@@ -27,11 +27,11 @@ Please use half-width characters for numbers, letters, and symbols.
 
 このアプリケーションは、関心事の分離が明確なモジュラーアーキテクチャを採用しています。中心となる概念は以下の通りです。
 
--   **Components**: レンダリングとユーザーインタラクションを担当する UI 要素。
--   **Repositories**: データソース（ローカルファイル、API など）を抽象化するデータアクセス層。
--   **Play Modes**: 特定のシナリオで使用されるリポジトリ実装を決定する設定。
--   **RepositoryProvider**: 選択された Play Mode に基づいて、適切なリポジトリ実装を注入（inject）する React の Context Provider。
--   **Hooks**: リポジトリとのインタラクションロジックをカプセル化するカスタム React フック（`use-generate-report`, `use-judgement`）。
+- **Components**: レンダリングとユーザーインタラクションを担当する UI 要素。
+- **Repositories**: データソース（ローカルファイル、API など）を抽象化するデータアクセス層。
+- **Play Modes**: 特定のシナリオで使用されるリポジトリ実装を決定する設定。
+- **RepositoryProvider**: 選択された Play Mode に基づいて、適切なリポジトリ実装を注入（inject）する React の Context Provider。
+- **Hooks**: リポジトリとのインタラクションロジックをカプセル化するカスタム React フック（`use-generate-report`, `use-judgement`）。
 
 ### データフローと依存性注入 (Dependency Injection)
 
@@ -108,7 +108,9 @@ classDiagram
     import type { Battle } from '@/types/types';
     import { uid } from '@/lib/id';
 
-    export class ExampleBattleReportRepository implements BattleReportRepository {
+    export class ExampleBattleReportRepository
+        implements BattleReportRepository
+    {
         async generateReport(): Promise<Battle> {
             // Implementation...
             return {
@@ -127,7 +129,9 @@ classDiagram
     // src/yk/repo/core/repository-provider.ts
     import { ExampleBattleReportRepository } from '@/yk/repo/example/repositories.example';
 
-    export async function getBattleReportRepository(mode?: PlayMode): Promise<BattleReportRepository> {
+    export async function getBattleReportRepository(
+        mode?: PlayMode,
+    ): Promise<BattleReportRepository> {
         if (mode?.id === 'some-mode') {
             return new ExampleBattleReportRepository();
         }
@@ -160,9 +164,13 @@ classDiagram
 
     ```typescript
     // src/yk/repo/core/repository-provider.ts
-    export async function getBattleReportRepository(mode?: PlayMode): Promise<BattleReportRepository> {
+    export async function getBattleReportRepository(
+        mode?: PlayMode,
+    ): Promise<BattleReportRepository> {
         if (mode?.id === 'example-mode') {
-            const { ExampleBattleReportRepository } = await import('@/yk/repo/example/repositories.example');
+            const { ExampleBattleReportRepository } = await import(
+                '@/yk/repo/example/repositories.example'
+            );
             return new ExampleBattleReportRepository();
         }
         // ... other modes
@@ -180,9 +188,9 @@ classDiagram
 
 E2E テストには Playwright を使用します。テスト仕様（spec）は `e2e/` ディレクトリにあります。
 
--   **ロケータ**: アクセシビリティのために、ロールベースのロケータ（`getByRole`）を優先します。セマンティックな役割を持たない要素には `data-testid` を使用します。
--   **決定性**: 任意の待機処理は避け、Playwright の Web-first assertions を利用します。
--   **パフォーマンス**: 長時間実行されるテストには `@performance` タグを付けます。
+- **ロケータ**: アクセシビリティのために、ロールベースのロケータ（`getByRole`）を優先します。セマンティックな役割を持たない要素には `data-testid` を使用します。
+- **決定性**: 任意の待機処理は避け、Playwright の Web-first assertions を利用します。
+- **パフォーマンス**: 長時間実行されるテストには `@performance` タグを付けます。
 
 ## 移行ノート
 
@@ -190,8 +198,8 @@ E2E テストには Playwright を使用します。テスト仕様（spec）は
 
 `JudgementRepository.determineWinner` メソッドは、単純な `Winner` 文字列の代わりに、構造化された `Verdict` オブジェクトを返すようになりました。
 
--   **旧:** `Promise<'YONO' | 'KOMAE' | 'DRAW'>`
--   **新:** `Promise<Verdict>`
+- **旧:** `Promise<'YONO' | 'KOMAE' | 'DRAW'>`
+- **新:** `Promise<Verdict>`
 
 ```typescript
 type Verdict = {
@@ -204,14 +212,14 @@ type Verdict = {
 
 **対応が必要な作業:**
 
--   すべての呼び出し箇所を、`verdict.winner` を介して勝者にアクセスするように更新してください。
--   すべての `JudgementRepository` 実装が `Verdict` オブジェクトを返すようにしてください。
--   テストとモックを、新しい戻り値の型に一致するように更新してください。
+- すべての呼び出し箇所を、`verdict.winner` を介して勝者にアクセスするように更新してください。
+- すべての `JudgementRepository` 実装が `Verdict` オブジェクトを返すようにしてください。
+- テストとモックを、新しい戻り値の型に一致するように更新してください。
 
 ## 現在の Play Mode
 
--   `demo`: 固定シナリオによる日本語のデモ。
--   `demo-en`: 英語のデモ。
--   `demo-de`: ドイツ語のデモ。
--   `historical-research`: 歴史的証拠のシードに基づいたシナリオ。
--   `yk-now`: マルチソースリポジトリを使用したニュース駆動モード。
+- `demo`: 固定シナリオによる日本語のデモ。
+- `demo-en`: 英語のデモ。
+- `demo-de`: ドイツ語のデモ。
+- `historical-research`: 歴史的証拠のシードに基づいたシナリオ。
+- `yk-now`: マルチソースリポジトリを使用したニュース駆動モード。

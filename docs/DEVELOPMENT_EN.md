@@ -27,11 +27,11 @@ Content within code fences may be written in languages other than English.
 
 The application follows a modular architecture with a clear separation of concerns. The core concepts are:
 
--   **Components**: UI elements responsible for rendering and user interaction.
--   **Repositories**: Data access layer that abstracts data sources (e.g., local files, APIs).
--   **Play Modes**: Configurations that determine which repository implementations are used for a given scenario.
--   **RepositoryProvider**: A React context provider that injects the appropriate repository implementations based on the selected Play Mode.
--   **Hooks**: Custom React hooks (`use-generate-report`, `use-judgement`) that encapsulate the logic for interacting with repositories.
+- **Components**: UI elements responsible for rendering and user interaction.
+- **Repositories**: Data access layer that abstracts data sources (e.g., local files, APIs).
+- **Play Modes**: Configurations that determine which repository implementations are used for a given scenario.
+- **RepositoryProvider**: A React context provider that injects the appropriate repository implementations based on the selected Play Mode.
+- **Hooks**: Custom React hooks (`use-generate-report`, `use-judgement`) that encapsulate the logic for interacting with repositories.
 
 ### Data Flow and Dependency Injection
 
@@ -108,7 +108,9 @@ This section explains how to extend the application with new repositories and Pl
     import type { Battle } from '@/types/types';
     import { uid } from '@/lib/id';
 
-    export class ExampleBattleReportRepository implements BattleReportRepository {
+    export class ExampleBattleReportRepository
+        implements BattleReportRepository
+    {
         async generateReport(): Promise<Battle> {
             // Implementation...
             return {
@@ -127,7 +129,9 @@ This section explains how to extend the application with new repositories and Pl
     // src/yk/repo/core/repository-provider.ts
     import { ExampleBattleReportRepository } from '@/yk/repo/example/repositories.example';
 
-    export async function getBattleReportRepository(mode?: PlayMode): Promise<BattleReportRepository> {
+    export async function getBattleReportRepository(
+        mode?: PlayMode,
+    ): Promise<BattleReportRepository> {
         if (mode?.id === 'some-mode') {
             return new ExampleBattleReportRepository();
         }
@@ -160,9 +164,13 @@ This section explains how to extend the application with new repositories and Pl
 
     ```typescript
     // src/yk/repo/core/repository-provider.ts
-    export async function getBattleReportRepository(mode?: PlayMode): Promise<BattleReportRepository> {
+    export async function getBattleReportRepository(
+        mode?: PlayMode,
+    ): Promise<BattleReportRepository> {
         if (mode?.id === 'example-mode') {
-            const { ExampleBattleReportRepository } = await import('@/yk/repo/example/repositories.example');
+            const { ExampleBattleReportRepository } = await import(
+                '@/yk/repo/example/repositories.example'
+            );
             return new ExampleBattleReportRepository();
         }
         // ... other modes
@@ -180,9 +188,9 @@ For detailed testing guidelines, see [TESTING.md](./TESTING.md).
 
 We use Playwright for E2E testing. Specs are located in the `e2e/` directory.
 
--   **Locators**: Prefer role-based locators (`getByRole`) for accessibility. Use `data-testid` for elements without semantic roles.
--   **Determinism**: Avoid arbitrary waits. Use Playwright's web-first assertions.
--   **Performance**: Long-running tests should be tagged with `@performance`.
+- **Locators**: Prefer role-based locators (`getByRole`) for accessibility. Use `data-testid` for elements without semantic roles.
+- **Determinism**: Avoid arbitrary waits. Use Playwright's web-first assertions.
+- **Performance**: Long-running tests should be tagged with `@performance`.
 
 ## Migration Notes
 
@@ -190,8 +198,8 @@ We use Playwright for E2E testing. Specs are located in the `e2e/` directory.
 
 The `JudgementRepository.determineWinner` method now returns a structured `Verdict` object instead of a simple `Winner` string.
 
--   **Old:** `Promise<'YONO' | 'KOMAE' | 'DRAW'>`
--   **New:** `Promise<Verdict>`
+- **Old:** `Promise<'YONO' | 'KOMAE' | 'DRAW'>`
+- **New:** `Promise<Verdict>`
 
 ```typescript
 type Verdict = {
@@ -204,14 +212,14 @@ type Verdict = {
 
 **Action Required:**
 
--   Update all call sites to access the winner via `verdict.winner`.
--   Ensure all `JudgementRepository` implementations return a `Verdict` object.
--   Update tests and mocks to match the new return type.
+- Update all call sites to access the winner via `verdict.winner`.
+- Ensure all `JudgementRepository` implementations return a `Verdict` object.
+- Update tests and mocks to match the new return type.
 
 ## Current Play Modes
 
--   `demo`: Japanese demo with fixed scenarios.
--   `demo-en`: English demo variant.
--   `demo-de`: German demo variant.
--   `historical-research`: Scenarios based on historical evidence seeds.
--   `yk-now`: News-driven mode using a multi-source repository.
+- `demo`: Japanese demo with fixed scenarios.
+- `demo-en`: English demo variant.
+- `demo-de`: German demo variant.
+- `historical-research`: Scenarios based on historical evidence seeds.
+- `yk-now`: News-driven mode using a multi-source repository.

@@ -31,14 +31,14 @@ A commit message should be structured as follows:
 
 **Common types:**
 
--   `feat`: A new feature
--   `fix`: A bug fix
--   `docs`: Documentation only changes
--   `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
--   `refactor`: A code change that neither fixes a bug nor adds a feature
--   `perf`: A code change that improves performance
--   `test`: Adding missing tests or correcting existing tests
--   `chore`: Changes to the build process or auxiliary tools and libraries such as documentation generation
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation only changes
+- `style`: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- `refactor`: A code change that neither fixes a bug nor adds a feature
+- `perf`: A code change that improves performance
+- `test`: Adding missing tests or correcting existing tests
+- `chore`: Changes to the build process or auxiliary tools and libraries such as documentation generation
 
 ## CI/CD Pipeline
 
@@ -90,12 +90,12 @@ When we're ready to release a new version, we follow these steps:
 
 The project includes TSV export functionality for usage examples and user voices:
 
--   `npm run ops:export-usage-examples-to-tsv` - Exports usage examples to TSV format
--   `npm run ops:export-users-voice-to-tsv` - Exports user voices data to TSV format
+- `npm run ops:export-usage-examples-to-tsv` - Exports usage examples to TSV format
+- `npm run ops:export-users-voice-to-tsv` - Exports user voices data to TSV format
 
 These scripts use the TypeScript configurations in `tsconfig.ops.json` and process data from:
 
--   `src/data/usage-examples.ts` - Usage examples with categories and descriptions
--   `src/data/users-voice.ts` - User testimonials and feedback
+- `src/data/usage-examples.ts` - Usage examples with categories and descriptions
+- `src/data/users-voice.ts` - User testimonials and feedback
 
 Export scripts are located in `src/ops/` directory and generate TSV files suitable for data analysis and external use.

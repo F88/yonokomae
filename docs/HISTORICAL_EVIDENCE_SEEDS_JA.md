@@ -25,27 +25,27 @@ instructions-for-ais:
 
 ## シードの場所
 
--   **TypeScript (推奨):** `src/seeds/historical-evidences/battle/*.ts`
--   **JSON (任意):** `seeds/historical-evidences/battle/*.json`
+- **TypeScript (推奨):** `src/seeds/historical-evidences/battle/*.ts`
+- **JSON (任意):** `seeds/historical-evidences/battle/*.json`
 
 型チェックの恩恵を受けるために、TypeScript の使用を推奨します。
 
 ## 読み込み方針: 静的な Eager Imports
 
--   シードファイルは、ビルド時に静的かつ Eager Imports (`import.meta.glob(..., { eager: true })`) を使用して検出・読み込みされます。
--   このアプローチにより、スキーマや型のエラーが早期（ビルドまたはテスト段階）に発見され、非同期の境界を避けることでランタイムのロジックが単純化されます。
--   トレードオフとして、初期バンドルサイズがわずかに増加しますが、現在のシードデータの量では許容範囲です。
+- シードファイルは、ビルド時に静的かつ Eager Imports (`import.meta.glob(..., { eager: true })`) を使用して検出・読み込みされます。
+- このアプローチにより、スキーマや型のエラーが早期（ビルドまたはテスト段階）に発見され、非同期の境界を避けることでランタイムのロジックが単純化されます。
+- トレードオフとして、初期バンドルサイズがわずかに増加しますが、現在のシードデータの量では許容範囲です。
 
 ## スキーマと型
 
--   Battle の正式な型定義は `src/types/types.ts` にある `Battle` 型です。
--   シードファイルのデフォルトエクスポートは、`Battle` 型と互換性のあるオブジェクトでなければなりません。
--   最小限の実装例については、`src/seeds/historical-evidences/README.md` を参照してください。
+- Battle の正式な型定義は `src/types/types.ts` にある `Battle` 型です。
+- シードファイルのデフォルトエクスポートは、`Battle` 型と互換性のあるオブジェクトでなければなりません。
+- 最小限の実装例については、`src/seeds/historical-evidences/README.md` を参照してください。
 
 ## 一意性とバリデーション
 
--   各 Battle の `id` プロパティは、すべての歴史的 Battle の中で一意でなければなりません。
--   一意性とスキーマの準拠は、CI チェック (`npm run test:seeds`) によって強制されます。このチェックは Vitest と Zod バリデーションを実行します。
+- 各 Battle の `id` プロパティは、すべての歴史的 Battle の中で一意でなければなりません。
+- 一意性とスキーマの準拠は、CI チェック (`npm run test:seeds`) によって強制されます。このチェックは Vitest と Zod バリデーションを実行します。
 
 ## Battle の追加または更新方法
 
@@ -58,14 +58,15 @@ instructions-for-ais:
 
 3.  **ローカルでのバリデーション実行:**
     コミットする前に、バリデーションスクリプトを実行してエラーがないか確認してください。
+
     ```bash
     npm run test:seeds
     ```
 
 4.  **変更のコミット:**
     規約に従った明確なコミットメッセージを使用してください。
-    -   `feat(seeds): add historical battle for my-battle`
-    -   `fix(seeds): correct provenance url for tama-river`
+    - `feat(seeds): add historical battle for my-battle`
+    - `fix(seeds): correct provenance url for tama-river`
 
 ## CI チェック
 
@@ -73,12 +74,12 @@ instructions-for-ais:
 
 ## トラブルシューティング
 
--   **ID の重複エラー:** `src/seeds/historical-evidences/battle/` 内を検索し、競合している ID を解決してください。
--   **バンドルサイズの警告:** 現状では許容範囲です。シードの数が大幅に増加した場合は、よりスケーラブルな非同期読み込み戦略を導入する可能性があります。
+- **ID の重複エラー:** `src/seeds/historical-evidences/battle/` 内を検索し、競合している ID を解決してください。
+- **バンドルサイズの警告:** 現状では許容範囲です。シードの数が大幅に増加した場合は、よりスケーラブルな非同期読み込み戦略を導入する可能性があります。
 
 ## 参考文献
 
--   **実装:** `src/yk/repo/seed-system/seeds.ts`
--   **バリデーションテスト:** `src/yk/repo/seed-system/seeds.validation.test.ts`
--   **作成例:** `src/seeds/historical-evidences/README.md`
--   **開発概要:** `docs/DEVELOPMENT_EN.md`
+- **実装:** `src/yk/repo/seed-system/seeds.ts`
+- **バリデーションテスト:** `src/yk/repo/seed-system/seeds.validation.test.ts`
+- **作成例:** `src/seeds/historical-evidences/README.md`
+- **開発概要:** `docs/DEVELOPMENT_EN.md`
