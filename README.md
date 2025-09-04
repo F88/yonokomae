@@ -116,7 +116,8 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 - [Developer guide (EN)](./docs/DEVELOPMENT_EN.md)
 - [開発ガイド (JA)](./docs/DEVELOPMENT_JA.md)
 - [Testing guide (EN)](./docs/TESTING.md)
-- [Contributing guide](CONTRIBUTING_EN.md)
+- [Contributing guide (en)](CONTRIBUTING_EN.md)
+- [Contributing guide (ja)](CONTRIBUTING_JA.md)
 
 ### For Data Maintainers
 
