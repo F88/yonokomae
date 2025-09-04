@@ -39,7 +39,7 @@ jobs:
         run: pnpm run lint
 
       - name: Typecheck
-        run: npx tsc -b --pretty false
+        run: pnpm run -s ci:typecheck
 
       - name: Unit tests (unit)
         run: pnpm run test:unit --silent

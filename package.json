@@ -26,6 +26,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.node.json",
+    "ci:typecheck": "tsc -b --pretty false",
     "preview": "vite preview",
     "mock-api": "node ./mock-api/server.ts",
     "deploy:ghpages": "pnpm run build:ghpages && gh-pages -d dist -m \"Updates --skip-ci\"",
