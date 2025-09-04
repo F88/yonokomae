@@ -16,6 +16,7 @@ import yonoKomaeIndustryGrowthJa from './battle/yono-komae-industry-growth.ja.js
 // import yonoKomaeMeteorologyJa from './battle/yono-komae-meteorology.ja.js';
 // import yonoKomaePopulationTrendsJa from './battle/yono-komae-population-trends.ja.js';
 // import yonoKomaeSocioeconomicJa from './battle/yono-komae-socioeconomic.ja.js';
+import cityNameOriginJa from './battle/city-name-origin.ja.js';
 
 // Collect all battles in a map
 const battleMap: Record<string, Battle> = {
@@ -36,6 +37,7 @@ const battleMap: Record<string, Battle> = {
     // 'yono-komae-meteorology.ja.ts': yonoKomaeMeteorologyJa,
     // 'yono-komae-population-trends.ja.ts': yonoKomaePopulationTrendsJa,
     // 'yono-komae-socioeconomic.ja.ts': yonoKomaeSocioeconomicJa,
+    'city-name-origin.ja.ts': cityNameOriginJa,
   },
 };
 
