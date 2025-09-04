@@ -46,8 +46,8 @@ export default mergeConfig(
           plugins: [
             storybookTest({
               configDir: path.join(dirname, '.storybook'),
-              // Use pnpm script defined in package.json
-              storybookScript: 'pnpm run storybook -- --ci',
+              // Use pnpm script defined in package.json; prevent UI from opening
+              storybookScript: 'pnpm run storybook -- --ci --no-open',
             }),
           ],
           test: {
