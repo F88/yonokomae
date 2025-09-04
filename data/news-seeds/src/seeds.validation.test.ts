@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
 import { BattleSchema } from '@yonokomae/schema';
+import type { Battle } from '@yonokomae/types';
+import { describe, expect, it } from 'vitest';
 import { newsSeeds } from './index.js';
 
 describe('News Seeds Validation', () => {

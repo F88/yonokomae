@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
 import { HistoricalSeedSchema } from '@yonokomae/schema';
-import { historicalSeeds, historicalSeedMetas } from './index.js';
+import { describe, expect, it } from 'vitest';
+import { historicalSeedMetas, historicalSeeds } from './index.js';
 
 describe('Historical Evidence Seeds Validation', () => {
   it('should have unique seed IDs', () => {
