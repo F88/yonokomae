@@ -43,7 +43,10 @@ function mergeGlobs(): Record<string, Battle> {
     for (const [fileName, seedBattle] of Object.entries(battleSeedsByFile)) {
       if (seedBattle.id === battle.id) {
         // Map to both possible root paths for compatibility
-        battleSeedMap[`@yonokomae/data-historical-evidence/${fileName}`] =
+        // 1) Workspace package virtual root
+        battleSeedMap[`@yonokomae/data-battle-seeds/${fileName}`] = battle;
+        // 2) Legacy filesystem-style root
+        battleSeedMap[`/seeds/historical-evidences/battle/${fileName}`] =
           battle;
         break;
       }
