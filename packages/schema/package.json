@@ -1,0 +1,16 @@
+{
+  "name": "@yonokomae/schema",
+  "version": "1.0.0",
+  "description": "Zod validation schemas for Yonokomae types",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@yonokomae/types": "workspace:*",
+    "zod": "^3.25.76"
+  }
+}

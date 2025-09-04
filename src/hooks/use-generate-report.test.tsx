@@ -18,7 +18,7 @@ vi.mock('@/yk/repo/core/repository-provider', () => ({
 }));
 
 import { useGenerateReport } from '@/hooks/use-generate-report';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import { useRepositoriesOptional } from '@/yk/repo/core/repository-context';
 import { getBattleReportRepository } from '@/yk/repo/core/repository-provider';
 

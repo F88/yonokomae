@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BattleContainer } from './BattleContainer';
 import { playMode } from '@/yk/play-mode';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 
 const demoMode = playMode.find((m) => m.id === 'demo-en') ?? playMode[0];
 

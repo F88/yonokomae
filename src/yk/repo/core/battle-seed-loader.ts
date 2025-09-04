@@ -1,11 +1,12 @@
 import { uid } from '@/lib/id';
 import { BattleSchema } from '@/schema/schema';
-import type { Battle, Neta } from '@/types/types';
+import type { Battle, Neta } from '@yonokomae/types';
+import { battleSeeds, battleSeedsByFile } from '@yonokomae/data-battle-seeds';
 
 export type BattleModule = { default?: Partial<Battle> } | Partial<Battle>;
 
 export async function loadBattleFromSeeds(params: {
-  roots: string[]; // e.g., ['/seeds/news/', '/src/seeds/news/']
+  roots: string[]; // Legacy field - now uses static imports from @yonokomae packages
   file?: string; // optional relative file name to load
 }): Promise<Battle> {
   const { roots, file } = params;
@@ -17,9 +18,9 @@ export async function loadBattleFromSeeds(params: {
     throw new Error(`No battle seeds found under: ${roots.join(', ')}`);
   }
   const target = file ?? files[Math.floor(Math.random() * files.length)];
-  const mod = getModuleFor(mods, roots, target);
-  if (!mod) throw new Error(`Battle not found: ${target}`);
-  const data = normalizeBattle(mod);
+  const battle = getModuleFor(mods, roots, target);
+  if (!battle) throw new Error(`Battle not found: ${target}`);
+  const data = battle; // Battle seeds are already normalized
   const result = BattleSchema.safeParse(data);
   if (!result.success) {
     throw new Error(
@@ -32,21 +33,30 @@ export async function loadBattleFromSeeds(params: {
   return result.data;
 }
 
-function mergeGlobs(): Record<string, unknown> {
-  // Load seed modules (code/data) and avoid globs that pick up README.md etc.
-  // Keep patterns as literals as required by Vite.
-  return {
-    ...(import.meta.glob('/seeds/**/*.{ts,js,json}', {
-      eager: true,
-    }) as Record<string, unknown>),
-    ...(import.meta.glob('/src/seeds/**/*.{ts,js,json}', {
-      eager: true,
-    }) as Record<string, unknown>),
-  };
+function mergeGlobs(): Record<string, Battle> {
+  // Use static imports from battle-seeds package
+  const battleSeedMap: Record<string, Battle> = {};
+
+  // Map battle seeds to file paths that match the old glob patterns
+  battleSeeds.forEach((battle) => {
+    // Find the original file name by checking the battleSeedsByFile map
+    for (const [fileName, seedBattle] of Object.entries(battleSeedsByFile)) {
+      if (seedBattle.id === battle.id) {
+        // Map to both possible root paths for compatibility
+        battleSeedMap[`/seeds/historical-evidences/battle/${fileName}`] =
+          battle;
+        battleSeedMap[`@yonokomae/data-historical-evidence:${fileName}`] =
+          battle;
+        break;
+      }
+    }
+  });
+
+  return battleSeedMap;
 }
 
 function listRelativeFiles(
-  mods: Record<string, unknown>,
+  mods: Record<string, Battle>,
   roots: string[],
 ): string[] {
   const out: string[] = [];
@@ -62,14 +72,14 @@ function listRelativeFiles(
 }
 
 function getModuleFor(
-  mods: Record<string, unknown>,
+  mods: Record<string, Battle>,
   roots: string[],
   file: string,
-): BattleModule | undefined {
+): Battle | undefined {
   for (const root of roots) {
     const key = `${root}${file}`;
-    const mod = mods[key] as BattleModule | undefined;
-    if (mod) return mod;
+    const battle = mods[key];
+    if (battle) return battle;
   }
   return undefined;
 }

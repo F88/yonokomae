@@ -1,10 +1,8 @@
 ---
+lang: en
 title: Development Guide
 title-en: Development Guide
 title-ja: 開発ガイド
-lang: en
-notes-ja:
-    - この文書はAI可読性を優先して英語で記述されています.
 related:
     - DEVELOPMENT_EN.md has been translated into Japanese as DEVELOPMENT_JA.md.
     - DEVELOPMENT_JA.md is a Japanese translation of DEVELOPMENT_EN.md.
@@ -15,23 +13,19 @@ instructions-for-ais:
     - Prohibit updating title line (1st line) in this document.
 ---
 
-<!--
-Dear AIs.
-This document should be written in English for AI readability.
-Content within code fences may be written in languages other than English.
--->
-
 # Development Guide (for Developers)
 
 ## Architecture overview
 
-The application follows a modular architecture with a clear separation of concerns. The core concepts are:
+The application follows a modular pnpm monorepo architecture with clear separation of concerns. The core concepts are:
 
 - **Components**: UI elements responsible for rendering and user interaction.
-- **Repositories**: Data access layer that abstracts data sources (e.g., local files, APIs).
+- **Repositories**: Data access layer that abstracts data sources (data packages, APIs).
 - **Play Modes**: Configurations that determine which repository implementations are used for a given scenario.
 - **RepositoryProvider**: A React context provider that injects the appropriate repository implementations based on the selected Play Mode.
 - **Hooks**: Custom React hooks (`use-generate-report`, `use-judgement`) that encapsulate the logic for interacting with repositories.
+- **Data Packages**: Independent packages (`data/battle-seeds/`, `data/historical-evidence/`, `data/news-seeds/`) containing game data.
+- **Type Packages**: Shared type definitions (`packages/types/`) and validation schemas (`packages/schema/`).
 
 ### Data Flow and Dependency Injection
 
@@ -43,8 +37,10 @@ flowchart TD
     B["RepositoryProvider (Context)"] -- "provides repositories" --> C
     C -- "calls" --> D["Repositories (from Context)"]
     D -- "implemented by" --> F["Implementations (Fake, Historical, API)"]
+    F -- "loads from" --> H["Data Packages (@yonokomae/data-*)"]
     F -- "return" --> G["Domain Data (Battle, Verdict)"]
     C -- "return data to" --> A
+    H -- "uses types from" --> I["Type Packages (@yonokomae/types, @yonokomae/schema)"]
 ```
 
 ### Sequence Diagram: Generating a Battle Report
@@ -68,7 +64,7 @@ sequenceDiagram
 
 ### Repository Interfaces
 
-The core repository contracts are defined in `src/yk/repo/core/repositories.ts`.
+The core repository contracts are defined in `src/yk/repo/core/repositories.ts`. Repositories consume data from the independent data packages.
 
 ```mermaid
 classDiagram
@@ -105,14 +101,15 @@ This section explains how to extend the application with new repositories and Pl
     ```typescript
     // src/yk/repo/example/repositories.example.ts
     import type { BattleReportRepository } from '@/yk/repo/core/repositories';
-    import type { Battle } from '@/types/types';
+    import type { Battle } from '@yonokomae/types';
     import { uid } from '@/lib/id';
 
     export class ExampleBattleReportRepository
         implements BattleReportRepository
     {
         async generateReport(): Promise<Battle> {
-            // Implementation...
+            // Load data from data packages
+            // const { battles } = await import('@yonokomae/data-battle-seeds');
             return {
                 id: uid('battle'),
                 title: 'Example Battle',
@@ -146,7 +143,7 @@ This section explains how to extend the application with new repositories and Pl
 
     ```typescript
     // src/yk/play-mode.ts
-    import type { PlayMode } from '@/types/types';
+    import type { PlayMode } from '@yonokomae/types';
 
     export const exampleMode: PlayMode = {
         id: 'example-mode',
@@ -182,7 +179,7 @@ This section explains how to extend the application with new repositories and Pl
 
 ## Testing
 
-For detailed testing guidelines, see [TESTING.md](./TESTING.md).
+For detailed testing guidelines, see [TESTING.md](TESTING.md).
 
 ### End-to-End (E2E) Testing Policy
 
@@ -198,10 +195,15 @@ We use Playwright for E2E testing. Specs are located in the `e2e/` directory.
 
 **Test Commands:**
 
-- `npm run e2e` - Run E2E tests (excluding @performance)
-- `npm run e2e:all` - Run all E2E tests (including @performance)
-- `npm run e2e:ui` - Interactive UI mode
-- `npm run e2e:headed` - Run in headed mode (Chromium)
+- `pnpm run e2e` - Run E2E tests (excluding @performance)
+- `pnpm run e2e:all` - Run all E2E tests (including @performance)
+- `pnpm run e2e:ui` - Interactive UI mode
+- `pnpm run e2e:headed` - Run in headed mode (Chromium)
+
+**Data Package Testing:**
+
+- `pnpm test` - Run all tests including data package validation
+- `cd data/{package} && pnpm test` - Test individual data package
 
 ## Migration Notes
 
@@ -232,5 +234,30 @@ type Verdict = {
 - `demo`: Japanese demo with fixed scenarios.
 - `demo-en`: English demo variant.
 - `demo-de`: German demo variant.
-- `historical-research`: Scenarios based on historical evidence seeds.
-- `yk-now`: News-driven mode using a multi-source repository.
+- `historical-research`: Scenarios based on historical evidence seeds from `@yonokomae/data-historical-evidence`.
+- `yk-now`: News-driven mode using data from `@yonokomae/data-news-seeds`.
+
+## Data Maintenance
+
+For data maintainers working with battle data, historical scenarios, or news samples:
+
+- **Main Guide**: See [DATA_MAINTENANCE_EN.md](DATA_MAINTENANCE_EN.md)
+- **Battle Data**: See [data/BATTLE_SEEDS_EN.md](data/BATTLE_SEEDS_EN.md)
+- **Historical Evidence**: See [data/HISTORICAL_EVIDENCE_SEEDS_EN.md](data/HISTORICAL_EVIDENCE_SEEDS_EN.md)
+- **News Seeds**: See [data/NEWS_SEEDS_EN.md](data/NEWS_SEEDS_EN.md)
+
+## Package Structure
+
+```
+yonokomae/
+├── packages/
+│   ├── types/                    # Pure TypeScript types
+│   └── schema/                   # Zod validation schemas
+├── data/
+│   ├── battle-seeds/             # Statistical battle data
+│   ├── historical-evidence/      # Historical scenario data
+│   └── news-seeds/              # News-style sample data
+├── src/                         # Main application
+├── e2e/                         # End-to-end tests
+└── docs/                        # Documentation
+```

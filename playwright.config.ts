@@ -37,7 +37,7 @@ export default defineConfig({
     { name: 'iPhone13', use: { ...devices['iPhone 13'] } },
   ],
   webServer: {
-    command: 'npm run dev',
+    command: 'pnpm run dev',
     port: 5173,
     reuseExistingServer: !process.env.CI,
   },

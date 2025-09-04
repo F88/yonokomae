@@ -1,130 +1,14 @@
-/**
- * Seed metadata containing essential information for seed catalog and selection.
- *
- * **Structure**:
- * - **id**: Unique identifier for the seed (used for deduplication)
- * - **title**: Human-readable name for UI display
- * - **file**: Relative path from seed directory for loading
- *
- * **Usage**:
- * Used by seed selection UI and provider for catalog management.
- */
-export type HistoricalSeedMeta = {
-  /** Unique identifier for the seed */
-  id: string;
-  /** Human-readable title for UI display */
-  title: string;
-  /** Relative file path under seeds/random-data/scenario/ */
-  file: string;
-};
+import type { HistoricalSeed, HistoricalSeedMeta } from '@yonokomae/types';
+import {
+  historicalSeedMetas as importedMetas,
+  loadSeedByFile as importedLoadSeed,
+} from '@yonokomae/data-historical-evidence';
 
-/**
- * Build-time seed module discovery using Vite glob imports.
- *
- * **Discovery Process**:
- * - **JSON Seeds**: `/seeds/random-data/scenario/*.json`
- * - **TypeScript Seeds**: `/src/seeds/random-data/scenario/*.{en,ja}.ts`
- * - **Eager Loading**: All modules loaded at build time for optimal performance
- * - **Static Analysis**: Enables tree shaking and build-time validation
- *
- * **Supported Formats**:
- * - JSON files with HistoricalSeed data structure
- * - TypeScript modules exporting default HistoricalSeed
- * - Multilingual variants (en.ts, ja.ts) for localization
- *
- * **Build Integration**:
- * - Vite glob imports provide type safety and static analysis
- * - Build fails early if seed files are malformed or missing
- * - Enables bundler optimization through static module graph
- */
-const discoveredSeedModules = {
-  ...import.meta.glob('/seeds/random-data/scenario/*.json', { eager: true }),
-  ...import.meta.glob('/src/seeds/random-data/scenario/*.{en,ja}.ts', {
-    eager: true,
-  }),
-};
+// Re-export types for backward compatibility
+export type { HistoricalSeed, HistoricalSeedMeta };
 
-/**
- * Extract base filename from file path for fallback naming.
- *
- * **Purpose**: Provides default id/title when seed doesn't specify them.
- *
- * @param path File path to extract basename from
- * @returns Base filename without extension
- *
- * @internal
- */
-function basename(path: string): string {
-  const m = path.match(/([^/]+)\.(json|ts)$/);
-  return m ? m[1] : path;
-}
-
-/**
- * Complete seed data structure containing battle scenario information.
- *
- * **Core Content**:
- * - **Identification**: Unique id and descriptive title
- * - **Narrative Elements**: Title, subtitle, overview, and full narrative
- * - **Attribution**: Optional provenance array with source references
- *
- * **Data Sources**:
- * Used by HistoricalEvidencesBattleReportRepository to generate rich battle scenarios
- * with historical context and proper source attribution.
- *
- * **Provenance Structure**:
- * Each provenance entry can include:
- * - **label**: Human-readable source description
- * - **url**: Optional link to original source
- * - **note**: Additional context or citation information
- */
-export type HistoricalSeed = {
-  /** Unique identifier for the seed */
-  id: string;
-  /** Battle title for display */
-  title: string;
-  /** Battle subtitle or tagline */
-  subtitle: string;
-  /** Brief overview of the scenario */
-  overview: string;
-  /** Full narrative text with rich details */
-  narrative: string;
-  /** Optional source attribution and references */
-  provenance?: Array<{ label: string; url?: string; note?: string }>;
-};
-
-/**
- * TypeScript module structure for seed imports.
- *
- * @internal
- */
-type SeedModule = { default: HistoricalSeed };
-
-/**
- * Build catalog of available seed metadata from discovered modules.
- *
- * **Processing Steps**:
- * 1. Sort discovered modules for consistent ordering
- * 2. Extract file path relative to seed directory
- * 3. Load id and title from seed content (with fallbacks)
- * 4. Build metadata catalog for provider consumption
- *
- * **Path Normalization**:
- * - Handles both `/seeds/` and `/src/seeds/` prefixes
- * - Maintains relative paths for loadSeedByFile compatibility
- * - Preserves file extensions for proper module resolution
- */
-const metas: HistoricalSeedMeta[] = Object.keys(discoveredSeedModules)
-  .sort()
-  .map((absPath) => {
-    const mod = discoveredSeedModules[absPath] as unknown as SeedModule;
-    const isSrcTs = absPath.startsWith('/src/seeds/random-data/scenario/');
-    const file = isSrcTs
-      ? absPath.replace('/src/seeds/random-data/scenario/', '')
-      : absPath.replace('/seeds/random-data/scenario/', '');
-    const id = mod?.default?.id || basename(file);
-    const title = mod?.default?.title || basename(file);
-    return { id, title, file } satisfies HistoricalSeedMeta;
-  });
+// Use static imports from data package
+const metas: HistoricalSeedMeta[] = importedMetas;
 
 /**
  * Build-time validation to prevent duplicate seed IDs.
@@ -208,7 +92,7 @@ export const historicalSeeds: ReadonlyArray<HistoricalSeedMeta> = metas;
  * for use in battle generation and narrative display.
  *
  * **File Resolution**:
- * - Tries both `/seeds/` and `/src/seeds/` prefixes
+ * - Uses static imports from @yonokomae/data-historical-evidence package
  * - Handles both JSON and TypeScript module formats
  * - Normalizes module export patterns (default export vs direct export)
  * - Provides clear error messages for missing files
@@ -255,30 +139,7 @@ export const historicalSeeds: ReadonlyArray<HistoricalSeedMeta> = metas;
 export async function loadSeedByFile(
   file: string,
 ): Promise<{ default: HistoricalSeed }> {
-  // Static-only resolution (no dynamic import) to avoid mixed static/dynamic warnings
-  const modules = {
-    ...import.meta.glob('/seeds/random-data/scenario/*.json', { eager: true }),
-    ...import.meta.glob('/src/seeds/random-data/scenario/*.{en,ja}.ts', {
-      eager: true,
-    }),
-  } as Record<string, unknown>;
-  const keyJsonNew = `/seeds/random-data/scenario/${file}`;
-  const keyTsNew = `/src/seeds/random-data/scenario/${file}`;
-  const mod = (modules[keyJsonNew] ?? modules[keyTsNew]) as
-    | { default?: HistoricalSeed }
-    | HistoricalSeed
-    | undefined;
-  if (!mod) throw new Error(`Seed not found: ${file}`);
-  function hasDefault(x: unknown): x is { default?: HistoricalSeed } {
-    return (
-      !!x &&
-      typeof x === 'object' &&
-      'default' in (x as Record<string, unknown>)
-    );
-  }
-  const normalized = hasDefault(mod)
-    ? mod.default
-    : (mod as HistoricalSeed | undefined);
-  if (!normalized) throw new Error(`Seed not found: ${file}`);
-  return Promise.resolve({ default: normalized });
+  const seed = importedLoadSeed(file);
+  if (!seed) throw new Error(`Seed not found: ${file}`);
+  return Promise.resolve({ default: seed });
 }

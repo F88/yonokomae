@@ -1,11 +1,14 @@
 ---
-title: Testing Guide
 lang: en
-notes-ja:
-    - この文書はテスト運用の整理用ドキュメントです(英語)。
+title: Testing Guide
 instructions-for-ais:
     - This document is written in English for AI readability.
     - Code fences may contain TypeScript/TSX/JSON.
+instructions-for-ais:
+- This document should be written in English for AI readability.
+- Content within code fences may be written in languages other than English.
+- Prohibit updating this front-matter.
+- Prohibit updating title line (1st line) in this document.
 ---
 
 # Testing Guide
@@ -23,33 +26,33 @@ This guide summarizes how tests are organized and run in this project, covering 
 
 ### All Tests
 
-- **Run all tests:** `npm test` or `npm run test`
-- **Watch mode:** `npm run test:watch`
+- **Run all tests:** `pnpm test` or `pnpm run test`
+- **Watch mode:** `pnpm run test:watch`
 
 ### Unit & Integration Tests
 
-- **Run unit tests:** `npm run test:unit`
-- **Watch mode:** `npm run test:unit:watch`
-- **UI mode:** `npm run test:ui`
-- **Coverage:** `npm run test:coverage`
+- **Run unit tests:** `pnpm run test:unit`
+- **Watch mode:** `pnpm run test:unit:watch`
+- **UI mode:** `pnpm run test:ui`
+- **Coverage:** `pnpm run test:coverage`
 
 ### Seed Validation Tests
 
-- **Run seed validation:** `npm run test:seeds`
+- **Run seed validation:** `pnpm run test:seeds`
 
 ### Storybook Tests
 
-- **Run Storybook tests:** `npm run test:storybook`
+- **Run Storybook tests:** `pnpm run test:storybook`
 
 ### End-to-End (E2E) Tests
 
-- **Run E2E tests (excluding @performance):** `npm run e2e`
-- **Run all E2E tests (including @performance):** `npm run e2e:all`
-- **Run in UI mode:** `npm run e2e:ui`
-- **Run in headed mode (Chromium only):** `npm run e2e:headed`
-- **Show report:** `npm run e2e:report`
+- **Run E2E tests (excluding @performance):** `pnpm run e2e`
+- **Run all E2E tests (including @performance):** `pnpm run e2e:all`
+- **Run in UI mode:** `pnpm run e2e:ui`
+- **Run in headed mode (Chromium only):** `pnpm run e2e:headed`
+- **Show report:** `pnpm run e2e:report`
 
-See `package.json` for all available scripts.
+See root `package.json` and individual data package `package.json` files for all available scripts.
 
 ## Test Layout & Conventions
 
@@ -94,6 +97,7 @@ it('uses historical repository in historical-research mode', () => {
     renderWithProviders(<YourComponent />, { mode: historicalResearchMode });
 
     // The component will receive HistoricalEvidencesBattleReportRepository via the provider.
+    // This repository loads data from @yonokomae/data-historical-evidence
     // Assert on behavior specific to this mode.
 });
 ```
@@ -134,4 +138,11 @@ E2E tests cover critical user flows from a user's perspective. For a detailed po
 
 ## CI/CD
 
-Our CI pipeline runs all checks, including linting, type checking, and all forms of tests. For details, see the [CI/CD Pipeline section in CONTRIBUTING.md](../CONTRIBUTING.md).
+Our CI pipeline runs all checks, including linting, type checking, data package validation, and all forms of tests. The pipeline validates:
+
+- **Application Tests:** Unit, integration, and E2E tests for the main application
+- **Data Package Tests:** Schema validation and uniqueness checks for all data packages
+- **Type Safety:** TypeScript compilation for all packages
+- **Code Quality:** ESLint and Prettier across the monorepo
+
+For details, see the [CI/CD Pipeline section in CONTRIBUTING.md](../CONTRIBUTING_EN.md).

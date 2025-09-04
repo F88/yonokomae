@@ -1,4 +1,4 @@
-import type { Battle, Neta } from '@/types/types';
+import type { Battle, Neta } from '@yonokomae/types';
 import type { PlayMode } from '@/yk/play-mode';
 
 // Re-export types for repository implementations

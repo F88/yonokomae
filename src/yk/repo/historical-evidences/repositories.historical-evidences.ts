@@ -1,4 +1,4 @@
-import type { Battle, Neta } from '@/types/types';
+import type { Battle, Neta } from '@yonokomae/types';
 import type {
   BattleReportRepository,
   JudgementRepository,
@@ -11,7 +11,7 @@ import { loadBattleFromSeeds } from '../core/battle-seed-loader';
  * BattleReportRepository that loads battle data from historical evidence seeds.
  *
  * It discovers seed files under `seeds/historical-evidences/battle/` or
- * `src/seeds/historical-evidences/battle/`, loads one (optionally specified),
+ * `@yonokomae/data-battle-seeds` package, loads one (optionally specified),
  * normalizes its shape, validates via zod, and returns a Battle.
  */
 export class HistoricalEvidencesBattleReportRepository
@@ -43,7 +43,7 @@ export class HistoricalEvidencesBattleReportRepository
     // Reuse shared loader: discovers, normalizes, and validates seeds.
     const roots = [
       '/seeds/historical-evidences/battle/',
-      '/src/seeds/historical-evidences/battle/',
+      '@yonokomae/data-battle-seeds',
     ];
     return loadBattleFromSeeds({ roots, file: this.file });
   }

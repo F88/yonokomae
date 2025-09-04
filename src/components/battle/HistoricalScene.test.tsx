@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { HistoricalScene } from './HistoricalScene';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 
 const makeBattle = (overrides: Partial<Battle> = {}): Battle => ({
   id: 'b1',

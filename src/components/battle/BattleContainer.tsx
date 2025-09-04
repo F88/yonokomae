@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import { HistoricalScene } from '@/components/battle/HistoricalScene';
 import { ConsiderationsAndJudgments } from '@/components/battle/ConsiderationsAndJudgments';
 import type { PlayMode } from '@/yk/play-mode';

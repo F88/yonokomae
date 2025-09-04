@@ -3,7 +3,7 @@ import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import { playMode } from '@/yk/play-mode';
-import type { Battle } from './types/types';
+import type { Battle } from '@yonokomae/types';
 
 // Mock the generate report hook to avoid dynamic imports and delays
 const mockGenerateReport = vi.fn<() => Promise<Battle>>();

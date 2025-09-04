@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { HistoricalScene } from './HistoricalScene';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 
 function makeSampleBattle(overrides?: Partial<Battle>): Battle {
   return {

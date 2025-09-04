@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Neta } from '@/types/types';
+import type { Neta } from '@yonokomae/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 

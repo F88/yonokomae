@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import type { PlayMode } from '@/yk/play-mode';
 import { getJudgementRepository } from '@/yk/repo/core/repository-provider';
 import type { Verdict } from '@/yk/repo/core/repositories';
