@@ -43,9 +43,7 @@ function mergeGlobs(): Record<string, Battle> {
     for (const [fileName, seedBattle] of Object.entries(battleSeedsByFile)) {
       if (seedBattle.id === battle.id) {
         // Map to both possible root paths for compatibility
-        battleSeedMap[`/seeds/historical-evidences/battle/${fileName}`] =
-          battle;
-        battleSeedMap[`@yonokomae/data-historical-evidence:${fileName}`] =
+        battleSeedMap[`@yonokomae/data-historical-evidence/${fileName}`] =
           battle;
         break;
       }
