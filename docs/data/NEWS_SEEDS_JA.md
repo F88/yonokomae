@@ -45,32 +45,24 @@ data/news-seeds/
 **パターン**: `news-sample-{number}.ts`  
 **言語**: 言語中立（主に英語ベース）
 
-各ファイルは `Battle` 型(v2)に適合するデフォルトオブジェクトをエクスポートします：
+各ファイルは `Battle` 型に適合するデフォルトオブジェクトをエクスポートします：
 
 ```typescript
 import type { Battle } from '@yonokomae/types';
 
 const newsSample: Battle = {
     id: 'news-sample-unique-id',
-    themeId: 'information',
-    significance: 'low',
     title: 'ニュースバトルタイトル',
     subtitle: 'ニュース風サブタイトル',
-    narrative: {
-        overview: 'ニュース風の簡潔な概要...',
-        scenario: '詳細なニュース記事...',
-    },
+    overview: 'ニュース風の簡潔な概要...',
+    scenario: '詳細なニュース記事...',
     komae: {
-        imageUrl: '/KOMAE-SYMBOL.png',
-        title: '狛江代表',
-        subtitle: 'スポークスパーソン',
+        name: '狛江代表',
         power: 75,
         description: '狛江派閥の詳細...',
     },
     yono: {
-        imageUrl: '/YONO-SYMBOL.png',
-        title: '与野代表',
-        subtitle: 'スポークスパーソン',
+        name: '与野代表',
         power: 68,
         description: '与野派閥の詳細...',
     },
@@ -88,16 +80,15 @@ export default newsSample;
 
 ## データ要件
 
-### Battle 型構造 (v2)
+### Battle 型構造
 
 ニュースシードは battle-seeds と同じ `Battle` 型を使用します：
 
 - **`id`**: 一意識別子 (string)
-- **`themeId`**: バトルテーマID (`@yonokomae/catalog` 参照)
-- **`significance`**: 'low' | 'medium' | 'high' | 'legendary'
 - **`title`**: ニュース風見出し (string)
 - **`subtitle`**: 補足見出し (string)
-- **`narrative`**: `{ overview: string, scenario: string }`
+- **`overview`**: 簡潔なニュース要約 (string)
+- **`scenario`**: 完全なニュース記事内容 (string)
 - **`komae`**: 狛江派を表す Neta オブジェクト
 - **`yono`**: 与野派を表す Neta オブジェクト
 - **`provenance`**: 架空またはデモンストレーション用ソースの配列 (任意)

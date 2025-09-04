@@ -66,7 +66,7 @@ Each package is independent and can be maintained separately while sharing commo
 
 **File Location**: `data/battle-seeds/src/battle/`  
 **File Pattern**: `yono-komae-{topic}.ja.ts`  
-**Type**: `Battle` (v2) from `@yonokomae/types`  
+**Type**: `Battle` from `@yonokomae/types`  
 **Validation**: `BattleSchema` from `@yonokomae/schema`
 
 **Examples**:
@@ -74,8 +74,6 @@ Each package is independent and can be maintained separately while sharing commo
 - `yono-komae-population-trends.ja.ts`
 - `yono-komae-area-comparison.ja.ts`
 - `yono-komae-agriculture.ja.ts`
-
-Notes: Battle v2 includes `themeId`, `significance`, and a `narrative` object grouping `overview` and `scenario`. Theme ids are defined in `@yonokomae/catalog`.
 
 **Detailed Guide**: See [docs/data/BATTLE_SEEDS_EN.md](data/BATTLE_SEEDS_EN.md)
 

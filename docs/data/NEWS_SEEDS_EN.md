@@ -23,7 +23,7 @@ News seeds serve as sample data that showcases the battle system in a news-style
 
 ## Package Structure
 
-```typescript
+```
 data/news-seeds/
 ├── package.json
 ├── tsconfig.json
@@ -45,32 +45,24 @@ data/news-seeds/
 **Pattern**: `news-sample-{number}.ts`  
 **Language**: Language-neutral (primarily English-based)
 
-Each file exports a default object conforming to the `Battle` type (v2):
+Each file exports a default object conforming to the `Battle` type:
 
 ```typescript
 import type { Battle } from '@yonokomae/types';
 
 const newsSample: Battle = {
     id: 'news-sample-unique-id',
-    themeId: 'information',
-    significance: 'low',
     title: 'News Battle Title',
     subtitle: 'Breaking News Style Subtitle',
-    narrative: {
-        overview: 'Brief news-style overview...',
-        scenario: 'Detailed news narrative...',
-    },
+    overview: 'Brief news-style overview...',
+    scenario: 'Detailed news narrative...',
     komae: {
-        imageUrl: '/KOMAE-SYMBOL.png',
-        title: 'Komae Representative',
-        subtitle: 'Spokesperson',
+        name: 'Komae Representative',
         power: 75,
         description: 'Komae faction details...',
     },
     yono: {
-        imageUrl: '/YONO-SYMBOL.png',
-        title: 'Yono Representative',
-        subtitle: 'Spokesperson',
+        name: 'Yono Representative',
         power: 68,
         description: 'Yono faction details...',
     },
@@ -88,16 +80,15 @@ export default newsSample;
 
 ## Data Requirements
 
-### Battle Type Structure (v2)
+### Battle Type Structure
 
 News seeds use the same `Battle` type as battle-seeds:
 
 - **`id`**: Unique identifier (string)
-- **`themeId`**: Battle theme id (see `@yonokomae/catalog`)
-- **`significance`**: 'low' | 'medium' | 'high' | 'legendary'
 - **`title`**: News-style headline (string)
 - **`subtitle`**: Supporting headline (string)
-- **`narrative`**: `{ overview: string, scenario: string }`
+- **`overview`**: Brief news summary (string)
+- **`scenario`**: Full news article content (string)
 - **`komae`**: Neta object representing Komae faction
 - **`yono`**: Neta object representing Yono faction
 - **`provenance`**: Array of fictional or demonstration sources (optional)

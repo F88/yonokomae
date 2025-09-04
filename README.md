@@ -60,26 +60,6 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 - **Type Safety**: Shared TypeScript definitions (`@yonokomae/types`) and Zod validation schemas (`@yonokomae/schema`)
 - **Data Maintenance**: Dedicated workflow for data contributors with comprehensive validation
 
-### Data model (Battle v2)
-
-Core entity used across the app and data packages:
-
-- id: string (stable unique id)
-- themeId: BattleThemeId (see `@yonokomae/catalog` for catalog and ids)
-- significance: 'low' | 'medium' | 'high' | 'legendary'
-- title: string
-- subtitle: string
-- narrative: { overview: string; scenario: string }
-- komae: Neta { imageUrl, title, subtitle, description, power }
-- yono: Neta { imageUrl, title, subtitle, description, power }
-- provenance?: Array<{ label, url?, note? }>
-
-References:
-
-- Types: `packages/types/src/battle.ts`
-- Schema: `packages/schema/src/battle.ts`
-- Theme catalog: `packages/catalog/src/battle-themes.ts`
-
 ### Application Features
 
 - One-click battle report generation with smooth auto-scroll to latest

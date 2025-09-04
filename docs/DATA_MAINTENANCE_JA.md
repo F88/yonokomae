@@ -66,7 +66,7 @@ instructions-for-ais:
 
 **ファイル場所**: `data/battle-seeds/src/battle/`  
 **ファイルパターン**: `yono-komae-{topic}.ja.ts`  
-**型**: `@yonokomae/types` の `Battle` (v2)  
+**型**: `@yonokomae/types` の `Battle`  
 **検証**: `@yonokomae/schema` の `BattleSchema`
 
 **例**:
@@ -74,8 +74,6 @@ instructions-for-ais:
 - `yono-komae-population-trends.ja.ts`
 - `yono-komae-area-comparison.ja.ts`
 - `yono-komae-agriculture.ja.ts`
-
-補足: Battle v2 には `themeId`、`significance`、および `overview` と `scenario` をまとめる `narrative` オブジェクトが含まれます。`themeId` は `@yonokomae/catalog` で定義されています。
 
 **詳細ガイド**: [docs/data/BATTLE_SEEDS_JA.md](data/BATTLE_SEEDS_JA.md) を参照
 
