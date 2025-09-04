@@ -78,7 +78,11 @@ export const HistoricalScene: FC<Props> = ({
   cropAspectRatio,
   cropFocusY,
 }) => {
-  // battle.themeId から BattleTheme を取得して何かに使う場合、以下のようにする。
+  /**
+   * Resolves the theme for the battle.
+   * Finds the theme in the catalog by battle.themeId.
+   * If not found, defaults to the first theme in the catalog.
+   */
   const theme =
     battleThemeCatalog.find((t) => t.id === battle.themeId) ??
     battleThemeCatalog[0];
