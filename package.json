@@ -67,6 +67,7 @@
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
+    "@types/node": "^20.14.15",
     "@yonokomae/types": "workspace:*",
     "@yonokomae/schema": "workspace:*",
     "@yonokomae/data-historical-evidence": "workspace:*",
