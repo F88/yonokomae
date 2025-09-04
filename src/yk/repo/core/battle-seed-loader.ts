@@ -92,8 +92,8 @@ export function normalizeBattle(mod: BattleModule): Battle {
   const id = raw.id ?? uid('battle');
   const title = raw.title ?? '';
   const subtitle = raw.subtitle ?? '';
-  const overview = raw.narrative?.overview ?? '';
-  const scenario = raw.narrative?.scenario ?? '';
+  const overview = raw.narrative?.overview ?? (raw as any).overview ?? '';
+  const scenario = raw.narrative?.scenario ?? (raw as any).scenario ?? '';
   const komae = normalizeNeta(raw.komae);
   const yono = normalizeNeta(raw.yono);
   const provenance = Array.isArray(raw.provenance) ? raw.provenance : [];
