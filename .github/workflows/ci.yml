@@ -19,6 +19,8 @@ jobs:
         run: corepack enable
       - name: Prepare pnpm via Corepack
         run: corepack prepare pnpm@9.15.9 --activate
+      - name: Install pnpm
+        run: npm install -g pnpm@9.15.9
       - name: Add pnpm to PATH
         run: echo "$(corepack which pnpm)" >> $GITHUB_PATH
       - name: Tool versions
