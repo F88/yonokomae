@@ -5,10 +5,11 @@ export const handlers = [
   http.get('/api/battle/report', () => {
     return HttpResponse.json({
       id: 'msw-battle-1',
+      themeId: 'history',
+      significance: 'low',
       title: 'MSW Battle',
       subtitle: 'Stubbed',
-      overview: 'From MSW',
-      scenario: 'Stub path',
+      narrative: { overview: 'From MSW', scenario: 'Stub path' },
       komae: {
         imageUrl: 'k',
         title: 'K',

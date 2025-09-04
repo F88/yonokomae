@@ -4,6 +4,8 @@ export const enPack: DemoLocalePack = {
   patterns: [
     {
       id: 'template-en-1',
+      themeId: 'history',
+      significance: 'low',
       title: 'Bridge Skirmish at Dusk',
       subtitle: 'Balance Checks on Narrow Planks',
       overview:
@@ -29,6 +31,8 @@ export const enPack: DemoLocalePack = {
     },
     {
       id: 'template-en-2',
+      themeId: 'history',
+      significance: 'low',
       title: 'Lantern Reconnaissance',
       subtitle: 'Ambience Wins the Initiative',
       overview:
@@ -56,6 +60,8 @@ export const enPack: DemoLocalePack = {
     },
     {
       id: 'template-en-3',
+      themeId: 'history',
+      significance: 'low',
       title: 'Teapot Stand-off',
       subtitle: 'Steam, Banners, and Mixed Signals',
       overview: 'Steam and banners muddle the lines; morale turns theatrical.',
@@ -80,6 +86,8 @@ export const enPack: DemoLocalePack = {
     },
     {
       id: 'template-en-4',
+      themeId: 'history',
+      significance: 'low',
       title: 'River Mist Maneuvers',
       subtitle: 'Maps Say Yes, Visibility Says No',
       overview:
@@ -104,6 +112,8 @@ export const enPack: DemoLocalePack = {
     },
     {
       id: 'template-en-5',
+      themeId: 'history',
+      significance: 'low',
       title: 'Bakery Skirmish',
       subtitle: 'Supplies Win Wars, Croissants Win Hearts',
       overview: 'A logistical drama between oven heat and marching orders.',
@@ -127,6 +137,8 @@ export const enPack: DemoLocalePack = {
     },
     {
       id: 'template-en-6',
+      themeId: 'history',
+      significance: 'low',
       title: 'Market Square Drill',
       subtitle: 'Banners Up, Stalls Observing Quietly',
       overview: 'Formation practice among crates, chalk, and curious pigeons.',
@@ -150,6 +162,8 @@ export const enPack: DemoLocalePack = {
     },
     {
       id: 'template-en-7',
+      themeId: 'history',
+      significance: 'low',
       title: 'Hilltop Beacon Exercise',
       subtitle: 'Light Fast, Notes Faster',
       overview: 'A chain of signals tests timing against wind and whim.',
@@ -173,6 +187,8 @@ export const enPack: DemoLocalePack = {
     },
     {
       id: 'template-en-8',
+      themeId: 'history',
+      significance: 'low',
       title: 'Rain-Soaked Rally',
       subtitle: 'Drums Keep Time, Rain Keeps Everyone Honest',
       overview: 'A spirited assembly under cooperative weather.',
@@ -196,6 +212,8 @@ export const enPack: DemoLocalePack = {
     },
     {
       id: 'template-en-9',
+      themeId: 'history',
+      significance: 'low',
       title: 'Depot Inspection Day',
       subtitle: 'Order Marches on Clipboards',
       overview: 'From hinges to headcounts, everything gets a tidy sticker.',
@@ -219,6 +237,8 @@ export const enPack: DemoLocalePack = {
     },
     {
       id: 'template-en-10',
+      themeId: 'history',
+      significance: 'low',
       title: 'Midnight Couriers',
       subtitle: 'Footnotes on the Move',
       overview: 'Silent routes braid the map; stars file dispatch receipts.',

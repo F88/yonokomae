@@ -17,8 +17,8 @@ describe('demo-en repositories', () => {
     expect(battle.title.length).toBeGreaterThan(0);
     expect(battle.subtitle).toBeTypeOf('string');
     expect(battle.subtitle.length).toBeGreaterThan(0);
-    expect(battle.overview).toBeTypeOf('string');
-    expect(battle.scenario).toBeTypeOf('string');
+    expect(battle.narrative.overview).toBeTypeOf('string');
+    expect(battle.narrative.scenario).toBeTypeOf('string');
     expect(battle.status).toBe('success');
 
     // reasonable neta structure
@@ -38,10 +38,11 @@ describe('demo-en repositories', () => {
     const judge = new DemoEnJudgementRepository({ delay: { min: 0, max: 0 } });
     const battleBase = {
       id: 'battle_demo_en_test',
+      themeId: 'history' as const,
+      significance: 'low' as const,
       title: 'Demo-2 Battle',
       subtitle: 'Variant Showcase',
-      overview: 'n/a',
-      scenario: 'n/a',
+      narrative: { overview: 'n/a', scenario: 'n/a' },
       status: 'success' as const,
     };
 

@@ -8,12 +8,16 @@ const demoMode = playMode.find((m) => m.id === 'demo-en') ?? playMode[0];
 function makeSampleBattle(overrides?: Partial<Battle>): Battle {
   return {
     id: 'sample-battle-1',
+    themeId: 'history',
+    significance: 'low',
     title: 'YONO vs KOMAE',
     subtitle: 'A classic showdown',
-    overview:
-      'Two legendary rivals meet again. Who will prevail in this iconic matchup?',
-    scenario:
-      'On a misty morning by the Tama River, strategies clash and wit decides the day.',
+    narrative: {
+      overview:
+        'Two legendary rivals meet again. Who will prevail in this iconic matchup?',
+      scenario:
+        'On a misty morning by the Tama River, strategies clash and wit decides the day.',
+    },
     status: 'success',
     yono: {
       imageUrl: '/YONO-SYMBOL.png',

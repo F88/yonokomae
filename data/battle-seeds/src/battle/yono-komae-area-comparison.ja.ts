@@ -3,15 +3,19 @@ import type { Battle } from '@yonokomae/types';
 // Yono (Saitama-shi Chuo-ku) vs Komae: area size comparison (Japanese)
 const battle = {
   id: 'yono-komae-area-comparison-geo-2025-ja',
+  themeId: 'development',
+  significance: 'low',
   title: '面積',
   subtitle: 'よのとこまえの地理的スケール',
-  overview:
-    'よのの面積は 8.39 km²、こまえは 6.39 km²。よのの方が約 2 km² 広い。' +
-    'よのの面積は 8.29 km² で、政令指定都市移行時に一部が編入され現行の 8.39 km² となった。',
-  scenario:
-    '面積は都市の密度・サービス配置・公園や道路空間の余裕に影響しうるが、単独では都市力を決めない。' +
-    'YONO(現・よの)は 8.39 km² とこまえ(6.39 km²)より広く、よの(8.29 km²)からの小幅な拡大が背景にある。' +
-    'こまえは全国で 2 番目に面積が小さい市として知られ、緻密な市街と沿線の機能集積が特徴とされる。',
+  narrative: {
+    overview:
+      'よのの面積は 8.39 km²、こまえは 6.39 km²。よのの方が約 2 km² 広い。' +
+      'よのの面積は 8.29 km² で、政令指定都市移行時に一部が編入され現行の 8.39 km² となった。',
+    scenario:
+      '面積は都市の密度・サービス配置・公園や道路空間の余裕に影響しうるが、単独では都市力を決めない。' +
+      'YONO(現・よの)は 8.39 km² とこまえ(6.39 km²)より広く、よの(8.29 km²)からの小幅な拡大が背景にある。' +
+      'こまえは全国で 2 番目に面積が小さい市として知られ、緻密な市街と沿線の機能集積が特徴とされる。',
+  },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE の面積',

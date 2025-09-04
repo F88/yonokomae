@@ -5,11 +5,15 @@ import type { Battle } from '@yonokomae/types';
 function makeSampleBattle(overrides?: Partial<Battle>): Battle {
   return {
     id: 'scene-001',
+    themeId: 'history',
+    significance: 'low',
     title: 'Bridge Skirmish',
     subtitle: 'Clash at dawn',
-    overview: 'A brief encounter escalates into a tactical exchange.',
-    scenario:
-      'Both sides contest a narrow crossing, leveraging terrain and timing.',
+    narrative: {
+      overview: 'A brief encounter escalates into a tactical exchange.',
+      scenario:
+        'Both sides contest a narrow crossing, leveraging terrain and timing.',
+    },
     yono: {
       imageUrl: '/YONO-SYMBOL.png',
       title: 'YONO',

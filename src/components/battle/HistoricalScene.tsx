@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { battleThemeCatalog } from '@yonokomae/catalog';
 import { Field } from '@/components/battle/Field';
 import type { Battle } from '@yonokomae/types';
 import {
@@ -77,6 +78,11 @@ export const HistoricalScene: FC<Props> = ({
   cropAspectRatio,
   cropFocusY,
 }) => {
+  // battle.themeId から BattleTheme を取得して何かに使う場合、以下のようにする。
+  const theme =
+    battleThemeCatalog.find((t) => t.id === battle.themeId) ??
+    battleThemeCatalog[0];
+
   return (
     <Card className="w-full">
       <CardHeader className="text-center px-4 lg:px-6">
@@ -86,10 +92,16 @@ export const HistoricalScene: FC<Props> = ({
               ID: {battle.id}
             </div>
             <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Theme: {battle.themeId} / Significance: {battle.significance}
+            </div>
+            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              {theme.name}
+            </div>
+            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               Overview
             </div>
             <CardDescription className="text-base">
-              {battle.overview}
+              {battle.narrative.overview}
             </CardDescription>
           </div>
 
@@ -97,6 +109,7 @@ export const HistoricalScene: FC<Props> = ({
 
           <div className="space-y-2">
             <CardTitle className="text-3xl font-bold lg:text-4xl">
+              {theme.icon}
               {battle.title}
             </CardTitle>
             <CardDescription className="text-lg italic">
@@ -111,7 +124,7 @@ export const HistoricalScene: FC<Props> = ({
               Scenario
             </div>
             <CardDescription className="text-base">
-              {battle.scenario}
+              {battle.narrative.scenario}
             </CardDescription>
           </div>
 

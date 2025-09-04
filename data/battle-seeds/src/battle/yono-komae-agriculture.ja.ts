@@ -3,16 +3,20 @@ import type { Battle } from '@yonokomae/types';
 // Yono (Saitama-shi Chuo-ku) vs Komae: agriculture comparison (Japanese)
 const battle = {
   id: 'yono-komae-agriculture-2025-ja',
+  themeId: 'development',
+  significance: 'low',
   title: '農業',
   subtitle: '歴史・現況・農地面積・政策の比較',
-  overview:
-    'よのは江戸期から畑作(麦・野菜など)が中心だったが、' +
-    '戦後の首都圏拡大で急速に宅地化が進み、農地は大きく減少した。' +
-    'こまえは江戸期の宿場・農村に由来し、昭和初期まで養蚕・野菜・花卉栽培が盛ん。' +
-    '現在も市内に小規模農地が点在し、都市型農業が維持されている。',
-  scenario:
-    'YONO は都市化により農地が極少で、市民農園や家庭菜園等の小規模・非営利的営みが中心。' +
-    'KOMAE は都市農業の維持・発展を掲げ、防災・環境・景観と両立させた農の機能が評価される。',
+  narrative: {
+    overview:
+      'よのは江戸期から畑作(麦・野菜など)が中心だったが、' +
+      '戦後の首都圏拡大で急速に宅地化が進み、農地は大きく減少した。' +
+      'こまえは江戸期の宿場・農村に由来し、昭和初期まで養蚕・野菜・花卉栽培が盛ん。' +
+      '現在も市内に小規模農地が点在し、都市型農業が維持されている。',
+    scenario:
+      'YONO は都市化により農地が極少で、市民農園や家庭菜園等の小規模・非営利的営みが中心。' +
+      'KOMAE は都市農業の維持・発展を掲げ、防災・環境・景観と両立させた農の機能が評価される。',
+  },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE の農業',

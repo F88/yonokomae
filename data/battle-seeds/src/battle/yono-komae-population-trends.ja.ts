@@ -3,12 +3,16 @@ import type { Battle } from '@yonokomae/types';
 // Yono vs Komae: population trends (Japanese version)
 const battle = {
   id: 'yono-komae-population-trends-1920-2050-ja',
+  themeId: 'development',
+  significance: 'high',
   title: '人口動向',
   subtitle: '国勢調査スナップショットと将来推計(1920-2050)',
-  overview:
-    '1920から2050(推計含む)までのYONOとKOMAEの人口スナップショットにより、長期的な軌跡の相違を示す。',
-  scenario:
-    'YONOは1920の10,750から2050推計の104,000まで増加し、1945(19,000)、1970(71,000)、1980(81,000)、2000(97,000)、2020(103,000)と段階的に拡大。KOMAEは1920の5,595から1980の70,000まで上昇し、2020は約82,000で安定、その後2050には45,000へと減少推計。これらは都市化、インフラ、地域的役割の違いを映す。',
+  narrative: {
+    overview:
+      '1920から2050(推計含む)までのYONOとKOMAEの人口スナップショットにより、長期的な軌跡の相違を示す。',
+    scenario:
+      'YONOは1920の10,750から2050推計の104,000まで増加し、1945(19,000)、1970(71,000)、1980(81,000)、2000(97,000)、2020(103,000)と段階的に拡大。KOMAEは1920の5,595から1980の70,000まで上昇し、2020は約82,000で安定、その後2050には45,000へと減少推計。これらは都市化、インフラ、地域的役割の違いを映す。',
+  },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAEの人口',

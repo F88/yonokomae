@@ -5,6 +5,7 @@
       "@/*": ["./src/*"]
     },
     "strict": true,
+    "module": "ESNext",
     /* Module resolution for config files (vite/vitest) */
     "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,

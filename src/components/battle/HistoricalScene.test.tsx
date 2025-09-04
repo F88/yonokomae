@@ -5,10 +5,11 @@ import type { Battle } from '@yonokomae/types';
 
 const makeBattle = (overrides: Partial<Battle> = {}): Battle => ({
   id: 'b1',
+  themeId: 'history',
+  significance: 'low',
   title: 'T',
   subtitle: 'S',
-  overview: 'O',
-  scenario: 'N',
+  narrative: { overview: 'O', scenario: 'N' },
   komae: {
     imageUrl: 'k',
     title: 'K',

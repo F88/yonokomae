@@ -3,15 +3,19 @@ import type { Battle } from '@yonokomae/types';
 // Yono vs Komae: commuting flows and mobility (Japanese version)
 const battle = {
   id: 'yono-komae-commuting-flows-1995-2025-ja',
+  themeId: 'development',
+  significance: 'medium',
   title: '通勤流動と交流人口',
   subtitle: '1995-2025 のモビリティと都市圏のつながり',
-  overview:
-    'YONO と KOMAE における通勤・通学・購買行動の流動を概観し、都市圏ネットワークの違いを示す。',
-  scenario:
-    'YONO は 2000 年代以降、都心・副都心への直結路線とバス網の強化で域外通勤が増加しつつ、' +
-    '駅周辺の再開発により域内完結度も上昇。KOMAE は 私鉄沿線のベッドタウンとして域外通勤比率が高く、' +
-    '駅近の商業利便性の向上で日常の購買行動は域内シフトが進行。双方ともにピーク分散・在宅比率の上昇により、' +
-    '直近では朝夕ピークが緩和される傾向。',
+  narrative: {
+    overview:
+      'YONO と KOMAE における通勤・通学・購買行動の流動を概観し、都市圏ネットワークの違いを示す。',
+    scenario:
+      'YONO は 2000 年代以降、都心・副都心への直結路線とバス網の強化で域外通勤が増加しつつ、' +
+      '駅周辺の再開発により域内完結度も上昇。KOMAE は 私鉄沿線のベッドタウンとして域外通勤比率が高く、' +
+      '駅近の商業利便性の向上で日常の購買行動は域内シフトが進行。双方ともにピーク分散・在宅比率の上昇により、' +
+      '直近では朝夕ピークが緩和される傾向。',
+  },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE のモビリティ',

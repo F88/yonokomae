@@ -5,10 +5,11 @@ import type { Battle } from '@yonokomae/types';
 function b(id: string, status?: Battle['status']): Battle {
   return {
     id,
+    themeId: 'history',
+    significance: 'low',
     title: 't',
     subtitle: 's',
-    overview: 'o',
-    scenario: 'c',
+    narrative: { overview: 'o', scenario: 'c' },
     komae: {
       imageUrl: '',
       title: 'k',

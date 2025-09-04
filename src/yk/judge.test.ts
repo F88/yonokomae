@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Judge } from './judge';
 import { playMode } from './play-mode';
+import type { Battle } from '@yonokomae/types';
 
 describe('Judge', () => {
   describe('constructor', () => {
@@ -31,12 +32,13 @@ describe('Judge', () => {
       const dummyBattle = (
         y: ReturnType<typeof dummyNeta>,
         k: ReturnType<typeof dummyNeta>,
-      ) => ({
+      ): Battle => ({
         id: 'test-battle',
+        themeId: 'history',
+        significance: 'low',
         title: 't',
         subtitle: 't',
-        overview: 'o',
-        scenario: 's',
+        narrative: { overview: 'o', scenario: 's' },
         yono: y,
         komae: k,
       });

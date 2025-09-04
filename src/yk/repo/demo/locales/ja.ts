@@ -4,6 +4,8 @@ export const jaPack: DemoLocalePack = {
   patterns: [
     {
       id: 'template-ja-1',
+      themeId: 'history',
+      significance: 'low',
       title: '橋上ごっこバトル',
       subtitle: '拍手はカモメだけ',
       overview:
@@ -28,6 +30,8 @@ export const jaPack: DemoLocalePack = {
     },
     {
       id: 'template-ja-2',
+      themeId: 'history',
+      significance: 'low',
       title: '提灯作戦バトル',
       subtitle: '雰囲気が全会一致',
       overview: '提灯偵察の現場報告: 光は蛾と噂とついでに将軍まで呼び寄せた。',
@@ -51,6 +55,8 @@ export const jaPack: DemoLocalePack = {
     },
     {
       id: 'template-ja-3',
+      themeId: 'history',
+      significance: 'low',
       title: '急須バトル',
       subtitle: '蒸気による多数決',
       overview: '急須の睨み合い速報: 蒸気が戦場を制圧、クッキーが和平を仲介。',
@@ -74,6 +80,8 @@ export const jaPack: DemoLocalePack = {
     },
     {
       id: 'template-ja-4',
+      themeId: 'history',
+      significance: 'low',
       title: '川霧マヌーバ',
       subtitle: '地図は可、視界は不可',
       overview: '河岸に沿う演習。議事録は縁から結露。',
@@ -97,6 +105,8 @@ export const jaPack: DemoLocalePack = {
     },
     {
       id: 'template-ja-5',
+      themeId: 'history',
+      significance: 'low',
       title: 'ベーカリー小競り合い',
       subtitle: '兵站が勝利、クロワッサンが心を掌握',
       overview: '窯の熱と行軍命令のはざまで起きた兵站劇。',
@@ -120,6 +130,8 @@ export const jaPack: DemoLocalePack = {
     },
     {
       id: 'template-ja-6',
+      themeId: 'history',
+      significance: 'low',
       title: '朝市ドリル',
       subtitle: '旗は凛々しく、屋台は静かに採点',
       overview: '木箱とチョークと鳩の視線のあいだで整列訓練。',
@@ -143,6 +155,8 @@ export const jaPack: DemoLocalePack = {
     },
     {
       id: 'template-ja-7',
+      themeId: 'history',
+      significance: 'low',
       title: '丘上烽火演習',
       subtitle: '光は速く、メモはさらに速い',
       overview: '連なる信号が、風と気まぐれにタイミング勝負を挑む。',
@@ -166,6 +180,8 @@ export const jaPack: DemoLocalePack = {
     },
     {
       id: 'template-ja-8',
+      themeId: 'history',
+      significance: 'low',
       title: '雨だまりラリー',
       subtitle: '太鼓は刻み、雨はみなを正直にする',
       overview: '協力的な天気のもとでの活気ある集合。',
@@ -189,6 +205,8 @@ export const jaPack: DemoLocalePack = {
     },
     {
       id: 'template-ja-9',
+      themeId: 'history',
+      significance: 'low',
       title: '兵站倉庫査閲',
       subtitle: '秩序はクリップボードの上を行進',
       overview: '蝶番から点呼まで、全てに整頓ステッカーが貼られる。',
@@ -212,6 +230,8 @@ export const jaPack: DemoLocalePack = {
     },
     {
       id: 'template-ja-10',
+      themeId: 'history',
+      significance: 'low',
       title: '真夜中の伝令',
       subtitle: '脚注は移動する',
       overview: '静かな経路が地図を編み、星は受領印を押す。',

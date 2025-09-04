@@ -17,10 +17,11 @@ import { getJudgementRepository } from '@/yk/repo/core/repository-provider';
 
 const battle: Battle = {
   id: 'b1',
+  themeId: 'history',
+  significance: 'low',
   title: 't',
   subtitle: 's',
-  overview: 'o',
-  scenario: 'sc',
+  narrative: { overview: 'o', scenario: 'sc' },
   yono: {
     imageUrl: '',
     title: 'y',

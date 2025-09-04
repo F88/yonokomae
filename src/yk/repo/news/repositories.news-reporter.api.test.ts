@@ -53,10 +53,14 @@ describe('NewsReporterApiBattleReportRepository', () => {
 
     const fallbackBattle: Battle = {
       id: 'battle-1',
+      themeId: 'history',
+      significance: 'low',
       title: 'Fallback News',
       subtitle: 'Local API-like',
-      overview: 'From app API fallback',
-      scenario: 'Fallback path',
+      narrative: {
+        overview: 'From app API fallback',
+        scenario: 'Fallback path',
+      },
       yono: {
         title: 'Y',
         subtitle: 'y',
@@ -166,10 +170,14 @@ describe('NewsReporterApiBattleReportRepository', () => {
 
       const fallbackBattle: Battle = {
         id: 'battle-fallback',
+        themeId: 'history',
+        significance: 'low',
         title: 'Fallback on 4xx/5xx',
         subtitle: 'Local API-like',
-        overview: 'From app API fallback',
-        scenario: 'Fallback path',
+        narrative: {
+          overview: 'From app API fallback',
+          scenario: 'Fallback path',
+        },
         yono: {
           title: 'Y',
           subtitle: 'y',
@@ -250,10 +258,14 @@ describe('NewsReporterApiBattleReportRepository', () => {
     );
     const fallbackBattle: Battle = {
       id: 'battle-weather-fallback',
+      themeId: 'history',
+      significance: 'low',
       title: 'Weather Fallback',
       subtitle: 'Local API-like',
-      overview: 'From app API fallback',
-      scenario: 'Fallback path',
+      narrative: {
+        overview: 'From app API fallback',
+        scenario: 'Fallback path',
+      },
       yono: {
         title: 'Y',
         subtitle: 'y',

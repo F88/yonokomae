@@ -3,12 +3,16 @@ import type { Battle } from '@yonokomae/types';
 // Yono vs Komae: industry and growth (Japanese version)
 const battle = {
   id: 'yono-komae-industry-growth-1928-2025-ja',
+  themeId: 'finance',
+  significance: 'medium',
   title: '産業と成長パターン',
   subtitle: '繊維・農業からサービス経済へ',
-  overview:
-    '産業構成と成長ドライバー。YONOは2020時点で第3次産業が8割超へシフト。KOMAEは昭和期の農業・養蚕から2020には郊外型サービス経済へ移行。',
-  scenario:
-    'YONOでは1928に繊維工業が拡大(松本産業など)。2020には(よの連合国全体で)第3次産業の就業者が8割超で、2001の合併/さいたま新都心開発と整合的。KOMAEは昭和期に農業・養蚕が中心で、2020の就業構成は第1次296、第2次5,045、第3次26,818。鉄道/路線(YONO: 駅4/路線3、KOMAE: 駅2/路線1)は接続規模の差を示す。',
+  narrative: {
+    overview:
+      '産業構成と成長ドライバー。YONOは2020時点で第3次産業が8割超へシフト。KOMAEは昭和期の農業・養蚕から2020には郊外型サービス経済へ移行。',
+    scenario:
+      'YONOでは1928に繊維工業が拡大(松本産業など)。2020には(よの連合国全体で)第3次産業の就業者が8割超で、2001の合併/さいたま新都心開発と整合的。KOMAEは昭和期に農業・養蚕が中心で、2020の就業構成は第1次296、第2次5,045、第3次26,818。鉄道/路線(YONO: 駅4/路線3、KOMAE: 駅2/路線1)は接続規模の差を示す。',
+  },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAEの産業',

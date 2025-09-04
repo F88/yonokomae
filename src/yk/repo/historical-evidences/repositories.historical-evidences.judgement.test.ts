@@ -1,14 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { HistoricalEvidencesJudgementRepository } from './repositories.historical-evidences';
+import type { Battle } from '@yonokomae/types';
 import { getJudgementRepository } from '@/yk/repo/core/repository-provider';
 
-function makeBattle(yonoPower: number, komaePower: number) {
+function makeBattle(yonoPower: number, komaePower: number): Battle {
   return {
     id: 'test-battle',
+    themeId: 'history',
+    significance: 'low',
     title: 't',
     subtitle: 's',
-    overview: 'o',
-    scenario: 'sc',
+    narrative: { overview: 'o', scenario: 'sc' },
     yono: {
       power: yonoPower,
       imageUrl: '',
