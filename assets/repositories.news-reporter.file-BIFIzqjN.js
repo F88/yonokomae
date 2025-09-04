@@ -1,1 +1,0 @@
-import{a as s}from"./delay-utils-lugK4fzg.js";import{l as t}from"./battle-seed-loader-exEVz7wq.js";import"./index-IIuZB8tb.js";class i{delay;constructor(e){this.delay=e?.delay}async generateReport(e){return await s(this.delay,e?.signal),t({roots:["/seeds/news/","/src/seeds/news/"]})}}export{i as NewsReporterFileiBattleReportRepository};
