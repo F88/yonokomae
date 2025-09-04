@@ -92,8 +92,10 @@ export function normalizeBattle(mod: BattleModule): Battle {
   const id = raw.id ?? uid('battle');
   const title = raw.title ?? '';
   const subtitle = raw.subtitle ?? '';
-  const overview = raw.narrative?.overview ?? (raw as any).overview ?? '';
-  const scenario = raw.narrative?.scenario ?? (raw as any).scenario ?? '';
+  const overview =
+    raw.narrative?.overview ?? getLegacyString(raw, 'overview') ?? '';
+  const scenario =
+    raw.narrative?.scenario ?? getLegacyString(raw, 'scenario') ?? '';
   const komae = normalizeNeta(raw.komae);
   const yono = normalizeNeta(raw.yono);
   const provenance = Array.isArray(raw.provenance) ? raw.provenance : [];
@@ -127,4 +129,15 @@ function hasDefault(x: unknown): x is { default?: Partial<Battle> } {
   return (
     !!x && typeof x === 'object' && 'default' in (x as Record<string, unknown>)
   );
+}
+
+function getLegacyString(
+  obj: unknown,
+  key: 'overview' | 'scenario',
+): string | undefined {
+  if (obj && typeof obj === 'object' && key in (obj as Record<string, unknown>)) {
+    const v = (obj as Record<string, unknown>)[key];
+    if (typeof v === 'string') return v;
+  }
+  return undefined;
 }
