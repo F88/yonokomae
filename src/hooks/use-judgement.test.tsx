@@ -10,7 +10,7 @@ vi.mock('@/yk/repo/core/repository-provider', () => ({
 }));
 
 import { useJudgement } from '@/hooks/use-judgement';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import type { PlayMode } from '@/yk/play-mode';
 import { useRepositoriesOptional } from '@/yk/repo/core/repository-context';
 import { getJudgementRepository } from '@/yk/repo/core/repository-provider';

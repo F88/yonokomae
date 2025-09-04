@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Field } from '@/components/battle/Field';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import {
   Card,
   CardHeader,

@@ -1,4 +1,4 @@
-import type { Battle, Neta } from '../../../types/types';
+import type { Battle, Neta } from "@yonokomae/types";
 import type { PlayMode } from '../../../yk/play-mode';
 export type { Battle, Neta, PlayMode };
 export type Verdict = {

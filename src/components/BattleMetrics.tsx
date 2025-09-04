@@ -1,4 +1,4 @@
-import type { BattleReportMetrics } from '@/types/types';
+import type { BattleReportMetrics } from '@yonokomae/types';
 import clsx from 'clsx';
 
 interface BattleMetricsProps {

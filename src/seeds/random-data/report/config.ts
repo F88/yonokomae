@@ -1,4 +1,0 @@
-export default {
-  attribution: 'Images: placeholders (https://placehold.co/)',
-  defaultPower: 50,
-};

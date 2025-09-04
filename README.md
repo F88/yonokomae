@@ -1,5 +1,8 @@
 # Yonokomae
 
+[![CI](https://github.com/F88/yonokomae/actions/workflows/ci.yml/badge.svg)](https://github.com/F88/yonokomae/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/F88/yonokomae/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/F88/yonokomae/actions/workflows/github-code-scanning/codeql)
+
 [![DeepWiki](https://img.shields.io/badge/DeepWiki-F88%2Fyonokomae-blue.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAyCAYAAAAnWDnqAAAAAXNSR0IArs4c6QAAA05JREFUaEPtmUtyEzEQhtWTQyQLHNak2AB7ZnyXZMEjXMGeK/AIi+QuHrMnbChYY7MIh8g01fJoopFb0uhhEqqcbWTp06/uv1saEDv4O3n3dV60RfP947Mm9/SQc0ICFQgzfc4CYZoTPAswgSJCCUJUnAAoRHOAUOcATwbmVLWdGoH//PB8mnKqScAhsD0kYP3j/Yt5LPQe2KvcXmGvRHcDnpxfL2zOYJ1mFwrryWTz0advv1Ut4CJgf5uhDuDj5eUcAUoahrdY/56ebRWeraTjMt/00Sh3UDtjgHtQNHwcRGOC98BJEAEymycmYcWwOprTgcB6VZ5JK5TAJ+fXGLBm3FDAmn6oPPjR4rKCAoJCal2eAiQp2x0vxTPB3ALO2CRkwmDy5WohzBDwSEFKRwPbknEggCPB/imwrycgxX2NzoMCHhPkDwqYMr9tRcP5qNrMZHkVnOjRMWwLCcr8ohBVb1OMjxLwGCvjTikrsBOiA6fNyCrm8V1rP93iVPpwaE+gO0SsWmPiXB+jikdf6SizrT5qKasx5j8ABbHpFTx+vFXp9EnYQmLx02h1QTTrl6eDqxLnGjporxl3NL3agEvXdT0WmEost648sQOYAeJS9Q7bfUVoMGnjo4AZdUMQku50McDcMWcBPvr0SzbTAFDfvJqwLzgxwATnCgnp4wDl6Aa+Ax283gghmj+vj7feE2KBBRMW3FzOpLOADl0Isb5587h/U4gGvkt5v60Z1VLG8BhYjbzRwyQZemwAd6cCR5/XFWLYZRIMpX39AR0tjaGGiGzLVyhse5C9RKC6ai42ppWPKiBagOvaYk8lO7DajerabOZP46Lby5wKjw1HCRx7p9sVMOWGzb/vA1hwiWc6jm3MvQDTogQkiqIhJV0nBQBTU+3okKCFDy9WwferkHjtxib7t3xIUQtHxnIwtx4mpg26/HfwVNVDb4oI9RHmx5WGelRVlrtiw43zboCLaxv46AZeB3IlTkwouebTr1y2NjSpHz68WNFjHvupy3q8TFn3Hos2IAk4Ju5dCo8B3wP7VPr/FGaKiG+T+v+TQqIrOqMTL1VdWV1DdmcbO8KXBz6esmYWYKPwDL5b5FA1a0hwapHiom0r/cKaoqr+27/XcrS5UwSMbQAAAABJRU5ErkJggg==)](https://deepwiki.com/F88/yonokomae)
 
 Yono Komae War
@@ -45,6 +48,19 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 | ⚡️ カミナリマンが、ピーマンマンに勝ったよ！ママ、見て！                                                                                                                                                                                                                                                                        | 👶 戦いの目撃者(3歳)                  |
 | 🌌 Oooh, aaah.                                                                                                                                                                                                                                                                                                                  | 👶 宇宙の真理を悟りし者(0歳)          |
 | 🐶 Wouf ! Wouf wouf !                                                                                                                                                                                                                                                                                                           | 🐕 食後の散歩を要求する柴犬(年齢不詳) |
+
+## Architecture & Features
+
+### pnpm Monorepo Structure
+
+- **Data Packages**: Independent packages for battle data, historical evidence, and news samples
+    - `@yonokomae/data-battle-seeds` - Statistical municipal comparison battles
+    - `@yonokomae/data-historical-evidence` - Fictional historical scenarios
+    - `@yonokomae/data-news-seeds` - News-style demonstration samples
+- **Type Safety**: Shared TypeScript definitions (`@yonokomae/types`) and Zod validation schemas (`@yonokomae/schema`)
+- **Data Maintenance**: Dedicated workflow for data contributors with comprehensive validation
+
+### Application Features
 
 - One-click battle report generation with smooth auto-scroll to latest
 - Interactive user engagement components
@@ -95,23 +111,47 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 
 ## Documentation
 
-[Developer guide (EN)](./docs/DEVELOPMENT_EN.md)
-[開発ガイド (JA)](./docs/DEVELOPMENT_JA.md)
-[Testing guide (EN)](./docs/TESTING.md)
-[Contributing guide](./CONTRIBUTING.md)
+### For Developers
+
+- [Developer guide (EN)](./docs/DEVELOPMENT_EN.md)
+- [開発ガイド (JA)](./docs/DEVELOPMENT_JA.md)
+- [Testing guide (EN)](./docs/TESTING.md)
+- [Contributing guide](CONTRIBUTING_EN.md)
+
+### For Data Maintainers
+
+- [Data Maintenance Guide (EN)](./docs/DATA_MAINTENANCE_EN.md)
+- [データメンテナンスガイド (JA)](./docs/DATA_MAINTENANCE_JA.md)
+- [Battle Seeds Guide](./docs/data/BATTLE_SEEDS_EN.md)
+- [Historical Evidence Guide](./docs/data/HISTORICAL_EVIDENCE_SEEDS_EN.md)
+- [News Seeds Guide](./docs/data/NEWS_SEEDS_EN.md)
 
 ## Roadmap
 
 ### Completed Features
 
-- ✅ Historical Evidence mode with curated event data (TypeScript/JSON seed files)
+#### Architecture & Infrastructure
+
+- ✅ **pnpm Monorepo**: Clean separation of concerns with independent data packages
+- ✅ **Type Safety**: Unified type system with `@yonokomae/types` and `@yonokomae/schema`
+- ✅ **Data Package System**: Independent validation and testing for each data domain
+
+#### Game Features
+
+- ✅ Historical Evidence mode with curated event data from `@yonokomae/data-historical-evidence`
+- ✅ Battle Seeds mode using real municipal data from `@yonokomae/data-battle-seeds`
+- ✅ News mode with sample content from `@yonokomae/data-news-seeds`
 - ✅ Multiple play modes: demo (JA/EN/DE), historical-research, yk-now
 - ✅ Repository pattern with lazy-loading and code splitting
 - ✅ Seed system for deterministic battle generation
-- ✅ E2E tests for key flows (Playwright)
-- ✅ Comprehensive test coverage (unit, integration, E2E)
 - ✅ TSV export functionality for usage data and user voices
-- ✅ Seed validation system with CI checks
+
+#### Quality & Testing
+
+- ✅ Comprehensive test coverage (unit, integration, E2E, data validation)
+- ✅ E2E tests for key flows (Playwright)
+- ✅ Automated data package validation with CI checks
+- ✅ Schema validation for all data entries using Zod
 
 ### In Progress
 
@@ -120,13 +160,18 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 
 ### Planned
 
-- Accessibility improvements
+- **Data Maintenance Enhancements**
+    - Data package dependency optimization
+    - Enhanced validation rules for data quality
+    - Automated data migration tools
+- **Accessibility improvements**
     - A11y audit (labels, focus management, contrast)
     - Improve keyboard flow after generating a report (focus return/announce)
-- Internationalization
+- **Internationalization**
     - Localize UI strings (EN/JA alignment with docs)
-- Testing enhancements
+- **Testing enhancements**
     - Optional visual regression for core components
+    - Enhanced data package integration testing
 
 ## Project notes
 

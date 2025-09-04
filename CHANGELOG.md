@@ -47,7 +47,7 @@
 
 - feat(usage): Add UsageExamples and UserVoices components with interactive displays
 - feat(export): Add TSV export functionality for usage examples and user voices data
-- feat(ops): Add build scripts for data export (`npm run build:usage-examples-tsv`, `npm run build:users-voice-tsv`)
+- feat(ops): Add build scripts for data export (`pnpm run build:usage-examples-tsv`, `pnpm run build:users-voice-tsv`)
 - feat(ui): Add marquee animation effects for user testimonials
 - docs: Update documentation to reflect new features and components
 - feat(config): Update TypeScript configuration for improved module handling

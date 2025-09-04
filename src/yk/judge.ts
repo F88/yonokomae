@@ -2,7 +2,7 @@
  * Judge class for determining the winner between two fighters.
  */
 
-import type { Battle } from 'src/types/types';
+import type { Battle } from '@yonokomae/types';
 import type { PlayMode } from './play-mode';
 import { getJudgementRepository } from '@/yk/repo/core/repository-provider';
 import type { Verdict } from '@/yk/repo/core/repositories';

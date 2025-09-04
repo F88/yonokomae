@@ -1,4 +1,5 @@
-import type { Battle, BattleReportMetrics } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
+import type { BattleReportMetrics } from '@yonokomae/types';
 
 /**
  * Compute the minimal BattleReportMetrics from a list of Battle reports.

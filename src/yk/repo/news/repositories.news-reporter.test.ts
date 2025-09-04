@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { NewsReporterMultiSourceReportRepository } from './repositories.news-reporter';
 import type { BattleReportRepository } from '../core/repositories';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 
 class StubRepo implements BattleReportRepository {
   private readonly src: 'local' | 'api';

@@ -1,5 +1,5 @@
 import type { JudgementRepository, Verdict } from '../core/repositories';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 
 export class FakeJudgementRepository implements JudgementRepository {

@@ -1,6 +1,6 @@
 import { ApiClient } from '@/lib/api-client';
 import { uid } from '@/lib/id';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import { applyDelay, type DelayOption } from '@/yk/repo/core/delay-utils';
 import type { BattleReportRepository } from '@/yk/repo/core/repositories';
 

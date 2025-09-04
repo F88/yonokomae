@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Field } from './Field';
-import type { Neta } from '@/types/types';
+import type { Neta } from '@yonokomae/types';
 
 const neta = (overrides: Partial<Neta> = {}): Neta => ({
   imageUrl: 'http://example.com/img.png',

@@ -3,7 +3,7 @@ import type {
   JudgementRepository,
   Verdict,
 } from '@/yk/repo/core/repositories';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import { uid } from '@/lib/id';
 import { applyDelay, type DelayOption } from '@/yk/repo/core/delay-utils';
 

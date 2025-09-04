@@ -13,7 +13,8 @@ import { BattleMetrics } from './components/BattleMetrics';
 import { Header } from './components/Header';
 import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
-import type { Battle, BattleReportMetrics } from './types/types';
+import type { Battle } from '@yonokomae/types';
+import type { BattleReportMetrics } from '@yonokomae/types';
 import { playMode, type PlayMode } from './yk/play-mode';
 
 function App() {

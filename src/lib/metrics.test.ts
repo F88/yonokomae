@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { computeBattleReportMetrics } from './metrics';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 
 function b(id: string, status?: Battle['status']): Battle {
   return {

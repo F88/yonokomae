@@ -1,6 +1,6 @@
 import { JudgeCard } from '@/components/battle/Judge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import type { PlayMode } from '@/yk/play-mode';
 import { ScrollText } from 'lucide-react';
 import { type FC, useEffect } from 'react';

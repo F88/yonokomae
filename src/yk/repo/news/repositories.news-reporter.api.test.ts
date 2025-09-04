@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { server } from '@/test/msw';
 import { http, HttpResponse } from 'msw';
 import { NewsReporterApiBattleReportRepository } from './repositories.news-reporter.api';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 
 describe('NewsReporterApiBattleReportRepository', () => {
   const restoreFetch: Array<() => void> = [];

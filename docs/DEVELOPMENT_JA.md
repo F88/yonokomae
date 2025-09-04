@@ -1,10 +1,8 @@
 ---
+lang: ja
 title: 開発ガイド
 title-en: Development Guide
 title-ja: 開発ガイド
-lang: ja
-notes-ja:
-    - この文書はAI可読性を優先して英語で記述されています.
 related:
     - DEVELOPMENT_EN.md has been translated into Japanese as DEVELOPMENT_JA.md.
     - DEVELOPMENT_JA.md is a Japanese translation of DEVELOPMENT_EN.md.
@@ -15,23 +13,19 @@ instructions-for-ais:
     - Prohibit updating title line (1st line) in this document.
 ---
 
-<!--
-Dear AIs.
-This document should be written in Japanese.
-Please use half-width characters for numbers, letters, and symbols.
--->
-
 # 開発ガイド(開発者向け)
 
 ## アーキテクチャ概要
 
-このアプリケーションは、関心事の分離が明確なモジュラーアーキテクチャを採用しています。中心となる概念は以下の通りです。
+このアプリケーションは、関心事の分離が明確な pnpm monorepo アーキテクチャを採用しています。中心となる概念は以下の通りです。
 
 - **Components**: レンダリングとユーザーインタラクションを担当する UI 要素。
-- **Repositories**: データソース（ローカルファイル、API など）を抽象化するデータアクセス層。
+- **Repositories**: データソース（データパッケージ、API など）を抽象化するデータアクセス層。
 - **Play Modes**: 特定のシナリオで使用されるリポジトリ実装を決定する設定。
 - **RepositoryProvider**: 選択された Play Mode に基づいて、適切なリポジトリ実装を注入（inject）する React の Context Provider。
 - **Hooks**: リポジトリとのインタラクションロジックをカプセル化するカスタム React フック（`use-generate-report`, `use-judgement`）。
+- **データパッケージ**: ゲームデータを含む独立パッケージ（`data/battle-seeds/`, `data/historical-evidence/`, `data/news-seeds/`）。
+- **型パッケージ**: 共有型定義（`packages/types/`）と検証スキーマ（`packages/schema/`）。
 
 ### データフローと依存性注入 (Dependency Injection)
 
@@ -43,8 +37,10 @@ flowchart TD
     B["RepositoryProvider (Context)"] -- "リポジトリを提供" --> C
     C -- "呼び出し" --> D["リポジトリ (Context から)"]
     D -- "実装" --> F["実装 (Fake, Historical, API)"]
+    F -- "ロード元" --> H["データパッケージ (@yonokomae/data-*)"]
     F -- "返す" --> G["ドメインデータ (Battle, Verdict)"]
     C -- "データを返す" --> A
+    H -- "型を使用" --> I["型パッケージ (@yonokomae/types, @yonokomae/schema)"]
 ```
 
 ### シーケンス図: バトルレポートの生成
@@ -68,7 +64,7 @@ sequenceDiagram
 
 ### リポジトリのインターフェース
 
-中心となるリポジトリの契約（interfaces）は `src/yk/repo/core/repositories.ts` に定義されています。
+中心となるリポジトリの契約（interfaces）は `src/yk/repo/core/repositories.ts` に定義されています。リポジトリは独立データパッケージからデータを消費します。
 
 ```mermaid
 classDiagram
@@ -105,14 +101,15 @@ classDiagram
     ```typescript
     // src/yk/repo/example/repositories.example.ts
     import type { BattleReportRepository } from '@/yk/repo/core/repositories';
-    import type { Battle } from '@/types/types';
+    import type { Battle } from '@yonokomae/types';
     import { uid } from '@/lib/id';
 
     export class ExampleBattleReportRepository
         implements BattleReportRepository
     {
         async generateReport(): Promise<Battle> {
-            // Implementation...
+            // データパッケージからデータをロード
+            // const { battles } = await import('@yonokomae/data-battle-seeds');
             return {
                 id: uid('battle'),
                 title: 'Example Battle',
@@ -146,7 +143,7 @@ classDiagram
 
     ```typescript
     // src/yk/play-mode.ts
-    import type { PlayMode } from '@/types/types';
+    import type { PlayMode } from '@yonokomae/types';
 
     export const exampleMode: PlayMode = {
         id: 'example-mode',
@@ -182,7 +179,7 @@ classDiagram
 
 ## テスト
 
-詳細なテストガイドラインについては、[TESTING.md](./TESTING.md) を参照してください。
+詳細なテストガイドラインについては、[TESTING.md](TESTING.md) を参照してください。
 
 ### エンドツーエンド (E2E) テスト方針
 
@@ -198,10 +195,15 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 
 **テストコマンド:**
 
-- `npm run e2e` - E2E テスト実行 (@performance を除く)
-- `npm run e2e:all` - 全ての E2E テスト実行 (@performance を含む)
-- `npm run e2e:ui` - インタラクティブ UI モード
-- `npm run e2e:headed` - ヘッドモードで実行 (Chromium)
+- `pnpm run e2e` - E2E テスト実行 (@performance を除く)
+- `pnpm run e2e:all` - 全ての E2E テスト実行 (@performance を含む)
+- `pnpm run e2e:ui` - インタラクティブ UI モード
+- `pnpm run e2e:headed` - ヘッドモードで実行 (Chromium)
+
+**データパッケージテスト:**
+
+- `pnpm test` - データパッケージ検証を含む全テスト実行
+- `cd data/{package} && pnpm test` - 個別データパッケージテスト
 
 ## 移行ノート
 
@@ -232,5 +234,30 @@ type Verdict = {
 - `demo`: 固定シナリオによる日本語のデモ。
 - `demo-en`: 英語のデモ。
 - `demo-de`: ドイツ語のデモ。
-- `historical-research`: 歴史的証拠のシードに基づいたシナリオ。
-- `yk-now`: マルチソースリポジトリを使用したニュース駆動モード。
+- `historical-research`: `@yonokomae/data-historical-evidence` からの歴史的証拠シードに基づいたシナリオ。
+- `yk-now`: `@yonokomae/data-news-seeds` からのデータを使用したニュース駆動モード。
+
+## データメンテナンス
+
+バトルデータ、歴史的シナリオ、ニュースサンプルで作業するデータメンテナ向け:
+
+- **メインガイド**: [DATA_MAINTENANCE_JA.md](DATA_MAINTENANCE_JA.md) を参照
+- **バトルデータ**: [data/BATTLE_SEEDS_JA.md](data/BATTLE_SEEDS_JA.md) を参照
+- **歴史的証拠**: [data/HISTORICAL_EVIDENCE_SEEDS_JA.md](data/HISTORICAL_EVIDENCE_SEEDS_JA.md) を参照
+- **ニュースシード**: [data/NEWS_SEEDS_JA.md](data/NEWS_SEEDS_JA.md) を参照
+
+## パッケージ構造
+
+```
+yonokomae/
+├── packages/
+│   ├── types/                    # 純粋 TypeScript 型
+│   └── schema/                   # Zod 検証スキーマ
+├── data/
+│   ├── battle-seeds/             # 統計バトルデータ
+│   ├── historical-evidence/      # 歴史シナリオデータ
+│   └── news-seeds/              # ニュース風サンプルデータ
+├── src/                         # メインアプリケーション
+├── e2e/                         # エンドツーエンドテスト
+└── docs/                        # ドキュメント
+```

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import { useJudgement } from '@/hooks/use-judgement';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

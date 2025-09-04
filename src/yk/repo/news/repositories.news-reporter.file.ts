@@ -1,13 +1,13 @@
 import type { BattleReportRepository } from '@/yk/repo/core/repositories';
-import type { Battle } from '@/types/types';
+import type { Battle } from '@yonokomae/types';
 import { applyDelay, type DelayOption } from '@/yk/repo/core/delay-utils';
-import { loadBattleFromSeeds } from '@/yk/repo/core/battle-seed-loader';
+import { newsSeeds } from '@yonokomae/data-news-seeds';
 
-// Seeds under /src/seeds/news/* must export a default Battle object
+// Static imports from @yonokomae/data-news-seeds package
 
 /**
  * ローカルファイルからニュースを集める BattleReportRepository
- * src/seeds/news/* がデータソース
+ * @yonokomae/data-news-seeds パッケージがデータソース
  */
 export class NewsReporterFileiBattleReportRepository
   implements BattleReportRepository
@@ -19,8 +19,12 @@ export class NewsReporterFileiBattleReportRepository
 
   async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
     await applyDelay(this.delay, options?.signal);
-    return loadBattleFromSeeds({
-      roots: ['/seeds/news/', '/src/seeds/news/'],
-    });
+    // Select a random news seed from static imports
+    const randomIndex = Math.floor(Math.random() * newsSeeds.length);
+    const selectedSeed = newsSeeds[randomIndex];
+    if (!selectedSeed) {
+      throw new Error('No news seeds available');
+    }
+    return selectedSeed;
   }
 }
