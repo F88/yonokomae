@@ -4,6 +4,8 @@ export const dePack: DemoLocalePack = {
   patterns: [
     {
       id: 'template-de-1',
+      themeId: 'history',
+      significance: 'low',
       title: 'Brückengefecht bei Dämmerung',
       subtitle: 'Gleichgewicht als Pflichtfach',
       overview:
@@ -30,6 +32,8 @@ export const dePack: DemoLocalePack = {
     },
     {
       id: 'template-de-2',
+      themeId: 'history',
+      significance: 'low',
       title: 'Laternen-Aufklärung',
       subtitle: 'Stimmung gewinnt die Initiative',
       overview:
@@ -57,6 +61,8 @@ export const dePack: DemoLocalePack = {
     },
     {
       id: 'template-de-3',
+      themeId: 'history',
+      significance: 'low',
       title: 'Teekannen-Pattsituation',
       subtitle: 'Dampf, Banner und Fehlinterpreten',
       overview:
@@ -81,6 +87,8 @@ export const dePack: DemoLocalePack = {
     },
     {
       id: 'template-de-4',
+      themeId: 'history',
+      significance: 'low',
       title: 'Flussnebel-Manöver',
       subtitle: 'Karten sagen ja, Sicht sagt nein',
       overview:
@@ -108,6 +116,8 @@ export const dePack: DemoLocalePack = {
     },
     {
       id: 'template-de-5',
+      themeId: 'history',
+      significance: 'low',
       title: 'Bäckerei-Scharmützel',
       subtitle: 'Vorräte gewinnen Schlachten, Croissants die Herzen',
       overview: 'Ein logistisches Drama zwischen Ofenwärme und Marschbefehl.',
@@ -131,6 +141,8 @@ export const dePack: DemoLocalePack = {
     },
     {
       id: 'template-de-6',
+      themeId: 'history',
+      significance: 'low',
       title: 'Marktplatz-Drill',
       subtitle: 'Fahnen straff, Stände nicken prüfend',
       overview:
@@ -156,6 +168,8 @@ export const dePack: DemoLocalePack = {
     },
     {
       id: 'template-de-7',
+      themeId: 'history',
+      significance: 'low',
       title: 'Höhenfeuer-Übung',
       subtitle: 'Licht schnell, Notizen schneller',
       overview: 'Ein Signalsystem misst Timing gegen Wind und Laune.',
@@ -180,6 +194,8 @@ export const dePack: DemoLocalePack = {
     },
     {
       id: 'template-de-8',
+      themeId: 'history',
+      significance: 'low',
       title: 'Regenversammlung',
       subtitle: 'Trommeln halten Takt, Regen hält alle ehrlich',
       overview: 'Temperamentvolle Zusammenkunft unter kooperativem Wetter.',
@@ -203,6 +219,8 @@ export const dePack: DemoLocalePack = {
     },
     {
       id: 'template-de-9',
+      themeId: 'history',
+      significance: 'low',
       title: 'Depot-Inspektionstag',
       subtitle: 'Ordnung marschiert auf Klemmbrettern',
       overview:
@@ -227,6 +245,8 @@ export const dePack: DemoLocalePack = {
     },
     {
       id: 'template-de-10',
+      themeId: 'history',
+      significance: 'low',
       title: 'Mitternachtskuriere',
       subtitle: 'Fußnoten unterwegs',
       overview: 'Leise Routen flechten die Karte; Sterne quittieren Empfang.',

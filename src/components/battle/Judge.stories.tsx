@@ -7,10 +7,14 @@ const mode = playMode.find((m) => m.id === 'demo-en') ?? playMode[0];
 
 const battle: Battle = {
   id: 'judge-battle-1',
+  themeId: 'history',
+  significance: 'low',
   title: 'Verdict Preview',
   subtitle: 'Judging outcomes',
-  overview: 'Judge card shows loading, success, or error states.',
-  scenario: 'Visual component; outcome depends on repository logic.',
+  narrative: {
+    overview: 'Judge card shows loading, success, or error states.',
+    scenario: 'Visual component; outcome depends on repository logic.',
+  },
   yono: {
     imageUrl: '/YONO-SYMBOL.png',
     title: 'YONO',

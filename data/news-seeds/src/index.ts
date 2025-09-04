@@ -3,11 +3,13 @@ import type { Battle } from '@yonokomae/types';
 // Import all news sample seeds
 import newsSample1 from './samples/news-sample-1.js';
 import newsSample2 from './samples/news-sample-2.js';
+import newsSampleLocalCuisineShowdown from './samples/news-sample-local-cuisine-showdown.js';
 
 // Collect all news seeds in a map
 const newsSeedMap: Record<string, Battle> = {
   'news-sample-1.ts': newsSample1,
   'news-sample-2.ts': newsSample2,
+  'news-sample-local-cuisine-showdown.ts': newsSampleLocalCuisineShowdown,
 };
 
 // Export all news seeds as an array

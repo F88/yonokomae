@@ -32,10 +32,11 @@ describe('repository-provider mapping for demo-de', () => {
         judge: { id: 't-judge', name: 'Test Judge', codeName: 'TEST' },
         battle: {
           id: 'b',
+          themeId: 'history' as const,
+          significance: 'low' as const,
           title: 'Demo-DE Schlacht',
           subtitle: 'Varianten-Schaukasten (DE)',
-          overview: '',
-          scenario: '',
+          narrative: { overview: '', scenario: '' },
           status: 'success',
           yono: {
             title: 'Y',

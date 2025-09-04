@@ -13,10 +13,14 @@ const server = http.createServer((req, res) => {
     res.end(
       JSON.stringify({
         id: 'api-battle-1',
+        themeId: 'history',
+        significance: 'low',
         title: 'API Battle',
         subtitle: 'From mock server',
-        overview: 'Served by local mock API',
-        scenario: 'Two sides clash via HTTP.',
+        narrative: {
+          overview: 'Served by local mock API',
+          scenario: 'Two sides clash via HTTP.',
+        },
         komae: {
           imageUrl: 'https://placehold.co/200x100?text=K',
           title: 'Komae (API)',

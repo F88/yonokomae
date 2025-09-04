@@ -69,10 +69,11 @@ describe('App', () => {
   it('clicking Battle calls generateReport and renders the result', async () => {
     const mockBattle: Battle = {
       id: 'battle_1',
+      themeId: 'history',
+      significance: 'low',
       title: 'Mock Battle',
       subtitle: 'Sub',
-      overview: 'Overview',
-      scenario: 'Scenario',
+      narrative: { overview: 'Overview', scenario: 'Scenario' },
       komae: {
         imageUrl: '',
         title: 'Komae',
@@ -107,10 +108,11 @@ describe('App', () => {
   it('Reset clears reports and returns to title screen', async () => {
     mockGenerateReport.mockResolvedValueOnce({
       id: 'battle_2',
+      themeId: 'history',
+      significance: 'low',
       title: 'Another Battle',
       subtitle: 'Sub',
-      overview: 'Overview',
-      scenario: 'Scenario',
+      narrative: { overview: 'Overview', scenario: 'Scenario' },
       komae: {
         imageUrl: '',
         title: 'Komae',
@@ -147,10 +149,11 @@ describe('App', () => {
   it('supports controller keyboard shortcuts (B for battle, R for reset)', async () => {
     mockGenerateReport.mockResolvedValue({
       id: 'battle_k',
+      themeId: 'history',
+      significance: 'low',
       title: 'KB Battle',
       subtitle: 'Sub',
-      overview: 'Overview',
-      scenario: 'Scenario',
+      narrative: { overview: 'Overview', scenario: 'Scenario' },
       komae: {
         imageUrl: '',
         title: 'Komae',

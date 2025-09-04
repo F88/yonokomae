@@ -268,10 +268,14 @@ function App() {
     let insertedIndex = -1;
     const loadingBattle: Battle = {
       id: uid('battle'),
+      themeId: 'history',
+      significance: 'low',
       title: 'Generating report...',
       subtitle: 'Please wait',
-      overview: 'Preparing a new battle report.',
-      scenario: 'Loading...',
+      narrative: {
+        overview: 'Preparing a new battle report.',
+        scenario: 'Loading...',
+      },
       komae: { ...Placeholders.Komae },
       yono: { ...Placeholders.Yono },
       status: 'loading',
@@ -310,10 +314,14 @@ function App() {
       const message = err instanceof Error ? err.message : String(err);
       const errorBattle: Battle = {
         id: uid('battle'),
+        themeId: 'history',
+        significance: 'low',
         title: 'Failed to generate report',
         subtitle: 'Error',
-        overview: 'An error occurred while generating the report.',
-        scenario: message,
+        narrative: {
+          overview: 'An error occurred while generating the report.',
+          scenario: message,
+        },
         komae: { ...Placeholders.Komae },
         yono: { ...Placeholders.Yono },
         status: 'error',

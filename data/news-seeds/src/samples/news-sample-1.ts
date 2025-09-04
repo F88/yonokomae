@@ -1,13 +1,17 @@
 import type { Battle } from '@yonokomae/types';
 
 // Sample news seed for NewsReporterFileiBattleReportRepository
-const newsSample1: Battle = {
+const data: Battle = {
   id: 'battle-news-1',
+  themeId: 'information',
+  significance: 'low',
   title: '朝のブリーフ: 与野 vs 狛江',
   subtitle: 'ローカルアップデートに注目',
-  overview: '与野と狛江で注目の動きを手短にまとめました。',
-  scenario:
-    '本日の速報では、与野が行政サービスの効率化に向けたパイロットを開始。一方、狛江は緑地と地域イベントに注力しています。市民からは実利と近隣への良い影響を評価する声が上がっています。',
+  narrative: {
+    overview: '与野と狛江で注目の動きを手短にまとめました。',
+    scenario:
+      '本日の速報では、与野が行政サービスの効率化に向けたパイロットを開始。一方、狛江は緑地と地域イベントに注力しています。市民からは実利と近隣への良い影響を評価する声が上がっています。',
+  },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: '与野',
@@ -34,5 +38,4 @@ const newsSample1: Battle = {
   ],
   status: 'success',
 };
-
-export default newsSample1;
+export default data;

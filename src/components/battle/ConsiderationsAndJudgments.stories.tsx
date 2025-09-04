@@ -7,10 +7,14 @@ const mode = playMode.find((m) => m.id === 'demo-en') ?? playMode[0];
 
 const battle: Battle = {
   id: 'cj-001',
+  themeId: 'history',
+  significance: 'low',
   title: 'Verdict Board',
   subtitle: 'Panel of judges',
-  overview: 'Comments and verdicts from a randomized panel.',
-  scenario: 'Panel composition changes per render.',
+  narrative: {
+    overview: 'Comments and verdicts from a randomized panel.',
+    scenario: 'Panel composition changes per render.',
+  },
   yono: {
     imageUrl: '/YONO-SYMBOL.png',
     title: 'YONO',

@@ -9,10 +9,12 @@ import { applyDelay, type DelayOption } from '@/yk/repo/core/delay-utils';
 
 export type DemoBattlePattern = {
   id: string;
+  themeId: Battle['themeId'];
+  significance: Battle['significance'];
   title: string;
   subtitle: string;
-  overview: string;
-  scenario: string;
+  overview: string; // kept in pack, mapped to narrative
+  scenario: string; // kept in pack, mapped to narrative
   yono: Battle['yono'];
   komae: Battle['komae'];
 };
@@ -36,10 +38,11 @@ export class DemoBattleReportRepository implements BattleReportRepository {
     const pick = patterns[Math.floor(Math.random() * patterns.length)];
     return {
       id: uid('battle'),
+      themeId: pick.themeId,
+      significance: pick.significance,
       title: pick.title,
       subtitle: pick.subtitle,
-      overview: pick.overview,
-      scenario: pick.scenario,
+      narrative: { overview: pick.overview, scenario: pick.scenario },
       yono: pick.yono,
       komae: pick.komae,
       status: 'success',

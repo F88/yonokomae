@@ -17,9 +17,9 @@ describe('demo-de repositories', () => {
     expect(battle.title.length).toBeGreaterThan(0);
     expect(typeof battle.subtitle).toBe('string');
     expect(battle.subtitle.length).toBeGreaterThan(0);
-    // DE strings are localized; overview/scenario may include (DE) markers, but not required for unit titles
-    expect(typeof battle.overview).toBe('string');
-    expect(typeof battle.scenario).toBe('string');
+    // DE strings are localized; ensure narrative fields exist
+    expect(typeof battle.narrative.overview).toBe('string');
+    expect(typeof battle.narrative.scenario).toBe('string');
     expect(battle.status).toBe('success');
 
     expect(typeof battle.yono.subtitle).toBe('string');
@@ -38,10 +38,11 @@ describe('demo-de repositories', () => {
     const judge = new DemoDeJudgementRepository({ delay: { min: 0, max: 0 } });
     const battleBase = {
       id: 'battle_demo_de_test',
+      themeId: 'history' as const,
+      significance: 'low' as const,
       title: 'Demo-DE Battle',
       subtitle: 'Variant Showcase (DE)',
-      overview: 'n/a',
-      scenario: 'n/a',
+      narrative: { overview: 'n/a', scenario: 'n/a' },
       status: 'success' as const,
     };
 

@@ -3,14 +3,18 @@ import type { Battle } from '@yonokomae/types';
 // Yono (former Yono-shi; present Saitama-shi Chuo-ku core) vs Komae: adjacent municipalities comparison (Japanese)
 const battle = {
   id: 'yono-komae-adjacent-municipalities-2025-ja',
+  themeId: 'community',
+  significance: 'low',
   title: '隣接自治体',
   subtitle: 'よの(現・よの連合国よの主要部)とこまえの周辺環境',
-  overview:
-    'よの(8.29 km², 約9.7万人)は合併直前、北側の旧大宮市(128.32 km², 約48.9万人)と南側の旧浦和市(85.50 km², 約50.5万人)に挟まれていた。' +
-    'こまえ(6.39 km², 約8.3万人; 2023年)は、世田谷区(58.05 km², 約93万人)・調布市(21.58 km², 約24.3万人)・川崎市(143.01 km², 約154万人)に隣接する。',
-  scenario:
-    '規模の観点では、よのは隣接する旧浦和/旧大宮に対して面積・人口ともに約1/10規模、こまえも世田谷区や川崎市に対し桁違いに小さい。' +
-    'いずれも「小国が大国に囲まれる」構図で、生活圏/通勤圏の相互依存や、越境インフラ・行政連携の重要性が高いことを示唆する。',
+  narrative: {
+    overview:
+      'よの(8.29 km², 約9.7万人)は合併直前、北側の旧大宮市(128.32 km², 約48.9万人)と南側の旧浦和市(85.50 km², 約50.5万人)に挟まれていた。' +
+      'こまえ(6.39 km², 約8.3万人; 2023年)は、世田谷区(58.05 km², 約93万人)・調布市(21.58 km², 約24.3万人)・川崎市(143.01 km², 約154万人)に隣接する。',
+    scenario:
+      '規模の観点では、よのは隣接する旧浦和/旧大宮に対して面積・人口ともに約1/10規模、こまえも世田谷区や川崎市に対し桁違いに小さい。' +
+      'いずれも「小国が大国に囲まれる」構図で、生活圏/通勤圏の相互依存や、越境インフラ・行政連携の重要性が高いことを示唆する。',
+  },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE の隣接状況',

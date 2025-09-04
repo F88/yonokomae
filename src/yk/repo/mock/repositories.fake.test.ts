@@ -19,10 +19,11 @@ describe('Fake repositories - delay capping', () => {
     const result = await repo.determineWinner({
       battle: {
         id: 'b-1',
+        themeId: 'history',
+        significance: 'low',
         title: 't',
         subtitle: 's',
-        overview: 'o',
-        scenario: 'sc',
+        narrative: { overview: 'o', scenario: 'sc' },
         yono: {
           imageUrl: '',
           title: 'Y',
@@ -53,10 +54,11 @@ describe('Fake repositories - delay capping', () => {
     const res = await repo.determineWinner({
       battle: {
         id: 'b-2',
+        themeId: 'history',
+        significance: 'low',
         title: 't',
         subtitle: 's',
-        overview: 'o',
-        scenario: 'sc',
+        narrative: { overview: 'o', scenario: 'sc' },
         yono: {
           imageUrl: '',
           title: 'Y',

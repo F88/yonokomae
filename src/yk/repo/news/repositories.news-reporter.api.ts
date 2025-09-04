@@ -118,12 +118,16 @@ export class NewsReporterApiBattleReportRepository
 
     const battle: Battle = {
       id: uid('battle'),
+      themeId: 'information',
+      significance: 'low',
       title: `IPアドレス ${ip}`,
       subtitle: 'Generated from ipify.org',
-      overview:
-        'A network-sourced battle report generated from your current public IP.',
-      scenario:
-        'Signal intelligence gathered from ipify inspires a spontaneous skirmish.',
+      narrative: {
+        overview:
+          'A network-sourced battle report generated from your current public IP.',
+        scenario:
+          'Signal intelligence gathered from ipify inspires a spontaneous skirmish.',
+      },
       provenance: [
         {
           label: 'ipify - A Simple Public IP Address API',
@@ -340,10 +344,14 @@ export class NewsReporterApiBattleReportRepository
       Math.max(min, Math.min(max, n));
     const dailyTemperature: Battle = {
       id: uid('battle'),
+      themeId: 'information',
+      significance: 'low',
       title: `最高気温`,
       subtitle: 'あついね',
-      overview: '',
-      scenario: `くまがややふちゅうにだって負けてない!!`,
+      narrative: {
+        overview: '',
+        scenario: `くまがややふちゅうにだって負けてない!!`,
+      },
       provenance: [
         {
           label: 'Open-Meteo - Free Weather API',

@@ -5,7 +5,8 @@
     "moduleResolution": "NodeNext",
     "target": "ES2022",
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["src/ops/*.ts", "src/data/*.ts"]
 }

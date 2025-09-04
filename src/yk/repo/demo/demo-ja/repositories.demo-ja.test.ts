@@ -89,10 +89,11 @@ describe('Demo repositories with delay support', () => {
 
       const battle = {
         id: 'b-1',
+        themeId: 'history' as const,
+        significance: 'low' as const,
         title: 't',
         subtitle: 's',
-        overview: 'o',
-        scenario: 'sc',
+        narrative: { overview: 'o', scenario: 'sc' },
         yono: {
           title: 'Y',
           subtitle: '',
@@ -122,10 +123,11 @@ describe('Demo repositories with delay support', () => {
 
       const battle = {
         id: 'b-2',
+        themeId: 'history' as const,
+        significance: 'low' as const,
         title: 't',
         subtitle: 's',
-        overview: 'o',
-        scenario: 'sc',
+        narrative: { overview: 'o', scenario: 'sc' },
         yono: {
           title: 'Y',
           subtitle: '',
@@ -161,10 +163,11 @@ describe('Demo repositories with delay support', () => {
       // Should not throw in test env
       const battle = {
         id: 'b-3',
+        themeId: 'history' as const,
+        significance: 'low' as const,
         title: 't',
         subtitle: 's',
-        overview: 'o',
-        scenario: 'sc',
+        narrative: { overview: 'o', scenario: 'sc' },
         yono: {
           title: 'Y',
           subtitle: '',

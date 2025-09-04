@@ -24,10 +24,11 @@ import { getBattleReportRepository } from '@/yk/repo/core/repository-provider';
 
 const sample: Battle = {
   id: 'id1',
+  themeId: 'history',
+  significance: 'low',
   title: 't',
   subtitle: 's',
-  overview: 'o',
-  scenario: 'sc',
+  narrative: { overview: 'o', scenario: 'sc' },
   yono: {
     imageUrl: '',
     title: 'y',

@@ -3,12 +3,16 @@ import type { Battle } from '@yonokomae/types';
 // Yono vs Komae: socio-economic trajectories (Japanese version)
 const battle = {
   id: 'yono-komae-socioeconomic-1920-2050-ja',
+  themeId: 'finance',
+  significance: 'medium',
   title: '社会経済の軌跡',
   subtitle: '1920-2050 の人口と産業の動向',
-  overview:
-    'YONOとKOMAEについて、人口、産業、ガバナンス上の節目にわたる比較スナップショット。',
-  scenario:
-    'YONOは20世紀を通じて着実に人口が増加し、合併後の都市開発(2001)とサービス業中心(2020時点で第3次産業が8割超)により成長が加速した。KOMAEは農業や養蚕業といった農村的基盤から郊外都市へ転換し、1955-1975にかけて人口が約3.4倍と急増、その後は安定化し、2020には第3次産業が優勢となった。これらは都市化の経路、インフラ、経済構造の違いを反映している。',
+  narrative: {
+    overview:
+      'YONOとKOMAEについて、人口、産業、ガバナンス上の節目にわたる比較スナップショット。',
+    scenario:
+      'YONOは20世紀を通じて着実に人口が増加し、合併後の都市開発(2001)とサービス業中心(2020時点で第3次産業が8割超)により成長が加速した。KOMAEは農業や養蚕業といった農村的基盤から郊外都市へ転換し、1955-1975にかけて人口が約3.4倍と急増、その後は安定し、2020には第3次産業が優勢となった。これらは都市化の経路、インフラ、経済構造の違いを反映している。',
+  },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'KOMAE',

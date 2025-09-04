@@ -11,10 +11,11 @@ class StubRepo implements BattleReportRepository {
   async generateReport(): Promise<Battle> {
     return {
       id: `${this.src}-1`,
+      themeId: 'history',
+      significance: 'low',
       title: `${this.src.toUpperCase()} title`,
       subtitle: '',
-      overview: '',
-      scenario: '',
+      narrative: { overview: '', scenario: '' },
       komae: {
         imageUrl: '',
         title: 'K',

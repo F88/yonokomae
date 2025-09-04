@@ -1,5 +1,5 @@
 import { uid } from '@/lib/id';
-import { BattleSchema } from '@/schema/schema';
+import { BattleSchema } from '@yonokomae/schema';
 import type { Battle, Neta } from '@yonokomae/types';
 import { battleSeeds, battleSeedsByFile } from '@yonokomae/data-battle-seeds';
 
@@ -20,7 +20,7 @@ export async function loadBattleFromSeeds(params: {
   const target = file ?? files[Math.floor(Math.random() * files.length)];
   const battle = getModuleFor(mods, roots, target);
   if (!battle) throw new Error(`Battle not found: ${target}`);
-  const data = battle; // Battle seeds are already normalized
+  const data = battle;
   const result = BattleSchema.safeParse(data);
   if (!result.success) {
     throw new Error(
@@ -92,18 +92,23 @@ export function normalizeBattle(mod: BattleModule): Battle {
   const id = raw.id ?? uid('battle');
   const title = raw.title ?? '';
   const subtitle = raw.subtitle ?? '';
-  const overview = raw.overview ?? '';
-  const scenario = raw.scenario ?? '';
+  const overview =
+    raw.narrative?.overview ?? getLegacyString(raw, 'overview') ?? '';
+  const scenario =
+    raw.narrative?.scenario ?? getLegacyString(raw, 'scenario') ?? '';
   const komae = normalizeNeta(raw.komae);
   const yono = normalizeNeta(raw.yono);
   const provenance = Array.isArray(raw.provenance) ? raw.provenance : [];
   const status = raw.status ?? 'success';
+  const themeId = raw.themeId ?? 'history';
+  const significance = raw.significance ?? 'low';
   return {
     id,
     title,
     subtitle,
-    overview,
-    scenario,
+    narrative: { overview, scenario },
+    themeId,
+    significance,
     komae,
     yono,
     provenance,
@@ -124,4 +129,15 @@ function hasDefault(x: unknown): x is { default?: Partial<Battle> } {
   return (
     !!x && typeof x === 'object' && 'default' in (x as Record<string, unknown>)
   );
+}
+
+function getLegacyString(
+  obj: unknown,
+  key: 'overview' | 'scenario',
+): string | undefined {
+  if (obj && typeof obj === 'object' && key in (obj as Record<string, unknown>)) {
+    const v = (obj as Record<string, unknown>)[key];
+    if (typeof v === 'string') return v;
+  }
+  return undefined;
 }
