@@ -46,26 +46,34 @@ data/battle-seeds/
 **パターン**: `yono-komae-{topic}.ja.ts`  
 **言語**: 主に日本語 (`.ja.ts` 拡張子)
 
-各ファイルは `Battle` 型に適合するデフォルトオブジェクトをエクスポートします：
+各ファイルは `Battle` 型(v2)に適合するデフォルトオブジェクトをエクスポートします：
 
 ```typescript
 import type { Battle } from '@yonokomae/types';
 
 const battle: Battle = {
     id: 'unique-battle-id',
+    themeId: 'history',
+    significance: 'low',
     title: 'バトルタイトル',
     subtitle: 'バトルサブタイトル',
-    overview: '簡潔な説明...',
-    scenario: '詳細なバトルシナリオ...',
+    narrative: {
+        overview: '簡潔な説明...',
+        scenario: '詳細なバトルシナリオ...',
+    },
     komae: {
-        name: 'コマえもん',
-        power: 42,
+        imageUrl: '/KOMAE-SYMBOL.png',
+        title: 'コマえもん',
+        subtitle: '防御の要',
         description: '狛江代表データ...',
+        power: 42,
     },
     yono: {
-        name: 'ヨノ丸',
-        power: 38,
+        imageUrl: '/YONO-SYMBOL.png',
+        title: 'ヨノ丸',
+        subtitle: '俊敏なる策士',
         description: '与野代表データ...',
+        power: 38,
     },
     provenance: [
         {
@@ -81,22 +89,25 @@ export default battle;
 
 ## データ要件
 
-### Battle 型構造
+### Battle 型構造 (v2)
 
 - **`id`**: 一意識別子 (string)
+- **`themeId`**: バトルテーマID (`@yonokomae/catalog` 参照)
+- **`significance`**: 'low' | 'medium' | 'high' | 'legendary'
 - **`title`**: メインバトルタイトル (string)
 - **`subtitle`**: セカンダリタイトル (string)
-- **`overview`**: 簡潔な説明 (string)
-- **`scenario`**: 詳細なバトルシナリオ (string)
+- **`narrative`**: `{ overview: string, scenario: string }`
 - **`komae`**: 狛江を表す Neta オブジェクト
 - **`yono`**: 与野を表す Neta オブジェクト
 - **`provenance`**: データソースの配列 (任意)
 
-### Neta 型構造
+### Neta 型構造 (v2)
 
-- **`name`**: キャラクター名 (string)
-- **`power`**: 数値的パワーレベル (number)
+- **`imageUrl`**: 画像URL (string)
+- **`title`**: 表示名 (string)
+- **`subtitle`**: サブタイトル/タグライン (string)
 - **`description`**: データ/根拠の説明 (string)
+- **`power`**: 数値的パワーレベル (number)
 
 ### 命名規則
 
@@ -248,17 +259,25 @@ pnpm test
 ```typescript
 const battle: Battle = {
     id: 'yono-komae-population-2023',
+    themeId: 'history',
+    significance: 'low',
     title: '人口対決2023',
     subtitle: '市民パワーバトル',
-    overview: '2023年の人口データを基にした対決',
-    scenario: 'より多くの市民を抱える自治体が勝利...',
+    narrative: {
+        overview: '2023年の人口データを基にした対決',
+        scenario: 'より多くの市民を抱える自治体が勝利...',
+    },
     komae: {
-        name: 'コマえもん',
+        imageUrl: '/KOMAE-SYMBOL.png',
+        title: 'コマえもん',
+        subtitle: '防御の要',
         power: 83,
         description: '狛江市の人口: 83,000人',
     },
     yono: {
-        name: 'ヨノ丸',
+        imageUrl: '/YONO-SYMBOL.png',
+        title: 'ヨノ丸',
+        subtitle: '俊敏なる策士',
         power: 135,
         description: 'さいたま市中央区の人口: 135,000人',
     },

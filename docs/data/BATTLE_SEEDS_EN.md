@@ -46,26 +46,34 @@ data/battle-seeds/
 **Pattern**: `yono-komae-{topic}.ja.ts`  
 **Language**: Primarily Japanese (`.ja.ts` extension)
 
-Each file exports a default object conforming to the `Battle` type:
+Each file exports a default object conforming to the `Battle` type (v2):
 
 ```typescript
 import type { Battle } from '@yonokomae/types';
 
 const battle: Battle = {
     id: 'unique-battle-id',
+    themeId: 'history',
+    significance: 'low',
     title: 'Battle Title',
     subtitle: 'Battle Subtitle',
-    overview: 'Brief description...',
-    scenario: 'Detailed battle scenario...',
+    narrative: {
+        overview: 'Brief description...',
+        scenario: 'Detailed battle scenario...',
+    },
     komae: {
-        name: 'コマえもん',
-        power: 42,
+        imageUrl: '/KOMAE-SYMBOL.png',
+        title: 'KOMAE',
+        subtitle: 'Stone Wall',
         description: 'Komae representative data...',
+        power: 42,
     },
     yono: {
-        name: 'ヨノ丸',
-        power: 38,
+        imageUrl: '/YONO-SYMBOL.png',
+        title: 'YONO',
+        subtitle: 'Lightning Step',
         description: 'Yono representative data...',
+        power: 38,
     },
     provenance: [
         {
@@ -81,22 +89,25 @@ export default battle;
 
 ## Data Requirements
 
-### Battle Type Structure
+### Battle Type Structure (v2)
 
 - **`id`**: Unique identifier (string)
+- **`themeId`**: Battle theme id (see `@yonokomae/catalog`)
+- **`significance`**: 'low' | 'medium' | 'high' | 'legendary'
 - **`title`**: Main battle title (string)
 - **`subtitle`**: Secondary title (string)
-- **`overview`**: Brief description (string)
-- **`scenario`**: Detailed battle scenario (string)
+- **`narrative`**: `{ overview: string, scenario: string }`
 - **`komae`**: Neta object representing Komae
 - **`yono`**: Neta object representing Yono
 - **`provenance`**: Array of data sources (optional)
 
-### Neta Type Structure
+### Neta Type Structure (v2)
 
-- **`name`**: Character name (string)
-- **`power`**: Numerical power level (number)
+- **`imageUrl`**: Image URL (string)
+- **`title`**: Display name (string)
+- **`subtitle`**: Short tagline (string)
 - **`description`**: Description of the data/rationale (string)
+- **`power`**: Numerical power level (number)
 
 ### Naming Conventions
 
@@ -248,17 +259,25 @@ pnpm test
 ```typescript
 const battle: Battle = {
     id: 'yono-komae-population-2023',
+    themeId: 'history',
+    significance: 'low',
     title: '人口対決2023',
     subtitle: '市民パワーバトル',
-    overview: '2023年の人口データを基にした対決',
-    scenario: 'より多くの市民を抱える自治体が勝利...',
+    narrative: {
+        overview: '2023年の人口データを基にした対決',
+        scenario: 'より多くの市民を抱える自治体が勝利...',
+    },
     komae: {
-        name: 'コマえもん',
+        imageUrl: '/KOMAE-SYMBOL.png',
+        title: 'コマえもん',
+        subtitle: '防御の要',
         power: 83,
         description: '狛江市の人口: 83,000人',
     },
     yono: {
-        name: 'ヨノ丸',
+        imageUrl: '/YONO-SYMBOL.png',
+        title: 'ヨノ丸',
+        subtitle: '俊敏なる策士',
         power: 135,
         description: 'さいたま市中央区の人口: 135,000人',
     },
