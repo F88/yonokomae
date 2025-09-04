@@ -1,14 +1,13 @@
 ---
 lang: en
 title: Testing Guide
+title-en: Testing Guide
+title-ja: テストガイド
 instructions-for-ais:
-    - This document is written in English for AI readability.
-    - Code fences may contain TypeScript/TSX/JSON.
-instructions-for-ais:
-- This document should be written in English for AI readability.
-- Content within code fences may be written in languages other than English.
-- Prohibit updating this front-matter.
-- Prohibit updating title line (1st line) in this document.
+    - This document should be written in English for AI readability.
+    - Content within code fences may be written in languages other than English.
+    - Prohibit updating this front-matter.
+    - Prohibit updating title line (1st line) in this document.
 ---
 
 # Testing Guide
