@@ -19,6 +19,17 @@ jobs:
         run: corepack enable
       - name: Prepare pnpm via Corepack
         run: corepack prepare pnpm@9.15.9 --activate
+      - name: Ensure pnpm available in PATH
+        shell: bash
+        run: |
+          # Reload hash table; on some shells new shims aren't picked up immediately
+          hash -r || true
+          if ! command -v pnpm >/dev/null 2>&1; then
+            echo "pnpm not found in PATH after corepack; installing via npm as fallback"
+            npm i -g pnpm@9.15.9
+            hash -r || true
+          fi
+          pnpm -v
       - name: Tool versions
         run: |
           node -v
