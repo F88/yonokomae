@@ -14,7 +14,6 @@ function makeMatchMediaController(initial: { width: number }) {
     return width >= min;
   };
   const install = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (window as any).matchMedia = (query: string) => {
       const mql: Partial<MediaQueryList> = {
         media: query,

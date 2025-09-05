@@ -6,7 +6,6 @@ const originalScrollTo = globalThis.window?.scrollTo;
 const originalScrollBy = globalThis.window?.scrollBy;
 
 function setMatchMedia(matches: boolean) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (window as any).matchMedia = (query: string) => ({
     matches: query.includes('prefers-reduced-motion') ? matches : false,
     media: query,
@@ -27,24 +26,21 @@ describe('reduced-motion utilities', () => {
     document.documentElement.classList.remove('reduced-motion');
 
     // jsdom: provide noop implementations so spying doesn't throw "Not implemented"
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     (window as any).scrollTo = vi.fn();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     (window as any).scrollBy = vi.fn();
   });
 
   afterEach(() => {
     if (originalMatchMedia) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).matchMedia = originalMatchMedia;
     }
     // restore original scroll functions (which may throw in jsdom, but keeps global clean)
     if (originalScrollTo) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).scrollTo = originalScrollTo;
     }
     if (originalScrollBy) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).scrollBy = originalScrollBy;
     }
   });

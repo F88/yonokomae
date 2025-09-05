@@ -248,7 +248,7 @@ describe('Component Integration Tests', () => {
       };
 
       // Cast to any here since we intentionally pass a problematic shape
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       render(<MetaData battle={problematicBattle as any} />);
 
       // Component should either render with fallbacks or be caught by error boundary
