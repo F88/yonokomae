@@ -48,6 +48,13 @@ export const Basic: Story = {
   },
 };
 
+export const SkeletonState: Story = {
+  name: 'Skeleton (battle = null)',
+  args: {
+    battle: null,
+  },
+};
+
 export const LongContent: Story = {
   args: {
     battle: {

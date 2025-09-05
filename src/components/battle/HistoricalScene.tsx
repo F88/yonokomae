@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import { battleThemeCatalog } from '@yonokomae/catalog';
 import type { Battle } from '@yonokomae/types';
 import type { FC } from 'react';
@@ -17,7 +18,7 @@ import SignificanceChip from '../ui/significance-chip';
 import { MetaData } from './MetaData';
 
 export type Props = {
-  battle: Battle;
+  battle?: Battle | null;
   /** When true, render images in cropped-top banner style. */
   cropTopBanner?: boolean;
   /** Toggle visibility of metadata (ID/Theme/Significance chips). Default true. */
@@ -86,6 +87,52 @@ export const HistoricalScene: FC<Props> = ({
   cropFocusY,
   showMetaData = false,
 }) => {
+  // Pick one of three icons at mount to avoid re-randomizing on each render
+  const randomIconSrc = useMemo(() => {
+    const icons = ['ykw-icon-4.png', 'ykw-icon-6.png', 'ykw-icon-7.png'];
+    const pick = icons[Math.floor(Math.random() * icons.length)];
+    return `${import.meta.env.BASE_URL}${pick}`;
+  }, []);
+
+  // Render placeholder when no battle is provided
+  if (!battle) {
+    return (
+      <Card className="w-full">
+        <CardHeader className="text-center px-4 lg:px-6">
+          <div className="mx-auto w-full space-y-5 sm:space-y-6">
+            {/* Overview placeholder */}
+            <div className="mx-auto w-full space-y-3 text-left sm:text-center">
+              <Skeleton className="mx-auto h-4 w-4/5" />
+            </div>
+
+            <Separator />
+
+            {/* Title block placeholder */}
+            <div className="space-y-2 w-full">
+              <div className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-2 py-2">
+                <Skeleton className="h-10 w-10 rounded" />
+                <Skeleton className="h-8 w-3/5" />
+              </div>
+              <div className="text-center">
+                <Skeleton className="mx-auto h-5 w-3/5" />
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0 px-4 lg:px-6">
+          {/* Reuse Field placeholders by passing undefined sides */}
+          <Field
+            yono={undefined}
+            komae={undefined}
+            cropTopBanner={cropTopBanner}
+            cropAspectRatio={cropAspectRatio}
+            cropFocusY={cropFocusY}
+          />
+        </CardContent>
+      </Card>
+    );
+  }
+
   /**
    * Resolves the theme for the battle.
    * Finds the theme in the catalog by battle.themeId.
@@ -94,13 +141,6 @@ export const HistoricalScene: FC<Props> = ({
   const theme =
     battleThemeCatalog.find((t) => t.id === battle.themeId) ??
     battleThemeCatalog[0];
-
-  // Pick one of three icons at mount to avoid re-randomizing on each render
-  const randomIconSrc = useMemo(() => {
-    const icons = ['ykw-icon-4.png', 'ykw-icon-6.png', 'ykw-icon-7.png'];
-    const pick = icons[Math.floor(Math.random() * icons.length)];
-    return `${import.meta.env.BASE_URL}${pick}`;
-  }, []);
 
   return (
     <Card className="w-full">

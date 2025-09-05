@@ -269,8 +269,8 @@ function App() {
     const loadingBattle: Battle = {
       id: uid('battle'),
       themeId: 'history',
-      significance: 'low',
-      title: 'Generating report...',
+      significance: 'medium',
+      title: 'Writing report...',
       subtitle: 'Please wait',
       narrative: {
         overview: 'Preparing a new battle report.',

@@ -334,7 +334,8 @@ function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
   switch (mode.id) {
     case 'historical-research':
       // return { min: 500, max: 2_000 };
-      return { min: 0, max: 0 };
+      // return { min: 0, max: 0 };
+      return { min: 5500, max: 10_000 };
     case 'yk-now':
       return { min: 200, max: 500 };
     case 'demo':
