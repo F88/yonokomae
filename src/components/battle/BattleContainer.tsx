@@ -57,7 +57,8 @@ export const BattleContainer: FC<BattleContainerProps> = ({
   return (
     <div className="space-y-4 sm:space-y-6" data-testid="battle">
       <HistoricalScene
-        battle={battle}
+        battle={isBattleReportLoading ? undefined : battle}
+        isLoading={isBattleReportLoading}
         cropTopBanner={cropSettingsForMode.enableCropTopBanner}
         cropAspectRatio={cropSettingsForMode.aspect}
         cropFocusY={cropSettingsForMode.focusY}

@@ -52,6 +52,7 @@ export const SkeletonState: Story = {
   name: 'Skeleton (battle = null)',
   args: {
     battle: null,
+    isLoading: true,
   },
 };
 

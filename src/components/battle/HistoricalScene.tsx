@@ -23,6 +23,8 @@ export type Props = {
   cropTopBanner?: boolean;
   /** Toggle visibility of metadata (ID/Theme/Significance chips). Default true. */
   showMetaData?: boolean;
+  /** Optional explicit loading flag. When true, sets aria-busy regardless of data. */
+  isLoading?: boolean;
   /**
    * Optional banner aspect ratio (W/H) used only when `cropTopBanner` is true.
    * Format: 'W/H' (e.g. '16/7'). Default is '16/7'.
@@ -86,6 +88,7 @@ export const HistoricalScene: FC<Props> = ({
   cropAspectRatio,
   cropFocusY,
   showMetaData = false,
+  isLoading = false,
 }) => {
   // Pick one of three icons at mount to avoid re-randomizing on each render
   const randomIconSrc = useMemo(() => {
@@ -94,10 +97,12 @@ export const HistoricalScene: FC<Props> = ({
     return `${import.meta.env.BASE_URL}${pick}`;
   }, []);
 
+  const isBusy = isLoading || !battle;
+
   // Render placeholder when no battle is provided
   if (!battle) {
     return (
-      <Card className="w-full" aria-busy="true">
+      <Card className="w-full" aria-busy={isBusy}>
         <CardHeader className="text-center px-4 lg:px-6">
           <div
             className="mx-auto w-full space-y-5 sm:space-y-6"
@@ -149,7 +154,7 @@ export const HistoricalScene: FC<Props> = ({
     battleThemeCatalog[0];
 
   return (
-    <Card className="w-full">
+    <Card className="w-full" aria-busy={isBusy}>
       <CardHeader className="text-center px-4 lg:px-6">
         <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">
           {/* Meta data first (optional) */}
