@@ -34,7 +34,8 @@ export const playMode: PlayMode[] = [
     id: 'historical-research',
     title: 'よの ⚔️ こまえ',
     description:
-      '[WIP] ' + '歴史的な出来事に基づいてよのこまを分析、眠れない夜のおともに',
+      // '[WIP] ' +
+      '歴史的な出来事に基づいてよのこまを分析、眠れない夜のおともに',
     enabled: true,
   },
   {
