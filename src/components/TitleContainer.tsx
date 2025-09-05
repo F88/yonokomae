@@ -146,7 +146,7 @@ export function TitleContainer({
   }, [handleKeyEvent]);
 
   return (
-    <div className="flex w-full justify-center p-6">
+    <div className="flex w-full justify-center px-6 pb-6 pt-0">
       <Card className="w-full max-w-2xl text-center">
         <CardHeader className="gap-2 pt-2">
           <CardTitle className="text-3xl font-bold tracking-wide">
