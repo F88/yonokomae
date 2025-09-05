@@ -3,7 +3,21 @@ import { BattleSchema } from '@yonokomae/schema';
 import type { Battle, Neta } from '@yonokomae/types';
 import { battleSeeds, battleSeedsByFile } from '@yonokomae/data-battle-seeds';
 
-export type BattleModule = { default?: Partial<Battle> } | Partial<Battle>;
+// DeepPartial utility to allow nested partials in test modules and loaders
+type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+};
+
+// Allow legacy/simple provenance entries as string[] in test/seed modules
+type RawProvenance = Array<
+  string | { label: string; url?: string; note?: string }
+>;
+
+type RawBattle = Omit<DeepPartial<Battle>, 'provenance'> & {
+  provenance?: RawProvenance;
+};
+
+export type BattleModule = { default?: RawBattle } | RawBattle;
 
 export async function loadBattleFromSeeds(params: {
   roots: string[]; // Legacy field - now uses static imports from @yonokomae packages
@@ -20,8 +34,7 @@ export async function loadBattleFromSeeds(params: {
   const target = file ?? files[Math.floor(Math.random() * files.length)];
   const battle = getModuleFor(mods, roots, target);
   if (!battle) throw new Error(`Battle not found: ${target}`);
-  const data = battle;
-  const result = BattleSchema.safeParse(data);
+  const result = BattleSchema.safeParse(battle);
   if (!result.success) {
     throw new Error(
       'Invalid Battle data: ' +
@@ -86,9 +99,9 @@ function getModuleFor(
 }
 
 export function normalizeBattle(mod: BattleModule): Battle {
-  const raw: Partial<Battle> = hasDefault(mod)
+  const raw: RawBattle = hasDefault(mod)
     ? (mod.default ?? {})
-    : (mod as Partial<Battle>);
+    : (mod as RawBattle);
   const id = raw.id ?? uid('battle');
   const title = raw.title ?? '';
   const subtitle = raw.subtitle ?? '';
@@ -98,7 +111,9 @@ export function normalizeBattle(mod: BattleModule): Battle {
     raw.narrative?.scenario ?? getLegacyString(raw, 'scenario') ?? '';
   const komae = normalizeNeta(raw.komae);
   const yono = normalizeNeta(raw.yono);
-  const provenance = Array.isArray(raw.provenance) ? raw.provenance : [];
+  const provenance = Array.isArray(raw.provenance)
+    ? ((raw.provenance as unknown as Battle['provenance']) ?? [])
+    : [];
   const status = raw.status ?? 'success';
   const themeId = raw.themeId ?? 'history';
   const significance = raw.significance ?? 'low';
@@ -116,7 +131,7 @@ export function normalizeBattle(mod: BattleModule): Battle {
   } satisfies Battle;
 }
 
-function normalizeNeta(n?: Partial<Neta> | undefined): Neta {
+function normalizeNeta(n?: DeepPartial<Neta> | undefined): Neta {
   const imageUrl = n?.imageUrl ?? 'about:blank';
   const title = n?.title ?? '';
   const subtitle = n?.subtitle ?? '';
@@ -125,7 +140,7 @@ function normalizeNeta(n?: Partial<Neta> | undefined): Neta {
   return { imageUrl, title, subtitle, description, power } satisfies Neta;
 }
 
-function hasDefault(x: unknown): x is { default?: Partial<Battle> } {
+function hasDefault(x: unknown): x is { default?: RawBattle } {
   return (
     !!x && typeof x === 'object' && 'default' in (x as Record<string, unknown>)
   );

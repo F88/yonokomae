@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event';
 
 // Helper to mock matchMedia for prefers-reduced-motion
 function setMatchMedia(matches: boolean) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (window as any).matchMedia = (query: string) => ({
     matches: query.includes('prefers-reduced-motion') ? matches : false,
     media: query,

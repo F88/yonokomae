@@ -75,9 +75,9 @@ export const UserManual: React.FC<UserManualProps> = ({
           aria-label="User manual content"
         >
           <div className="mb-8">
-            <h2 className="text-xl font-semibold text-foreground mb-5">
+            <h5 className="text-xl font-semibold text-foreground mb-5">
               個人の感想
-            </h2>
+            </h5>
             <div className="border border-border rounded-md p-2 my-6">
               <UserVoicesCarousel
                 intervalMs={3000}

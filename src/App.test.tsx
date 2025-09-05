@@ -16,7 +16,7 @@ vi.mock('@/hooks/use-generate-report', () => ({
 beforeEach(() => {
   mockGenerateReport.mockReset();
   // jsdom doesn't implement scrollTo; provide a noop mock
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   (window as any).scrollTo = vi.fn();
 });
 

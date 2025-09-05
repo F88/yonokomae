@@ -5,7 +5,6 @@ import UserVoicesCarousel from './UserVoicesCarousel';
 const originalMatchMedia = globalThis.window?.matchMedia;
 
 function setMatchMedia(matches: boolean) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (window as any).matchMedia = (query: string) => ({
     matches: query.includes('prefers-reduced-motion') ? matches : false,
     media: query,
@@ -24,7 +23,6 @@ describe('UserVoicesCarousel (reduced motion)', () => {
   });
   afterEach(() => {
     if (originalMatchMedia) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).matchMedia = originalMatchMedia;
     }
   });

@@ -24,6 +24,23 @@ export default tseslint.config(
         globals: globals.browser,
       },
     },
+    // Test files: relax a few strict TypeScript rules that are noisy in tests
+    {
+      files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
+      rules: {
+        '@typescript-eslint/no-require-imports': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        // Keep signal but avoid blocking CI for harmless test variables
+        '@typescript-eslint/no-unused-vars': [
+          'warn',
+          {
+            argsIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
+            caughtErrorsIgnorePattern: '^_',
+          },
+        ],
+      },
+    },
   ],
   storybook.configs['flat/recommended'],
 );
