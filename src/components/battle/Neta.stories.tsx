@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { NetaView } from './Neta';
+import { faker } from '@faker-js/faker';
 
 const meta: Meta<typeof NetaView> = {
   title: 'Battle/NetaView',
@@ -22,6 +23,17 @@ const baseArgs = {
 export const Default: Story = {
   args: {
     ...baseArgs,
+  },
+};
+
+export const LongContent: Story = {
+  args: {
+    ...baseArgs,
+    title: 'Sample Neta with a Very Long Title That Might Wrap',
+    subtitle:
+      'Exhibit A with a Surprisingly Lengthy Subtitle. Indeed, Quite longer than Usual',
+    description: faker.lorem.paragraphs(5, '\n\n'),
+    power: 1_234_567_890,
   },
 };
 

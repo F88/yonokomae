@@ -52,3 +52,23 @@ export const CroppedTopBanner: Story = {
     cropFocusY: 'y-40',
   },
 };
+
+export const LongContent: Story = {
+  args: {
+    yono: {
+      ...yono,
+      title: 'YONO with a Very Long Title That Might Wrap',
+      subtitle: 'A Subtitle That Is Also Quite Lengthy and Descriptive',
+      description:
+        'YONO represents the swift and agile approach, striking from unexpected angles with precision and speed. This strategy emphasizes flexibility and adaptability in the face of changing circumstances, allowing for quick adjustments and maneuvers to outpace the opponent effectively.',
+    },
+    komae: {
+      ...komae,
+      title: 'KOMAE with an Equally Long Title That Could Also Wrap',
+      subtitle: 'A Subtitle That Matches in Length and Detail',
+      description:
+        "KOMAE embodies the steadfast and resilient approach, enduring the storm with unwavering determination. This strategy focuses on building a solid foundation, weathering challenges, and countering decisively when the moment is right. KOMAE's strength lies in its ability to maintain composure      and respond effectively to the opponent's moves.",
+      power: 1_000_000,
+    },
+  },
+};

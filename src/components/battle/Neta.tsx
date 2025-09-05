@@ -340,7 +340,9 @@ export const NetaView: FC<Props> = ({
           <div className="mt-auto flex justify-center ">
             <Badge variant="secondary" className="gap-1 px-3 py-1">
               <span className="text-lg">💥</span>
-              <span className="font-bold">Power: {power}</span>
+              <span className="font-bold">
+                Power: {new Intl.NumberFormat(undefined).format(power)}
+              </span>
             </Badge>
           </div>
         </div>
