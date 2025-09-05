@@ -1,12 +1,14 @@
-import type { FC } from 'react';
-import type { Battle } from '@yonokomae/types';
-import { HistoricalScene } from '@/components/battle/HistoricalScene';
 import { ConsiderationsAndJudgments } from '@/components/battle/ConsiderationsAndJudgments';
+import { HistoricalScene } from '@/components/battle/HistoricalScene';
 import type { PlayMode } from '@/yk/play-mode';
+import type { Battle } from '@yonokomae/types';
+import type { FC } from 'react';
 
 export type BattleContainerProps = {
   battle: Battle;
   mode: PlayMode;
+  /** Toggle visibility of metadata (ID/Theme/Significance chips) in HistoricalScene. */
+  showMetaData?: boolean;
 };
 
 const cropSettings = {
@@ -41,7 +43,11 @@ type CropSettingsKey = keyof typeof cropSettings;
 const isCropSettingsKey = (key: string): key is CropSettingsKey =>
   key in cropSettings;
 
-export const BattleContainer: FC<BattleContainerProps> = ({ battle, mode }) => {
+export const BattleContainer: FC<BattleContainerProps> = ({
+  battle,
+  mode,
+  showMetaData,
+}) => {
   const isBattleReportLoading = battle.status === 'loading';
 
   const cropSettingsForMode = isCropSettingsKey(mode.id)
@@ -49,12 +55,13 @@ export const BattleContainer: FC<BattleContainerProps> = ({ battle, mode }) => {
     : cropSettings.default;
 
   return (
-    <div className="space-y-6" data-testid="battle">
+    <div className="space-y-4 sm:space-y-6" data-testid="battle">
       <HistoricalScene
         battle={battle}
         cropTopBanner={cropSettingsForMode.enableCropTopBanner}
         cropAspectRatio={cropSettingsForMode.aspect}
         cropFocusY={cropSettingsForMode.focusY}
+        showMetaData={showMetaData}
       />
       {isBattleReportLoading ? (
         <ConsiderationsAndJudgments battle={undefined} mode={mode} />

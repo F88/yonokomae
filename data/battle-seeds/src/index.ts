@@ -35,6 +35,7 @@ import civicTechBattle from './battle/civic-tech-battle.ja.js';
 import coderDojoBattle from './battle/coder-dojo-battle.ja.js';
 import robotEthics from './battle/robot-ethics.ja.js';
 import snsTruthVsLies from './battle/sns-truth-vs-lies.ja.js';
+import wikipediaJaBattle from './battle/wikipedia-ja-battle.ja.js';
 
 // Collect all battles in a map
 const battleMap: Record<string, Battle> = {
@@ -76,6 +77,7 @@ const battleMap: Record<string, Battle> = {
     'coder-dojo-battle.ja.ts': coderDojoBattle,
     'robot-ethics.ja.ts': robotEthics,
     'sns-truth-vs-lies.ja.ts': snsTruthVsLies,
+    'wikipedia-ja-battle.ja.ts': wikipediaJaBattle,
   },
 };
 

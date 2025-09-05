@@ -1,5 +1,39 @@
 @import 'tailwindcss';
 
+/* Base font size configuration to respect OS settings */
+html {
+  /* Use 100% to inherit browser's default font size (which respects OS settings) */
+  font-size: 100%;
+  /* Enable smooth transitions for font size changes */
+  transition: font-size 0.2s ease;
+}
+
+/* Responsive font scaling based on viewport and user preferences */
+@media (prefers-contrast: high) {
+  html {
+    font-size: 110%;
+  }
+}
+
+/* Support for browser zoom levels */
+@media (min-resolution: 120dpi) {
+  html {
+    font-size: 112.5%;
+  }
+}
+
+@media (min-resolution: 144dpi) {
+  html {
+    font-size: 125%;
+  }
+}
+
+@media (min-resolution: 192dpi) {
+  html {
+    font-size: 150%;
+  }
+}
+
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(222.2 84% 4.9%);
@@ -76,6 +110,21 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Base font size in rem to respect cascading from html */
+    font-size: 1rem;
+    line-height: 1.5;
+    /* Improve text rendering for better readability */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Ensure interactive elements have minimum touch target sizes */
+  button,
+  a,
+  [role='button'] {
+    min-height: 44px;
+    min-width: 44px;
   }
 }
 

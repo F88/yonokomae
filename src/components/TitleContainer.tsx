@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { PlayMode } from '@/yk/play-mode';
 import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { KeyChip } from '@/components/ui/key-chip';
+import { KeyChip } from '@/components/KeyChip';
 import { isEditable } from '@/lib/dom-utils';
 // import { historicalSeeds } from '@/yk/repo/seed-system';
 // import { useHistoricalSeedSelection } from '@/yk/repo/seed-system';

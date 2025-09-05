@@ -34,9 +34,16 @@ function normalizeBattle(b: Battle): Battle {
   };
 }
 
-async function loadAllBattlesFromDist(): Promise<{ battles: Battle[]; filesRead: number }> {
+async function loadAllBattlesFromDist(): Promise<{
+  battles: Battle[];
+  filesRead: number;
+}> {
   const currentDir = path.dirname(fileURLToPath(import.meta.url)); // dist/ops
-  const battleDir = path.resolve(currentDir, '../..', 'data/battle-seeds/dist/battle');
+  const battleDir = path.resolve(
+    currentDir,
+    '../..',
+    'data/battle-seeds/dist/battle',
+  );
   const files = readdirSync(battleDir).filter((f) => f.endsWith('.js'));
 
   const imports = files.map(async (file) => {
@@ -111,5 +118,4 @@ async function main() {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
 main();

@@ -1,20 +1,27 @@
-import type { FC } from 'react';
-import { battleThemeCatalog } from '@yonokomae/catalog';
 import { Field } from '@/components/battle/Field';
-import type { Battle } from '@yonokomae/types';
+import { OverView } from '@/components/battle/OverView';
+import { Scenario } from '@/components/battle/Scenario';
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { battleThemeCatalog } from '@yonokomae/catalog';
+import type { Battle } from '@yonokomae/types';
+import type { FC } from 'react';
+import { useMemo } from 'react';
+import SignificanceChip from '../ui/significance-chip';
+import { MetaData } from './MetaData';
 
 export type Props = {
   battle: Battle;
   /** When true, render images in cropped-top banner style. */
   cropTopBanner?: boolean;
+  /** Toggle visibility of metadata (ID/Theme/Significance chips). Default true. */
+  showMetaData?: boolean;
   /**
    * Optional banner aspect ratio (W/H) used only when `cropTopBanner` is true.
    * Format: 'W/H' (e.g. '16/7'). Default is '16/7'.
@@ -77,6 +84,7 @@ export const HistoricalScene: FC<Props> = ({
   cropTopBanner = false,
   cropAspectRatio,
   cropFocusY,
+  showMetaData = false,
 }) => {
   /**
    * Resolves the theme for the battle.
@@ -87,55 +95,66 @@ export const HistoricalScene: FC<Props> = ({
     battleThemeCatalog.find((t) => t.id === battle.themeId) ??
     battleThemeCatalog[0];
 
+  // Pick one of three icons at mount to avoid re-randomizing on each render
+  const randomIconSrc = useMemo(() => {
+    const icons = ['ykw-icon-4.png', 'ykw-icon-6.png', 'ykw-icon-7.png'];
+    const pick = icons[Math.floor(Math.random() * icons.length)];
+    return `${import.meta.env.BASE_URL}${pick}`;
+  }, []);
+
   return (
     <Card className="w-full">
       <CardHeader className="text-center px-4 lg:px-6">
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              ID: {battle.id}
-            </div>
-            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Theme: {battle.themeId} / Significance: {battle.significance}
-            </div>
-            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              {theme.name}
-            </div>
-            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Overview
-            </div>
-            <CardDescription className="text-base">
-              {battle.narrative.overview}
-            </CardDescription>
+        <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">
+          {/* Meta data first (optional) */}
+          {showMetaData ? <MetaData battle={battle} align="center" /> : null}
+
+          {/* Overview */}
+          <div className="mx-auto max-w-3xl space-y-3 text-left sm:text-center">
+            <OverView battle={battle} showLabel />
           </div>
 
           <Separator />
 
+          {/* Title block */}
           <div className="space-y-2">
-            <CardTitle className="text-3xl font-bold lg:text-4xl">
-              {theme.icon}
-              {battle.title}
-            </CardTitle>
-            <CardDescription className="text-lg italic">
-              {battle.subtitle}
-            </CardDescription>
-          </div>
+            {/* Legendary battle */}
+            {battle.significance && battle.significance === 'legendary' && (
+              <>
+                <SignificanceChip
+                  significance={battle.significance}
+                  showLabel
+                />
+                <img
+                  src={randomIconSrc}
+                  alt="Legendary battle icon"
+                  className="mx-auto h-30 w-auto opacity-90"
+                />
+              </>
+            )}
 
-          <Separator />
-
-          <div className="space-y-2">
-            <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Scenario
+            <div className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-2 py-2">
+              <span aria-hidden className="inline-block text-3xl lg:text-4xl">
+                {theme.icon}
+              </span>
+              <CardTitle className="font-extrabold tracking-tight leading-tight text-4xl lg:text-5xl text-balance break-words">
+                {battle.title}
+              </CardTitle>
             </div>
-            <CardDescription className="text-base">
-              {battle.narrative.scenario}
-            </CardDescription>
+            {battle.subtitle ? (
+              <CardDescription className="text-muted-foreground italic text-lg lg:text-xl text-balance mx-auto max-w-3xl">
+                {battle.subtitle}
+              </CardDescription>
+            ) : null}
           </div>
+
+          {/* Scenario */}
+          <Scenario battle={battle} showLabel />
 
           {battle.provenance && battle.provenance.length > 0 && (
             <>
               <Separator />
-              <div className="space-y-2 text-left">
+              <div className="mx-auto max-w-3xl space-y-2 text-left">
                 <div className="text-xs font-medium uppercase tracking-wide text-muted-foreground text-center">
                   Sources / Provenance
                 </div>

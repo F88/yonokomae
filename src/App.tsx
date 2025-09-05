@@ -423,7 +423,11 @@ function App() {
                     id={battle.id}
                     className="scroll-mt-[72px] lg:scroll-mt-[96px]"
                   >
-                    <BattleContainer battle={battle} mode={mode} />
+                    <BattleContainer
+                      battle={battle}
+                      mode={mode}
+                      // showMetaData
+                    />
                   </div>
                 ))}
               </div>

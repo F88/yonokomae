@@ -28,7 +28,7 @@ export const battleThemeCatalog = [
   {
     id: 'figures',
     name: 'Figures',
-    icon: '🦸‍♂️',
+    icon: '🦸',
     subThemes: "AI Mayor's Data Politics vs. Charismatic Human Leadership",
     description:
       'Leadership dynamics between algorithmic governance and human charisma.',

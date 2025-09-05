@@ -5,7 +5,7 @@ const battle = {
   themeId: 'development',
   significance: 'medium',
   title: '密です',
-  subtitle: '超高層ビルか、隠された地下都市か。人口の謎を解け！',
+  subtitle: '超高層ビルか、隠された地下都市か。人口密度の謎を解け!',
   narrative: {
     overview:
       'よのは地上に高層ビルを建設し、人口を集中させる戦略に出る。一方こまえは、地下に巨大集合都市を隠し持ち、人口密度の謎を解き明かすカギとなる。どちらの都市計画が、真の豊かさをもたらすか？',

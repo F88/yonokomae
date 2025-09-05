@@ -11,6 +11,8 @@ export default {
       },
     },
     extend: {
+      // Remove custom fontSize definitions to use Tailwind's defaults which are already in rem
+      // This ensures better OS/browser font size setting compatibility
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
