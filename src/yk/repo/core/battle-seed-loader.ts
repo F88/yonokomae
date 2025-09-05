@@ -34,8 +34,7 @@ export async function loadBattleFromSeeds(params: {
   const target = file ?? files[Math.floor(Math.random() * files.length)];
   const battle = getModuleFor(mods, roots, target);
   if (!battle) throw new Error(`Battle not found: ${target}`);
-  const data = battle;
-  const result = BattleSchema.safeParse(data);
+  const result = BattleSchema.safeParse(battle);
   if (!result.success) {
     throw new Error(
       'Invalid Battle data: ' +
