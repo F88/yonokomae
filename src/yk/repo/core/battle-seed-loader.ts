@@ -135,7 +135,11 @@ function getLegacyString(
   obj: unknown,
   key: 'overview' | 'scenario',
 ): string | undefined {
-  if (obj && typeof obj === 'object' && key in (obj as Record<string, unknown>)) {
+  if (
+    obj &&
+    typeof obj === 'object' &&
+    key in (obj as Record<string, unknown>)
+  ) {
     const v = (obj as Record<string, unknown>)[key];
     if (typeof v === 'string') return v;
   }

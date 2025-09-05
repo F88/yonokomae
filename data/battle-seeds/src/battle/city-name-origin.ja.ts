@@ -1,6 +1,6 @@
 import type { Battle } from '@yonokomae/types';
 
-export default  {
+export default {
   id: 'city-name-origin',
   themeId: 'history',
   significance: 'low',
