@@ -50,7 +50,6 @@ jobs:
       - name: Seed schema validation
         run: pnpm run -s test:seeds
 
-
       - name: Run tests for Codecov Test Analytics
         run: pnpm run test:coverage
 
