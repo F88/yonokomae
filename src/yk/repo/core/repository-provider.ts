@@ -332,15 +332,17 @@ function defaultDelayForMode(mode?: PlayMode, kind: DelayKind = 'report') {
   if (!mode) return { min: 800, max: 1500 };
 
   switch (mode.id) {
+    case 'historical-research':
+      return { min: 500, max: 2_000 };
+    // return { min: 0, max: 0 };
+    // return { min: 5500, max: 10_000 };
+    case 'yk-now':
+      return { min: 200, max: 500 };
     case 'demo':
       return { min: 800, max: 1600 };
     case 'api':
       // Legacy mode; keep mapping for compatibility though unused
       return { min: 1500, max: 3000 };
-    case 'historical-research':
-      return { min: 1200, max: 2500 };
-    case 'yk-now':
-      return { min: 0, max: 0 };
     default:
       // Apply moderate delay for unknown modes
       return { min: 0, max: 0 };

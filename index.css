@@ -129,3 +129,96 @@
     display: inline-flex;
   }
 }
+
+/* Legendary card styling: shimmering border with subtle sparkle overlay */
+/* Register custom property so it interpolates as an angle (smooth animation) */
+@property --shine-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@keyframes shimmer-border {
+  0% {
+    --shine-angle: 0deg;
+  }
+  100% {
+    --shine-angle: 360deg;
+  }
+}
+
+.legendary-card {
+  position: relative;
+  /* Tunable legendary effect variables */
+  --legendary-speed: 8s; /* animation duration */
+  --legendary-alpha: 1; /* border gradient opacity (0..1) */
+  --legendary-glow-alpha: 0.35; /* box-shadow/glow opacity (0..1) */
+  --legendary-sparkle-opacity: 0.35; /* overlay sparkle opacity (0..1) */
+  --legendary-sparkle-blur: 0.3px; /* overlay sparkle blur */
+  border-width: 2px; /* stronger border */
+  border-style: solid;
+  border-color: transparent; /* we draw border via background */
+  /* Layered background: solid card bg in padding box + animated conic gradient in border box */
+  background:
+    linear-gradient(var(--card), var(--card)) padding-box,
+    conic-gradient(
+        from var(--shine-angle, 0deg),
+        /* multicolor holographic palette for higher contrast */
+          hsl(200 95% 60% / var(--legendary-alpha)),
+        /* cyan */ hsl(280 100% 70% / var(--legendary-alpha)),
+        /* violet */ hsl(330 95% 65% / var(--legendary-alpha)),
+        /* pink */ hsl(140 90% 60% / var(--legendary-alpha)),
+        /* green */ hsl(50 100% 65% / var(--legendary-alpha)),
+        /* amber */ hsl(200 95% 60% / var(--legendary-alpha)) /* loop */
+      )
+      border-box;
+  background-clip: padding-box, border-box;
+  animation: shimmer-border linear infinite;
+  animation-duration: var(--legendary-speed);
+  box-shadow:
+    0 0 0 1px hsl(0 0% 100% / var(--legendary-glow-alpha)) inset,
+    0 6px 18px -6px hsl(230 95% 65% / var(--legendary-glow-alpha));
+}
+
+.legendary-card::after {
+  content: '';
+  position: absolute;
+  inset: -2px; /* slightly outside for glow */
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      20px 12px at 15% 20%,
+      hsl(190 100% 75% / 0.7),
+      /* aqua */ transparent 60%
+    ),
+    radial-gradient(
+      14px 10px at 80% 35%,
+      hsl(330 100% 80% / 0.6),
+      /* pink */ transparent 60%
+    ),
+    radial-gradient(
+      10px 8px at 30% 85%,
+      hsl(260 100% 80% / 0.5),
+      /* violet */ transparent 60%
+    );
+  filter: blur(var(--legendary-sparkle-blur));
+  opacity: var(--legendary-sparkle-opacity);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .legendary-card {
+    animation: none;
+  }
+  .legendary-card::after {
+    opacity: 0.18;
+  }
+}
+
+/* Also respect app-level toggle (html.reduced-motion) */
+html.reduced-motion .legendary-card {
+  animation: none;
+}
+html.reduced-motion .legendary-card::after {
+  opacity: 0.18;
+}

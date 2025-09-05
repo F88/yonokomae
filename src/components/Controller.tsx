@@ -2,7 +2,7 @@ import { GiInvertedDice3 } from 'react-icons/gi';
 import { Square } from 'lucide-react';
 import { useCallback, useEffect, type FC } from 'react';
 import { Button } from '@/components/ui/button';
-import { KeyChip } from '@/components/ui/key-chip';
+import { KeyChip } from '@/components/KeyChip';
 import { isEditable } from '@/lib/dom-utils';
 
 interface ControllerProps {

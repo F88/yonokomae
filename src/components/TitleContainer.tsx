@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { PlayMode } from '@/yk/play-mode';
 import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { KeyChip } from '@/components/ui/key-chip';
+import { KeyChip } from '@/components/KeyChip';
 import { isEditable } from '@/lib/dom-utils';
 // import { historicalSeeds } from '@/yk/repo/seed-system';
 // import { useHistoricalSeedSelection } from '@/yk/repo/seed-system';
@@ -146,7 +146,7 @@ export function TitleContainer({
   }, [handleKeyEvent]);
 
   return (
-    <div className="flex w-full justify-center p-6">
+    <div className="flex w-full justify-center px-6 pb-6 pt-0">
       <Card className="w-full max-w-2xl text-center">
         <CardHeader className="gap-2 pt-2">
           <CardTitle className="text-3xl font-bold tracking-wide">

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { scrollToY } from '@/lib/reduced-motion';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { ReducedMotionModeToggle } from '@/components/ReducedMotionModeToggle';
+import { FontSizeControl } from '@/components/FontSizeControl';
 import { Swords, ScrollText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { UserManual } from '@/components/UserManual';
@@ -28,7 +29,9 @@ export const Header = ({ mode }: { mode?: PlayMode }) => {
           </button>
           <h1 className="text-lg font-semibold">よのこまえ</h1>
         </div>
+
         <div className="flex items-center gap-2">
+          {/* Play mode  */}
           {mode ? (
             <Badge
               variant="secondary"
@@ -39,6 +42,8 @@ export const Header = ({ mode }: { mode?: PlayMode }) => {
               {mode.title}
             </Badge>
           ) : null}
+
+          {/* Manual Controls */}
           <button
             type="button"
             onClick={() => setIsManualOpen(true)}
@@ -50,7 +55,14 @@ export const Header = ({ mode }: { mode?: PlayMode }) => {
           >
             <ScrollText className="h-4 w-4" />
           </button>
+
+          {/* Font Size Control */}
+          <FontSizeControl />
+
+          {/* Reduced Motion Toggles */}
           <ReducedMotionModeToggle />
+
+          {/* Theme Toggle */}
           <ThemeToggle />
         </div>
       </div>
