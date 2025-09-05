@@ -14,6 +14,7 @@ import { battleThemeCatalog } from '@yonokomae/catalog';
 import type { Battle } from '@yonokomae/types';
 import type { FC } from 'react';
 import { useMemo } from 'react';
+import { cn } from '@/lib/utils';
 import SignificanceChip from '../ui/significance-chip';
 import { MetaData } from './MetaData';
 
@@ -154,7 +155,13 @@ export const HistoricalScene: FC<Props> = ({
     battleThemeCatalog[0];
 
   return (
-    <Card className="w-full" aria-busy={isBusy}>
+    <Card
+      className={cn(
+        'w-full',
+        battle.significance === 'legendary' && 'legendary-card',
+      )}
+      aria-busy={isBusy}
+    >
       <CardHeader className="text-center px-4 lg:px-6">
         <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">
           {/* Meta data first (optional) */}
