@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useBreakpoint, BREAKPOINTS } from '@/hooks/use-breakpoint';
 
 type Handler = (e?: unknown) => void;
@@ -53,23 +54,98 @@ describe('useBreakpoint', () => {
     // Reset any prior state; nothing global to reset here.
   });
 
-  it('returns false when viewport is below min width', () => {
-    const ctl = makeMatchMediaController({ width: 800 });
-    ctl.install();
-    render(<Probe min="lg" />);
-    expect(screen.getByTestId('ok').textContent).toBe('false');
+  describe('BREAKPOINTS constant', () => {
+    it('should export correct breakpoint values', () => {
+      expect(BREAKPOINTS).toEqual({
+        lg: 1024,
+      });
+    });
   });
 
-  it('returns true when viewport meets min width and updates on change', () => {
-    const ctl = makeMatchMediaController({ width: 900 });
-    ctl.install();
-    render(<Probe min="lg" />);
-    expect(screen.getByTestId('ok').textContent).toBe('false');
-
-    act(() => {
-      ctl.setWidth(1200);
-      ctl.triggerChange();
+  describe('Basic functionality with component', () => {
+    it('returns false when viewport is below min width', () => {
+      const ctl = makeMatchMediaController({ width: 800 });
+      ctl.install();
+      render(<Probe min="lg" />);
+      expect(screen.getByTestId('ok').textContent).toBe('false');
     });
-    expect(screen.getByTestId('ok').textContent).toBe('true');
+
+    it('returns true when viewport meets min width and updates on change', () => {
+      const ctl = makeMatchMediaController({ width: 900 });
+      ctl.install();
+      render(<Probe min="lg" />);
+      expect(screen.getByTestId('ok').textContent).toBe('false');
+
+      act(() => {
+        ctl.setWidth(1200);
+        ctl.triggerChange();
+      });
+      expect(screen.getByTestId('ok').textContent).toBe('true');
+    });
+  });
+
+  describe('Hook functionality with renderHook', () => {
+    it('should return correct initial state based on matchMedia', () => {
+      const ctl = makeMatchMediaController({ width: 1200 });
+      ctl.install();
+
+      const { result } = renderHook(() => useBreakpoint('lg'));
+      expect(result.current).toBe(true);
+    });
+
+    it('should update when media query changes', () => {
+      const ctl = makeMatchMediaController({ width: 800 });
+      ctl.install();
+
+      const { result } = renderHook(() => useBreakpoint('lg'));
+      expect(result.current).toBe(false);
+
+      act(() => {
+        ctl.setWidth(1200);
+        ctl.triggerChange();
+      });
+
+      expect(result.current).toBe(true);
+    });
+
+    it('should clean up event listeners on unmount', () => {
+      const ctl = makeMatchMediaController({ width: 1200 });
+      ctl.install();
+
+      const { unmount } = renderHook(() => useBreakpoint('lg'));
+
+      // Should not throw on unmount
+      expect(() => unmount()).not.toThrow();
+    });
+
+    it('should handle breakpoint transitions correctly', () => {
+      const ctl = makeMatchMediaController({ width: 1200 });
+      ctl.install();
+
+      const { result } = renderHook(() => useBreakpoint('lg'));
+      expect(result.current).toBe(true);
+
+      // Go below breakpoint
+      act(() => {
+        ctl.setWidth(800);
+        ctl.triggerChange();
+      });
+      expect(result.current).toBe(false);
+
+      // Return above breakpoint
+      act(() => {
+        ctl.setWidth(1500);
+        ctl.triggerChange();
+      });
+      expect(result.current).toBe(true);
+    });
+
+    it('should handle exact breakpoint value', () => {
+      const ctl = makeMatchMediaController({ width: 1024 });
+      ctl.install();
+
+      const { result } = renderHook(() => useBreakpoint('lg'));
+      expect(result.current).toBe(true);
+    });
   });
 });
