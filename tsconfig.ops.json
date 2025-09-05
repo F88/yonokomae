@@ -8,5 +8,5 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/ops/*.ts", "src/data/*.ts"]
+  "include": ["packages/app/src/ops/*.ts", "packages/app/src/data/*.ts"]
 }

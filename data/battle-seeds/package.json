@@ -18,7 +18,10 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@yonokomae/types": "workspace:*",
-    "@yonokomae/schema": "workspace:*"
+    "@yonokomae/schema": "workspace:*",
+    "@yonokomae/types": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^7.1.4"
   }
 }

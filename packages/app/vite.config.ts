@@ -11,6 +11,21 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@yonokomae/catalog': path.resolve(__dirname, '../catalog/dist'),
+      '@yonokomae/schema': path.resolve(__dirname, '../schema/dist'),
+      '@yonokomae/types': path.resolve(__dirname, '../types/dist'),
+      '@yonokomae/data-battle-seeds': path.resolve(
+        __dirname,
+        '../../data/battle-seeds/dist',
+      ),
+      '@yonokomae/data-historical-evidence': path.resolve(
+        __dirname,
+        '../../data/historical-evidence/dist',
+      ),
+      '@yonokomae/data-news-seeds': path.resolve(
+        __dirname,
+        '../../data/news-seeds/dist',
+      ),
     },
   },
   build: {

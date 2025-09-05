@@ -23,12 +23,13 @@ export default mergeConfig(
               '@': path.resolve(dirname, './src'),
             },
           },
+          plugins: viteConfig.plugins,
           test: {
             name: 'unit',
             globals: true,
             environment: 'jsdom',
             css: true,
-            setupFiles: './src/test/setup.ts',
+            setupFiles: path.resolve(dirname, './src/test/setup.ts'),
             include: ['src/**/*.{test,spec}.ts', 'src/**/*.{test,spec}.tsx'],
             exclude: ['tests/e2e/**', 'node_modules/**', 'dist/**'],
           },
@@ -59,7 +60,7 @@ export default mergeConfig(
               instances: [{ browser: 'chromium' }],
             },
             // Important: use Storybook-specific setup; avoid Node-only libs here
-            setupFiles: ['./.storybook/vitest.setup.ts'],
+            setupFiles: path.resolve(dirname, './.storybook/vitest.setup.ts'),
           },
         }),
       ],
