@@ -6,7 +6,7 @@ import type { Battle } from '@yonokomae/types';
 describe('BattleContainerIdChip', () => {
   const mockBattle: Battle = {
     id: 'test-battle-id',
-    themeId: 'tech',
+    themeId: 'technology',
     significance: 'medium',
     title: 'Test Battle',
     subtitle: 'Test vs Test',
@@ -274,7 +274,7 @@ describe('BattleContainerIdChip', () => {
     it('should work with minimal battle object', () => {
       const minimalBattle: Battle = {
         id: 'minimal',
-        themeId: 'tech',
+        themeId: 'technology',
         significance: 'low',
         title: 'Minimal',
         subtitle: 'Test',

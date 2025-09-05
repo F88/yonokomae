@@ -105,9 +105,7 @@ describe('scroll utilities', () => {
     });
 
     it('should return early if element not found', () => {
-      (document.getElementById as unknown as vi.Mock).mockImplementation(
-        () => null,
-      );
+      vi.spyOn(document, 'getElementById').mockImplementation(() => null);
 
       scrollToAnchor('non-existent');
 
@@ -124,16 +122,7 @@ describe('scroll utilities', () => {
 
     it('should use extraGapSmall for small viewports', () => {
       // Mock small viewport
-      (window.matchMedia as unknown as (q: string) => {
-        matches: boolean;
-        media: string;
-        onchange: null;
-        addListener: () => void;
-        removeListener: () => void;
-        addEventListener: () => void;
-        removeEventListener: () => void;
-        dispatchEvent: () => boolean;
-      }) = vi.fn((query: string) => ({
+      (window as any).matchMedia = vi.fn((query: string) => ({
         matches: false,
         media: query,
         onchange: null,
@@ -158,18 +147,16 @@ describe('scroll utilities', () => {
         value: 800,
       });
 
-      (window.matchMedia as unknown as (q: string) => any) = vi.fn(
-        (query: string) => ({
-          matches: query === '(min-width: 900px)' && window.innerWidth >= 900,
-          media: query,
-          onchange: null,
-          addListener: vi.fn(),
-          removeListener: vi.fn(),
-          addEventListener: vi.fn(),
-          removeEventListener: vi.fn(),
-          dispatchEvent: vi.fn(),
-        }),
-      );
+      (window as any).matchMedia = vi.fn((query: string) => ({
+        matches: query === '(min-width: 900px)' && window.innerWidth >= 900,
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      }));
 
       scrollToAnchor('test-element', {
         largeMinWidth: 900,
@@ -194,9 +181,7 @@ describe('scroll utilities', () => {
     });
 
     it('should handle missing header selector gracefully', () => {
-      (document.querySelector as unknown as vi.Mock).mockImplementation(
-        () => null,
-      );
+      vi.spyOn(document, 'querySelector').mockImplementation(() => null);
 
       scrollToAnchor('test-element', {
         stickyHeaderSelector: '.non-existent-header',
@@ -206,7 +191,6 @@ describe('scroll utilities', () => {
     });
 
     it('should work in SSR environment (no window.matchMedia)', () => {
-      // @ts-expect-error - testing without matchMedia
       (window as any).matchMedia = undefined;
 
       scrollToAnchor('test-element', {
@@ -219,7 +203,6 @@ describe('scroll utilities', () => {
     it('should work in environment without window', () => {
       const originalWindow = global.window;
 
-      // @ts-expect-error - testing without window
       delete (global as any).window;
 
       // Mock getElementById to work without window
