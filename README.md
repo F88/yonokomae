@@ -4,6 +4,7 @@
 [![CodeQL](https://github.com/F88/yonokomae/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/F88/yonokomae/actions/workflows/github-code-scanning/codeql)
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/F88/yonokomae)
+[![codecov](https://codecov.io/gh/F88/yonokomae/graph/badge.svg?token=8BC900V3O3)](https://codecov.io/gh/F88/yonokomae)
 
 Yono Komae War
 
