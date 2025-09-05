@@ -132,7 +132,9 @@ describe('Component Integration Tests', () => {
     });
 
     it('should handle unknown theme gracefully', () => {
-      render(<ThemeChip themeId="unknown-theme" />);
+      render(
+        <ThemeChip themeId={'unknown-theme' as unknown as Battle['themeId']} />,
+      );
 
       expect(screen.getByTestId('theme-chip')).toBeInTheDocument();
       // The component maps unknown themes to history by default

@@ -7,7 +7,8 @@ describe('Scenario', () => {
   const mockBattleWithScenario: Battle = {
     id: 'test-battle',
     title: 'Test Battle',
-    theme: 'history',
+    subtitle: '',
+    themeId: 'history',
     significance: 'medium',
     narrative: {
       overview: 'Test overview',
@@ -28,12 +29,14 @@ describe('Scenario', () => {
       power: 90,
       imageUrl: '',
     },
-  } as Battle;
+    status: 'success',
+  };
 
   const mockBattleWithoutScenario: Battle = {
     id: 'test-battle-2',
     title: 'Test Battle 2',
-    theme: 'culture',
+    subtitle: '',
+    themeId: 'culture',
     significance: 'low',
     narrative: {
       overview: 'Test overview',
@@ -53,7 +56,8 @@ describe('Scenario', () => {
       power: 85,
       imageUrl: '',
     },
-  } as Battle;
+    status: 'success',
+  };
 
   it('renders scenario text when narrative.scenario exists', () => {
     render(<Scenario battle={mockBattleWithScenario} />);

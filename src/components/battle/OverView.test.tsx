@@ -7,7 +7,8 @@ describe('OverView', () => {
   const mockBattleWithOverview: Battle = {
     id: 'test-battle',
     title: 'Test Battle',
-    theme: 'history',
+    subtitle: '',
+    themeId: 'history',
     significance: 'medium',
     narrative: {
       overview:
@@ -28,12 +29,14 @@ describe('OverView', () => {
       power: 90,
       imageUrl: '',
     },
-  } as Battle;
+    status: 'success',
+  };
 
   const mockBattleWithoutOverview: Battle = {
     id: 'test-battle-2',
     title: 'Test Battle 2',
-    theme: 'culture',
+    subtitle: '',
+    themeId: 'culture',
     significance: 'low',
     narrative: {
       overview: '',
@@ -53,7 +56,8 @@ describe('OverView', () => {
       power: 85,
       imageUrl: '',
     },
-  } as Battle;
+    status: 'success',
+  };
 
   it('renders overview text when narrative.overview exists', () => {
     render(<OverView battle={mockBattleWithOverview} />);

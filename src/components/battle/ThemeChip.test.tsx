@@ -8,13 +8,13 @@ import type { Battle } from '@yonokomae/types';
 vi.mock('@yonokomae/catalog', () => ({
   battleThemeCatalog: [
     {
-      id: 'legendary',
-      name: 'Legendary',
-      icon: '⚔️',
-      description: 'Legendary battles',
+      id: 'history',
+      name: 'History',
+      icon: '📜',
+      description: 'Historical battles',
     },
     {
-      id: 'tech',
+      id: 'technology',
       name: 'Technology',
       icon: '💻',
       description: 'Tech battles',
@@ -31,16 +31,16 @@ vi.mock('@yonokomae/catalog', () => ({
 describe('ThemeChip', () => {
   describe('Basic Rendering', () => {
     it('should render theme chip with name and icon', () => {
-      render(<ThemeChip themeId="legendary" />);
+      render(<ThemeChip themeId="history" />);
 
       const chip = screen.getByTestId('theme-chip');
       expect(chip).toBeInTheDocument();
-      expect(screen.getByText('Legendary')).toBeInTheDocument();
-      expect(screen.getByText('⚔️')).toBeInTheDocument();
+      expect(screen.getByText('History')).toBeInTheDocument();
+      expect(screen.getByText('📜')).toBeInTheDocument();
     });
 
     it('should render different theme correctly', () => {
-      render(<ThemeChip themeId="tech" />);
+      render(<ThemeChip themeId="technology" />);
 
       expect(screen.getByText('Technology')).toBeInTheDocument();
       expect(screen.getByText('💻')).toBeInTheDocument();
@@ -54,9 +54,9 @@ describe('ThemeChip', () => {
     });
 
     it('should show name by default', () => {
-      render(<ThemeChip themeId="legendary" />);
+      render(<ThemeChip themeId="history" />);
 
-      expect(screen.getByText('Legendary')).toBeInTheDocument();
+      expect(screen.getByText('History')).toBeInTheDocument();
     });
   });
 
@@ -64,14 +64,14 @@ describe('ThemeChip', () => {
     it('should fallback to first theme for unknown themeId', () => {
       render(<ThemeChip themeId={'unknown' as Battle['themeId']} />);
 
-      expect(screen.getByText('Legendary')).toBeInTheDocument();
-      expect(screen.getByText('⚔️')).toBeInTheDocument();
+      expect(screen.getByText('History')).toBeInTheDocument();
+      expect(screen.getByText('📜')).toBeInTheDocument();
     });
 
     it('should handle all valid theme IDs', () => {
       const validThemeIds: Battle['themeId'][] = [
-        'legendary',
-        'tech',
+        'history',
+        'technology',
         'culture',
       ];
 
@@ -86,7 +86,7 @@ describe('ThemeChip', () => {
 
   describe('Accessibility', () => {
     it('should have appropriate aria-label', () => {
-      render(<ThemeChip themeId="tech" />);
+      render(<ThemeChip themeId="technology" />);
 
       const chip = screen.getByLabelText('Theme Technology');
       expect(chip).toBeInTheDocument();
@@ -100,9 +100,9 @@ describe('ThemeChip', () => {
     });
 
     it('should mark icon as aria-hidden', () => {
-      render(<ThemeChip themeId="legendary" />);
+      render(<ThemeChip themeId="history" />);
 
-      const icon = screen.getByText('⚔️');
+      const icon = screen.getByText('📜');
       expect(icon).toHaveAttribute('aria-hidden', 'true');
     });
   });
@@ -110,14 +110,14 @@ describe('ThemeChip', () => {
   describe('Styling', () => {
     it('should apply custom className', () => {
       const customClass = 'custom-test-class';
-      render(<ThemeChip themeId="tech" className={customClass} />);
+      render(<ThemeChip themeId="technology" className={customClass} />);
 
       const chip = screen.getByTestId('theme-chip');
       expect(chip).toHaveClass(customClass);
     });
 
     it('should have default variant styling', () => {
-      render(<ThemeChip themeId="legendary" />);
+      render(<ThemeChip themeId="history" />);
 
       const chip = screen.getByTestId('theme-chip');
       expect(chip).toHaveClass(
@@ -130,16 +130,16 @@ describe('ThemeChip', () => {
 
     it('should apply different variant styles', () => {
       const { rerender } = render(
-        <ThemeChip themeId="tech" variant="default" />,
+        <ThemeChip themeId="technology" variant="default" />,
       );
       let chip = screen.getByTestId('theme-chip');
       expect(chip).toBeInTheDocument();
 
-      rerender(<ThemeChip themeId="tech" variant="outline" />);
+      rerender(<ThemeChip themeId="technology" variant="outline" />);
       chip = screen.getByTestId('theme-chip');
       expect(chip).toBeInTheDocument();
 
-      rerender(<ThemeChip themeId="tech" variant="secondary" />);
+      rerender(<ThemeChip themeId="technology" variant="secondary" />);
       chip = screen.getByTestId('theme-chip');
       expect(chip).toBeInTheDocument();
     });
@@ -156,7 +156,7 @@ describe('ThemeChip', () => {
   describe('Component Props', () => {
     it('should accept all expected props', () => {
       const props = {
-        themeId: 'tech' as Battle['themeId'],
+        themeId: 'technology' as Battle['themeId'],
         className: 'test-class',
         variant: 'outline' as const,
         showName: false,
@@ -171,11 +171,11 @@ describe('ThemeChip', () => {
     });
 
     it('should use default values for optional props', () => {
-      render(<ThemeChip themeId="legendary" />);
+      render(<ThemeChip themeId="history" />);
 
       const chip = screen.getByTestId('theme-chip');
       expect(chip).toBeInTheDocument();
-      expect(screen.getByText('Legendary')).toBeInTheDocument();
+      expect(screen.getByText('History')).toBeInTheDocument();
     });
   });
 
@@ -196,11 +196,11 @@ describe('ThemeChip', () => {
     });
 
     it('should maintain consistency across rerenders', () => {
-      const { rerender } = render(<ThemeChip themeId="tech" />);
+      const { rerender } = render(<ThemeChip themeId="technology" />);
 
       const initialChip = screen.getByTestId('theme-chip').cloneNode(true);
 
-      rerender(<ThemeChip themeId="tech" />);
+      rerender(<ThemeChip themeId="technology" />);
 
       const rerenderedChip = screen.getByTestId('theme-chip');
       expect(rerenderedChip.textContent).toBe(initialChip.textContent);

@@ -54,7 +54,7 @@ vi.mock('@/components/ui/significance-chip', () => ({
 describe('MetaData', () => {
   const mockBattle: Battle = {
     id: 'test-battle',
-    themeId: 'tech',
+    themeId: 'technology',
     significance: 'medium',
     title: 'Test Battle',
     subtitle: 'Test vs Test',
@@ -97,7 +97,7 @@ describe('MetaData', () => {
       expect(battleChip).toHaveAttribute('data-variant', 'outline');
 
       const themeChip = screen.getByTestId('theme-chip');
-      expect(themeChip).toHaveAttribute('data-theme', 'tech');
+      expect(themeChip).toHaveAttribute('data-theme', 'technology');
       expect(themeChip).toHaveAttribute('data-variant', 'secondary');
 
       const significanceChip = screen.getByTestId('significance-chip');
@@ -110,7 +110,7 @@ describe('MetaData', () => {
       render(<MetaData battle={mockBattle} />);
 
       expect(screen.getByText('Battle: test-battle')).toBeInTheDocument();
-      expect(screen.getByText('Theme: tech')).toBeInTheDocument();
+      expect(screen.getByText('Theme: technology')).toBeInTheDocument();
       expect(screen.getByText('Significance: medium')).toBeInTheDocument();
     });
   });

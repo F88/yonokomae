@@ -11,55 +11,43 @@ import { scrollByY } from './reduced-motion';
 describe('scroll utilities', () => {
   let mockElement: HTMLElement;
   let mockHeader: HTMLElement;
-  let scrollByYMock: ReturnType<typeof vi.mocked>;
+  let scrollByYMock: typeof scrollByY;
 
   beforeEach(() => {
     scrollByYMock = vi.mocked(scrollByY);
 
-    // Mock DOM methods
-    mockElement = {
-      getBoundingClientRect: vi.fn(() => ({
-        top: 100,
-        bottom: 150,
-        left: 0,
-        right: 100,
-        width: 100,
-        height: 50,
-        x: 0,
-        y: 100,
-      })),
-    } as HTMLElement;
+    // Create real elements and override getBoundingClientRect to return DOMRect
+    mockElement = document.createElement('div');
+    Object.defineProperty(mockElement, 'getBoundingClientRect', {
+      configurable: true,
+      value: vi.fn(() => new DOMRect(0, 100, 100, 50)),
+    });
 
-    mockHeader = {
-      getBoundingClientRect: vi.fn(() => ({
-        top: 0,
-        bottom: 60,
-        left: 0,
-        right: 1200,
-        width: 1200,
-        height: 60,
-        x: 0,
-        y: 0,
-      })),
-    } as HTMLElement;
+    mockHeader = document.createElement('div');
+    Object.defineProperty(mockHeader, 'getBoundingClientRect', {
+      configurable: true,
+      value: vi.fn(() => new DOMRect(0, 0, 1200, 60)),
+    });
 
     // Mock document.getElementById
-    global.document.getElementById = vi.fn((id) => {
+    vi.spyOn(document, 'getElementById').mockImplementation((id: string) => {
       if (id === 'test-element') return mockElement;
       return null;
     });
 
     // Mock document.querySelector
-    global.document.querySelector = vi.fn((selector) => {
-      if (selector === '.sticky-header') return mockHeader;
-      return null;
-    });
+    vi.spyOn(document, 'querySelector').mockImplementation(
+      (selector: string) => {
+        if (selector === '.sticky-header') return mockHeader;
+        return null;
+      },
+    );
 
     // Mock window.matchMedia
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       configurable: true,
-      value: vi.fn().mockImplementation((query) => ({
+      value: vi.fn().mockImplementation((query: string) => ({
         matches: query === '(min-width: 1024px)',
         media: query,
         onchange: null,
@@ -85,7 +73,7 @@ describe('scroll utilities', () => {
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
         configurable: true,
-        value: vi.fn().mockImplementation((query) => ({
+        value: vi.fn().mockImplementation((query: string) => ({
           matches: query === '(min-width: 1024px)',
           media: query,
           onchange: null,
@@ -117,6 +105,10 @@ describe('scroll utilities', () => {
     });
 
     it('should return early if element not found', () => {
+      (document.getElementById as unknown as vi.Mock).mockImplementation(
+        () => null,
+      );
+
       scrollToAnchor('non-existent');
 
       expect(scrollByYMock).not.toHaveBeenCalled();
@@ -132,9 +124,16 @@ describe('scroll utilities', () => {
 
     it('should use extraGapSmall for small viewports', () => {
       // Mock small viewport
-      (
-        window.matchMedia as vi.MockedFunction<typeof window.matchMedia>
-      ).mockImplementation((query) => ({
+      (window.matchMedia as unknown as (q: string) => {
+        matches: boolean;
+        media: string;
+        onchange: null;
+        addListener: () => void;
+        removeListener: () => void;
+        addEventListener: () => void;
+        removeEventListener: () => void;
+        dispatchEvent: () => boolean;
+      }) = vi.fn((query: string) => ({
         matches: false,
         media: query,
         onchange: null,
@@ -159,18 +158,18 @@ describe('scroll utilities', () => {
         value: 800,
       });
 
-      (
-        window.matchMedia as vi.MockedFunction<typeof window.matchMedia>
-      ).mockImplementation((query) => ({
-        matches: query === '(min-width: 900px)' && window.innerWidth >= 900,
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      }));
+      (window.matchMedia as unknown as (q: string) => any) = vi.fn(
+        (query: string) => ({
+          matches: query === '(min-width: 900px)' && window.innerWidth >= 900,
+          media: query,
+          onchange: null,
+          addListener: vi.fn(),
+          removeListener: vi.fn(),
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+          dispatchEvent: vi.fn(),
+        }),
+      );
 
       scrollToAnchor('test-element', {
         largeMinWidth: 900,
@@ -182,17 +181,10 @@ describe('scroll utilities', () => {
     });
 
     it('should not scroll if delta is very small', () => {
-      // Mock element very close to desired position
-      mockElement.getBoundingClientRect = vi.fn(() => ({
-        top: 79.5, // Header bottom (60) + extraGap (20) = 80 => delta = -0.5
-        bottom: 70.5,
-        left: 0,
-        right: 100,
-        width: 100,
-        height: 50,
-        x: 0,
-        y: 79.5,
-      }));
+      Object.defineProperty(mockElement, 'getBoundingClientRect', {
+        configurable: true,
+        value: vi.fn(() => new DOMRect(0, 79.5, 100, 50)),
+      });
 
       scrollToAnchor('test-element', {
         stickyHeaderSelector: '.sticky-header',
@@ -202,7 +194,9 @@ describe('scroll utilities', () => {
     });
 
     it('should handle missing header selector gracefully', () => {
-      global.document.querySelector = vi.fn(() => null);
+      (document.querySelector as unknown as vi.Mock).mockImplementation(
+        () => null,
+      );
 
       scrollToAnchor('test-element', {
         stickyHeaderSelector: '.non-existent-header',
@@ -212,8 +206,8 @@ describe('scroll utilities', () => {
     });
 
     it('should work in SSR environment (no window.matchMedia)', () => {
-      delete (window as Window & { matchMedia?: typeof window.matchMedia })
-        .matchMedia;
+      // @ts-expect-error - testing without matchMedia
+      (window as any).matchMedia = undefined;
 
       scrollToAnchor('test-element', {
         extraGapLarge: 25,
@@ -226,10 +220,10 @@ describe('scroll utilities', () => {
       const originalWindow = global.window;
 
       // @ts-expect-error - testing without window
-      delete global.window;
+      delete (global as any).window;
 
       // Mock getElementById to work without window
-      global.document.getElementById = vi.fn((id) => {
+      vi.spyOn(document, 'getElementById').mockImplementation((id: string) => {
         if (id === 'test-element') return mockElement;
         return null;
       });
@@ -240,7 +234,7 @@ describe('scroll utilities', () => {
 
       expect(scrollByYMock).toHaveBeenCalledWith(92); // Should use small gap (no window = small viewport)
 
-      global.window = originalWindow;
+      (global as any).window = originalWindow;
     });
 
     it('should use default gap values', () => {
@@ -262,17 +256,10 @@ describe('scroll utilities', () => {
     });
 
     it('should handle negative scroll delta', () => {
-      // Mock element above the target position
-      mockElement.getBoundingClientRect = vi.fn(() => ({
-        top: -50,
-        bottom: 0,
-        left: 0,
-        right: 100,
-        width: 100,
-        height: 50,
-        x: 0,
-        y: -50,
-      }));
+      Object.defineProperty(mockElement, 'getBoundingClientRect', {
+        configurable: true,
+        value: vi.fn(() => new DOMRect(0, -50, 100, 50)),
+      });
 
       scrollToAnchor('test-element', {
         stickyHeaderSelector: '.sticky-header',

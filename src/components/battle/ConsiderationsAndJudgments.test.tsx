@@ -48,7 +48,9 @@ describe('ConsiderationsAndJudgments', () => {
   const mockBattle: Battle = {
     id: 'test-battle-1',
     title: 'Test Battle Title',
-    theme: 'Test Theme',
+    subtitle: '',
+    narrative: { overview: '', scenario: '' },
+    themeId: 'history',
     significance: 'high',
     yono: {
       title: 'YONO',
@@ -64,9 +66,16 @@ describe('ConsiderationsAndJudgments', () => {
       power: 90,
       imageUrl: '',
     },
-  } as Battle;
+    status: 'success',
+    provenance: [],
+  };
 
-  const mockMode: PlayMode = 'demo';
+  const mockMode: PlayMode = {
+    id: 'demo',
+    title: 'DEMO',
+    description: 'Demonstration mode',
+    enabled: true,
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
