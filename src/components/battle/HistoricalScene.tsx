@@ -97,9 +97,15 @@ export const HistoricalScene: FC<Props> = ({
   // Render placeholder when no battle is provided
   if (!battle) {
     return (
-      <Card className="w-full">
+      <Card className="w-full" aria-busy="true">
         <CardHeader className="text-center px-4 lg:px-6">
-          <div className="mx-auto w-full space-y-5 sm:space-y-6">
+          <div
+            className="mx-auto w-full space-y-5 sm:space-y-6"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <span className="sr-only">Loading battle content…</span>
             {/* Overview placeholder */}
             <div className="mx-auto w-full space-y-3 text-left sm:text-center">
               <Skeleton className="mx-auto h-4 w-4/5" />
