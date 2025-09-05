@@ -200,10 +200,19 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 - `pnpm run e2e:ui` - インタラクティブ UI モード
 - `pnpm run e2e:headed` - ヘッドモードで実行 (Chromium)
 
-**データパッケージテスト:**
+**データパッケージのテスト:**
 
-- `pnpm test` - データパッケージ検証を含む全テスト実行
-- `cd data/{package} && pnpm test` - 個別データパッケージテスト
+- `pnpm test` - データパッケージ検証を含む全てのテストを実行
+- `pnpm run test:seeds` - 全シードデータの検証
+- `cd data/{package} && pnpm test` - 個別のデータパッケージをテスト
+
+### コンポーネントテスト
+
+コンポーネントテストには Vitest と React Testing Library を使用しています:
+
+- `pnpm run test:unit` - ユニットテストを実行
+- `pnpm run test:storybook` - ブラウザで Storybook テストを実行
+- `pnpm run test:coverage` - カバレッジレポートを生成
 
 ## 移行ノート
 
@@ -236,6 +245,25 @@ type Verdict = {
 - `demo-de`: ドイツ語のデモ。
 - `historical-research`: `@yonokomae/data-historical-evidence` からの歴史的証拠シードに基づいたシナリオ。
 - `yk-now`: `@yonokomae/data-news-seeds` からのデータを使用したニュース駆動モード。
+
+## UI コンポーネント
+
+### バトルコンポーネント
+
+- **HistoricalScene**: ローディング状態とメタデータ表示を備えたメインバトル表示コンポーネント
+    - 設定可能なアスペクト比でクロップドバナーモードをサポート
+    - 重要度チップとテーマバッジを含む
+    - ローディングスケルトン状態を処理
+
+- **FontSizeControl**: レスポンシブなフォントサイズ調整コントロール
+    - モバイルデバイス用のコンパクトモード
+    - キーボードショートカットサポート (Alt+Plus/Minus)
+
+### アクセシビリティ機能
+
+- **ReducedMotionModeToggle**: ユーザーのモーション設定を尊重
+- **キーボードショートカット**: Controller コンポーネントはキーボードナビゲーションをサポート (B でバトル、R でリセット)
+- **ARIA 属性**: スクリーンリーダー用の適切なラベリングとライブリージョン
 
 ## データメンテナンス
 

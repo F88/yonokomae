@@ -52,19 +52,27 @@ import type { Battle } from '@yonokomae/types';
 
 const newsSample: Battle = {
     id: 'news-sample-unique-id',
+    themeId: 'information',
+    significance: 'high',
     title: 'ニュースバトルタイトル',
     subtitle: 'ニュース風サブタイトル',
-    overview: 'ニュース風の簡潔な概要...',
-    scenario: '詳細なニュース記事...',
+    narrative: {
+        overview: 'ニュース風の簡潔な概要...',
+        scenario: '詳細なニュース記事...',
+    },
     komae: {
-        name: '狛江代表',
-        power: 75,
+        imageUrl: './imgs/neta/komae-news.png',
+        title: '狛江代表',
+        subtitle: '最新の展開',
         description: '狛江派閥の詳細...',
+        power: 75,
     },
     yono: {
-        name: '与野代表',
-        power: 68,
+        imageUrl: './imgs/neta/yono-news.png',
+        title: '与野代表',
+        subtitle: '速報',
         description: '与野派閥の詳細...',
+        power: 68,
     },
     provenance: [
         {
@@ -85,10 +93,13 @@ export default newsSample;
 ニュースシードは battle-seeds と同じ `Battle` 型を使用します：
 
 - **`id`**: 一意識別子 (string)
+- **`themeId`**: テーマ識別子 (ニュースの場合は通常 'information')
+- **`significance`**: 重要度レベル ('low' | 'medium' | 'high' | 'legendary')
 - **`title`**: ニュース風見出し (string)
 - **`subtitle`**: 補足見出し (string)
-- **`overview`**: 簡潔なニュース要約 (string)
-- **`scenario`**: 完全なニュース記事内容 (string)
+- **`narrative`**: 以下を含むオブジェクト:
+    - **`overview`**: 簡潔なニュース要約 (string)
+    - **`scenario`**: 完全なニュース記事内容 (string)
 - **`komae`**: 狛江派を表す Neta オブジェクト
 - **`yono`**: 与野派を表す Neta オブジェクト
 - **`provenance`**: 架空またはデモンストレーション用ソースの配列 (任意)

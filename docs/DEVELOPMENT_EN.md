@@ -203,7 +203,16 @@ We use Playwright for E2E testing. Specs are located in the `e2e/` directory.
 **Data Package Testing:**
 
 - `pnpm test` - Run all tests including data package validation
+- `pnpm run test:seeds` - Validate all seed data
 - `cd data/{package} && pnpm test` - Test individual data package
+
+### Component Testing
+
+We use Vitest with React Testing Library for component testing:
+
+- `pnpm run test:unit` - Run unit tests
+- `pnpm run test:storybook` - Run Storybook tests in browser
+- `pnpm run test:coverage` - Generate coverage report
 
 ## Migration Notes
 
@@ -236,6 +245,25 @@ type Verdict = {
 - `demo-de`: German demo variant.
 - `historical-research`: Scenarios based on historical evidence seeds from `@yonokomae/data-historical-evidence`.
 - `yk-now`: News-driven mode using data from `@yonokomae/data-news-seeds`.
+
+## UI Components
+
+### Battle Components
+
+- **HistoricalScene**: Main battle display component with loading states and metadata display
+    - Supports cropped banner mode with configurable aspect ratios
+    - Includes significance chips and theme badges
+    - Handles loading skeleton states
+
+- **FontSizeControl**: Responsive font size adjustment control
+    - Compact mode for mobile devices
+    - Keyboard shortcut support (Alt+Plus/Minus)
+
+### Accessibility Features
+
+- **ReducedMotionModeToggle**: Respects user's motion preferences
+- **Keyboard shortcuts**: Controller component supports keyboard navigation (B for Battle, R for Reset)
+- **ARIA attributes**: Proper labeling and live regions for screen readers
 
 ## Data Maintenance
 

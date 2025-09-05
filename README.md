@@ -70,10 +70,16 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 - Robust loading and error states
     - Async judgement with simulated latency
     - Shadcn skeleton placeholders on the battle field
+    - Loading states with aria-busy for accessibility
 - Modern UI stack
     - React 19 + Vite 7 + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
     - Dark mode toggle via class-based theme
     - Responsive design with breakpoint-aware layouts
+    - Font size control with keyboard shortcuts (Alt+Plus/Minus)
+- Battle theming and significance levels
+    - 8 theme categories (history, culture, community, etc.)
+    - 4 significance levels (low, medium, high, legendary)
+    - Visual indicators with chips and badges
 - Zero-SSR SPA optimized for client-side rendering
 - GitHub Pages deployment with base path configured
 
@@ -146,6 +152,8 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 - ✅ Repository pattern with lazy-loading and code splitting
 - ✅ Seed system for deterministic battle generation
 - ✅ TSV export functionality for usage data and user voices
+- ✅ Battle theming system with 8 categories
+- ✅ Significance levels for battle importance (low to legendary)
 
 #### Quality & Testing
 
@@ -153,6 +161,8 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 - ✅ E2E tests for key flows (Playwright)
 - ✅ Automated data package validation with CI checks
 - ✅ Schema validation for all data entries using Zod
+- ✅ Vitest with isolated test projects (unit and Storybook)
+- ✅ Component testing in real browser environment
 
 ### In Progress
 

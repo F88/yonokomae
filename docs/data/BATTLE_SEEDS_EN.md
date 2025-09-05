@@ -53,19 +53,27 @@ import type { Battle } from '@yonokomae/types';
 
 const battle: Battle = {
     id: 'unique-battle-id',
+    themeId: 'community', // or 'history', 'culture', etc.
+    significance: 'medium', // 'low' | 'medium' | 'high' | 'legendary'
     title: 'Battle Title',
     subtitle: 'Battle Subtitle',
-    overview: 'Brief description...',
-    scenario: 'Detailed battle scenario...',
+    narrative: {
+        overview: 'Brief description...',
+        scenario: 'Detailed battle scenario...',
+    },
     komae: {
-        name: 'コマえもん',
-        power: 42,
+        imageUrl: './imgs/neta/komae-example.png',
+        title: 'コマえもん',
+        subtitle: 'Komae champion',
         description: 'Komae representative data...',
+        power: 42,
     },
     yono: {
-        name: 'ヨノ丸',
-        power: 38,
+        imageUrl: './imgs/neta/yono-example.png',
+        title: 'ヨノ丸',
+        subtitle: 'Yono challenger',
         description: 'Yono representative data...',
+        power: 38,
     },
     provenance: [
         {
@@ -84,19 +92,24 @@ export default battle;
 ### Battle Type Structure
 
 - **`id`**: Unique identifier (string)
+- **`themeId`**: Theme identifier for categorization (BattleThemeId)
+- **`significance`**: Importance level ('low' | 'medium' | 'high' | 'legendary')
 - **`title`**: Main battle title (string)
 - **`subtitle`**: Secondary title (string)
-- **`overview`**: Brief description (string)
-- **`scenario`**: Detailed battle scenario (string)
+- **`narrative`**: Object containing:
+    - **`overview`**: Brief description (string)
+    - **`scenario`**: Detailed battle scenario (string)
 - **`komae`**: Neta object representing Komae
 - **`yono`**: Neta object representing Yono
 - **`provenance`**: Array of data sources (optional)
 
 ### Neta Type Structure
 
-- **`name`**: Character name (string)
+- **`imageUrl`**: URL of the image representing this Neta (string)
+- **`title`**: Main title or name of the Neta (string)
+- **`subtitle`**: Short subtitle or catchphrase (string)
+- **`description`**: Detailed description of the Neta (string)
 - **`power`**: Numerical power level (number)
-- **`description`**: Description of the data/rationale (string)
 
 ### Naming Conventions
 

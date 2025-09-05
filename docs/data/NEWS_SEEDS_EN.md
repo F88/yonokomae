@@ -52,19 +52,27 @@ import type { Battle } from '@yonokomae/types';
 
 const newsSample: Battle = {
     id: 'news-sample-unique-id',
+    themeId: 'information',
+    significance: 'high',
     title: 'News Battle Title',
     subtitle: 'Breaking News Style Subtitle',
-    overview: 'Brief news-style overview...',
-    scenario: 'Detailed news narrative...',
+    narrative: {
+        overview: 'Brief news-style overview...',
+        scenario: 'Detailed news narrative...',
+    },
     komae: {
-        name: 'Komae Representative',
-        power: 75,
+        imageUrl: './imgs/neta/komae-news.png',
+        title: 'Komae Representative',
+        subtitle: 'Latest development',
         description: 'Komae faction details...',
+        power: 75,
     },
     yono: {
-        name: 'Yono Representative',
-        power: 68,
+        imageUrl: './imgs/neta/yono-news.png',
+        title: 'Yono Representative',
+        subtitle: 'Breaking story',
         description: 'Yono faction details...',
+        power: 68,
     },
     provenance: [
         {
@@ -85,10 +93,13 @@ export default newsSample;
 News seeds use the same `Battle` type as battle-seeds:
 
 - **`id`**: Unique identifier (string)
+- **`themeId`**: Theme identifier (typically 'information' for news)
+- **`significance`**: Importance level ('low' | 'medium' | 'high' | 'legendary')
 - **`title`**: News-style headline (string)
 - **`subtitle`**: Supporting headline (string)
-- **`overview`**: Brief news summary (string)
-- **`scenario`**: Full news article content (string)
+- **`narrative`**: Object containing:
+    - **`overview`**: Brief news summary (string)
+    - **`scenario`**: Full news article content (string)
 - **`komae`**: Neta object representing Komae faction
 - **`yono`**: Neta object representing Yono faction
 - **`provenance`**: Array of fictional or demonstration sources (optional)

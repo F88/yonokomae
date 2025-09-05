@@ -53,19 +53,27 @@ import type { Battle } from '@yonokomae/types';
 
 const battle: Battle = {
     id: 'unique-battle-id',
+    themeId: 'community', // または 'history', 'culture' など
+    significance: 'medium', // 'low' | 'medium' | 'high' | 'legendary'
     title: 'バトルタイトル',
     subtitle: 'バトルサブタイトル',
-    overview: '簡潔な説明...',
-    scenario: '詳細なバトルシナリオ...',
+    narrative: {
+        overview: '簡潔な説明...',
+        scenario: '詳細なバトルシナリオ...',
+    },
     komae: {
-        name: 'コマえもん',
-        power: 42,
+        imageUrl: './imgs/neta/komae-example.png',
+        title: 'コマえもん',
+        subtitle: '狛江のチャンピオン',
         description: '狛江代表データ...',
+        power: 42,
     },
     yono: {
-        name: 'ヨノ丸',
-        power: 38,
+        imageUrl: './imgs/neta/yono-example.png',
+        title: 'ヨノ丸',
+        subtitle: '与野の挑戦者',
         description: '与野代表データ...',
+        power: 38,
     },
     provenance: [
         {
@@ -84,19 +92,24 @@ export default battle;
 ### Battle 型構造
 
 - **`id`**: 一意識別子 (string)
+- **`themeId`**: カテゴリ分けのためのテーマ識別子 (BattleThemeId)
+- **`significance`**: 重要度レベル ('low' | 'medium' | 'high' | 'legendary')
 - **`title`**: メインバトルタイトル (string)
 - **`subtitle`**: セカンダリタイトル (string)
-- **`overview`**: 簡潔な説明 (string)
-- **`scenario`**: 詳細なバトルシナリオ (string)
+- **`narrative`**: 以下を含むオブジェクト:
+    - **`overview`**: 簡潔な説明 (string)
+    - **`scenario`**: 詳細なバトルシナリオ (string)
 - **`komae`**: 狛江を表す Neta オブジェクト
 - **`yono`**: 与野を表す Neta オブジェクト
 - **`provenance`**: データソースの配列 (任意)
 
 ### Neta 型構造
 
-- **`name`**: キャラクター名 (string)
+- **`imageUrl`**: この Neta を表す画像の URL (string)
+- **`title`**: Neta のメインタイトルまたは名前 (string)
+- **`subtitle`**: 短いサブタイトルまたはキャッチフレーズ (string)
+- **`description`**: Neta の詳細な説明 (string)
 - **`power`**: 数値的パワーレベル (number)
-- **`description`**: データ/根拠の説明 (string)
 
 ### 命名規則
 
