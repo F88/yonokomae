@@ -8,5 +8,5 @@
     "types": ["vite/client"]
   },
   "include": ["src", "vite-env.d.ts"],
-  "exclude": ["dist"]
+  "exclude": ["dist", "**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"]
 }
