@@ -16,10 +16,8 @@ dist-ssr
 # TypeScript generated artifacts
 *.d.ts
 *.d.ts.map
-# Allow explicit ambient env types for seed packages
-!data/news-seeds/src/env.d.ts
-
-*.tsbuildinfo
+# Allow explicit ambient env types for seed packages (battle-seeds, historical-evidence, news-seeds)
+!data/*/src/env.d.ts
 node_modules/.types/
 .vscode/*
 !.vscode/extensions.json
