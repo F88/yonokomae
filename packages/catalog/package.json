@@ -18,5 +18,8 @@
   },
   "dependencies": {
     "@yonokomae/types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.2"
   }
 }
