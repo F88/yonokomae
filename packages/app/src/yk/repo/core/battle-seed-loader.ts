@@ -2,6 +2,7 @@ import { uid } from '@/lib/id';
 import { BattleSchema } from '@yonokomae/schema';
 import type { Battle, Neta } from '@yonokomae/types';
 import { battleSeeds, battleSeedsByFile } from '@yonokomae/data-battle-seeds';
+import type { ZodIssue } from 'zod';
 
 // DeepPartial utility to allow nested partials in test modules and loaders
 type DeepPartial<T> = {
@@ -49,7 +50,7 @@ export async function loadBattleFromSeeds(params: {
   const result = BattleSchema.safeParse(battle);
   if (!result.success) {
     throw new BattleSeedValidationError(
-      result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`),
+      result.error.issues.map((i: ZodIssue) => `${i.path.join('.')}: ${i.message}`),
     );
   }
   return result.data;
@@ -85,10 +86,12 @@ function mergeGlobs(): Record<string, Battle> {
   const battleSeedMap: Record<string, Battle> = {};
 
   // Map battle seeds to file paths that match the old glob patterns
-  battleSeeds.forEach((battle) => {
+  battleSeeds.forEach((battle: Battle) => {
     // Find the original file name by checking the battleSeedsByFile map
-    for (const [fileName, seedBattle] of Object.entries(battleSeedsByFile)) {
-      if (seedBattle.id === battle.id) {
+    for (const [fileName, seedBattle] of Object.entries(
+      battleSeedsByFile as Record<string, Battle>,
+    )) {
+      if ((seedBattle as Battle).id === battle.id) {
         // Map to both possible root paths for compatibility
         // 1) Workspace package virtual root
         battleSeedMap[`@yonokomae/data-battle-seeds/${fileName}`] = battle;
