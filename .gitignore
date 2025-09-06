@@ -54,3 +54,6 @@ coverage/
 data/battle-seeds/src/**/*.js
 data/historical-evidence/src/**/*.js
 data/news-seeds/src/**/*.js
+
+# TypeScript build info
+tsconfig.tsbuildinfo
