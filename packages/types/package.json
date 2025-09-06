@@ -2,9 +2,15 @@
   "name": "@yonokomae/types",
   "version": "1.0.0",
   "description": "Pure TypeScript type definitions for Yonokomae",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
