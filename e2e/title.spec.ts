@@ -132,9 +132,19 @@ test.describe('Title', () => {
 
       // End jumps to the last enabled option
       await page.keyboard.press('End');
-      // The last enabled option should be focused; assert it's a radio and is checked
-      const lastIndex = (await group.getByRole('radio').count()) - 1;
-      await expect(group.getByRole('radio').nth(lastIndex)).toBeChecked();
+      // The last enabled option should now be selected. Compute the last non-disabled radio.
+      {
+        const radios = group.getByRole('radio');
+        const total = await radios.count();
+        let lastEnabledIndex = -1;
+        for (let i = 0; i < total; i++) {
+          if (!(await radios.nth(i).isDisabled())) {
+            lastEnabledIndex = i;
+          }
+        }
+        expect(lastEnabledIndex).toBeGreaterThanOrEqual(0);
+        await expect(radios.nth(lastEnabledIndex)).toBeChecked();
+      }
 
       // Home jumps back to the first enabled option
       await page.keyboard.press('Home');
