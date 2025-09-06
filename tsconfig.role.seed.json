@@ -1,7 +1,10 @@
 {
   "extends": "./tsconfig.env.dom.json",
   "compilerOptions": {
-    "composite": true,
-    "noEmit": false
+    "composite": false,
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "moduleResolution": "node"
   }
 }
