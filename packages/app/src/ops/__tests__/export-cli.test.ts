@@ -62,6 +62,15 @@ describe('ops CLI TSV exporters', () => {
     }
   });
 
+  it('export-usage-examples-to-tsv: shows help with --help', async () => {
+    process.argv = ['node', 'export-usage-examples-to-tsv', '--help'];
+    const out = await captureStdout(async () => {
+      await importFresh('../export-usage-examples-to-tsv');
+    });
+    expect(out).toMatch(/Usage:/i);
+    expect(out).toMatch(/USAGE_EXAMPLES/i);
+  });
+
   it('export-users-voice-to-tsv: writes TSV to stdout when no args', async () => {
     process.argv = ['node', 'export-users-voice-to-tsv'];
     const out = await captureStdout(async () => {
@@ -83,5 +92,14 @@ describe('ops CLI TSV exporters', () => {
     } finally {
       if (fs.existsSync(tmpFile)) fs.unlinkSync(tmpFile);
     }
+  });
+
+  it('export-users-voice-to-tsv: shows help with -h', async () => {
+    process.argv = ['node', 'export-users-voice-to-tsv', '-h'];
+    const out = await captureStdout(async () => {
+      await importFresh('../export-users-voice-to-tsv');
+    });
+    expect(out).toMatch(/Usage:/i);
+    expect(out).toMatch(/USER_VOICES/i);
   });
 });

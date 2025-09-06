@@ -24,12 +24,21 @@ import * as path from 'path';
 
 function main() {
   const args = process.argv.slice(2);
+  if (args.includes('-h') || args.includes('--help')) {
+    process.stdout.write(
+      `Export USAGE_EXAMPLES as TSV.\n\nUsage: pnpm run ops:export-usage-examples-to-tsv [outfile]\\n  If [outfile] is omitted, TSV is written to stdout.\\n`,
+    );
+    return;
+  }
   if (args.length === 0) {
     // 引数がなければ標準出力に出力
     process.stdout.write(usageExamplesToTSV());
     return;
   }
   const outFile = args[0];
+  if (typeof outFile !== 'string' || outFile.length === 0) {
+    throw new Error('Output file path argument must be a non-empty string');
+  }
   const tsv = usageExamplesToTSV();
   writeFileSync(path.resolve(outFile), tsv, 'utf8');
   console.log('TSV exported to', outFile);

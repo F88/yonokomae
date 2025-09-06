@@ -15,6 +15,8 @@ dist-ssr
 # Editor directories and files
 # TypeScript generated artifacts
 *.d.ts
+*.d.ts.map
+
 *.tsbuildinfo
 node_modules/.types/
 .vscode/*
@@ -46,3 +48,10 @@ playwright-report/
 storybook-static
 
 coverage/
+
+### App
+
+# Seed packages: ensure only source .ts tracked (no in-place compiled JS)
+data/battle-seeds/src/**/*.js
+data/historical-evidence/src/**/*.js
+data/news-seeds/src/**/*.js

@@ -89,6 +89,12 @@ function printSummary(
 async function main() {
   const startedAt = Date.now();
   const args = process.argv.slice(2);
+  if (args.includes('-h') || args.includes('--help')) {
+    process.stdout.write(
+      `Export battle seeds as JSON.\n\nUsage: pnpm run ops:export-battle-seeds-to-json [outfile]\\n  If [outfile] is omitted, JSON is written to stdout.\\n\nExamples:\n  pnpm run ops:export-battle-seeds-to-json\\n  pnpm run ops:export-battle-seeds-to-json -- out/battles.json\\n`,
+    );
+    return;
+  }
   const { battles, filesRead } = await loadAllBattlesFromDist();
   const json = JSON.stringify(battles, null, 2);
   const bytes = Buffer.byteLength(json, 'utf8');
@@ -106,6 +112,9 @@ async function main() {
   }
 
   const outFile = args[0];
+  if (typeof outFile !== 'string' || outFile.length === 0) {
+    throw new Error('Output file path argument must be a non-empty string');
+  }
   const absOut = path.resolve(outFile);
   mkdirSync(path.dirname(absOut), { recursive: true });
   writeFileSync(absOut, json, 'utf8');

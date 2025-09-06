@@ -8,6 +8,7 @@ import { type FC, useEffect } from 'react';
 import { scrollToAnchor } from '@/lib/scroll';
 import { BREAKPOINTS } from '@/hooks/use-breakpoint';
 import { JUDGES } from '@/yk/judges';
+import { shuffleInPlace } from '@/lib/shuffle';
 
 /**
  * Props for ConsiderationsAndJudgments.
@@ -26,12 +27,6 @@ export type Props = {
 /**
  * In-place Fisher–Yates shuffle.
  */
-function shuffleInPlace<T>(arr: T[], rnd: () => number): void {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(rnd() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-}
 
 /**
  * Select judges to display for the current battle render.

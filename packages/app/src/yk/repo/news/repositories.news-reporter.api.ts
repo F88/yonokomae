@@ -24,6 +24,32 @@ type DailyEntry = {
   wind_speed_10m_max: number;
 };
 
+// -------------------------
+// Error Types (news reporter)
+// -------------------------
+export class NewsReporterError extends Error {
+  readonly name = 'NewsReporterError';
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export class NewsReporterHttpError extends NewsReporterError {
+  readonly service: string;
+  readonly status: number;
+  constructor(service: string, status: number) {
+    super(`${service} HTTP ${status}`);
+    this.service = service;
+    this.status = status;
+  }
+}
+
+export class NewsReporterDataError extends NewsReporterError {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 /**
  * API経由でニュースを集める BattleReportRepository
  */
@@ -106,7 +132,7 @@ export class NewsReporterApiBattleReportRepository
       headers: { Accept: 'application/json' },
       signal,
     });
-    if (!res.ok) throw new Error(`ipify HTTP ${res.status}`);
+  if (!res.ok) throw new NewsReporterHttpError('ipify', res.status);
     const data = (await res.json()) as Ipify;
     const ip = typeof data?.ip === 'string' && data.ip ? data.ip : '0.0.0.0';
 
@@ -167,8 +193,19 @@ export class NewsReporterApiBattleReportRepository
   private async generateWeatherForecast(signal?: AbortSignal): Promise<Battle> {
     const snapshot = await this.fetchWeatherSnapshot(signal);
     const variants = this.buildBattlesFromWeatherSnapshot(snapshot);
+    if (variants.length === 0) {
+      throw new NewsReporterDataError(
+        'No weather-based battle variants generated',
+      );
+    }
     const index = this.chooseVariant(variants.length);
-    return variants[index] ?? variants[0];
+    const chosen = variants[index] ?? variants[0];
+    if (!chosen) {
+      throw new NewsReporterDataError(
+        'Failed to choose a weather battle variant',
+      );
+    }
+    return chosen;
   }
 
   /**
@@ -317,8 +354,7 @@ export class NewsReporterApiBattleReportRepository
       headers: { Accept: 'application/json' },
       signal,
     });
-
-    if (!res.ok) throw new Error(`open-meteo HTTP ${res.status}`);
+  if (!res.ok) throw new NewsReporterHttpError('open-meteo', res.status);
     const data = (await res.json()) as OpenMeteoItem[];
 
     const first = Array.isArray(data) && data.length > 0 ? data[0] : undefined;
@@ -329,10 +365,12 @@ export class NewsReporterApiBattleReportRepository
     // console.debug('yono', yono);
     // console.debug('komae', komae);
 
-    return {
-      yono: yono[1],
-      komae: komae[1],
-    };
+    if (!yono[1] || !komae[1]) {
+      throw new NewsReporterDataError(
+        'Incomplete weather snapshot: missing daily entries',
+      );
+    }
+    return { yono: yono[1], komae: komae[1] };
   }
 
   // Build multiple Battle variants from one snapshot

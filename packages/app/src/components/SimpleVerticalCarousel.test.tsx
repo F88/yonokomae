@@ -14,26 +14,46 @@ vi.mock('@/data/users-voice', () => ({
 // Mock CSS import
 vi.mock('@/components/UserVoicesMarquee.css', () => ({}));
 
+// Helper to ensure every mount is inside act (some internal effects + timers were triggering warnings)
+function renderCarousel(ui: React.ReactElement) {
+  let utils: ReturnType<typeof render> | undefined;
+  act(() => {
+    utils = render(ui);
+  });
+  // Flush any microtasks / layout effects and queued immediate timers
+  act(() => {
+    try {
+      vi.advanceTimersByTime(0);
+    } catch {
+      // ignore if timers not fake yet
+    }
+  });
+  return utils!;
+}
+
 describe('SimpleVerticalCarousel', () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
+    // Flush any remaining interval ticks inside act to avoid warnings
+    act(() => {
+      vi.runOnlyPendingTimers();
+    });
     vi.useRealTimers();
   });
 
   describe('Basic Rendering', () => {
     it('should render the first user voice initially', () => {
-      render(<SimpleVerticalCarousel />);
+      renderCarousel(<SimpleVerticalCarousel />);
 
       expect(screen.getByText('Test voice 1')).toBeInTheDocument();
       expect(screen.getByText('User 1（20s）')).toBeInTheDocument();
     });
 
     it('should render with custom height', () => {
-      render(<SimpleVerticalCarousel height="200px" />);
+      renderCarousel(<SimpleVerticalCarousel height="200px" />);
 
       const container = screen
         .getByText('Test voice 1')
@@ -43,7 +63,7 @@ describe('SimpleVerticalCarousel', () => {
 
     it('should apply custom className', () => {
       const customClass = 'custom-carousel';
-      render(<SimpleVerticalCarousel className={customClass} />);
+      renderCarousel(<SimpleVerticalCarousel className={customClass} />);
 
       const container = screen
         .getByText('Test voice 1')
@@ -59,14 +79,14 @@ describe('SimpleVerticalCarousel', () => {
       const { SimpleVerticalCarousel: Dynamic } = await import(
         './SimpleVerticalCarousel'
       );
-      const { container } = render(<Dynamic />);
+      const { container } = renderCarousel(<Dynamic />);
       expect(container.firstChild).toBeNull();
     });
   });
 
   describe('Carousel Functionality', () => {
     it('should advance to next voice after interval', () => {
-      render(<SimpleVerticalCarousel intervalMs={1000} />);
+      renderCarousel(<SimpleVerticalCarousel intervalMs={1000} />);
 
       expect(screen.getByText('Test voice 1')).toBeInTheDocument();
 
@@ -78,7 +98,7 @@ describe('SimpleVerticalCarousel', () => {
     });
 
     it('should cycle back to first voice after last voice', () => {
-      render(<SimpleVerticalCarousel intervalMs={1000} />);
+      renderCarousel(<SimpleVerticalCarousel intervalMs={1000} />);
 
       // Advance through all voices
       act(() => {
@@ -95,7 +115,7 @@ describe('SimpleVerticalCarousel', () => {
     });
 
     it('should use default interval of 3000ms', () => {
-      render(<SimpleVerticalCarousel />);
+      renderCarousel(<SimpleVerticalCarousel />);
 
       expect(screen.getByText('Test voice 1')).toBeInTheDocument();
 
@@ -113,7 +133,9 @@ describe('SimpleVerticalCarousel', () => {
 
   describe('Hover Behavior', () => {
     it('should pause on hover when pauseOnHover is true', () => {
-      render(<SimpleVerticalCarousel intervalMs={1000} pauseOnHover={true} />);
+      renderCarousel(
+        <SimpleVerticalCarousel intervalMs={1000} pauseOnHover={true} />,
+      );
 
       const container = screen
         .getByText('Test voice 1')
@@ -134,7 +156,9 @@ describe('SimpleVerticalCarousel', () => {
     });
 
     it('should resume on mouse leave', () => {
-      render(<SimpleVerticalCarousel intervalMs={1000} pauseOnHover={true} />);
+      renderCarousel(
+        <SimpleVerticalCarousel intervalMs={1000} pauseOnHover={true} />,
+      );
 
       const container = screen
         .getByText('Test voice 1')
@@ -160,7 +184,9 @@ describe('SimpleVerticalCarousel', () => {
     });
 
     it('should not pause on hover when pauseOnHover is false', () => {
-      render(<SimpleVerticalCarousel intervalMs={1000} pauseOnHover={false} />);
+      renderCarousel(
+        <SimpleVerticalCarousel intervalMs={1000} pauseOnHover={false} />,
+      );
 
       const container = screen
         .getByText('Test voice 1')
@@ -186,7 +212,7 @@ describe('SimpleVerticalCarousel', () => {
       const mockRandom = vi.spyOn(Math, 'random');
       mockRandom.mockReturnValueOnce(0.5);
 
-      render(<SimpleVerticalCarousel shuffle={true} />);
+      renderCarousel(<SimpleVerticalCarousel shuffle={true} />);
 
       // The shuffle function should have been called
       expect(mockRandom).toHaveBeenCalled();
@@ -195,7 +221,7 @@ describe('SimpleVerticalCarousel', () => {
     });
 
     it('should not shuffle voices when shuffle is false', () => {
-      render(<SimpleVerticalCarousel shuffle={false} />);
+      renderCarousel(<SimpleVerticalCarousel shuffle={false} />);
 
       // Should render first voice in original order
       expect(screen.getByText('Test voice 1')).toBeInTheDocument();
@@ -204,7 +230,7 @@ describe('SimpleVerticalCarousel', () => {
 
   describe('Transform Styles', () => {
     it('should apply correct transform for current index', () => {
-      render(<SimpleVerticalCarousel intervalMs={1000} />);
+      renderCarousel(<SimpleVerticalCarousel intervalMs={1000} />);
 
       const transformContainer = screen
         .getByText('Test voice 1')
@@ -219,7 +245,7 @@ describe('SimpleVerticalCarousel', () => {
     });
 
     it('should have transition classes', () => {
-      render(<SimpleVerticalCarousel />);
+      renderCarousel(<SimpleVerticalCarousel />);
 
       const transformContainer = screen
         .getByText('Test voice 1')
@@ -234,7 +260,7 @@ describe('SimpleVerticalCarousel', () => {
 
   describe('Voice Item Structure', () => {
     it('should render all voice items', () => {
-      render(<SimpleVerticalCarousel />);
+      renderCarousel(<SimpleVerticalCarousel />);
 
       expect(screen.getByText('Test voice 1')).toBeInTheDocument();
       expect(screen.getByText('Test voice 2')).toBeInTheDocument();
@@ -242,7 +268,7 @@ describe('SimpleVerticalCarousel', () => {
     });
 
     it('should have correct CSS classes for voice items', () => {
-      render(<SimpleVerticalCarousel />);
+      renderCarousel(<SimpleVerticalCarousel />);
 
       const figure = screen.getByText('Test voice 1').closest('figure');
       expect(figure).toHaveClass('yk-uvm-item', 'max-w-full');
@@ -256,7 +282,7 @@ describe('SimpleVerticalCarousel', () => {
     });
 
     it('should render voice metadata with correct styling', () => {
-      render(<SimpleVerticalCarousel />);
+      renderCarousel(<SimpleVerticalCarousel />);
 
       const metadata = screen.getByText('User 1（20s）');
       expect(metadata).toHaveClass('yk-uvm-meta', 'block', 'mt-2', 'text-xs');
@@ -265,7 +291,7 @@ describe('SimpleVerticalCarousel', () => {
 
   describe('Default Props', () => {
     it('should use default values for optional props', () => {
-      render(<SimpleVerticalCarousel />);
+      renderCarousel(<SimpleVerticalCarousel />);
 
       const container = screen
         .getByText('Test voice 1')
@@ -284,9 +310,13 @@ describe('SimpleVerticalCarousel', () => {
     it('should cleanup interval on unmount', () => {
       const clearIntervalSpy = vi.spyOn(global, 'clearInterval');
 
-      const { unmount } = render(<SimpleVerticalCarousel intervalMs={1000} />);
+      const { unmount } = renderCarousel(
+        <SimpleVerticalCarousel intervalMs={1000} />,
+      );
 
-      unmount();
+      act(() => {
+        unmount();
+      });
 
       expect(clearIntervalSpy).toHaveBeenCalled();
 
@@ -294,13 +324,17 @@ describe('SimpleVerticalCarousel', () => {
     });
 
     it('should reset interval when props change', () => {
-      const { rerender } = render(<SimpleVerticalCarousel intervalMs={1000} />);
+      const { rerender } = renderCarousel(
+        <SimpleVerticalCarousel intervalMs={1000} />,
+      );
 
       act(() => {
         vi.advanceTimersByTime(500);
       });
 
-      rerender(<SimpleVerticalCarousel intervalMs={2000} />);
+      act(() => {
+        rerender(<SimpleVerticalCarousel intervalMs={2000} />);
+      });
 
       act(() => {
         vi.advanceTimersByTime(1500); // Should not advance yet with new interval

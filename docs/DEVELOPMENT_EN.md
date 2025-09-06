@@ -95,7 +95,7 @@ This section explains how to extend the application with new repositories and Pl
 
 ### Adding a New Repository
 
-1.  **Create the Repository Implementation:**
+1. **Create the Repository Implementation:**
     Create a new file under `src/yk/repo/`. For example, `src/yk/repo/example/repositories.example.ts`. Implement one or more of the repository interfaces.
 
     ```typescript
@@ -119,7 +119,7 @@ This section explains how to extend the application with new repositories and Pl
     }
     ```
 
-2.  **Wire into Provider Factory:**
+2. **Wire into Provider Factory:**
     In `src/yk/repo/core/repository-provider.ts`, update the factory functions (`getBattleReportRepository`, `getJudgementRepository`, etc.) to return your new repository implementation for the desired Play Mode.
 
     ```typescript
@@ -138,7 +138,7 @@ This section explains how to extend the application with new repositories and Pl
 
 ### Adding a New Play Mode
 
-1.  **Define the Play Mode:**
+1. **Define the Play Mode:**
     In `src/yk/play-mode.ts`, add a new `PlayMode` object.
 
     ```typescript
@@ -153,10 +153,10 @@ This section explains how to extend the application with new repositories and Pl
     };
     ```
 
-2.  **Implement Repositories:**
+2. **Implement Repositories:**
     Create the repository implementations for your new mode as described above.
 
-3.  **Update Provider Factories:**
+3. **Update Provider Factories:**
     In `src/yk/repo/core/repository-provider.ts`, add a new branch in the factory functions to handle your new `example-mode`. Use dynamic imports to lazy-load the repositories.
 
     ```typescript
@@ -174,7 +174,7 @@ This section explains how to extend the application with new repositories and Pl
     }
     ```
 
-4.  **Use the Mode in the UI:**
+4. **Use the Mode in the UI:**
     Update the UI to allow selecting the new Play Mode, which will then be passed to the `RepositoryProvider`.
 
 ## Testing
@@ -214,6 +214,95 @@ We use Vitest with React Testing Library for component testing:
 - `pnpm run test:storybook` - Run Storybook tests in browser
 - `pnpm run test:coverage` - Generate coverage report
 
+## TypeScript Build Layout
+
+The repository uses a layered tsconfig approach to balance strictness, fast
+editor feedback, and consistent declaration output:
+
+- `tsconfig.base.json`: Shared strict defaults (noEmit by default via root
+    tsconfig override). No DOM or Node specifics.
+- `tsconfig.env.dom.json` / `tsconfig.env.node.json`: Environment-specific
+    library targets (DOM vs NodeNext module resolution).
+- `tsconfig.role.app.json`: Web app role (React, JSX, declaration-only emit to
+    `node_modules/.types/app`). Enables `allowImportingTsExtensions` for Vite /
+    shadcn/ui interoperability and additional side-effect safety flags.
+- `packages/app/tsconfig.json`: Package entry that sets `baseUrl`, paths and
+    points declarationDir at the internal `.types` folder (kept out of `src`).
+- `tsconfig.role.package.json`: Generic library/package role (outputs to `dist`).
+- `packages/{types,schema,catalog}/tsconfig.json`: Thin wrappers over the
+    package role with `rootDir` / `outDir` only.
+- `tsconfig.role.seed.json`: DOM env + composite settings for seed data builds.
+- `data/*/tsconfig.json`: Three mirrored seed packages (battle-seeds,
+    news-seeds, historical-evidence) kept intentionally identical for symmetry.
+- `tsconfig.ops.json`: Node environment for operational / CLI scripts emitting
+    JS into `dist/ops`.
+
+Removed (2025-09): `packages/app/tsconfig.app.json` (redundant with role.app)
+to reduce divergence surface.
+
+Guidelines:
+
+1. Add new roles sparingly—prefer extending an existing role config.
+2. Keep environment concerns (DOM vs Node) separate from package roles.
+3. Prefer declaration-only emits where runtime bundlers (Vite) handle JS output.
+4. Mirror changes across the three seed tsconfig files when adjusting build
+    options (or introduce a new shared role file to de-duplicate).
+5. Document rationale for any non-standard compiler flags in the nearest
+    tsconfig comment block.
+
+Rationale for `allowImportingTsExtensions`: Some UI component templates and
+code mod tooling rely on explicit `.ts/.tsx` extensions—enabling this keeps
+the developer experience frictionless without relaxing broader strictness.
+
+### Error Classes
+
+Custom error hierarchies improve diagnosability and allow targeted handling:
+
+- `BattleSeedError` (base) -> `BattleSeedNotFoundError`, `BattleSeedValidationError`
+- `NewsReporterError` (base) -> `NewsReporterHttpError`, `NewsReporterDataError`
+
+Guidelines:
+
+1. Use the most specific error type possible when throwing.
+2. Tests should assert `instanceof` for critical error pathways (see `battle-seed-loader.test.ts`).
+3. Messages for user-facing CLI contexts should remain stable to avoid breaking snapshot / expectation tests.
+
+### CLI Operations Scripts
+
+Ops scripts live under `src/ops/` and provide data export utilities. Each supports `-h` / `--help`:
+
+- `export-battle-seeds-to-json.ts`
+- `export-users-voice-to-tsv.ts`
+- `export-usage-examples-to-tsv.ts`
+
+Usage pattern:
+
+```bash
+pnpm run ops:export-battle-seeds-to-json -- out/battles.json
+pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
+pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
+```
+
+Help example:
+
+```bash
+pnpm run ops:export-users-voice-to-tsv -- --help
+```
+
+Testing:
+
+- See `src/ops/__tests__/export-cli.test.ts` for stdout capture approach.
+- Help flags are verified to contain a `Usage:` line.
+
+### Deterministic Shuffle
+
+`shuffleArraySeeded` allows deterministic ordering for reproducible tests. Use when:
+
+1. The test depends on a specific shuffled order.
+2. You need to verify stable output across environments.
+
+Avoid injecting seeded randomness into production code paths unless reproducibility is explicitly required.
+
 ## Migration Notes
 
 ### Breaking Change (2025-09-02): `Winner` -> `Verdict`
@@ -230,7 +319,7 @@ type Verdict = {
     judgeCode?: string;
     powerDiff?: number;
 };
-```
+```text
 
 **Action Required:**
 
@@ -276,7 +365,7 @@ For data maintainers working with battle data, historical scenarios, or news sam
 
 ## Package Structure
 
-```
+```text
 yonokomae/
 ├── packages/
 │   ├── types/                    # Pure TypeScript types

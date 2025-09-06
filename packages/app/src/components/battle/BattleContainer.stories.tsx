@@ -1,9 +1,26 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { BattleContainer } from './BattleContainer';
-import { playMode } from '@/yk/play-mode';
+import { playMode, type PlayMode } from '@/yk/play-mode';
 import type { Battle } from '@yonokomae/types';
 
-const demoMode = playMode.find((m) => m.id === 'demo-en') ?? playMode[0];
+const demoMode: PlayMode = (() => {
+  const fallback: PlayMode = {
+    id: 'demo-fallback',
+    title: 'Demo Mode',
+    description: 'Demo mode for Storybook',
+    enabled: true,
+  };
+  const found = playMode.find((m) => m.id === 'demo-en') ?? playMode[0];
+  if (!found) return fallback;
+  return {
+    id: found.id ?? fallback.id,
+    title: found.title ?? fallback.title,
+    description:
+      (found as unknown as { description?: string }).description ??
+      fallback.description,
+    enabled: found.enabled ?? fallback.enabled,
+  } satisfies PlayMode;
+})();
 
 function makeSampleBattle(overrides?: Partial<Battle>): Battle {
   return {

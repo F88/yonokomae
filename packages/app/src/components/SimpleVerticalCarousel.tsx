@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { USER_VOICES } from '@/data/users-voice';
 import '@/components/UserVoicesMarquee.css';
+import { shuffleArray } from '@/lib/shuffle';
 
 export type SimpleVerticalCarouselProps = {
   shuffle?: boolean;
@@ -10,14 +11,6 @@ export type SimpleVerticalCarouselProps = {
   height?: string;
 };
 
-function shuffleArray<T>(arr: T[]): T[] {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 export const SimpleVerticalCarousel: React.FC<SimpleVerticalCarouselProps> = ({
   shuffle = false,

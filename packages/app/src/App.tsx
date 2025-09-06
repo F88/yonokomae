@@ -297,8 +297,12 @@ function App() {
         const updated = prev.map((b, i) =>
           i === insertedIndex ? { ...next, id: b.id } : b,
         );
-        lastIdAfterUpdate =
-          updated.length > 0 ? updated[updated.length - 1].id : undefined;
+        if (updated.length > 0) {
+          const last = updated[updated.length - 1];
+          lastIdAfterUpdate = last ? last.id : undefined;
+        } else {
+          lastIdAfterUpdate = undefined;
+        }
         return updated;
       });
       // If the real content is taller than the placeholder, it may end up overlapped by the header.
@@ -417,19 +421,23 @@ function App() {
           {mode != null && reports.length > 0 && (
             <section className="mx-auto w-full max-w-[2800px]">
               <div className={`${gridCols} gap-4 lg:gap-6`}>
-                {reports.map((battle: Battle) => (
-                  <div
-                    key={battle.id}
-                    id={battle.id}
-                    className="scroll-mt-[72px] lg:scroll-mt-[96px]"
-                  >
-                    <BattleContainer
-                      battle={battle}
-                      mode={mode}
-                      // showMetaData
-                    />
-                  </div>
-                ))}
+                {reports.map((battle: Battle) => {
+                  if (!battle) return null; // defensive (strict + future-proof)
+                  if (!battle.id) return null;
+                  return (
+                    <div
+                      key={battle.id}
+                      id={battle.id}
+                      className="scroll-mt-[72px] lg:scroll-mt-[96px]"
+                    >
+                      <BattleContainer
+                        battle={battle}
+                        mode={mode}
+                        // showMetaData
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </section>
           )}

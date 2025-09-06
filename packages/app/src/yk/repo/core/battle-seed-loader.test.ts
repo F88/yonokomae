@@ -3,6 +3,8 @@ import {
   loadBattleFromSeeds,
   normalizeBattle,
   type BattleModule,
+  BattleSeedNotFoundError,
+  BattleSeedValidationError,
 } from './battle-seed-loader';
 
 // Mock the dependencies
@@ -86,6 +88,13 @@ describe('battle-seed-loader', () => {
           roots: ['/nonexistent-root/'],
         }),
       ).rejects.toThrow('No battle seeds found under: /nonexistent-root/');
+      try {
+        await loadBattleFromSeeds({ roots: ['/nonexistent-root/'] });
+        expect.unreachable();
+      } catch (e) {
+        expect(e).toBeInstanceOf(BattleSeedNotFoundError);
+        expect((e as Error).name).toBe('BattleSeedNotFoundError');
+      }
     });
 
     it('throws error when specific file not found', async () => {
@@ -95,19 +104,33 @@ describe('battle-seed-loader', () => {
           file: 'nonexistent-file.json',
         }),
       ).rejects.toThrow('Battle not found: nonexistent-file.json');
+      try {
+        await loadBattleFromSeeds({
+          roots: ['@yonokomae/data-battle-seeds/'],
+          file: 'nonexistent-file.json',
+        });
+        expect.unreachable();
+      } catch (e) {
+        expect(e).toBeInstanceOf(BattleSeedNotFoundError);
+      }
     });
 
     it('throws error when battle data is invalid', async () => {
       const mockSchema = await import('@yonokomae/schema');
-      vi.mocked(mockSchema.BattleSchema.safeParse).mockReturnValueOnce({
-        success: false,
-        error: {
-          issues: [
-            { path: ['title'], message: 'Required' },
-            { path: ['power'], message: 'Invalid number' },
-          ],
-        },
-      } as any);
+      // Make every invocation in this test return a validation failure so we can
+      // assert both the rejection message and the error class via a second call.
+      vi.mocked(mockSchema.BattleSchema.safeParse).mockImplementation(
+        () =>
+          ({
+            success: false,
+            error: {
+              issues: [
+                { path: ['title'], message: 'Required' },
+                { path: ['power'], message: 'Invalid number' },
+              ],
+            },
+          }) as any,
+      );
 
       await expect(
         loadBattleFromSeeds({
@@ -117,6 +140,16 @@ describe('battle-seed-loader', () => {
       ).rejects.toThrow(
         'Invalid Battle data: title: Required; power: Invalid number',
       );
+      try {
+        await loadBattleFromSeeds({
+          roots: ['@yonokomae/data-battle-seeds/'],
+          file: 'test-battle-1.json',
+        });
+        expect.unreachable();
+      } catch (e) {
+        expect(e).toBeInstanceOf(BattleSeedValidationError);
+        expect((e as Error).name).toBe('BattleSeedValidationError');
+      }
     });
 
     it('works with legacy filesystem-style roots', async () => {

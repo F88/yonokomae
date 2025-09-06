@@ -35,7 +35,62 @@ export class DemoBattleReportRepository implements BattleReportRepository {
   async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
     await applyDelay(this.delay, options?.signal);
     const patterns = this.pack.patterns;
-    const pick = patterns[Math.floor(Math.random() * patterns.length)];
+    if (patterns.length === 0) {
+      // Fallback empty battle (ensures type soundness under strict + noUncheckedIndexedAccess)
+      return {
+        id: uid('battle'),
+        themeId: 'history',
+        significance: 'low',
+        title: 'No Patterns Available',
+        subtitle: '',
+        narrative: { overview: '', scenario: '' },
+        yono: {
+          imageUrl: 'about:blank',
+          title: '',
+          subtitle: '',
+          description: '',
+          power: 50,
+        },
+        komae: {
+          imageUrl: 'about:blank',
+          title: '',
+          subtitle: '',
+          description: '',
+          power: 50,
+        },
+        status: 'success',
+        provenance: [],
+      } satisfies Battle;
+    }
+    const pickIndex = Math.floor(Math.random() * patterns.length);
+    const pick = patterns[pickIndex];
+    if (!pick) {
+      // Should not happen, but keep defensive
+      return {
+        id: uid('battle'),
+        themeId: 'history',
+        significance: 'low',
+        title: 'Pattern Load Error',
+        subtitle: '',
+        narrative: { overview: '', scenario: '' },
+        yono: {
+          imageUrl: 'about:blank',
+          title: '',
+          subtitle: '',
+          description: '',
+          power: 50,
+        },
+        komae: {
+          imageUrl: 'about:blank',
+          title: '',
+          subtitle: '',
+          description: '',
+          power: 50,
+        },
+        status: 'error',
+        provenance: [],
+      } satisfies Battle;
+    }
     return {
       id: uid('battle'),
       themeId: pick.themeId,

@@ -1,13 +1,20 @@
 {
   "extends": "./tsconfig.base.json",
+  "files": [],
   "compilerOptions": {
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
-    },
-    "allowSyntheticDefaultImports": true,
-    "noEmit": true
+      "@/*": ["./packages/app/src/*"]
+    }
   },
-  "files": [],
-  "references": [{ "path": "./packages/app/tsconfig.app.json" }]
+  "references": [
+    { "path": "./packages/app" },
+    { "path": "./packages/types" },
+    { "path": "./packages/schema" },
+    { "path": "./packages/catalog" },
+    { "path": "./data/battle-seeds" },
+    { "path": "./data/news-seeds" },
+    { "path": "./data/historical-evidence" }
+  ]
 }

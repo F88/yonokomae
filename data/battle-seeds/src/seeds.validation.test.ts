@@ -1,7 +1,7 @@
 import { BattleSchema } from '@yonokomae/schema';
 import type { Battle } from '@yonokomae/types';
 import { describe, expect, it } from 'vitest';
-import { battleSeeds } from './index.js';
+import { battleSeeds } from './index';
 
 describe('Battle Seeds Validation', () => {
   it('should have unique battle IDs', () => {

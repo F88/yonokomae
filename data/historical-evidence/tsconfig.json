@@ -1,11 +1,10 @@
+// See battle-seeds/tsconfig.json for rationale — kept mirrored intentionally.
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.role.seed.json",
   "compilerOptions": {
-    "lib": ["ES2020"],
-    "noEmit": false,
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "src",
+    "outDir": "dist"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "exclude": ["dist", "**/*.test.ts"]
 }

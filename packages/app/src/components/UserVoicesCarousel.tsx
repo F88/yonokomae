@@ -10,6 +10,7 @@ import {
 import Autoplay from 'embla-carousel-autoplay';
 import '@/components/UserVoicesMarquee.css';
 import { prefersReducedMotion } from '@/lib/reduced-motion';
+import { shuffleArray } from '@/lib/shuffle';
 
 export type UserVoicesCarouselProps = {
   shuffle?: boolean;
@@ -22,14 +23,6 @@ export type UserVoicesCarouselProps = {
   showControls?: boolean;
 };
 
-function shuffleArray<T>(arr: T[]): T[] {
-  const a = arr.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 export const UserVoicesCarousel: React.FC<UserVoicesCarouselProps> = ({
   shuffle = false,

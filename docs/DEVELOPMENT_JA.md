@@ -214,6 +214,32 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 - `pnpm run test:storybook` - ブラウザで Storybook テストを実行
 - `pnpm run test:coverage` - カバレッジレポートを生成
 
+## TypeScript ビルド構成
+
+このリポジトリはレイヤード tsconfig 戦略を用いて、厳格性 / エディタ反応速度 / 一貫した型生成を両立しています:
+
+- `tsconfig.base.json`: 共有の厳格デフォルト (ルート tsconfig 側で noEmit 指定)。DOM/Node 依存なし。
+- `tsconfig.env.dom.json` / `tsconfig.env.node.json`: 環境別ライブラリ設定 (DOM vs NodeNext)。
+- `tsconfig.role.app.json`: Web アプリ用 (React / JSX / 型のみ出力 `.types/app`)。Vite / shadcn/ui 互換のため `allowImportingTsExtensions` を有効化し副作用安全系フラグも追加。
+- `packages/app/tsconfig.json`: パッケージエントリ (`baseUrl` / paths / declarationDir 設定)。
+- `tsconfig.role.package.json`: 汎用ライブラリロール (出力先 `dist`)。
+- `packages/{types,schema,catalog}/tsconfig.json`: role.package を薄く継承し `rootDir` と `outDir` のみ設定。
+- `tsconfig.role.seed.json`: シードデータビルド用 (DOM 環境 + composite)。
+- `data/*/tsconfig.json`: 3 つのシードパッケージ (battle, news, historical) は対称性のため完全に同一。
+- `tsconfig.ops.json`: 運用/CLI 用 Node 環境 (出力 `dist/ops`)。
+
+削除 (2025-09): `packages/app/tsconfig.app.json` (role.app と冗長) により分岐点を削減。
+
+ガイドライン:
+
+1. 新しい role の追加は最小限にし既存継承を優先。
+2. 環境 (DOM/Node) とパッケージ役割を分離。
+3. JS 出力はバンドラ (Vite) に任せ型のみ emit を優先。
+4. シード tsconfig を変更する際は 3 つ全てを同期 (もしくは共有 role 追加で重複排除)。
+5. 非標準フラグの理由は近接する tsconfig コメントに記述。
+
+`allowImportingTsExtensions` の理由: 明示的 `.ts/.tsx` 拡張子に依存する一部 UI テンプレート/コードモッドとの摩擦を避けるため。
+
 ## 移行ノート
 
 ### 破壊的変更 (2025-09-02): `Winner` -> `Verdict`
@@ -276,7 +302,7 @@ type Verdict = {
 
 ## パッケージ構造
 
-```
+```text
 yonokomae/
 ├── packages/
 │   ├── types/                    # 純粋 TypeScript 型

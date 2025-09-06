@@ -29,21 +29,55 @@ export async function loadBattleFromSeeds(params: {
   const mods = mergeGlobs();
   const files = listRelativeFiles(mods, roots);
   if (files.length === 0) {
-    throw new Error(`No battle seeds found under: ${roots.join(', ')}`);
+    throw new BattleSeedNotFoundError(roots, 'No battle seeds found under');
   }
-  const target = file ?? files[Math.floor(Math.random() * files.length)];
+  const target =
+    file ??
+    (files.length > 0
+      ? files[Math.floor(Math.random() * files.length)]
+      : undefined);
+  if (!target) {
+    throw new BattleSeedNotFoundError(
+      roots,
+      'No target battle file resolved from roots',
+    );
+  }
   const battle = getModuleFor(mods, roots, target);
-  if (!battle) throw new Error(`Battle not found: ${target}`);
+  if (battle === undefined) {
+    throw new BattleSeedNotFoundError(roots, `Battle not found: ${target}`);
+  }
   const result = BattleSchema.safeParse(battle);
   if (!result.success) {
-    throw new Error(
-      'Invalid Battle data: ' +
-        result.error.issues
-          .map((i) => `${i.path.join('.')}: ${i.message}`)
-          .join('; '),
+    throw new BattleSeedValidationError(
+      result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`),
     );
   }
   return result.data;
+}
+
+export class BattleSeedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'BattleSeedError';
+  }
+}
+
+export class BattleSeedNotFoundError extends BattleSeedError {
+  readonly roots: string[];
+  constructor(roots: string[], detail: string) {
+    super(`${detail}: ${roots.join(', ')}`);
+    this.name = 'BattleSeedNotFoundError';
+    this.roots = roots;
+  }
+}
+
+export class BattleSeedValidationError extends BattleSeedError {
+  readonly issues: string[];
+  constructor(issues: string[]) {
+    super('Invalid Battle data: ' + issues.join('; '));
+    this.name = 'BattleSeedValidationError';
+    this.issues = issues;
+  }
 }
 
 function mergeGlobs(): Record<string, Battle> {

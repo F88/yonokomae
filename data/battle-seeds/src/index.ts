@@ -10,32 +10,32 @@ import hwmbKomaeJa from './battle/hwmb-komae-independence.ja';
 // import yonoKomaeAgricultureJa from './battle/yono-komae-agriculture.ja.js';
 // import yonoKomaeAreaComparisonJa from './battle/yono-komae-area-comparison.ja.js';
 // import yonoKomaeCommutingFlowsJa from './battle/yono-komae-commuting-flows.ja.js';
-import yonoKomaeFisheriesJa from './battle/yono-komae-fisheries.ja.js';
-import yonoKomaeGeomorphologyHydrologyJa from './battle/yono-komae-geomorphology-hydrology.ja.js';
-import yonoKomaeIndustryGrowthJa from './battle/yono-komae-industry-growth.ja.js';
+import yonoKomaeFisheriesJa from './battle/yono-komae-fisheries.ja';
+import yonoKomaeGeomorphologyHydrologyJa from './battle/yono-komae-geomorphology-hydrology.ja';
+import yonoKomaeIndustryGrowthJa from './battle/yono-komae-industry-growth.ja';
 // import yonoKomaeMeteorologyJa from './battle/yono-komae-meteorology.ja.js';
 // import yonoKomaePopulationTrendsJa from './battle/yono-komae-population-trends.ja.js';
 // import yonoKomaeSocioeconomicJa from './battle/yono-komae-socioeconomic.ja.js';
-import cityNameOriginJa from './battle/city-name-origin.ja.js';
+import cityNameOriginJa from './battle/city-name-origin.ja';
 
 // Import new battle files
-import celebrityBattle from './battle/celebrity-battle.ja.js';
-import showaSuperstarBattle from './battle/showa-superstar-battle.ja.js';
-import edoEraHeroes from './battle/edo-era-heroes.ja.js';
-import sengokuTerritory from './battle/sengoku-territory.ja.js';
-import ancientLifeBattle from './battle/ancient-life-battle.ja.js';
-import ruinsBattle from './battle/ruins-battle.ja.js';
-import developmentBattle from './battle/development-battle.ja.js';
-import floodBattle from './battle/flood-battle.ja.js';
-import transportationHubBattle from './battle/transportation-hub-battle.ja.js';
-import cultureBattle from './battle/culture-battle.ja.js';
-import densityBattle from './battle/density-battle.ja.js';
-import ikadaRace from './battle/ikada-race.ja.js';
-import civicTechBattle from './battle/civic-tech-battle.ja.js';
-import coderDojoBattle from './battle/coder-dojo-battle.ja.js';
-import robotEthics from './battle/robot-ethics.ja.js';
-import snsTruthVsLies from './battle/sns-truth-vs-lies.ja.js';
-import wikipediaJaBattle from './battle/wikipedia-ja-battle.ja.js';
+import celebrityBattle from './battle/celebrity-battle.ja';
+import showaSuperstarBattle from './battle/showa-superstar-battle.ja';
+import edoEraHeroes from './battle/edo-era-heroes.ja';
+import sengokuTerritory from './battle/sengoku-territory.ja';
+import ancientLifeBattle from './battle/ancient-life-battle.ja';
+import ruinsBattle from './battle/ruins-battle.ja';
+import developmentBattle from './battle/development-battle.ja';
+import floodBattle from './battle/flood-battle.ja';
+import transportationHubBattle from './battle/transportation-hub-battle.ja';
+import cultureBattle from './battle/culture-battle.ja';
+import densityBattle from './battle/density-battle.ja';
+import ikadaRace from './battle/ikada-race.ja';
+import civicTechBattle from './battle/civic-tech-battle.ja';
+import coderDojoBattle from './battle/coder-dojo-battle.ja';
+import robotEthics from './battle/robot-ethics.ja';
+import snsTruthVsLies from './battle/sns-truth-vs-lies.ja';
+import wikipediaJaBattle from './battle/wikipedia-ja-battle.ja';
 
 // Collect all battles in a map
 const battleMap: Record<string, Battle> = {

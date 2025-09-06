@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { uid } from './id';
+import { ensureString } from '@/test-utils/ensure';
 
 describe('id utilities', () => {
   beforeEach(() => {
@@ -38,9 +39,12 @@ describe('id utilities', () => {
       const id2 = uid('test');
       const id3 = uid('test');
 
-      const [, , counter1] = id1.split('-');
-      const [, , counter2] = id2.split('-');
-      const [, , counter3] = id3.split('-');
+      const parts1 = id1.split('-');
+      const parts2 = id2.split('-');
+      const parts3 = id3.split('-');
+      const counter1 = ensureString(parts1[2], 'counter1');
+      const counter2 = ensureString(parts2[2], 'counter2');
+      const counter3 = ensureString(parts3[2], 'counter3');
 
       expect(parseInt(counter2)).toBe(parseInt(counter1) + 1);
       expect(parseInt(counter3)).toBe(parseInt(counter2) + 1);
@@ -58,7 +62,8 @@ describe('id utilities', () => {
       const timestamp = testTime.getTime().toString(36);
 
       expect(id).toContain(timestamp);
-      expect(id.split('-')[1]).toBe(timestamp);
+      const part = ensureString(id.split('-')[1], 'timestamp');
+      expect(part).toBe(timestamp);
     });
 
     it('should handle empty string prefix', () => {
@@ -85,8 +90,8 @@ describe('id utilities', () => {
       expect(id1).not.toBe(id2);
 
       // Timestamps should be different
-      const timestamp1 = id1.split('-')[1];
-      const timestamp2 = id2.split('-')[1];
+      const timestamp1 = ensureString(id1.split('-')[1], 'timestamp1');
+      const timestamp2 = ensureString(id2.split('-')[1], 'timestamp2');
       expect(timestamp1).not.toBe(timestamp2);
     });
 
@@ -96,8 +101,8 @@ describe('id utilities', () => {
       const id1 = uid('prefix1');
       const id2 = uid('prefix2');
 
-      const counter1 = parseInt(id1.split('-')[2]);
-      const counter2 = parseInt(id2.split('-')[2]);
+      const counter1 = parseInt(ensureString(id1.split('-')[2], 'counter1'));
+      const counter2 = parseInt(ensureString(id2.split('-')[2], 'counter2'));
 
       expect(counter2).toBe(counter1 + 1);
     });
@@ -172,7 +177,8 @@ describe('id utilities', () => {
         const { uid: freshUid } = await import('./id');
         const id = freshUid();
         const expectedTimestamp = testTime.getTime().toString(36);
-        expect(id.split('-')[1]).toBe(expectedTimestamp);
+        const tsPart = ensureString(id.split('-')[1], 'expectedTimestamp');
+        expect(tsPart).toBe(expectedTimestamp);
       }
     });
   });
@@ -180,10 +186,10 @@ describe('id utilities', () => {
   describe('Counter state management', () => {
     it('should persist counter across module reloads in same test', () => {
       const id1 = uid();
-      const counter1 = parseInt(id1.split('-')[2]);
+      const counter1 = parseInt(ensureString(id1.split('-')[2], 'counter1'));
 
       const id2 = uid();
-      const counter2 = parseInt(id2.split('-')[2]);
+      const counter2 = parseInt(ensureString(id2.split('-')[2], 'counter2'));
 
       expect(counter2).toBeGreaterThan(counter1);
     });
