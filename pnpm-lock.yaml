@@ -139,6 +139,21 @@ importers:
       '@yonokomae/catalog':
         specifier: workspace:*
         version: link:../catalog
+      '@yonokomae/data-battle-seeds':
+        specifier: workspace:*
+        version: link:../../data/battle-seeds
+      '@yonokomae/data-historical-evidence':
+        specifier: workspace:*
+        version: link:../../data/historical-evidence
+      '@yonokomae/data-news-seeds':
+        specifier: workspace:*
+        version: link:../../data/news-seeds
+      '@yonokomae/schema':
+        specifier: workspace:*
+        version: link:../schema
+      '@yonokomae/types':
+        specifier: workspace:*
+        version: link:../types
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
