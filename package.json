@@ -21,7 +21,7 @@
     "dev:api": "VITE_API_BASE_URL=http://localhost:8787/api pnpm run dev",
     "build": "pnpm -r --sort build",
     "build:app": "pnpm --filter @yonokomae/app build",
-    "build:ghpages": "pnpm -r --sort build && VITE_BASE_PATH=/yonokomae/ pnpm run build:app",
+    "build:ghpages": "pnpm -r --sort build && VITE_BASE_PATH=/yonokomae/ pnpm run build:app && cp packages/app/dist/index.html packages/app/dist/404.html",
     "build:packages": "pnpm -r --filter './packages/*' --filter './data/*' build",
     "clean": "pnpm -r clean",
     "lint": "eslint .",
@@ -32,7 +32,7 @@
     "ci:typecheck": "tsc -b --pretty false",
     "preview": "pnpm --filter @yonokomae/app preview",
     "mock-api": "node ./mock-api/server.ts",
-    "deploy:ghpages": "pnpm run build:ghpages && gh-pages -d dist -m \"Updates --skip-ci\"",
+    "deploy:ghpages": "pnpm run build:ghpages && gh-pages -d packages/app/dist -m \"deploy: gh-pages --skip-ci\"",
     "test": "pnpm --filter @yonokomae/app test",
     "test:watch": "pnpm --filter @yonokomae/app test:watch",
     "test:unit": "pnpm --filter @yonokomae/app test:unit",
@@ -51,7 +51,7 @@
     "e2e:report": "playwright show-report",
     "storybook": "pnpm --filter @yonokomae/app storybook",
     "build-storybook": "pnpm --filter @yonokomae/app build-storybook",
-    "chromatic": "chromatic --exit-zero-on-changes"
+    "chromatic": "pnpm --filter @yonokomae/app chromatic --exit-zero-on-changes"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.10.2",
