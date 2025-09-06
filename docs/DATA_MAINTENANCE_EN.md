@@ -64,9 +64,9 @@ Each package is independent and can be maintained separately while sharing commo
 
 **Purpose**: Statistical battles between Yono and Komae using real municipal data.
 
-**File Location**: `data/battle-seeds/src/battle/`  
-**File Pattern**: `yono-komae-{topic}.ja.ts`  
-**Type**: `Battle` from `@yonokomae/types`  
+**File Location**: `data/battle-seeds/src/battle/`
+**File Pattern**: `yono-komae-{topic}.ja.ts`
+**Type**: `Battle` from `@yonokomae/types`
 **Validation**: `BattleSchema` from `@yonokomae/schema`
 
 **Examples**:
@@ -91,7 +91,7 @@ Each package is independent and can be maintained separately while sharing commo
 - `{scenario-name}.en.ts` (English version)
 - `{scenario-name}.ja.ts` (Japanese version)
 
-**Type**: `HistoricalSeed` from `@yonokomae/types`  
+**Type**: `HistoricalSeed` from `@yonokomae/types`
 **Validation**: `HistoricalSeedSchema` from `@yonokomae/schema`
 
 **Examples**:
@@ -105,9 +105,9 @@ Each package is independent and can be maintained separately while sharing commo
 
 **Purpose**: News-style sample battles for demonstration and testing.
 
-**File Location**: `data/news-seeds/src/samples/`  
-**File Pattern**: `news-sample-{number}.ts`  
-**Type**: `Battle` from `@yonokomae/types`  
+**File Location**: `data/news-seeds/src/samples/`
+**File Pattern**: `news-sample-{number}.ts`
+**Type**: `Battle` from `@yonokomae/types`
 **Validation**: `BattleSchema` from `@yonokomae/schema`
 
 **Examples**:
@@ -154,10 +154,16 @@ cd data/battle-seeds/     # or historical-evidence/ or news-seeds/
 pnpm test
 ```
 
-Or test all packages from the root:
+Or test all packages from the root (app + validation focused):
 
 ```bash
 pnpm test
+```
+
+To run every workspace package's own test script (including internal ones if added), you can also use:
+
+```bash
+pnpm run test:all
 ```
 
 ### Commit Message Conventions
@@ -229,4 +235,4 @@ All data packages share common types from:
 - **Historical Evidence**: [docs/data/HISTORICAL_EVIDENCE_SEEDS_EN.md](data/HISTORICAL_EVIDENCE_SEEDS_EN.md)
 - **News Seeds**: [docs/data/NEWS_SEEDS_EN.md](data/NEWS_SEEDS_EN.md)
 - **Development Overview**: `docs/DEVELOPMENT_EN.md`
-- **RFC Document**: `docs/RFC_pnpm-monorepo-historical-evidence-seeds.md`
+- (RFC document reference removed – consolidated into the Development Guide.)

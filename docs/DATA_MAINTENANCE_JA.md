@@ -64,9 +64,9 @@ instructions-for-ais:
 
 **目的**: 実際の自治体データを使用した与野と狛江の統計的バトル。
 
-**ファイル場所**: `data/battle-seeds/src/battle/`  
-**ファイルパターン**: `yono-komae-{topic}.ja.ts`  
-**型**: `@yonokomae/types` の `Battle`  
+**ファイル場所**: `data/battle-seeds/src/battle/`
+**ファイルパターン**: `yono-komae-{topic}.ja.ts`
+**型**: `@yonokomae/types` の `Battle`
 **検証**: `@yonokomae/schema` の `BattleSchema`
 
 **例**:
@@ -91,7 +91,7 @@ instructions-for-ais:
 - `{scenario-name}.en.ts` (英語版)
 - `{scenario-name}.ja.ts` (日本語版)
 
-**型**: `@yonokomae/types` の `HistoricalSeed`  
+**型**: `@yonokomae/types` の `HistoricalSeed`
 **検証**: `@yonokomae/schema` の `HistoricalSeedSchema`
 
 **例**:
@@ -105,9 +105,9 @@ instructions-for-ais:
 
 **目的**: デモンストレーション・テスト用のニューススタイルサンプルバトル。
 
-**ファイル場所**: `data/news-seeds/src/samples/`  
-**ファイルパターン**: `news-sample-{number}.ts`  
-**型**: `@yonokomae/types` の `Battle`  
+**ファイル場所**: `data/news-seeds/src/samples/`
+**ファイルパターン**: `news-sample-{number}.ts`
+**型**: `@yonokomae/types` の `Battle`
 **検証**: `@yonokomae/schema` の `BattleSchema`
 
 **例**:
@@ -154,10 +154,16 @@ cd data/battle-seeds/     # または historical-evidence/ や news-seeds/
 pnpm test
 ```
 
-またはルートから全パッケージをテスト：
+またはルートから全パッケージをテスト（アプリ + バリデーション中心）:
 
 ```bash
 pnpm test
+```
+
+全ワークスペースの test スクリプト（将来的に追加される内部用を含む）を包括的に起動したい場合:
+
+```bash
+pnpm run test:all
 ```
 
 ### コミットメッセージ規約
@@ -229,4 +235,4 @@ pnpm test
 - **歴史的証拠**: [docs/data/HISTORICAL_EVIDENCE_SEEDS_JA.md](data/HISTORICAL_EVIDENCE_SEEDS_JA.md)
 - **ニュースシード**: [docs/data/NEWS_SEEDS_JA.md](data/NEWS_SEEDS_JA.md)
 - **開発概要**: `docs/DEVELOPMENT_JA.md`
-- **RFC 文書**: `docs/RFC_pnpm-monorepo-historical-evidence-seeds.md`
+- （旧 RFC 文書参照は統合のため削除。開発ガイドに集約。）

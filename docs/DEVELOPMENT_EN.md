@@ -27,6 +27,8 @@ The application follows a modular pnpm monorepo architecture with clear separati
 - **Data Packages**: Independent packages (`data/battle-seeds/`, `data/historical-evidence/`, `data/news-seeds/`) containing game data.
 - **Type Packages**: Shared type definitions (`packages/types/`) and validation schemas (`packages/schema/`).
 
+> Note: All source code paths shown below (e.g. `src/yk/...`) are relative to `packages/app/`. The main application lives in `packages/app/src/` – there is no `src/` directory at the repository root.
+
 ### Data Flow and Dependency Injection
 
 The `RepositoryProvider` is the central piece for dependency injection. It ensures that components receive the correct repository instances for the active Play Mode.
@@ -177,6 +179,113 @@ This section explains how to extend the application with new repositories and Pl
 4. **Use the Mode in the UI:**
    Update the UI to allow selecting the new Play Mode, which will then be passed to the `RepositoryProvider`.
 
+## Workspace & Dependency Management
+
+The repository uses a single pnpm workspace (`pnpm-workspace.yaml`) with three glob groups:
+
+```yaml
+packages:
+    - 'packages/*' # app, catalog, schema, types (library / app code)
+    - 'data/*' # seed data packages
+    - 'packages/app' # explicit path (redundant but keeps order intent clear)
+```
+
+### Internal Package Naming
+
+All internal published-style packages use the `@yonokomae/*` scope:
+
+- Application: `@yonokomae/app` (not published, but scoped for consistency)
+- Libraries: `@yonokomae/types`, `@yonokomae/schema`, `@yonokomae/catalog`
+- Data: `@yonokomae/data-battle-seeds`, `@yonokomae/data-historical-evidence`, `@yonokomae/data-news-seeds`
+
+Use `"workspace:*"` as the version range for cross-package deps to ensure local linking and avoid accidental mismatches.
+
+### Adding a New Internal Package (Library)
+
+1. Create directory: `packages/<name>/`
+2. Add `package.json`:
+    ```json
+    {
+        "name": "@yonokomae/<name>",
+        "version": "0.0.0",
+        "type": "module",
+        "main": "dist/index.js",
+        "exports": {
+            ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+        },
+        "files": ["dist"],
+        "scripts": { "build": "tsc -p tsconfig.json" },
+        "dependencies": {},
+        "devDependencies": {}
+    }
+    ```
+3. Add `tsconfig.json` extending `tsconfig.role.package.json` (or `tsconfig.role.seed.json` for seed-type data) with appropriate `rootDir`/`outDir`.
+4. Implement code under `src/` (avoid top-level JS files for tree clarity).
+5. Run `pnpm install` (link + ensure lockfile update).
+6. Add any new words/types to documentation if public surface (glossary update if needed).
+
+### Adding a New Data Package
+
+Mirror an existing data package for structure symmetry to keep validation and build scripts uniform. Ensure:
+
+- `type` stays `module`.
+- Validation tests live in the app repo (do not duplicate heavy test infra inside each data package).
+- Consistent tsconfig (copy one of the existing three; keep them aligned).
+
+### Dependency Guidelines
+
+- `dependencies`: Required at runtime by the built artifact or consumer.
+- `devDependencies`: Build, test, lint, type tooling only.
+- Avoid adding heavy transitive dependencies to seed/data packages; keep them pure data + minimal schema validation.
+- Prefer intra-repo reuse over re-implementing small utilities; if shared logic emerges, extract into a new scoped package.
+- Do **not** depend on `@yonokomae/app` from any package (app is the leaf / consumer layer).
+- Keep dependency graph acyclic: data -> (types/schema), libs -> (types/schema), app -> (all).
+
+### Versioning & Changesets
+
+A `.changeset/` directory exists for release notes & version bumps. Although packages may not currently be published externally, follow the flow:
+
+- Create changeset when a package public API or schema meaning changes.
+- Use conventional commit prefixes (`feat:`, `fix:`, `docs:`) inside changeset summary for clarity.
+- Mark breaking doc changes with `!` in commit scope if they alter consumer expectations.
+
+### Useful pnpm Filters
+
+```bash
+pnpm --filter @yonokomae/app dev            # run app only
+pnpm --filter @yonokomae/types test         # test a single lib
+pnpm --filter ./data/battle-seeds build     # path-based filter
+pnpm -r exec echo {name}                    # list all workspace package names
+```
+
+### Build Order
+
+`pnpm -r --sort build` leverages dependency graph ordering:
+
+1. Types / schema / catalog
+2. Data packages (if they reference types / schema)
+3. App (consumes all)
+
+Project references (`composite: true`) plus `--sort` guarantee declarations are ready before dependents build.
+
+### Common Issues / Diagnostics
+
+| Symptom                            | Likely Cause                              | Fix                                          |
+| ---------------------------------- | ----------------------------------------- | -------------------------------------------- |
+| Type not found across packages     | Missing `references` or out-of-date build | Run `pnpm -r build` then retry typecheck     |
+| Stale generated d.ts               | Editor using old `.types`                 | Delete `node_modules/.types` in app; rebuild |
+| Unexpected version bump suggestion | Missing changeset categorization          | Add or adjust a changeset file               |
+
+### When to Split a New Package
+
+Split only when at least one of:
+
+- Code is reused by both app and data packages.
+- Build time for app grows due to unrelated module changes.
+- Domain concept (e.g., catalog enumerations) stabilizes and merits isolation.
+
+Otherwise keep code colocated to reduce fragmentation.
+
 ## Testing
 
 For detailed testing guidelines, see [TESTING.md](TESTING.md).
@@ -237,8 +346,7 @@ editor feedback, and consistent declaration output:
 - `tsconfig.ops.json`: Node environment for operational / CLI scripts emitting
   JS into `dist/ops`.
 
-Removed (2025-09): `packages/app/tsconfig.app.json` (redundant with role.app)
-to reduce divergence surface.
+> Note: `packages/app/tsconfig.app.json` currently remains in the repository as a transitional config (historically intended for removal). It co-exists with the role file and will be deprecated once remaining consumers are migrated. Until then, treat documentation referring to its removal as obsolete.
 
 Guidelines:
 
@@ -312,14 +420,19 @@ The `JudgementRepository.determineWinner` method now returns a structured `Verdi
 - **Old:** `Promise<'YONO' | 'KOMAE' | 'DRAW'>`
 - **New:** `Promise<Verdict>`
 
-````typescript
+```typescript
 type Verdict = {
     winner: 'YONO' | 'KOMAE' | 'DRAW';
     reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
     judgeCode?: string;
+    /** yono.power - komae.power */
     powerDiff?: number;
+    /** sampled random number (0..1) when randomness participates */
+    rng?: number;
+    /** optional confidence score (0..1) for future model-based judges */
+    confidence?: number;
 };
-```text
+```
 
 **Action Required:**
 
@@ -368,13 +481,16 @@ For data maintainers working with battle data, historical scenarios, or news sam
 ```text
 yonokomae/
 ├── packages/
-│   ├── types/                    # Pure TypeScript types
+│   ├── app/                      # Main web application (React, hooks, repos)
+│   ├── catalog/                  # Domain catalogs / enumerations
+│   ├── types/                    # Shared TypeScript types
 │   └── schema/                   # Zod validation schemas
 ├── data/
 │   ├── battle-seeds/             # Statistical battle data
 │   ├── historical-evidence/      # Historical scenario data
-│   └── news-seeds/              # News-style sample data
-├── src/                         # Main application
-├── e2e/                         # End-to-end tests
-└── docs/                        # Documentation
-````
+│   └── news-seeds/               # News-style sample data
+├── docs/                         # Documentation (English source of truth)
+├── e2e/                          # End-to-end tests (Playwright)
+├── mock-api/                     # Local mock API server
+└── (no root src/ directory – app code is under packages/app/src/)
+```

@@ -130,6 +130,9 @@ pnpm run test:unit
 # 全テスト実行（データパッケージ検証を含む）
 pnpm test
 
+# 全ワークスペースの test スクリプトを包括実行
+pnpm run test:all
+
 # 個別データパッケージのテスト
 cd data/battle-seeds && pnpm test
 cd data/historical-evidence && pnpm test
@@ -140,16 +143,21 @@ cd data/news-seeds && pnpm test
 
 新バージョンをリリースする準備ができたら、以下の手順に従います:
 
-1.  **バージョンバンプ**: `changeset version` コマンドを実行します。これにより全チェンジセットファイルが消費され、パッケージバージョンと `CHANGELOG.md` が更新されます。
-    ```bash
-    pnpm changeset version
-    ```
-2.  **リリースコミットとタグの作成**: 変更がコミットされ、新しいバージョンタグが作成されます。
-3.  **npm への公開（該当する場合）**: パッケージが npm レジストリに公開されます。
-4.  **GitHub Pages への展開**: アプリケーションが GitHub Pages に展開されます。
-    ```bash
-    pnpm run deploy:ghpages
-    ```
+1. **バージョンバンプ**: `changeset version` コマンドを実行します。これにより全チェンジセットファイルが消費され、パッケージバージョンと `CHANGELOG.md` が更新されます。
+
+```bash
+pnpm changeset version
+```
+
+1. **リリースコミットとタグの作成**: 変更がコミットされ、新しいバージョンタグが作成されます。
+2. **npm への公開（該当する場合）**: パッケージが npm レジストリに公開されます。
+3. **GitHub Pages への展開**: アプリケーションを GitHub Pages にデプロイ (詳細は Deployment Guide 参照)。
+
+```bash
+pnpm run deploy:ghpages
+```
+
+詳細 (base path / 404 fallback / トラブルシュート): `docs/DEPLOYMENT_JA.md` を参照。
 
 ## データエクスポートスクリプト
 

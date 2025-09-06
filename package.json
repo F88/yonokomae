@@ -34,6 +34,7 @@
     "mock-api": "node ./mock-api/server.ts",
     "deploy:ghpages": "pnpm run build:ghpages && gh-pages -d packages/app/dist -m \"deploy: gh-pages --skip-ci\"",
     "test": "pnpm --filter @yonokomae/app test",
+    "test:all": "pnpm -r --parallel --workspace-concurrency=1 test",
     "test:watch": "pnpm --filter @yonokomae/app test:watch",
     "test:unit": "pnpm --filter @yonokomae/app test:unit",
     "test:unit:watch": "pnpm --filter @yonokomae/app test:unit:watch",

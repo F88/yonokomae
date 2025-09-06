@@ -134,6 +134,19 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 - [Historical Evidence Guide](./docs/data/HISTORICAL_EVIDENCE_SEEDS_EN.md)
 - [News Seeds Guide](./docs/data/NEWS_SEEDS_EN.md)
 
+## Deployment (Summary)
+
+Static SPA deployed to GitHub Pages at `/yonokomae/` using scripts:
+
+| Script                    | Purpose                                                           |
+| ------------------------- | ----------------------------------------------------------------- |
+| `pnpm run build:ghpages`  | Build all packages, build app with base path, generate `404.html` |
+| `pnpm run deploy:ghpages` | Build + publish `packages/app/dist` to `gh-pages`                 |
+
+Essential rules: set `VITE_BASE_PATH=/yonokomae/`, publish `packages/app/dist`, duplicate `index.html` → `404.html`.
+
+Full details, troubleshooting matrix, and manual workflow: see [Deployment Guide](./docs/DEPLOYMENT_EN.md).
+
 ## Roadmap
 
 ### Completed Features

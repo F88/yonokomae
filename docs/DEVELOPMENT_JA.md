@@ -228,7 +228,7 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 - `data/*/tsconfig.json`: 3 つのシードパッケージ (battle, news, historical) は対称性のため完全に同一。
 - `tsconfig.ops.json`: 運用/CLI 用 Node 環境 (出力 `dist/ops`)。
 
-削除 (2025-09): `packages/app/tsconfig.app.json` (role.app と冗長) により分岐点を削減。
+> 注: `packages/app/tsconfig.app.json` は移行期間中の暫定設定として残っています。`tsconfig.role.app.json` と併存し、依存箇所移行後に廃止予定です。過去の「削除済み」とする記述は古い情報です。
 
 ガイドライン:
 
@@ -254,7 +254,12 @@ type Verdict = {
     winner: 'YONO' | 'KOMAE' | 'DRAW';
     reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
     judgeCode?: string;
+    /** yono.power - komae.power */
     powerDiff?: number;
+    /** ランダム性が関与する場合の 0..1 サンプル値 */
+    rng?: number;
+    /** 将来のモデルベース判定向け信頼度 (0..1) */
+    confidence?: number;
 };
 ```
 
@@ -305,13 +310,123 @@ type Verdict = {
 ```text
 yonokomae/
 ├── packages/
-│   ├── types/                    # 純粋 TypeScript 型
+│   ├── app/                      # メイン Web アプリ (React / hooks / repos)
+│   ├── catalog/                  # ドメインカタログ / 列挙
+│   ├── types/                    # 共有 TypeScript 型
 │   └── schema/                   # Zod 検証スキーマ
 ├── data/
 │   ├── battle-seeds/             # 統計バトルデータ
 │   ├── historical-evidence/      # 歴史シナリオデータ
-│   └── news-seeds/              # ニュース風サンプルデータ
-├── src/                         # メインアプリケーション
-├── e2e/                         # エンドツーエンドテスト
-└── docs/                        # ドキュメント
+│   └── news-seeds/               # ニュース風サンプルデータ
+├── docs/                         # ドキュメント (英語がソース)
+├── e2e/                          # E2E テスト (Playwright)
+├── mock-api/                     # ローカルモック API サーバ
+└── (リポジトリ直下に root src/ は存在せず、アプリコードは packages/app/src/ 配下)
 ```
+
+## Workspace と依存関係管理
+
+このリポジトリは単一の pnpm workspace (`pnpm-workspace.yaml`) を使用し、3 つのグロブグループを定義しています:
+
+```yaml
+packages:
+    - 'packages/*' # app, catalog, schema, types (ライブラリ / アプリコード)
+    - 'data/*' # シードデータパッケージ
+    - 'packages/app' # 明示的パス (順序意図を明確化するための冗長指定)
+```
+
+### 内部パッケージ命名
+
+内部パッケージは `@yonokomae/*` スコープを使用します:
+
+- アプリ: `@yonokomae/app` (公開予定なしだが一貫性のためスコープ付与)
+- ライブラリ: `@yonokomae/types`, `@yonokomae/schema`, `@yonokomae/catalog`
+- データ: `@yonokomae/data-battle-seeds`, `@yonokomae/data-historical-evidence`, `@yonokomae/data-news-seeds`
+
+クロスパッケージ依存には `"workspace:*"` を使用しローカルリンクとバージョン整合を保証します。
+
+### 新しい内部ライブラリパッケージ追加手順
+
+1. ディレクトリ作成: `packages/<name>/`
+2. `package.json` 追加:
+    ```json
+    {
+        "name": "@yonokomae/<name>",
+        "version": "0.0.0",
+        "type": "module",
+        "main": "dist/index.js",
+        "exports": {
+            ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
+        },
+        "files": ["dist"],
+        "scripts": { "build": "tsc -p tsconfig.json" },
+        "dependencies": {},
+        "devDependencies": {}
+    }
+    ```
+3. `tsconfig.role.package.json` (又はシード系なら `tsconfig.role.seed.json`) を継承する `tsconfig.json` を追加し `rootDir` / `outDir` 設定。
+4. `src/` 配下に実装 (ルート直下 JS 直置きは避ける)。
+5. `pnpm install` 実行 (リンクと lockfile 更新)。
+6. 公開面に影響する新語や型があればドキュメント / 用語集更新。
+
+### 新しいデータパッケージ追加
+
+既存データパッケージをコピーし構造対称性を維持します:
+
+- `type` は `module` を維持。
+- バリデーションテストは app 側に集中 (各データパッケージに重複テスト環境を持たせない)。
+- 3 つの既存シードと同一スタイルの tsconfig を使用し揃え続ける。
+
+### 依存方針
+
+- `dependencies`: ビルド成果物/利用側が実行時に必要。
+- `devDependencies`: ビルド / テスト / Lint / 型目的のみ。
+- データ/シードパッケージには重量依存を追加せず純粋データ + 最小限スキーマ検証に留める。
+- 再利用ロジックが複数箇所に現れたら新スコープパッケージへ抽出を検討。
+- どのパッケージからも `@yonokomae/app` へ依存しない (app は最終消費層)。
+- 依存グラフは非循環: data -> (types/schema), libs -> (types/schema), app -> (all)。
+
+### バージョニング & Changeset
+
+`.changeset/` ディレクトリはリリースノートとバージョン管理に使用:
+
+- 公開 API / スキーマ意味が変わる変更で changeset を追加。
+- サマリ内で conventional prefix (`feat:`, `fix:`, `docs:` など) を使用。
+- 利用者期待を変える文書的破壊変更は commit scope に `!` を付与。
+
+### よく使う pnpm フィルタ
+
+```bash
+pnpm --filter @yonokomae/app dev            # app のみ起動
+pnpm --filter @yonokomae/types test         # 単一ライブラリのテスト
+pnpm --filter ./data/battle-seeds build     # パス指定フィルタ
+pnpm -r exec echo {name}                    # 全ワークスペース名一覧
+```
+
+### ビルド順序
+
+`pnpm -r --sort build` は依存グラフ順に:
+
+1. types / schema / catalog
+2. data パッケージ (types / schema を参照する場合)
+3. app (全てを消費)
+
+Project References (`composite: true`) と `--sort` により依存宣言生成後に下位がビルドされます。
+
+### トラブルシュート / 診断
+
+| 症状                     | 原因候補                        | 対処                                       |
+| ------------------------ | ------------------------------- | ------------------------------------------ |
+| 他パッケージ型が見えない | references 不備 or ビルド未更新 | `pnpm -r build` 後に再 typecheck           |
+| 古い d.ts が参照される   | editor が旧 `.types` を保持     | app の `node_modules/.types` 削除→再ビルド |
+| 想定外の version bump    | changeset 分類不足              | changeset 追加/修正                        |
+
+### パッケージ分割判断基準
+
+以下のいずれかを満たす場合のみ分割:
+
+- app と data の双方で再利用されるコードが発生
+- 無関係変更で app ビルド時間が増大
+- catalog 等ドメイン概念が安定し独立価値がある
+
+それ以外は断片化を避けコロケーションを維持。
