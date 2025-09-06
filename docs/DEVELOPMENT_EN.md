@@ -242,3 +242,270 @@ Mirror an existing data package for structure symmetry to keep validation and bu
 - Keep dependency graph acyclic: data -> (types/schema), libs -> (types/schema), app -> (all).
 
 ### Versioning & Changeset
+
+A `.changeset/` directory exists for release notes & version bumps. Although packages may not currently be published externally, follow the flow:
+
+- Create a changeset when a package public API or schema meaning changes.
+- Use conventional commit prefixes (`feat:`, `fix:`, `docs:`) inside the summary for clarity.
+- Mark breaking doc or API changes with `!` in the commit scope if they alter consumer expectations.
+
+### Useful pnpm Filters
+
+```bash
+pnpm --filter @yonokomae/app dev            # run app only
+pnpm --filter @yonokomae/types test         # test a single lib
+pnpm --filter ./data/battle-seeds build     # path-based filter
+pnpm -r exec echo {name}                    # list all workspace package names
+```
+
+### Build Order
+
+`pnpm -r --sort build` leverages dependency graph ordering:
+
+1. Types / schema / catalog
+2. Data packages (if they reference types / schema)
+3. App (consumes all)
+
+Project references (`composite: true`) plus `--sort` guarantee declarations are ready before dependents build.
+
+### Common Issues / Diagnostics
+
+| Symptom                            | Likely Cause                              | Fix                                          |
+| ---------------------------------- | ----------------------------------------- | -------------------------------------------- |
+| Type not found across packages     | Missing `references` or out-of-date build | Run `pnpm -r build` then retry typecheck     |
+| Stale generated d.ts               | Editor using old `.types`                 | Delete `node_modules/.types` in app; rebuild |
+| Unexpected version bump suggestion | Missing changeset categorization          | Add or adjust a changeset file               |
+
+### When to Split a New Package
+
+Split only when at least one of:
+
+- Code is reused by both app and data packages.
+- Build time for app grows due to unrelated module changes.
+- Domain concept (e.g., catalog enumerations) stabilizes and merits isolation.
+
+Otherwise keep code colocated to reduce fragmentation.
+
+## Testing
+
+For detailed testing guidelines, see [TESTING.md](TESTING.md).
+
+### End-to-End (E2E) Testing Policy
+
+We use Playwright for E2E testing. Specs are located in the `e2e/` directory.
+
+**Testing Principles:**
+
+- **Focus**: Test user-facing behaviors, not implementation details.
+- **Accessibility**: Assert accessible names and roles for critical controls using `getByRole`.
+- **Locators**: Prefer role-based locators for resilience. Use `data-testid` sparingly for elements without semantic roles.
+- **Determinism**: Avoid arbitrary waits. Use Playwright's web-first assertions and auto-waiting.
+- **Performance**: Long-running tests should be tagged with `@performance`.
+
+**Test Commands:**
+
+- `pnpm run e2e` - Run E2E tests (excluding @performance)
+- `pnpm run e2e:all` - Run all E2E tests (including @performance)
+- `pnpm run e2e:ui` - Interactive UI mode
+- `pnpm run e2e:headed` - Run in headed mode (Chromium)
+
+**Data Package Testing:**
+
+- `pnpm test` - Run all tests including data package validation
+- `pnpm run test:seeds` - Validate all seed data
+- `cd data/{package} && pnpm test` - Test individual data package
+
+### Component Testing
+
+We use Vitest with React Testing Library for component testing:
+
+- `pnpm run test:unit` - Run unit tests
+- `pnpm run test:storybook` - Run Storybook tests in browser
+- `pnpm run test:coverage` - Generate coverage report
+
+## TypeScript Build Layout
+
+The repository uses a layered tsconfig approach to balance strictness, fast
+editor feedback, and consistent declaration output:
+
+- `tsconfig.base.json`: Shared strict defaults (noEmit by default via root
+  tsconfig override). No DOM or Node specifics.
+- `tsconfig.env.dom.json` / `tsconfig.env.node.json`: Environment-specific
+  library targets (DOM vs NodeNext module resolution).
+- `tsconfig.role.app.json`: Web app role (React, JSX, declaration-only emit to
+  `node_modules/.types/app`). Enables `allowImportingTsExtensions` for Vite /
+  shadcn/ui interoperability and additional side-effect safety flags.
+- `packages/app/tsconfig.json`: Package entry that sets `baseUrl`, paths and
+  points declarationDir at the internal `.types` folder (kept out of `src`).
+- `tsconfig.role.package.json`: Generic library/package role (outputs to `dist`).
+- `packages/{types,schema,catalog}/tsconfig.json`: Thin wrappers over the
+  package role with `rootDir` / `outDir` only.
+- `tsconfig.role.seed.json`: DOM env + composite settings for seed data builds.
+- `data/*/tsconfig.json`: Three mirrored seed packages (battle-seeds,
+  news-seeds, historical-evidence) kept intentionally identical for symmetry.
+- `tsconfig.ops.json`: Node environment for operational / CLI scripts emitting
+  JS into `dist/ops`.
+
+> Note (2025-09-06): `packages/app/tsconfig.app.json` was removed after confirming no remaining references. Use `tsconfig.role.app.json` (role config) together with `packages/app/tsconfig.json` (package entry) going forward.
+
+Guidelines:
+
+1. Add new roles sparingly—prefer extending an existing role config.
+2. Keep environment concerns (DOM vs Node) separate from package roles.
+3. Prefer declaration-only emits where runtime bundlers (Vite) handle JS output.
+4. Mirror changes across the three seed tsconfig files when adjusting build
+   options (or introduce a new shared role file to de-duplicate).
+5. Document rationale for any non-standard compiler flags in the nearest
+   tsconfig comment block.
+
+Rationale for `allowImportingTsExtensions`: Some UI component templates and
+code mod tooling rely on explicit `.ts/.tsx` extensions—enabling this keeps
+the developer experience frictionless without relaxing broader strictness.
+
+### Error Classes
+
+Custom error hierarchies improve diagnosability and allow targeted handling:
+
+- `BattleSeedError` (base) -> `BattleSeedNotFoundError`, `BattleSeedValidationError`
+- `NewsReporterError` (base) -> `NewsReporterHttpError`, `NewsReporterDataError`
+
+Guidelines:
+
+1. Use the most specific error type possible when throwing.
+2. Tests should assert `instanceof` for critical error pathways (see `battle-seed-loader.test.ts`).
+3. Messages for user-facing CLI contexts should remain stable to avoid breaking snapshot / expectation tests.
+
+### CLI Operations Scripts
+
+Ops scripts live under `src/ops/` and provide data export utilities. Each supports `-h` / `--help`:
+
+- `export-battle-seeds-to-json.ts`
+- `export-users-voice-to-tsv.ts`
+- `export-usage-examples-to-tsv.ts`
+
+Usage pattern:
+
+```bash
+pnpm run ops:export-battle-seeds-to-json -- out/battles.json
+pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
+pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
+```
+
+Help example:
+
+```bash
+pnpm run ops:export-users-voice-to-tsv -- --help
+```
+
+Testing:
+
+- See `src/ops/__tests__/export-cli.test.ts` for stdout capture approach.
+- Help flags are verified to contain a `Usage:` line.
+
+### Deterministic Shuffle
+
+`shuffleArraySeeded` allows deterministic ordering for reproducible tests. Use when:
+
+1. The test depends on a specific shuffled order.
+2. You need to verify stable output across environments.
+
+Avoid injecting seeded randomness into production code paths unless reproducibility is explicitly required.
+
+## Migration Notes
+
+### Breaking Change (2025-09-02): `Winner` -> `Verdict`
+
+The `JudgementRepository.determineWinner` method now returns a structured `Verdict` object instead of a simple `Winner` string.
+
+- **Old:** `Promise<'YONO' | 'KOMAE' | 'DRAW'>`
+- **New:** `Promise<Verdict>`
+
+```typescript
+type Verdict = {
+    winner: 'YONO' | 'KOMAE' | 'DRAW';
+    reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
+    judgeCode?: string;
+    /** yono.power - komae.power */
+    powerDiff?: number;
+    /** sampled random number (0..1) when randomness participates */
+    rng?: number;
+    /** optional confidence score (0..1) for future model-based judges */
+    confidence?: number;
+};
+```
+
+**Action Required:**
+
+- Update all call sites to access the winner via `verdict.winner`.
+- Ensure all `JudgementRepository` implementations return a `Verdict` object.
+- Update tests and mocks to match the new return type.
+
+### Infrastructure Change (2025-09-06): Removal of `packages/app/tsconfig.app.json`
+
+The historical transitional config was deleted to reduce duplication and potential drift.
+
+Rationale:
+
+- All editors, CI scripts, and build commands resolve via `tsconfig.role.app.json` + `packages/app/tsconfig.json`.
+- Eliminates confusion over which config governs emitted declarations.
+- Prevents stale flag divergence (e.g. JSX, moduleResolution).
+
+Action:
+
+- If any local editor workspace still referenced the removed file, retarget it to `packages/app/tsconfig.json`.
+- No code changes required; build graph unchanged.
+
+## Current Play Modes
+
+- `demo`: Japanese demo with fixed scenarios.
+- `demo-en`: English demo variant.
+- `demo-de`: German demo variant.
+- `historical-research`: Scenarios based on historical evidence seeds from `@yonokomae/data-historical-evidence`.
+- `yk-now`: News-driven mode using data from `@yonokomae/data-news-seeds`.
+
+## UI Components
+
+### Battle Components
+
+- **HistoricalScene**: Main battle display component with loading states and metadata display
+    - Supports cropped banner mode with configurable aspect ratios
+    - Includes significance chips and theme badges
+    - Handles loading skeleton states
+
+- **FontSizeControl**: Responsive font size adjustment control
+    - Compact mode for mobile devices
+    - Keyboard shortcut support (Alt+Plus/Minus)
+
+### Accessibility Features
+
+- **ReducedMotionModeToggle**: Respects user's motion preferences
+- **Keyboard shortcuts**: Controller component supports keyboard navigation (B for Battle, R for Reset)
+- **ARIA attributes**: Proper labeling and live regions for screen readers
+
+## Data Maintenance
+
+For data maintainers working with battle data, historical scenarios, or news samples:
+
+- **Main Guide**: See [DATA_MAINTENANCE_EN.md](DATA_MAINTENANCE_EN.md)
+- **Battle Data**: See [data/BATTLE_SEEDS_EN.md](data/BATTLE_SEEDS_EN.md)
+- **Historical Evidence**: See [data/HISTORICAL_EVIDENCE_SEEDS_EN.md](data/HISTORICAL_EVIDENCE_SEEDS_EN.md)
+- **News Seeds**: See [data/NEWS_SEEDS_EN.md](data/NEWS_SEEDS_EN.md)
+
+## Package Structure
+
+```text
+yonokomae/
+├── packages/
+│   ├── app/                      # Main web application (React, hooks, repos)
+│   ├── catalog/                  # Domain catalogs / enumerations
+│   ├── types/                    # Shared TypeScript types
+│   └── schema/                   # Zod validation schemas
+├── data/
+│   ├── battle-seeds/             # Statistical battle data
+│   ├── historical-evidence/      # Historical scenario data
+│   └── news-seeds/               # News-style sample data
+├── docs/                         # Documentation (English source of truth)
+├── e2e/                          # End-to-end tests (Playwright)
+├── mock-api/                     # Local mock API server
+└── (no root src/ directory – app code is under packages/app/src/)
+```

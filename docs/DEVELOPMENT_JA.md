@@ -27,6 +27,8 @@ instructions-for-ais:
 - **データパッケージ**: ゲームデータを含む独立パッケージ（`data/battle-seeds/`, `data/historical-evidence/`, `data/news-seeds/`）。
 - **型パッケージ**: 共有型定義（`packages/types/`）と検証スキーマ（`packages/schema/`）。
 
+> 注: 以下に現れる `src/yk/...` 等のパスはすべて `packages/app/` を基準とした相対パスです。リポジトリ直下に `src/` ディレクトリは存在せず、アプリコードは `packages/app/src/` 配下にあります。
+
 ### データフローと依存性注入 (Dependency Injection)
 
 `RepositoryProvider` は、依存性注入の中心的な役割を担います。これにより、コンポーネントはアクティブな Play Mode に応じた正しいリポジトリインスタンスを受け取ることができます。
@@ -177,6 +179,88 @@ classDiagram
 4.  **UI での Mode の使用:**
     UI を更新して新しい Play Mode を選択できるようにし、そのモードが `RepositoryProvider` に渡されるようにします。
 
+## Workspace と依存関係管理
+
+単一の pnpm workspace (`pnpm-workspace.yaml`) を用い 3 つのグロブを定義:
+
+```yaml
+packages:
+    - 'packages/*' # app, catalog, schema, types (ライブラリ / アプリコード)
+    - 'data/*' # シードデータパッケージ
+    - 'packages/app' # 明示的パス (順序意図の明確化)
+```
+
+### 内部パッケージ命名
+
+- アプリ: `@yonokomae/app`
+- ライブラリ: `@yonokomae/types`, `@yonokomae/schema`, `@yonokomae/catalog`
+- データ: `@yonokomae/data-battle-seeds`, `@yonokomae/data-historical-evidence`, `@yonokomae/data-news-seeds`
+
+クロス依存は常に `workspace:*`。
+
+### 新規内部ライブラリ追加フロー
+
+1. `packages/<name>/` 作成
+2. `package.json` 作成（exports / dist 指定）
+3. `tsconfig.role.package.json` (又は seed 用 role) 継承 tsconfig
+4. 実装を `src/` 配下へ配置
+5. `pnpm install`
+6. 公開 API 変更ならドキュメント/用語更新
+
+### データパッケージ追加
+
+既存のいずれかを複製し対称性維持。ビルド/テストは app に集中。tsconfig は 3 つの seed と揃える。
+
+### 依存ポリシー
+
+- runtime 必須のみ `dependencies`
+- ビルド/テスト/型のみは `devDependencies`
+- seed/data に重量依存禁止
+- 共有ロジックが複数箇所に出たら新パッケージ化検討
+- 逆方向 (`@yonokomae/app` への依存) 禁止
+- グラフは非循環: data -> (types/schema), libs -> (types/schema), app -> all
+
+### バージョニング & Changeset
+
+`.changeset/` を利用:
+
+- 公開 API/スキーマ意味変更で追加
+- conventional prefix 使用
+- 破壊的なら scope に `!`
+
+### よく使う pnpm フィルタ
+
+```bash
+pnpm --filter @yonokomae/app dev
+pnpm --filter @yonokomae/types test
+pnpm --filter ./data/battle-seeds build
+pnpm -r exec echo {name}
+```
+
+### ビルド順序
+
+1. types / schema / catalog
+2. data
+3. app
+
+`pnpm -r --sort build` と Project References で順序保証。
+
+### トラブルシュート
+
+| 症状                    | 原因                         | 対処                                |
+| ----------------------- | ---------------------------- | ----------------------------------- |
+| 型が見えない            | references 不備/ビルド未更新 | `pnpm -r build` 再 typecheck        |
+| 古い d.ts               | 旧 `.types` 残存             | `node_modules/.types` 削除→再ビルド |
+| 意図しない version bump | changeset 不備               | changeset 追加/修正                 |
+
+### パッケージ分割判断
+
+- app & data 両方で再利用
+- 不関連変更で app ビルド遅延
+- 安定したドメイン概念抽出価値あり
+
+該当なしなら分割しない。
+
 ## テスト
 
 詳細なテストガイドラインについては、[TESTING.md](TESTING.md) を参照してください。
@@ -239,6 +323,52 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 5. 非標準フラグの理由は近接する tsconfig コメントに記述。
 
 `allowImportingTsExtensions` の理由: 明示的 `.ts/.tsx` 拡張子に依存する一部 UI テンプレート/コードモッドとの摩擦を避けるため。
+
+## エラークラス (Error Classes)
+
+カスタムエラー階層で診断性向上:
+
+- `BattleSeedError` -> `BattleSeedNotFoundError`, `BattleSeedValidationError`
+- `NewsReporterError` -> `NewsReporterHttpError`, `NewsReporterDataError`
+
+指針:
+
+1. 最も具体的な型を throw
+2. 重要経路はテストで `instanceof` アサート
+3. CLI ユーザー向けメッセージは安定維持
+
+## CLI オペレーションスクリプト
+
+`src/ops/` 配下:
+
+- `export-battle-seeds-to-json.ts`
+- `export-users-voice-to-tsv.ts`
+- `export-usage-examples-to-tsv.ts`
+
+使用例:
+
+```bash
+pnpm run ops:export-battle-seeds-to-json -- out/battles.json
+pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
+pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
+```
+
+ヘルプ:
+
+```bash
+pnpm run ops:export-users-voice-to-tsv -- --help
+```
+
+テスト: `src/ops/__tests__/export-cli.test.ts` 参照。
+
+## 決定的シャッフル (Deterministic Shuffle)
+
+`shuffleArraySeeded` でテストの再現性確保:
+
+1. シャッフル順序に依存するアサーション
+2. 複数環境で安定出力比較
+
+本番経路へは再現性要件が明確でない限り導入しない。
 
 ## 移行ノート
 
@@ -338,110 +468,3 @@ yonokomae/
 ├── mock-api/                     # ローカルモック API サーバ
 └── (リポジトリ直下に root src/ は存在せず、アプリコードは packages/app/src/ 配下)
 ```
-
-## Workspace と依存関係管理
-
-このリポジトリは単一の pnpm workspace (`pnpm-workspace.yaml`) を使用し、3 つのグロブグループを定義しています:
-
-```yaml
-packages:
-    - 'packages/*' # app, catalog, schema, types (ライブラリ / アプリコード)
-    - 'data/*' # シードデータパッケージ
-    - 'packages/app' # 明示的パス (順序意図を明確化するための冗長指定)
-```
-
-### 内部パッケージ命名
-
-内部パッケージは `@yonokomae/*` スコープを使用します:
-
-- アプリ: `@yonokomae/app` (公開予定なしだが一貫性のためスコープ付与)
-- ライブラリ: `@yonokomae/types`, `@yonokomae/schema`, `@yonokomae/catalog`
-- データ: `@yonokomae/data-battle-seeds`, `@yonokomae/data-historical-evidence`, `@yonokomae/data-news-seeds`
-
-クロスパッケージ依存には `"workspace:*"` を使用しローカルリンクとバージョン整合を保証します。
-
-### 新しい内部ライブラリパッケージ追加手順
-
-1. ディレクトリ作成: `packages/<name>/`
-2. `package.json` 追加:
-    ```json
-    {
-        "name": "@yonokomae/<name>",
-        "version": "0.0.0",
-        "type": "module",
-        "main": "dist/index.js",
-        "exports": {
-            ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" }
-        },
-        "files": ["dist"],
-        "scripts": { "build": "tsc -p tsconfig.json" },
-        "dependencies": {},
-        "devDependencies": {}
-    }
-    ```
-3. `tsconfig.role.package.json` (又はシード系なら `tsconfig.role.seed.json`) を継承する `tsconfig.json` を追加し `rootDir` / `outDir` 設定。
-4. `src/` 配下に実装 (ルート直下 JS 直置きは避ける)。
-5. `pnpm install` 実行 (リンクと lockfile 更新)。
-6. 公開面に影響する新語や型があればドキュメント / 用語集更新。
-
-### 新しいデータパッケージ追加
-
-既存データパッケージをコピーし構造対称性を維持します:
-
-- `type` は `module` を維持。
-- バリデーションテストは app 側に集中 (各データパッケージに重複テスト環境を持たせない)。
-- 3 つの既存シードと同一スタイルの tsconfig を使用し揃え続ける。
-
-### 依存方針
-
-- `dependencies`: ビルド成果物/利用側が実行時に必要。
-- `devDependencies`: ビルド / テスト / Lint / 型目的のみ。
-- データ/シードパッケージには重量依存を追加せず純粋データ + 最小限スキーマ検証に留める。
-- 再利用ロジックが複数箇所に現れたら新スコープパッケージへ抽出を検討。
-- どのパッケージからも `@yonokomae/app` へ依存しない (app は最終消費層)。
-- 依存グラフは非循環: data -> (types/schema), libs -> (types/schema), app -> (all)。
-
-### バージョニング & Changeset
-
-`.changeset/` ディレクトリはリリースノートとバージョン管理に使用:
-
-- 公開 API / スキーマ意味が変わる変更で changeset を追加。
-- サマリ内で conventional prefix (`feat:`, `fix:`, `docs:` など) を使用。
-- 利用者期待を変える文書的破壊変更は commit scope に `!` を付与。
-
-### よく使う pnpm フィルタ
-
-```bash
-pnpm --filter @yonokomae/app dev            # app のみ起動
-pnpm --filter @yonokomae/types test         # 単一ライブラリのテスト
-pnpm --filter ./data/battle-seeds build     # パス指定フィルタ
-pnpm -r exec echo {name}                    # 全ワークスペース名一覧
-```
-
-### ビルド順序
-
-`pnpm -r --sort build` は依存グラフ順に:
-
-1. types / schema / catalog
-2. data パッケージ (types / schema を参照する場合)
-3. app (全てを消費)
-
-Project References (`composite: true`) と `--sort` により依存宣言生成後に下位がビルドされます。
-
-### トラブルシュート / 診断
-
-| 症状                     | 原因候補                        | 対処                                       |
-| ------------------------ | ------------------------------- | ------------------------------------------ |
-| 他パッケージ型が見えない | references 不備 or ビルド未更新 | `pnpm -r build` 後に再 typecheck           |
-| 古い d.ts が参照される   | editor が旧 `.types` を保持     | app の `node_modules/.types` 削除→再ビルド |
-| 想定外の version bump    | changeset 分類不足              | changeset 追加/修正                        |
-
-### パッケージ分割判断基準
-
-以下のいずれかを満たす場合のみ分割:
-
-- app と data の双方で再利用されるコードが発生
-- 無関係変更で app ビルド時間が増大
-- catalog 等ドメイン概念が安定し独立価値がある
-
-それ以外は断片化を避けコロケーションを維持。
