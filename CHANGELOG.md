@@ -19,6 +19,7 @@
 - feat(ops): add --help flags to export CLI scripts and corresponding tests
 - test(core): add deterministic and instance checks for BattleSeed\* errors
 - feat(core): add seedable shuffle utilities and tests (regression guard)
+- test(e2e): fix End key navigation assertion to ignore disabled play modes
 
 ## 1.1.0
 
