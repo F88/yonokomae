@@ -2,7 +2,6 @@
   "extends": "./tsconfig.env.dom.json",
   "compilerOptions": {
     "composite": true,
-    "noEmit": false,
-    "types": ["vite/client"]
+    "noEmit": false
   }
 }

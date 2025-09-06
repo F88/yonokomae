@@ -23,7 +23,6 @@ export type UserVoicesCarouselProps = {
   showControls?: boolean;
 };
 
-
 export const UserVoicesCarousel: React.FC<UserVoicesCarouselProps> = ({
   shuffle = false,
   className,

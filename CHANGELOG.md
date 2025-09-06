@@ -17,7 +17,7 @@
 - docs(types): clean JSDoc references to removed modes
 - feat(core): introduce custom error classes for battle seed and news reporter repositories
 - feat(ops): add --help flags to export CLI scripts and corresponding tests
-- test(core): add deterministic and instance checks for BattleSeed* errors
+- test(core): add deterministic and instance checks for BattleSeed\* errors
 - feat(core): add seedable shuffle utilities and tests (regression guard)
 
 ## 1.1.0

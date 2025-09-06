@@ -11,7 +11,6 @@ export type SimpleVerticalCarouselProps = {
   height?: string;
 };
 
-
 export const SimpleVerticalCarousel: React.FC<SimpleVerticalCarouselProps> = ({
   shuffle = false,
   className,

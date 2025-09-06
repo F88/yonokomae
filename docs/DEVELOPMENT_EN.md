@@ -96,7 +96,7 @@ This section explains how to extend the application with new repositories and Pl
 ### Adding a New Repository
 
 1. **Create the Repository Implementation:**
-    Create a new file under `src/yk/repo/`. For example, `src/yk/repo/example/repositories.example.ts`. Implement one or more of the repository interfaces.
+   Create a new file under `src/yk/repo/`. For example, `src/yk/repo/example/repositories.example.ts`. Implement one or more of the repository interfaces.
 
     ```typescript
     // src/yk/repo/example/repositories.example.ts
@@ -120,7 +120,7 @@ This section explains how to extend the application with new repositories and Pl
     ```
 
 2. **Wire into Provider Factory:**
-    In `src/yk/repo/core/repository-provider.ts`, update the factory functions (`getBattleReportRepository`, `getJudgementRepository`, etc.) to return your new repository implementation for the desired Play Mode.
+   In `src/yk/repo/core/repository-provider.ts`, update the factory functions (`getBattleReportRepository`, `getJudgementRepository`, etc.) to return your new repository implementation for the desired Play Mode.
 
     ```typescript
     // src/yk/repo/core/repository-provider.ts
@@ -139,7 +139,7 @@ This section explains how to extend the application with new repositories and Pl
 ### Adding a New Play Mode
 
 1. **Define the Play Mode:**
-    In `src/yk/play-mode.ts`, add a new `PlayMode` object.
+   In `src/yk/play-mode.ts`, add a new `PlayMode` object.
 
     ```typescript
     // src/yk/play-mode.ts
@@ -154,10 +154,10 @@ This section explains how to extend the application with new repositories and Pl
     ```
 
 2. **Implement Repositories:**
-    Create the repository implementations for your new mode as described above.
+   Create the repository implementations for your new mode as described above.
 
 3. **Update Provider Factories:**
-    In `src/yk/repo/core/repository-provider.ts`, add a new branch in the factory functions to handle your new `example-mode`. Use dynamic imports to lazy-load the repositories.
+   In `src/yk/repo/core/repository-provider.ts`, add a new branch in the factory functions to handle your new `example-mode`. Use dynamic imports to lazy-load the repositories.
 
     ```typescript
     // src/yk/repo/core/repository-provider.ts
@@ -175,7 +175,7 @@ This section explains how to extend the application with new repositories and Pl
     ```
 
 4. **Use the Mode in the UI:**
-    Update the UI to allow selecting the new Play Mode, which will then be passed to the `RepositoryProvider`.
+   Update the UI to allow selecting the new Play Mode, which will then be passed to the `RepositoryProvider`.
 
 ## Testing
 
@@ -220,22 +220,22 @@ The repository uses a layered tsconfig approach to balance strictness, fast
 editor feedback, and consistent declaration output:
 
 - `tsconfig.base.json`: Shared strict defaults (noEmit by default via root
-    tsconfig override). No DOM or Node specifics.
+  tsconfig override). No DOM or Node specifics.
 - `tsconfig.env.dom.json` / `tsconfig.env.node.json`: Environment-specific
-    library targets (DOM vs NodeNext module resolution).
+  library targets (DOM vs NodeNext module resolution).
 - `tsconfig.role.app.json`: Web app role (React, JSX, declaration-only emit to
-    `node_modules/.types/app`). Enables `allowImportingTsExtensions` for Vite /
-    shadcn/ui interoperability and additional side-effect safety flags.
+  `node_modules/.types/app`). Enables `allowImportingTsExtensions` for Vite /
+  shadcn/ui interoperability and additional side-effect safety flags.
 - `packages/app/tsconfig.json`: Package entry that sets `baseUrl`, paths and
-    points declarationDir at the internal `.types` folder (kept out of `src`).
+  points declarationDir at the internal `.types` folder (kept out of `src`).
 - `tsconfig.role.package.json`: Generic library/package role (outputs to `dist`).
 - `packages/{types,schema,catalog}/tsconfig.json`: Thin wrappers over the
-    package role with `rootDir` / `outDir` only.
+  package role with `rootDir` / `outDir` only.
 - `tsconfig.role.seed.json`: DOM env + composite settings for seed data builds.
 - `data/*/tsconfig.json`: Three mirrored seed packages (battle-seeds,
-    news-seeds, historical-evidence) kept intentionally identical for symmetry.
+  news-seeds, historical-evidence) kept intentionally identical for symmetry.
 - `tsconfig.ops.json`: Node environment for operational / CLI scripts emitting
-    JS into `dist/ops`.
+  JS into `dist/ops`.
 
 Removed (2025-09): `packages/app/tsconfig.app.json` (redundant with role.app)
 to reduce divergence surface.
@@ -246,9 +246,9 @@ Guidelines:
 2. Keep environment concerns (DOM vs Node) separate from package roles.
 3. Prefer declaration-only emits where runtime bundlers (Vite) handle JS output.
 4. Mirror changes across the three seed tsconfig files when adjusting build
-    options (or introduce a new shared role file to de-duplicate).
+   options (or introduce a new shared role file to de-duplicate).
 5. Document rationale for any non-standard compiler flags in the nearest
-    tsconfig comment block.
+   tsconfig comment block.
 
 Rationale for `allowImportingTsExtensions`: Some UI component templates and
 code mod tooling rely on explicit `.ts/.tsx` extensions—enabling this keeps
@@ -312,7 +312,7 @@ The `JudgementRepository.determineWinner` method now returns a structured `Verdi
 - **Old:** `Promise<'YONO' | 'KOMAE' | 'DRAW'>`
 - **New:** `Promise<Verdict>`
 
-```typescript
+````typescript
 type Verdict = {
     winner: 'YONO' | 'KOMAE' | 'DRAW';
     reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
@@ -377,4 +377,4 @@ yonokomae/
 ├── src/                         # Main application
 ├── e2e/                         # End-to-end tests
 └── docs/                        # Documentation
-```
+````

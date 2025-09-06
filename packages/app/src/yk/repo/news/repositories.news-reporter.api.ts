@@ -132,7 +132,7 @@ export class NewsReporterApiBattleReportRepository
       headers: { Accept: 'application/json' },
       signal,
     });
-  if (!res.ok) throw new NewsReporterHttpError('ipify', res.status);
+    if (!res.ok) throw new NewsReporterHttpError('ipify', res.status);
     const data = (await res.json()) as Ipify;
     const ip = typeof data?.ip === 'string' && data.ip ? data.ip : '0.0.0.0';
 
@@ -354,7 +354,7 @@ export class NewsReporterApiBattleReportRepository
       headers: { Accept: 'application/json' },
       signal,
     });
-  if (!res.ok) throw new NewsReporterHttpError('open-meteo', res.status);
+    if (!res.ok) throw new NewsReporterHttpError('open-meteo', res.status);
     const data = (await res.json()) as OpenMeteoItem[];
 
     const first = Array.isArray(data) && data.length > 0 ? data[0] : undefined;

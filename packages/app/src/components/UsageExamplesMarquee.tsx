@@ -16,7 +16,6 @@ export type UsageExamplesMarqueeProps = {
   pauseOnHover?: boolean;
 };
 
-
 export const UsageExamplesMarquee: React.FC<UsageExamplesMarqueeProps> = ({
   shuffle = false,
   className,

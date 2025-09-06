@@ -17,7 +17,6 @@ export type UserVoicesMarqueeProps = {
   fadeWidth?: string;
 };
 
-
 export const UserVoicesMarquee: React.FC<UserVoicesMarqueeProps> = ({
   shuffle = false,
   className,
