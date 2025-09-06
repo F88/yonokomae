@@ -54,10 +54,36 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 
 ### pnpm Monorepo Structure
 
-- **Data Packages**: Independent packages for battle data, historical evidence, and news samples
+- **Application Package**: `@yonokomae/app` (React SPA)
+- **Catalog Package**: `@yonokomae/catalog` (列挙 / 定数 / ドメインカタログ)
+- **Type Packages**: `@yonokomae/types` (型), `@yonokomae/schema` (Zod スキーマ)
+- **Data Packages**:
     - `@yonokomae/data-battle-seeds` - Statistical municipal comparison battles
     - `@yonokomae/data-historical-evidence` - Fictional historical scenarios
     - `@yonokomae/data-news-seeds` - News-style demonstration samples
+- **Mock API**: `mock-api/` ローカル開発用スタブサーバ
+
+リポジトリ構造 (簡易図):
+
+```text
+yonokomae/
+├── packages/
+│   ├── app/
+│   ├── catalog/
+│   ├── types/
+│   └── schema/
+├── data/
+│   ├── battle-seeds/
+│   ├── historical-evidence/
+│   └── news-seeds/
+├── mock-api/
+├── docs/
+├── e2e/
+└── (no root src/; app code lives under packages/app/src/)
+```
+
+> Internal cross-package versions use `workspace:*`. The app depends on all; lower-level packages must not depend on `@yonokomae/app`.
+
 - **Type Safety**: Shared TypeScript definitions (`@yonokomae/types`) and Zod validation schemas (`@yonokomae/schema`)
 - **Data Maintenance**: Dedicated workflow for data contributors with comprehensive validation
 
@@ -133,6 +159,19 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 - [Battle Seeds Guide](./docs/data/BATTLE_SEEDS_EN.md)
 - [Historical Evidence Guide](./docs/data/HISTORICAL_EVIDENCE_SEEDS_EN.md)
 - [News Seeds Guide](./docs/data/NEWS_SEEDS_EN.md)
+
+## Deployment (Summary)
+
+Static SPA deployed to GitHub Pages at `/yonokomae/` using scripts:
+
+| Script                    | Purpose                                                           |
+| ------------------------- | ----------------------------------------------------------------- |
+| `pnpm run build:ghpages`  | Build all packages, build app with base path, generate `404.html` |
+| `pnpm run deploy:ghpages` | Build + publish `packages/app/dist` to `gh-pages`                 |
+
+Essential rules: set `VITE_BASE_PATH=/yonokomae/`, publish `packages/app/dist`, duplicate `index.html` → `404.html`.
+
+Full details, troubleshooting matrix, and manual workflow: see [Deployment Guide](./docs/DEPLOYMENT_EN.md).
 
 ## Roadmap
 

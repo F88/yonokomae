@@ -12,10 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Build outputs
+packages/*/dist/
+data/*/dist/
+
 # Editor directories and files
-# TypeScript generated artifacts
-*.d.ts
-*.tsbuildinfo
 node_modules/.types/
 .vscode/*
 !.vscode/extensions.json
@@ -46,3 +47,13 @@ playwright-report/
 storybook-static
 
 coverage/
+
+### App
+
+# Seed packages: ensure only source .ts tracked (no in-place compiled JS)
+data/battle-seeds/src/**/*.js
+data/historical-evidence/src/**/*.js
+data/news-seeds/src/**/*.js
+
+# TypeScript build info
+tsconfig.tsbuildinfo

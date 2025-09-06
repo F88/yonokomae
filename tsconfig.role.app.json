@@ -1,0 +1,27 @@
+// Role config for the web (DOM) application packages.
+// Overrides base defaults with React / DOM specific compiler options.
+// allowImportingTsExtensions=true is required for certain shadcn/ui and Vite
+// ecosystem patterns that re-export .ts/.tsx files with explicit extensions.
+// This file intentionally diverges from tsconfig.base.json to:
+//  - enable JSX transform
+//  - allow side-effect import safety flags (erasableSyntaxOnly, noUncheckedSideEffectImports)
+//  - emit only type declarations from app package builds (emitDeclarationOnly)
+{
+  "extends": "./tsconfig.env.dom.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "verbatimModuleSyntax": true,
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "composite": true,
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationMap": true,
+    "allowImportingTsExtensions": true,
+    "useDefineForClassFields": true,
+    "erasableSyntaxOnly": true,
+    "noUncheckedSideEffectImports": true,
+    "noEmit": false
+  }
+}

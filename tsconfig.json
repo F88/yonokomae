@@ -1,21 +1,20 @@
 {
+  "extends": "./tsconfig.base.json",
+  "files": [],
   "compilerOptions": {
+    "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
-    },
-    "strict": true,
-    "module": "ESNext",
-    /* Module resolution for config files (vite/vitest) */
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    /* Interop Constraints */
-    "forceConsistentCasingInFileNames": true
+      "@/*": ["./packages/app/src/*"]
+    }
   },
-  "files": [],
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+    { "path": "./packages/app" },
+    { "path": "./packages/types" },
+    { "path": "./packages/schema" },
+    { "path": "./packages/catalog" },
+    { "path": "./data/battle-seeds" },
+    { "path": "./data/news-seeds" },
+    { "path": "./data/historical-evidence" }
   ]
 }

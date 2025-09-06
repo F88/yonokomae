@@ -130,6 +130,9 @@ pnpm run test:unit
 # Run all tests (includes data package validation)
 pnpm test
 
+# Run every workspace package's own test script (broader sweep)
+pnpm run test:all
+
 # Test individual data packages
 cd data/battle-seeds && pnpm test
 cd data/historical-evidence && pnpm test
@@ -140,16 +143,21 @@ cd data/news-seeds && pnpm test
 
 When we're ready to release a new version, we follow these steps:
 
-1.  **Version bump:** The `changeset version` command is run. This consumes all changeset files, updates the package versions and the `CHANGELOG.md`.
-    ```bash
-    pnpm changeset version
-    ```
-2.  **Create a release commit and tag:** The changes are committed and a new version tag is created.
-3.  **Publish to npm (if applicable):** The package is published to the npm registry.
-4.  **Deploy to GitHub Pages:** The application is deployed to GitHub Pages.
-    ```bash
-    pnpm run deploy:ghpages
-    ```
+1. **Version bump:** The `changeset version` command is run. This consumes all changeset files, updates the package versions and the `CHANGELOG.md`.
+
+```bash
+pnpm changeset version
+```
+
+1. **Create a release commit and tag:** The changes are committed and a new version tag is created.
+2. **Publish to npm (if applicable):** The package is published to the npm registry.
+3. **Deploy to GitHub Pages:** The application is deployed to GitHub Pages (see Deployment Guide for details).
+
+```bash
+pnpm run deploy:ghpages
+```
+
+See `docs/DEPLOYMENT_EN.md` for base path, 404 fallback, and troubleshooting details.
 
 ## Data Export Scripts
 

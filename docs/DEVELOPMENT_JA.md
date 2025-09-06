@@ -27,6 +27,8 @@ instructions-for-ais:
 - **データパッケージ**: ゲームデータを含む独立パッケージ（`data/battle-seeds/`, `data/historical-evidence/`, `data/news-seeds/`）。
 - **型パッケージ**: 共有型定義（`packages/types/`）と検証スキーマ（`packages/schema/`）。
 
+> 注: 以下に現れる `src/yk/...` 等のパスはすべて `packages/app/` を基準とした相対パスです。リポジトリ直下に `src/` ディレクトリは存在せず、アプリコードは `packages/app/src/` 配下にあります。
+
 ### データフローと依存性注入 (Dependency Injection)
 
 `RepositoryProvider` は、依存性注入の中心的な役割を担います。これにより、コンポーネントはアクティブな Play Mode に応じた正しいリポジトリインスタンスを受け取ることができます。
@@ -177,6 +179,88 @@ classDiagram
 4.  **UI での Mode の使用:**
     UI を更新して新しい Play Mode を選択できるようにし、そのモードが `RepositoryProvider` に渡されるようにします。
 
+## Workspace と依存関係管理
+
+単一の pnpm workspace (`pnpm-workspace.yaml`) を用い 3 つのグロブを定義:
+
+```yaml
+packages:
+    - 'packages/*' # app, catalog, schema, types (ライブラリ / アプリコード)
+    - 'data/*' # シードデータパッケージ
+    - 'packages/app' # 明示的パス (順序意図の明確化)
+```
+
+### 内部パッケージ命名
+
+- アプリ: `@yonokomae/app`
+- ライブラリ: `@yonokomae/types`, `@yonokomae/schema`, `@yonokomae/catalog`
+- データ: `@yonokomae/data-battle-seeds`, `@yonokomae/data-historical-evidence`, `@yonokomae/data-news-seeds`
+
+クロス依存は常に `workspace:*`。
+
+### 新規内部ライブラリ追加フロー
+
+1. `packages/<name>/` 作成
+2. `package.json` 作成（exports / dist 指定）
+3. `tsconfig.role.package.json` (又は seed 用 role) 継承 tsconfig
+4. 実装を `src/` 配下へ配置
+5. `pnpm install`
+6. 公開 API 変更ならドキュメント/用語更新
+
+### データパッケージ追加
+
+既存のいずれかを複製し対称性維持。ビルド/テストは app に集中。tsconfig は 3 つの seed と揃える。
+
+### 依存ポリシー
+
+- runtime 必須のみ `dependencies`
+- ビルド/テスト/型のみは `devDependencies`
+- seed/data に重量依存禁止
+- 共有ロジックが複数箇所に出たら新パッケージ化検討
+- 逆方向 (`@yonokomae/app` への依存) 禁止
+- グラフは非循環: data -> (types/schema), libs -> (types/schema), app -> all
+
+### バージョニング & Changeset
+
+`.changeset/` を利用:
+
+- 公開 API/スキーマ意味変更で追加
+- conventional prefix 使用
+- 破壊的なら scope に `!`
+
+### よく使う pnpm フィルタ
+
+```bash
+pnpm --filter @yonokomae/app dev
+pnpm --filter @yonokomae/types test
+pnpm --filter ./data/battle-seeds build
+pnpm -r exec echo {name}
+```
+
+### ビルド順序
+
+1. types / schema / catalog
+2. data
+3. app
+
+`pnpm -r --sort build` と Project References で順序保証。
+
+### トラブルシュート
+
+| 症状                    | 原因                         | 対処                                |
+| ----------------------- | ---------------------------- | ----------------------------------- |
+| 型が見えない            | references 不備/ビルド未更新 | `pnpm -r build` 再 typecheck        |
+| 古い d.ts               | 旧 `.types` 残存             | `node_modules/.types` 削除→再ビルド |
+| 意図しない version bump | changeset 不備               | changeset 追加/修正                 |
+
+### パッケージ分割判断
+
+- app & data 両方で再利用
+- 不関連変更で app ビルド遅延
+- 安定したドメイン概念抽出価値あり
+
+該当なしなら分割しない。
+
 ## テスト
 
 詳細なテストガイドラインについては、[TESTING.md](TESTING.md) を参照してください。
@@ -214,6 +298,78 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 - `pnpm run test:storybook` - ブラウザで Storybook テストを実行
 - `pnpm run test:coverage` - カバレッジレポートを生成
 
+## TypeScript ビルド構成
+
+このリポジトリはレイヤード tsconfig 戦略を用いて、厳格性 / エディタ反応速度 / 一貫した型生成を両立しています:
+
+- `tsconfig.base.json`: 共有の厳格デフォルト (ルート tsconfig 側で noEmit 指定)。DOM/Node 依存なし。
+- `tsconfig.env.dom.json` / `tsconfig.env.node.json`: 環境別ライブラリ設定 (DOM vs NodeNext)。
+- `tsconfig.role.app.json`: Web アプリ用 (React / JSX / 型のみ出力 `.types/app`)。Vite / shadcn/ui 互換のため `allowImportingTsExtensions` を有効化し副作用安全系フラグも追加。
+- `packages/app/tsconfig.json`: パッケージエントリ (`baseUrl` / paths / declarationDir 設定)。
+- `tsconfig.role.package.json`: 汎用ライブラリロール (出力先 `dist`)。
+- `packages/{types,schema,catalog}/tsconfig.json`: role.package を薄く継承し `rootDir` と `outDir` のみ設定。
+- `tsconfig.role.seed.json`: シードデータビルド用 (DOM 環境 + composite)。
+- `data/*/tsconfig.json`: 3 つのシードパッケージ (battle, news, historical) は対称性のため完全に同一。
+- `tsconfig.ops.json`: 運用/CLI 用 Node 環境 (出力 `dist/ops`)。
+
+> 注 (2025-09-06): `packages/app/tsconfig.app.json` は参照が無いことを確認後に削除済みです。今後は `tsconfig.role.app.json` (ロール設定) + `packages/app/tsconfig.json` (パッケージエントリ) の組み合わせのみを使用してください。
+
+ガイドライン:
+
+1. 新しい role の追加は最小限にし既存継承を優先。
+2. 環境 (DOM/Node) とパッケージ役割を分離。
+3. JS 出力はバンドラ (Vite) に任せ型のみ emit を優先。
+4. シード tsconfig を変更する際は 3 つ全てを同期 (もしくは共有 role 追加で重複排除)。
+5. 非標準フラグの理由は近接する tsconfig コメントに記述。
+
+`allowImportingTsExtensions` の理由: 明示的 `.ts/.tsx` 拡張子に依存する一部 UI テンプレート/コードモッドとの摩擦を避けるため。
+
+## エラークラス (Error Classes)
+
+カスタムエラー階層で診断性向上:
+
+- `BattleSeedError` -> `BattleSeedNotFoundError`, `BattleSeedValidationError`
+- `NewsReporterError` -> `NewsReporterHttpError`, `NewsReporterDataError`
+
+指針:
+
+1. 最も具体的な型を throw
+2. 重要経路はテストで `instanceof` アサート
+3. CLI ユーザー向けメッセージは安定維持
+
+## CLI オペレーションスクリプト
+
+`src/ops/` 配下:
+
+- `export-battle-seeds-to-json.ts`
+- `export-users-voice-to-tsv.ts`
+- `export-usage-examples-to-tsv.ts`
+
+使用例:
+
+```bash
+pnpm run ops:export-battle-seeds-to-json -- out/battles.json
+pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
+pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
+```
+
+ヘルプ:
+
+```bash
+pnpm run ops:export-users-voice-to-tsv -- --help
+```
+
+テスト: `src/ops/__tests__/export-cli.test.ts` 参照。
+
+## 決定的シャッフル (Deterministic Shuffle)
+
+`shuffleArraySeeded` でテストの再現性確保:
+
+1. シャッフル順序に依存するアサーション
+2. 複数環境で安定出力比較
+
+本番経路へは再現性要件が明確でない限り導入しない。
+
 ## 移行ノート
 
 ### 破壊的変更 (2025-09-02): `Winner` -> `Verdict`
@@ -228,7 +384,12 @@ type Verdict = {
     winner: 'YONO' | 'KOMAE' | 'DRAW';
     reason: 'bias-hit' | 'power' | 'api' | 'default' | 'near-tie';
     judgeCode?: string;
+    /** yono.power - komae.power */
     powerDiff?: number;
+    /** ランダム性が関与する場合の 0..1 サンプル値 */
+    rng?: number;
+    /** 将来のモデルベース判定向け信頼度 (0..1) */
+    confidence?: number;
 };
 ```
 
@@ -237,6 +398,21 @@ type Verdict = {
 - すべての呼び出し箇所を、`verdict.winner` を介して勝者にアクセスするように更新してください。
 - すべての `JudgementRepository` 実装が `Verdict` オブジェクトを返すようにしてください。
 - テストとモックを、新しい戻り値の型に一致するように更新してください。
+
+### インフラ変更 (2025-09-06): `packages/app/tsconfig.app.json` の削除
+
+歴史的な暫定ファイルを重複/乖離リスク低減のため削除しました。
+
+理由:
+
+- Editor / CI / build は `tsconfig.role.app.json` + `packages/app/tsconfig.json` で解決可能
+- 宣言出力設定の二重化を排除
+- JSX / moduleResolution 等のフラグ乖離リスク排除
+
+対応:
+
+- ローカルで旧ファイルを直接参照するエディタ設定が残っていれば `packages/app/tsconfig.json` に切替
+- コード変更不要 (ビルドグラフ影響なし)
 
 ## 現在の Play Mode
 
@@ -276,16 +452,19 @@ type Verdict = {
 
 ## パッケージ構造
 
-```
+```text
 yonokomae/
 ├── packages/
-│   ├── types/                    # 純粋 TypeScript 型
+│   ├── app/                      # メイン Web アプリ (React / hooks / repos)
+│   ├── catalog/                  # ドメインカタログ / 列挙
+│   ├── types/                    # 共有 TypeScript 型
 │   └── schema/                   # Zod 検証スキーマ
 ├── data/
 │   ├── battle-seeds/             # 統計バトルデータ
 │   ├── historical-evidence/      # 歴史シナリオデータ
-│   └── news-seeds/              # ニュース風サンプルデータ
-├── src/                         # メインアプリケーション
-├── e2e/                         # エンドツーエンドテスト
-└── docs/                        # ドキュメント
+│   └── news-seeds/               # ニュース風サンプルデータ
+├── docs/                         # ドキュメント (英語がソース)
+├── e2e/                          # E2E テスト (Playwright)
+├── mock-api/                     # ローカルモック API サーバ
+└── (リポジトリ直下に root src/ は存在せず、アプリコードは packages/app/src/ 配下)
 ```

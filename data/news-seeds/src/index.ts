@@ -1,9 +1,9 @@
 import type { Battle } from '@yonokomae/types';
 
 // Import all news sample seeds
-import newsSample1 from './samples/news-sample-1.js';
-import newsSample2 from './samples/news-sample-2.js';
-import newsSampleLocalCuisineShowdown from './samples/news-sample-local-cuisine-showdown.js';
+import newsSample1 from './samples/news-sample-1';
+import newsSample2 from './samples/news-sample-2';
+import newsSampleLocalCuisineShowdown from './samples/news-sample-local-cuisine-showdown';
 
 // Collect all news seeds in a map
 const newsSeedMap: Record<string, Battle> = {

@@ -1,27 +1,14 @@
+// Seed data package tsconfig.
+// All three seed packages share the same structure intentionally so that
+// they can be built / published independently while remaining symmetrical.
+// If you change one (battle-seeds, news-seeds, historical-evidence), reflect
+// the change in the others or consider introducing a shared role config.
 {
+  "extends": "../../tsconfig.role.seed.json",
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "lib": ["ES2020", "DOM"],
-    "types": ["vite/client"],
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": false,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": false,
-    "declaration": true,
-    "declarationMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-
-    "skipLibCheck": true
+    "rootDir": "src",
+    "outDir": "dist"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "exclude": ["dist", "**/*.test.ts"]
 }

@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-### Breaking Changes
+### Breaking Changes (Unreleased)
 
 - refactor(play-mode): remove mixed-nuts mode
 - refactor(provider): drop mixed-nuts mapping and delay case
@@ -15,10 +15,15 @@
 - docs: update play mode documentation to clarify available modes
 - test(e2e): update title navigation tests without mixed-nuts mode
 - docs(types): clean JSDoc references to removed modes
+- feat(core): introduce custom error classes for battle seed and news reporter repositories
+- feat(ops): add --help flags to export CLI scripts and corresponding tests
+- test(core): add deterministic and instance checks for BattleSeed\* errors
+- feat(core): add seedable shuffle utilities and tests (regression guard)
+- test(e2e): fix End key navigation assertion to ignore disabled play modes
 
 ## 1.1.0
 
-### Minor Changes
+### Minor Changes (1.1.0)
 
 - c052628: Remove Space from shortcut that triggers handleGenerate
 
