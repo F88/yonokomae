@@ -50,7 +50,9 @@ export async function loadBattleFromSeeds(params: {
   const result = BattleSchema.safeParse(battle);
   if (!result.success) {
     throw new BattleSeedValidationError(
-      result.error.issues.map((i: ZodIssue) => `${i.path.join('.')}: ${i.message}`),
+      result.error.issues.map(
+        (i: ZodIssue) => `${i.path.join('.')}: ${i.message}`,
+      ),
     );
   }
   return result.data;
