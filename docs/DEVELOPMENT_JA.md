@@ -228,7 +228,7 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 - `data/*/tsconfig.json`: 3 つのシードパッケージ (battle, news, historical) は対称性のため完全に同一。
 - `tsconfig.ops.json`: 運用/CLI 用 Node 環境 (出力 `dist/ops`)。
 
-> 注: `packages/app/tsconfig.app.json` は移行期間中の暫定設定として残っています。`tsconfig.role.app.json` と併存し、依存箇所移行後に廃止予定です。過去の「削除済み」とする記述は古い情報です。
+> 注 (2025-09-06): `packages/app/tsconfig.app.json` は参照が無いことを確認後に削除済みです。今後は `tsconfig.role.app.json` (ロール設定) + `packages/app/tsconfig.json` (パッケージエントリ) の組み合わせのみを使用してください。
 
 ガイドライン:
 
@@ -268,6 +268,21 @@ type Verdict = {
 - すべての呼び出し箇所を、`verdict.winner` を介して勝者にアクセスするように更新してください。
 - すべての `JudgementRepository` 実装が `Verdict` オブジェクトを返すようにしてください。
 - テストとモックを、新しい戻り値の型に一致するように更新してください。
+
+### インフラ変更 (2025-09-06): `packages/app/tsconfig.app.json` の削除
+
+歴史的な暫定ファイルを重複/乖離リスク低減のため削除しました。
+
+理由:
+
+- Editor / CI / build は `tsconfig.role.app.json` + `packages/app/tsconfig.json` で解決可能
+- 宣言出力設定の二重化を排除
+- JSX / moduleResolution 等のフラグ乖離リスク排除
+
+対応:
+
+- ローカルで旧ファイルを直接参照するエディタ設定が残っていれば `packages/app/tsconfig.json` に切替
+- コード変更不要 (ビルドグラフ影響なし)
 
 ## 現在の Play Mode
 
