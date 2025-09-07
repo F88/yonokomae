@@ -6,7 +6,7 @@ import type { Battle } from '@yonokomae/types';
 export type ThemeChipProps = {
   themeId: Battle['themeId'];
   className?: string;
-  variant?: 'default' | 'secondary' | 'outline';
+  variant?: 'default' | 'secondary' | 'outline' | 'accent' | 'ring';
   showName?: boolean;
 };
 
