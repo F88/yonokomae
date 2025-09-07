@@ -14,16 +14,16 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
-    subtitle: 'KWSKとの密約',
+    title: '地下鉄計画',
+    subtitle: '多摩川を越えるKWSKとの密約',
     description:
       '多摩川を越え、隣国KKと通ずる地下鉄を建設し、TOKIO連合からの独立と、KWSKとの関係深化を狙う。その計画は、市民が持つ高度な技術と、コミュニティの結束力によって支えられている。',
     power: 55000,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
-    subtitle: 'TOKIOへの密航者',
+    title: '地下水路計画',
+    subtitle: '荒川からTOKIOへの秘密経路',
     description:
       '荒川の地下水脈に秘密の通路を構築し、TOKIO連合への密行を画策。これは、武力ではない知の力で大国に対抗する、よのの外交戦略そのものである。AIを駆使したハッキングで、こまえの地下計画の情報も狙っている。',
     power: 55000,
