@@ -56,10 +56,10 @@ sequenceDiagram
     participant Repo as BattleReportRepository
 
     User->>UI: 「対戦」をクリック
-    UI->>Hook: generateReport() を呼び出し
+    UI->>Hook: generateReport({ filter }) を呼び出し
     Hook->>Provider: Context にアクセス
     Provider-->>Hook: BattleReportRepository インスタンスを提供
-    Hook->>Repo: generateReport({ signal }) を呼び出し
+    Hook->>Repo: generateReport({ filter, signal }) を呼び出し
     Repo-->>Hook: Battle データを返す
     Hook-->>UI: Battle データで State を更新
 ```
@@ -71,7 +71,7 @@ sequenceDiagram
 ```mermaid
 classDiagram
     class BattleReportRepository {
-        +generateReport(options): Promise<Battle>
+        +generateReport(params): Promise<Battle>
     }
     class JudgementRepository {
         +determineWinner(input, options): Promise<Verdict>
@@ -106,22 +106,28 @@ classDiagram
     import type { Battle } from '@yonokomae/types';
     import { uid } from '@/lib/id';
 
-    export class ExampleBattleReportRepository
-        implements BattleReportRepository
-    {
-        async generateReport(): Promise<Battle> {
-            // データパッケージからデータをロード
-            // const { battles } = await import('@yonokomae/data-battle-seeds');
+    export class ExampleBattleReportRepository implements BattleReportRepository {
+        async generateReport(
+            params?: { filter?: { battle?: { themeId?: string } }; signal?: AbortSignal }
+        ): Promise<Battle> {
+            // 任意: params.filter で選択を絞り込み
+            // 任意: params.signal を尊重 (Abort 対応)
             return {
                 id: uid('battle'),
                 title: 'Example Battle',
-                // ... other properties
-            };
+                themeId: params?.filter?.battle?.themeId ?? 'example',
+                significance: 'low',
+                subtitle: 'Demo',
+                narrative: { overview: '', scenario: '' },
+                yono: { imageUrl: '', title: 'Yono', subtitle: '', description: '', power: 50 },
+                komae: { imageUrl: '', title: 'Komae', subtitle: '', description: '', power: 50 },
+                status: 'success',
+            } as Battle;
         }
     }
     ```
 
-2.  **Provider Factory への接続:**
+2. **Provider Factory への接続:**
     `src/yk/repo/core/repository-provider.ts` 内のファクトリ関数（`getBattleReportRepository`, `getJudgementRepository` など）を更新し、目的の Play Mode に対して新しいリポジトリ実装を返すようにします。
 
     ```typescript
@@ -138,9 +144,38 @@ classDiagram
     }
     ```
 
+#### 統一された generateReport パラメータ
+
+すべての `BattleReportRepository` は単一の任意パラメータオブジェクトを受け取ります:
+
+```ts
+interface GenerateBattleReportParams {
+    filter?: {
+        battle?: {
+            id?: string;
+            themeId?: string;
+            significance?: Battle['significance'];
+        };
+    };
+    signal?: AbortSignal;
+}
+
+// 使用例
+await repo.generateReport(); // ランダム取得
+await repo.generateReport({ filter: { battle: { themeId: 'history' } } });
+const controller = new AbortController();
+await repo.generateReport({ signal: controller.signal });
+```
+
+指針:
+
+- `signal` のみでも常に単一オブジェクトで渡す。
+- 新しいフィルタ項目は慎重に追加し、まずは `filter.battle` 下に平坦配置。
+- 追加したフィールドを各実装が未対応の場合は無視される旨をドキュメント化。
+
 ### 新しい Play Mode の追加
 
-1.  **Play Mode の定義:**
+1. **Play Mode の定義:**
     `src/yk/play-mode.ts` に新しい `PlayMode` オブジェクトを追加します。
 
     ```typescript
@@ -155,10 +190,10 @@ classDiagram
     };
     ```
 
-2.  **Repositories の実装:**
+2. **Repositories の実装:**
     上記で説明したように、新しいモード用のリポジトリ実装を作成します。
 
-3.  **Provider Factories の更新:**
+3. **Provider Factories の更新:**
     `src/yk/repo/core/repository-provider.ts` のファクトリ関数に、新しい `example-mode` を処理するための分岐を追加します。動的インポート（dynamic import）を使用してリポジトリを遅延読み込みします。
 
     ```typescript
@@ -176,7 +211,7 @@ classDiagram
     }
     ```
 
-4.  **UI での Mode の使用:**
+4. **UI での Mode の使用:**
     UI を更新して新しい Play Mode を選択できるようにし、そのモードが `RepositoryProvider` に渡されるようにします。
 
 ## Workspace と依存関係管理

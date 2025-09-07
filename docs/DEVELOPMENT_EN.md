@@ -56,10 +56,10 @@ sequenceDiagram
     participant Repo as BattleReportRepository
 
     User->>UI: Clicks "Battle"
-    UI->>Hook: generateReport()
+    UI->>Hook: generateReport({ filter })
     Hook->>Provider: Accesses context
     Provider-->>Hook: Provides BattleReportRepository instance
-    Hook->>Repo: generateReport({ signal })
+    Hook->>Repo: generateReport({ filter, signal })
     Repo-->>Hook: Returns Battle data
     Hook-->>UI: Updates state with Battle data
 ```
@@ -71,7 +71,7 @@ The core repository contracts are defined in `src/yk/repo/core/repositories.ts`.
 ```mermaid
 classDiagram
     class BattleReportRepository {
-        +generateReport(options): Promise<Battle>
+        +generateReport(params): Promise<Battle>
     }
     class JudgementRepository {
         +determineWinner(input, options): Promise<Verdict>
@@ -106,17 +106,23 @@ This section explains how to extend the application with new repositories and Pl
     import type { Battle } from '@yonokomae/types';
     import { uid } from '@/lib/id';
 
-    export class ExampleBattleReportRepository
-        implements BattleReportRepository
-    {
-        async generateReport(): Promise<Battle> {
-            // Load data from data packages
-            // const { battles } = await import('@yonokomae/data-battle-seeds');
+    export class ExampleBattleReportRepository implements BattleReportRepository {
+        async generateReport(
+            params?: { filter?: { battle?: { themeId?: string } }; signal?: AbortSignal }
+        ): Promise<Battle> {
+            // Optional: use params.filter to narrow selection
+            // Optional: respect params.signal for abort support
             return {
                 id: uid('battle'),
                 title: 'Example Battle',
-                // ... other properties
-            };
+                themeId: params?.filter?.battle?.themeId ?? 'example',
+                significance: 'low',
+                subtitle: 'Demo',
+                narrative: { overview: '', scenario: '' },
+                yono: { imageUrl: '', title: 'Yono', subtitle: '', description: '', power: 50 },
+                komae: { imageUrl: '', title: 'Komae', subtitle: '', description: '', power: 50 },
+                status: 'success',
+            } as Battle;
         }
     }
     ```
@@ -137,6 +143,35 @@ This section explains how to extend the application with new repositories and Pl
         // ... other modes
     }
     ```
+
+#### Unified generateReport params
+
+All `BattleReportRepository` implementations now expose a single optional params object:
+
+```ts
+interface GenerateBattleReportParams {
+    filter?: {
+        battle?: {
+            id?: string;
+            themeId?: string;
+            significance?: Battle['significance'];
+        };
+    };
+    signal?: AbortSignal;
+}
+
+// Usage examples
+await repo.generateReport(); // random battle
+await repo.generateReport({ filter: { battle: { themeId: 'history' } } });
+const controller = new AbortController();
+await repo.generateReport({ signal: controller.signal });
+```
+
+Guidelines:
+
+- Always prefer passing a single params object (even if only `signal`).
+- Add new filter namespaces under `filter.battle` conservatively; keep flat until clear grouping emerges.
+- When adding new filter fields, ensure all implementations either respect them or explicitly document they are ignored.
 
 ### Adding a New Play Mode
 
@@ -204,6 +239,7 @@ Use `"workspace:*"` as the version range for cross-package deps to ensure local 
 
 1. Create directory: `packages/<name>/`
 2. Add `package.json`:
+
     ```json
     {
         "name": "@yonokomae/<name>",
@@ -219,6 +255,7 @@ Use `"workspace:*"` as the version range for cross-package deps to ensure local 
         "devDependencies": {}
     }
     ```
+
 3. Add `tsconfig.json` extending `tsconfig.role.package.json` (or `tsconfig.role.seed.json` for seed-type data) with appropriate `rootDir`/`outDir`.
 4. Implement code under `src/` (avoid top-level JS files for tree clarity).
 5. Run `pnpm install` (link + ensure lockfile update).
