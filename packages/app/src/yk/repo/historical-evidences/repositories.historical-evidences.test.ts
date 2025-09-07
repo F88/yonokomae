@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { getBattleReportRepository } from '../core/repository-provider';
 // Minimal PlayMode type for this test (avoids path alias issues in test env)
-type PlayMode = { id: string; title: string; description: string; enabled: boolean };
+type PlayMode = {
+  id: string;
+  title: string;
+  description: string;
+  enabled: boolean;
+};
 
 const heMode: PlayMode = {
   id: 'historical-evidences',

@@ -230,7 +230,7 @@ export function TitleContainer({
           />
           <BattleFilter
             show={
-              import.meta.env.DEV &&
+              // import.meta.env.DEV &&
               options[index]?.id === 'historical-research'
             }
             selectedThemeId={poolThemes[0]}

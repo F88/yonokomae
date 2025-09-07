@@ -56,7 +56,9 @@ export class NewsReporterDataError extends NewsReporterError {
 /**
  * API経由でニュースを集める BattleReportRepository
  */
-export class NewsReporterApiBattleReportRepository implements BattleReportRepository {
+export class NewsReporterApiBattleReportRepository
+  implements BattleReportRepository
+{
   private readonly api: ApiClient;
   private readonly delay?: DelayOption;
   private readonly cacheTtlMs: number;
