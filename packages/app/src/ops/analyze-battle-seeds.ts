@@ -46,6 +46,7 @@ interface StatsSummary {
     yonoPower: number;
     combined: number;
   }>;
+  index: Array<{ themeId: string; id: string; title: string }>;
 }
 
 function locateBattleDistDir(currentDir: string): string {
@@ -146,11 +147,20 @@ function calcStats(battles: Battle[]): StatsSummary {
     .sort((a, b) => b.combined - a.combined)
     .slice(0, 5);
 
+  const index = battles
+    .map((b) => ({ themeId: b.themeId, id: b.id, title: b.title }))
+    // Order by themeId, then title, then id (as requested: theme,title,id)
+    .sort((a, b) => {
+      if (a.themeId !== b.themeId) return a.themeId.localeCompare(b.themeId);
+      if (a.title !== b.title) return a.title.localeCompare(b.title);
+      return a.id.localeCompare(b.id);
+    });
+
   return {
     total,
     byTheme,
     bySignificance,
-      crossTab,
+    crossTab,
     power: {
       komae: {
         min: komaeMin === Infinity ? 0 : komaeMin,
@@ -169,6 +179,7 @@ function calcStats(battles: Battle[]): StatsSummary {
       },
     },
     topCombined,
+    index,
   };
 }
 
@@ -268,6 +279,13 @@ function renderText(stats: StatsSummary): string {
   if (stats.topCombined.length === 0) {
     lines.push('  (no battles)');
   }
+  lines.push('');
+  lines.push(chalk.bold('Battle Index (themeId,title,id):'));
+  for (const row of stats.index) {
+    lines.push(
+      `  ${row.themeId.padEnd(12, ' ')} ${row.title.padEnd(30, ' ')} ${row.id}`,
+    );
+  }
   return lines.join('\n');
 }
 
@@ -312,10 +330,13 @@ async function main() {
     );
     return;
   }
-  process.stdout.write(renderText(stats) + '\n');
-  process.stderr.write(
-    chalk.dim(`Duration(ms): ${Date.now() - started}`) + '\n',
-  );
+  const durationMs = Date.now() - started;
+  const outText =
+    renderText(stats) +
+    '\n\n' +
+    chalk.dim(`Duration(ms): ${durationMs}`) +
+    '\n';
+  process.stdout.write(outText);
 }
 
 main();
