@@ -14,16 +14,16 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
-    subtitle: 'かわうそロボ',
+    title: 'かわうそロボ',
+    subtitle: '川の探検家',
     description:
       '多摩川の人気者、かわうそがモデルのロボット。水の中をスイスイ泳いで、お宝を探すのが大得意！でも、たまに暴走して、川の水をみんなにかけちゃう、いたずらっ子な一面も。',
     power: 15000,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
-    subtitle: 'とりロボ',
+    title: 'とりロボ',
+    subtitle: '空のヒーロー',
     description:
       '大きな翼で空を自由に飛びまわる、とりがモデルのロボット。高いところから街をパトロールするのがお仕事。でも、たまにお洗濯物を間違えて持っていっちゃう、おっちょこちょいさん。',
     power: 15000,
