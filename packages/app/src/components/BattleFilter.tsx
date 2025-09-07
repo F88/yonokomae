@@ -1,6 +1,6 @@
 import { battleSeedsByFile } from '@yonokomae/data-battle-seeds';
 import { battleThemeCatalog } from '@yonokomae/catalog';
-import { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback, useEffect } from 'react';
 import { ThemeChip } from '@/components/battle/ThemeChip';
 import { BattleTitleChip } from '@/components/battle/BattleTitleChip';
 import type { Battle } from '@yonokomae/types';
@@ -20,9 +20,6 @@ export type BattleFilterProps = {
   /** Selected theme id (undefined => all themes). */
   selectedThemeId?: string;
   onSelectedThemeIdChange?: (id: string | undefined) => void;
-  /** Deprecated multi-select props kept for backward compatibility (first element used). */
-  selectedThemeIds?: string[]; // deprecated
-  onSelectedThemeIdsChange?: (ids: string[]) => void; // deprecated
   show?: boolean;
   className?: string;
 };
@@ -31,8 +28,6 @@ export function BattleFilter({
   themeIdsFilter,
   selectedThemeId,
   onSelectedThemeIdChange,
-  selectedThemeIds, // deprecated
-  onSelectedThemeIdsChange, // deprecated
   show = true,
   className,
 }: BattleFilterProps) {
@@ -69,14 +64,19 @@ export function BattleFilter({
       });
   }, [themeIdsFilter]);
 
-  const [internalTheme, setInternalTheme] = useState<string | undefined>(
-    selectedThemeIds && selectedThemeIds.length > 0
-      ? selectedThemeIds[0]
-      : undefined,
+  // Unified local mirror state for immediate (optimistic) UI feedback.
+  // Rationale: When parent controls the value, the first click triggers parent state update
+  // but the render with the new prop arrives on the next tick; without a local mirror the
+  // user must click twice to see ALL highlighted. We therefore always keep a local copy
+  // and sync it via effect when the external prop changes.
+  const [localTheme, setLocalTheme] = useState<string | undefined>(
+    selectedThemeId,
   );
-  const themeId = onSelectedThemeIdChange
-    ? selectedThemeId
-    : (selectedThemeId ?? internalTheme);
+  // Sync local state whenever the controlled prop changes (including becoming undefined)
+  useEffect(() => {
+    setLocalTheme(selectedThemeId);
+  }, [selectedThemeId]);
+  const themeId = localTheme;
 
   const themeOptions = useMemo(() => {
     const ids = new Set<string>();
@@ -96,11 +96,11 @@ export function BattleFilter({
 
   const selectThemeId = useCallback(
     (id: string | undefined) => {
-      if (onSelectedThemeIdChange) onSelectedThemeIdChange(id);
-      else setInternalTheme(id);
-      if (onSelectedThemeIdsChange) onSelectedThemeIdsChange(id ? [id] : []);
+      // Optimistically reflect in UI
+      setLocalTheme(id);
+      onSelectedThemeIdChange?.(id);
     },
-    [onSelectedThemeIdChange, onSelectedThemeIdsChange],
+    [onSelectedThemeIdChange],
   );
   if (!show) return null;
 
@@ -132,8 +132,8 @@ export function BattleFilter({
             'rounded-full border px-2 py-0.5 text-[11px] sm:text-xs',
             'transition-colors',
             !themeId
-              ? 'bg-primary text-primary-foreground border-primary'
-              : 'hover:bg-muted',
+              ? 'bg-muted border-ring ring-2 ring-ring/40'
+              : 'bg-muted hover:brightness-105',
           ].join(' ')}
           aria-label="All Themes"
         >
@@ -156,12 +156,12 @@ export function BattleFilter({
             >
               <ThemeChip
                 themeId={t.id as Battle['themeId']}
-                variant={active ? 'default' : 'outline'}
+                variant="outline"
                 showName={false}
                 className={[
-                  'cursor-pointer',
+                  'cursor-pointer transition-colors',
                   active
-                    ? 'ring-2 ring-primary/70'
+                    ? 'border-ring ring-2 ring-ring/40'
                     : 'opacity-80 group-hover:opacity-100',
                 ].join(' ')}
               />
