@@ -1,7 +1,9 @@
 import type {
   BattleReportRepository,
   JudgementRepository,
+  GenerateBattleReportParams,
 } from '@/yk/repo/core/repositories';
+import type { Battle } from '@yonokomae/types';
 import type { DelayOption } from '@/yk/repo/core/delay-utils';
 import {
   DemoBattleReportRepository,
@@ -16,8 +18,8 @@ export class DemoDeBattleReportRepository implements BattleReportRepository {
       delay: options?.delay,
     });
   }
-  async generateReport(options?: { signal?: AbortSignal }) {
-    return this.impl.generateReport(options);
+  async generateReport(params?: GenerateBattleReportParams): Promise<Battle> {
+    return this.impl.generateReport(params);
   }
 }
 

@@ -1,4 +1,7 @@
-import type { BattleReportRepository } from '../core/repositories';
+import type {
+  BattleReportRepository,
+  GenerateBattleReportParams,
+} from '../core/repositories';
 import type { Battle } from '@yonokomae/types';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 
@@ -40,11 +43,12 @@ export class NewsReporterMultiSourceReportRepository
     this.delay = opts.delay;
   }
 
-  async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
-    await applyDelay(this.delay, options?.signal);
+  async generateReport(arg?: GenerateBattleReportParams): Promise<Battle> {
+    const signal = arg?.signal;
+    await applyDelay(this.delay, signal);
     const r = this.rng();
     const useApi = r < this.weightApi;
     const chosen = useApi ? this.api : this.local;
-    return chosen.generateReport(options);
+    return chosen.generateReport(arg);
   }
 }

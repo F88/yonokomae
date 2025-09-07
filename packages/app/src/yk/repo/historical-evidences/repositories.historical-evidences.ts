@@ -32,17 +32,7 @@ export class HistoricalEvidencesBattleReportRepository
     this.delay = opts?.delay;
   }
 
-  // Overloads (legacy + new unified params)
-  async generateReport(options?: { signal?: AbortSignal }): Promise<Battle>;
-  async generateReport(params: GenerateBattleReportParams): Promise<Battle>;
-  async generateReport(
-    arg?: { signal?: AbortSignal } | GenerateBattleReportParams,
-  ): Promise<Battle> {
-    const params: GenerateBattleReportParams | undefined = arg
-      ? 'filter' in arg || 'signal' in arg
-        ? (arg as GenerateBattleReportParams)
-        : { signal: (arg as { signal?: AbortSignal }).signal }
-      : undefined;
+  async generateReport(params?: GenerateBattleReportParams): Promise<Battle> {
     await applyDelay(this.delay, params?.signal);
     const roots = [
       '/seeds/historical-evidences/battle/',

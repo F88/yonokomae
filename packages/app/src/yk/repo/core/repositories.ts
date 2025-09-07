@@ -104,10 +104,11 @@ export interface BattleReportRepository {
   // Legacy positional options (signal only) kept as overload for backward
   // compatibility. New unified params object supports filters + signal.
   // After callsites migrate, the legacy signature can be removed.
-  /** @deprecated Use generateReport(params?: GenerateBattleReportParams) */
-  generateReport(options?: { signal?: AbortSignal }): Promise<Battle>;
-  /** Unified params signature (preferred). */
-  generateReport(params: GenerateBattleReportParams): Promise<Battle>;
+  /**
+   * Generate or fetch a complete battle report.
+   * Unified params signature – optional object may include `filter` and/or `signal`.
+   */
+  generateReport(params?: GenerateBattleReportParams): Promise<Battle>;
 }
 
 // ----- Filter / Params Types -----
