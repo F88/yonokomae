@@ -69,21 +69,7 @@ export type JudgeIdentity = {
  * @see {@link PlayMode} for mode-based repository selection
  */
 export interface BattleReportRepository {
-  /**
-   * Structured filter object for battle report generation.
-   *
-   * Extensible namespace – start with `battle` sub-object to scope
-   * attributes of the target battle entity being requested.
-   */
-  // (type alias placed inside interface file for single-source-of-truth DX)
-  // Exported below via `export type`.
-  // Intentionally minimal; add fields as requirements emerge.
-  // Keeping optional to allow partial narrowing of random pool.
-  // themeId filter is the initial motivating use-case.
-  // significance and id reserved for future deterministic selection.
-  /** @internal */
-  // (Note: interface merging not used; we export a separate type after def.)
-  // placeholder – actual exported type below.
+  // Filter shape defined below (BattleReportFilter) and referenced via params.filter.
   /**
    * Generate or fetch a complete battle report.
    *
@@ -100,10 +86,6 @@ export interface BattleReportRepository {
    * @returns Promise resolving to complete Battle object
    * @throws Error if generation fails or is cancelled
    */
-  // ---------------- Migration Note ----------------
-  // Legacy positional options (signal only) kept as overload for backward
-  // compatibility. New unified params object supports filters + signal.
-  // After callsites migrate, the legacy signature can be removed.
   /**
    * Generate or fetch a complete battle report.
    * Unified params signature – optional object may include `filter` and/or `signal`.
