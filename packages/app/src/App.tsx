@@ -24,6 +24,10 @@ function App() {
   const [battleSeedFile, setBattleSeedFile] = useState<string | undefined>(
     undefined,
   );
+  // Active repository-level theme filter (BattleFilter). Undefined => no filtering.
+  const [activeThemeId, setActiveThemeId] = useState<string | undefined>(
+    undefined,
+  );
   // Minimal aggregated metrics for the current reports list (MVP scope)
   const [reportMetrics, setReportMetrics] = useState<BattleReportMetrics>({
     totalReports: 0,
@@ -293,7 +297,11 @@ function App() {
     // Scrolling will occur in the effect after DOM updates
 
     try {
-      const next = await generateReport();
+      const next = await generateReport(
+        activeThemeId
+          ? { filter: { battle: { themeId: activeThemeId } } }
+          : undefined,
+      );
       // Replace the placeholder at the captured index
       let lastIdAfterUpdate: string | undefined;
       setReports((prev) => {
@@ -427,6 +435,8 @@ function App() {
                 onSelect={(mode) => setMode(mode)}
                 battleSeedFile={battleSeedFile}
                 onBattleSeedChange={(f) => setBattleSeedFile(f)}
+                selectedThemeId={activeThemeId}
+                onSelectedThemeIdChange={(id) => setActiveThemeId(id)}
               />
             </div>
           )}

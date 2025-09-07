@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { battleSeedsByFile } from '@yonokomae/data-battle-seeds';
 import type { PlayMode } from '@/yk/play-mode';
 import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyChip } from '@/components/KeyChip';
 import { isEditable } from '@/lib/dom-utils';
 import { BattleSeedSelector } from '@/components/BattleSeedSelector';
+import { BattleFilter } from '@/components/BattleFilter';
 
 export type TitleContainerProps = {
   modes?: PlayMode[];
@@ -12,6 +14,14 @@ export type TitleContainerProps = {
   title?: string;
   battleSeedFile?: string;
   onBattleSeedChange?: (file: string | undefined) => void;
+  /**
+   * Currently selected theme id coming from parent (BattleFilter). When provided this component
+   * operates in a controlled mode for theme selection and emits changes through
+   * `onSelectedThemeIdChange`.
+   */
+  selectedThemeId?: string;
+  /** Notify parent when the active theme filter changes (undefined => all). */
+  onSelectedThemeIdChange?: (id: string | undefined) => void;
 };
 
 /**
@@ -26,25 +36,58 @@ export function TitleContainer({
   title = 'SELECT MODE',
   battleSeedFile,
   onBattleSeedChange,
+  selectedThemeId,
+  onSelectedThemeIdChange,
 }: TitleContainerProps) {
   // Local (controlled/uncontrolled) battle seed file selection
   const [internalBattleSeedFile, setInternalBattleSeedFile] = useState<
     string | undefined
   >(battleSeedFile);
   const effectiveBattleSeedFile = battleSeedFile ?? internalBattleSeedFile;
-  const updateBattleSeedFile = (file: string | undefined) => {
-    if (battleSeedFile === undefined) {
-      setInternalBattleSeedFile(file); // uncontrolled mode
-    }
-    onBattleSeedChange?.(file);
-  };
+  const updateBattleSeedFile = useCallback(
+    (file: string | undefined) => {
+      if (battleSeedFile === undefined) {
+        setInternalBattleSeedFile(file); // uncontrolled mode
+      }
+      onBattleSeedChange?.(file);
+    },
+    [battleSeedFile, onBattleSeedChange],
+  );
   // Battle seed filtering (dev utility) — locally controlled
   const [battleSeedSearch, setBattleSeedSearch] = useState('');
-  const [battleSeedTheme, setBattleSeedTheme] = useState<string | undefined>(
-    undefined,
-  );
+  // Theme selection unified: BattleFilter drives the theme filter used by BattleSeedSelector
+  // Removed separate battleSeedTheme state; we derive active theme from poolThemes[0]
   const options = useMemo(() => modes ?? defaultPlayModes, [modes]);
   const [index, setIndex] = useState(0);
+  // Theme filter state (single selection). Keep historical array shape for downstream (poolThemes[0]).
+  const [internalTheme, setInternalTheme] = useState<string | undefined>(
+    undefined,
+  );
+  const themeId =
+    selectedThemeId !== undefined ? selectedThemeId : internalTheme;
+  const poolThemes = useMemo(() => (themeId ? [themeId] : []), [themeId]);
+  const updateTheme = useCallback(
+    (id: string | undefined) => {
+      if (selectedThemeId === undefined) {
+        setInternalTheme(id);
+      }
+      onSelectedThemeIdChange?.(id);
+    },
+    [selectedThemeId, onSelectedThemeIdChange],
+  );
+
+  // Keep selected battle seed consistent with active theme filter: if theme changes and current
+  // selection doesn't belong to that theme, clear it so downstream consumers don't see stale data.
+  useEffect(() => {
+    const activeTheme = poolThemes[0];
+    if (!activeTheme || !effectiveBattleSeedFile) return;
+    const seed = battleSeedsByFile[effectiveBattleSeedFile] as
+      | { themeId?: string }
+      | undefined;
+    if (seed && seed.themeId !== activeTheme) {
+      updateBattleSeedFile(undefined);
+    }
+  }, [poolThemes, effectiveBattleSeedFile, updateBattleSeedFile]);
 
   // Keep index within range if modes change
   useEffect(() => {
@@ -172,6 +215,7 @@ export function TitleContainer({
           </CardTitle>
 
           <BattleSeedSelector
+            showIds
             show={
               import.meta.env.DEV &&
               options[index]?.id === 'historical-research'
@@ -181,8 +225,17 @@ export function TitleContainer({
             enableFilters={true}
             searchText={battleSeedSearch}
             onSearchTextChange={setBattleSeedSearch}
-            themeIdFilter={battleSeedTheme}
-            onThemeIdFilterChange={setBattleSeedTheme}
+            themeIdFilter={poolThemes[0]}
+            onThemeIdFilterChange={(id) => updateTheme(id)}
+          />
+          <BattleFilter
+            show={
+              import.meta.env.DEV &&
+              options[index]?.id === 'historical-research'
+            }
+            selectedThemeId={poolThemes[0]}
+            onSelectedThemeIdChange={(id) => updateTheme(id)}
+            className="mt-2"
           />
         </CardHeader>
         <CardContent>
