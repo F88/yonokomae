@@ -15,7 +15,7 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
+    title: '紺野美沙子',
     subtitle: '深みと知性の表現者',
     description:
       '紺野美沙子。こまえ市出身の女優で、朗読や国際協力活動でも知られる。彼女の持つ知的な魅力は、こまえの市民が誇る精神の豊かさそのものである。',
@@ -23,7 +23,7 @@ const battle = {
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
+    title: '萩原健一',
     subtitle: '反骨のロック・スター',
     description:
       '萩原健一。よの市（現さいたま市中央区）出身の伝説的ロック・スター。その型破りで個性的な生き方は、よのの持つ先進性と知性を象徴している。新都心のライトに最も似合う男、それが彼の正体だ。',
