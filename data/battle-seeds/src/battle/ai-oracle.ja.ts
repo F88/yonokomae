@@ -14,19 +14,19 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
-    subtitle: '自由を求めるジャーナリスト',
+    title: '反逆のジャーナリスト',
+    subtitle: 'AIの予言に抗うペン',
     description:
       'AIの予言に頼らず、人々の生の声と自由な選択こそが真実を創ると主張。AIに支配された未来ではなく、自分たちの手で未来を切り開くことを選ぶ。',
-    power: 55000,
+    power: 85,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
-    subtitle: '未来を司るAIオラクル',
+    title: 'シンギュラリティ・オラクル',
+    subtitle: '絶対的予言による統治',
     description:
       '膨大なデータと予測能力を持つAI『シンギュラリティ・オラクル』で、市民の生活を安定させる。AIが導き出す完璧な未来こそが、人々の真の幸福だと信じている。',
-    power: 55000,
+    power: 85,
   },
   provenance: [
     {
