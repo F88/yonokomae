@@ -3,6 +3,7 @@ import type {
   BattleReportRepository,
   JudgementRepository,
   Verdict,
+  GenerateBattleReportParams,
 } from '@/yk/repo/core/repositories';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 import { loadBattleFromSeeds } from '../core/battle-seed-loader';
@@ -31,21 +32,41 @@ export class HistoricalEvidencesBattleReportRepository
     this.delay = opts?.delay;
   }
 
-  /**
-   * Generates a battle by loading and validating a seed file.
-   *
-   * @param options.signal AbortSignal to cancel the operation.
-   * @returns A validated Battle object derived from a seed.
-   * @throws Error when no battle files are found or when validation fails.
-   */
-  async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
-    await applyDelay(this.delay, options?.signal);
-    // Reuse shared loader: discovers, normalizes, and validates seeds.
+  // Overloads (legacy + new unified params)
+  async generateReport(options?: { signal?: AbortSignal }): Promise<Battle>;
+  async generateReport(params: GenerateBattleReportParams): Promise<Battle>;
+  async generateReport(
+    arg?: { signal?: AbortSignal } | GenerateBattleReportParams,
+  ): Promise<Battle> {
+    const params: GenerateBattleReportParams | undefined = arg
+      ? 'filter' in arg || 'signal' in arg
+        ? (arg as GenerateBattleReportParams)
+        : { signal: (arg as { signal?: AbortSignal }).signal }
+      : undefined;
+    await applyDelay(this.delay, params?.signal);
     const roots = [
       '/seeds/historical-evidences/battle/',
       '@yonokomae/data-battle-seeds',
     ];
-    return loadBattleFromSeeds({ roots, file: this.file });
+    const themeId = params?.filter?.battle?.themeId;
+    const idFilter = params?.filter?.battle?.id;
+    const significance = params?.filter?.battle?.significance;
+
+    const predicate =
+      themeId || idFilter || significance
+        ? (b: Battle) => {
+            if (themeId && b.themeId !== themeId) return false;
+            if (idFilter && b.id !== idFilter) return false;
+            if (significance && b.significance !== significance) return false;
+            return true;
+          }
+        : undefined;
+
+    return loadBattleFromSeeds({
+      roots,
+      file: this.file,
+      predicate,
+    });
   }
 }
 // (intentionally empty between loader import and class)
