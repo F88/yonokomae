@@ -15,6 +15,8 @@ export type BattleSeedSelectorProps = {
   /** Controlled themeId filter (optional). */
   themeIdFilter?: string;
   onThemeIdFilterChange?: (themeId: string | undefined) => void;
+  /** Show underlying battle seed id (battle.id inside the seed) next to the title. */
+  showIds?: boolean;
 };
 
 /**
@@ -33,15 +35,18 @@ export function BattleSeedSelector({
   onSearchTextChange,
   themeIdFilter,
   onThemeIdFilterChange,
+  showIds = false,
 }: BattleSeedSelectorProps) {
   // Build seed metadata once (stable unless battleSeedsByFile changes at build time)
   type SeedMeta = {
     file: string;
     title: string;
+    id?: string;
     themeId?: string;
     themeName?: string;
   };
   interface BattleShape {
+    id?: string;
     title?: string;
     themeId?: string;
   }
@@ -57,6 +62,7 @@ export function BattleSeedSelector({
         return {
           file,
           title: b.title || file,
+          id: b.id,
           themeId: b.themeId,
           themeName: b.themeId ? themeNameById.get(b.themeId) : undefined,
         } satisfies SeedMeta;
@@ -165,7 +171,9 @@ export function BattleSeedSelector({
             const meta = seeds.find((s) => s.file === file);
             return (
               <option key={file} value={file}>
-                {(meta && meta.title) || file}
+                {meta
+                  ? `${meta.title}${showIds && meta.id ? ` [${meta.id}]` : ''}`
+                  : file}
               </option>
             );
           })}
