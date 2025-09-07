@@ -39,6 +39,7 @@ import wikipediaJaBattle from './battle/wikipedia-ja-battle.ja';
 import undergroundConspiracy from './battle/underground-conspiracy.ja';
 import localCurrencyBattle from './battle/local-currency-battle.ja';
 import snackBattle from './battle/snack-battle.ja';
+import kidsTechBattle from './battle/kids-tech-battle.ja';
 
 // Collect all battles in a map
 const battleMap: Record<string, Battle> = {
@@ -85,6 +86,7 @@ const battleMap: Record<string, Battle> = {
     'underground-conspiracy.ja.ts': undergroundConspiracy,
     'local-currency-battle.ja.ts': localCurrencyBattle,
     'snack-battle.ja.ts': snackBattle,
+    'kids-tech-battle.ja.ts': kidsTechBattle,
   },
 };
 
