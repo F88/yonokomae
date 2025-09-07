@@ -14,16 +14,16 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
-    subtitle: '生きている百科事典',
+    title: '狛江市 - Wikipedia',
+    subtitle: '現在進行形の物語',
     description:
       '先史時代からの集落の歴史、多摩川の治水、そして現代の事件に至るまで、独立した一つの都市としての歴史が克明に記録されている。その物語は、人々の暮らしに根ざし、今もなお紡がれ続けている。',
     power: 35000,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
-    subtitle: '歴史を終えた英雄の書',
+    title: '与野市 - Wikipedia',
+    subtitle: '完結した英雄譚',
     description:
       '浦和・大宮との合併によって、その名は歴史から消えた。しかし、百科事典のページには、合併という偉業を成し遂げた英雄的な物語が記されており、その功績は今も色褪せることはない。',
     power: 35000,
