@@ -174,7 +174,7 @@ export default battle;
     import type { Battle } from '@yonokomae/types';
 
     const battle: Battle = {
-        id: 'yono-komae-your-topic-2024',
+        id: 'your-topic-2024',
         title: 'あなたのトピック対決',
         // ... バトルデータの残り
     };
@@ -260,7 +260,7 @@ pnpm test
 
 ```typescript
 const battle: Battle = {
-    id: 'yono-komae-population-2023',
+    id: 'population-2023',
     title: '人口対決2023',
     subtitle: '市民パワーバトル',
     overview: '2023年の人口データを基にした対決',
