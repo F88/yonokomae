@@ -233,8 +233,8 @@ export function TitleContainer({
               // import.meta.env.DEV &&
               options[index]?.id === 'historical-research'
             }
-            showBattleChips={false}
-            // showBattleCount={false}
+            showBattleChips={import.meta.env.DEV}
+            showBattleCount={import.meta.env.DEV}
             themeIdsFilter={undefined}
             selectedThemeId={poolThemes[0]}
             onSelectedThemeIdChange={(id) => updateTheme(id)}
