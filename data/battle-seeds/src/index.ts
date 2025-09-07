@@ -40,6 +40,8 @@ import undergroundConspiracy from './battle/underground-conspiracy.ja';
 import localCurrencyBattle from './battle/local-currency-battle.ja';
 import snackBattle from './battle/snack-battle.ja';
 import kidsTechBattle from './battle/kids-tech-battle.ja';
+import aiOracle from './battle/ai-oracle.ja';
+import dataGhostHunt from './battle/data-ghost-hunt.ja';
 
 // Collect all battles in a map
 const battleMap: Record<string, Battle> = {
@@ -87,6 +89,8 @@ const battleMap: Record<string, Battle> = {
     'local-currency-battle.ja.ts': localCurrencyBattle,
     'snack-battle.ja.ts': snackBattle,
     'kids-tech-battle.ja.ts': kidsTechBattle,
+    'ai-oracle.ja.ts': aiOracle,
+    'data-ghost-hunt.ja.ts': dataGhostHunt,
   },
 };
 
