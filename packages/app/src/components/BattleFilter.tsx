@@ -20,16 +20,20 @@ export type BattleFilterProps = {
   /** Selected theme id (undefined => all themes). */
   selectedThemeId?: string;
   onSelectedThemeIdChange?: (id: string | undefined) => void;
-  show?: boolean;
   className?: string;
+  show?: boolean;
+  showBattleCount?: boolean; // Whether to show the battle count next to "テーマ" (default true)
+  showBattleChips?: boolean; // Whether to show the battle chips below the filter (default true)
 };
 
 export function BattleFilter({
   themeIdsFilter,
   selectedThemeId,
   onSelectedThemeIdChange,
-  show = true,
   className,
+  show = true,
+  showBattleCount = true,
+  showBattleChips = true,
 }: BattleFilterProps) {
   interface BattleShape {
     title?: string;
@@ -114,9 +118,11 @@ export function BattleFilter({
     >
       <div className="flex flex-wrap items-center gap-2">
         <strong>テーマ</strong>
-        <span className="rounded bg-muted px-2 py-0.5" title="Filtered count">
-          {filtered.length}
-        </span>
+        {showBattleCount && (
+          <span className="rounded bg-muted px-2 py-0.5" title="Filtered count">
+            {filtered.length}
+          </span>
+        )}
       </div>
       <div
         className="flex flex-wrap items-center gap-2"
@@ -169,7 +175,7 @@ export function BattleFilter({
           );
         })}
       </div>
-      {themeId && (
+      {showBattleChips && (
         <div
           className="flex flex-wrap gap-2 max-h-48 overflow-auto rounded border p-2"
           data-testid="battle-filter-list"

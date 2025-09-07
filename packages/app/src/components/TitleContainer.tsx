@@ -233,6 +233,9 @@ export function TitleContainer({
               // import.meta.env.DEV &&
               options[index]?.id === 'historical-research'
             }
+            showBattleChips={false}
+            // showBattleCount={false}
+            themeIdsFilter={undefined}
             selectedThemeId={poolThemes[0]}
             onSelectedThemeIdChange={(id) => updateTheme(id)}
             className="mt-2"
