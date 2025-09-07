@@ -42,6 +42,10 @@ import snackBattle from './battle/snack-battle.ja';
 import kidsTechBattle from './battle/kids-tech-battle.ja';
 import aiOracle from './battle/ai-oracle.ja';
 import dataGhostHunt from './battle/data-ghost-hunt.ja';
+import childSafetyBattle from './battle/child-safety-battle.ja';
+import disasterSimulationBattle from './battle/disaster-simulation-battle.ja';
+import parentingRobotsBattle from './battle/parenting-robot-battle.ja';
+import waterResourceManagementBattle from './battle/water-resource-battle.ja';
 
 // Collect all battles in a map
 const battleMap: Record<string, Battle> = {
@@ -91,6 +95,10 @@ const battleMap: Record<string, Battle> = {
     'kids-tech-battle.ja.ts': kidsTechBattle,
     'ai-oracle.ja.ts': aiOracle,
     'data-ghost-hunt.ja.ts': dataGhostHunt,
+    'child-safety-battle.ja.ts': childSafetyBattle,
+    'disaster-simulation-battle.ja.ts': disasterSimulationBattle,
+    'parenting-robot-battle.ja.ts': parentingRobotsBattle,
+    'water-resource-battle.ja.ts': waterResourceManagementBattle,
   },
 };
 
