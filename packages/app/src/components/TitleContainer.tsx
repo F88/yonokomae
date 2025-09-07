@@ -4,13 +4,14 @@ import { playMode as defaultPlayModes } from '@/yk/play-mode';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyChip } from '@/components/KeyChip';
 import { isEditable } from '@/lib/dom-utils';
-// import { historicalSeeds } from '@/yk/repo/seed-system';
-// import { useHistoricalSeedSelection } from '@/yk/repo/seed-system';
+import { BattleSeedSelector } from '@/components/BattleSeedSelector';
 
 export type TitleContainerProps = {
   modes?: PlayMode[];
   onSelect: (mode: PlayMode) => void;
   title?: string;
+  battleSeedFile?: string;
+  onBattleSeedChange?: (file: string | undefined) => void;
 };
 
 /**
@@ -23,8 +24,25 @@ export function TitleContainer({
   modes,
   onSelect,
   title = 'SELECT MODE',
+  battleSeedFile,
+  onBattleSeedChange,
 }: TitleContainerProps) {
-  // const seedSelection = useHistoricalSeedSelection();
+  // Local (controlled/uncontrolled) battle seed file selection
+  const [internalBattleSeedFile, setInternalBattleSeedFile] = useState<
+    string | undefined
+  >(battleSeedFile);
+  const effectiveBattleSeedFile = battleSeedFile ?? internalBattleSeedFile;
+  const updateBattleSeedFile = (file: string | undefined) => {
+    if (battleSeedFile === undefined) {
+      setInternalBattleSeedFile(file); // uncontrolled mode
+    }
+    onBattleSeedChange?.(file);
+  };
+  // Battle seed filtering (dev utility) — locally controlled
+  const [battleSeedSearch, setBattleSeedSearch] = useState('');
+  const [battleSeedTheme, setBattleSeedTheme] = useState<string | undefined>(
+    undefined,
+  );
   const options = useMemo(() => modes ?? defaultPlayModes, [modes]);
   const [index, setIndex] = useState(0);
 
@@ -153,37 +171,19 @@ export function TitleContainer({
             {title}
           </CardTitle>
 
-          {/* Seed selection */}
-          {/* {options[index]?.id === 'historical-research' && (
-            <div className="mt-2 flex flex-col items-center gap-2 text-xs text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <span>Seed:</span>
-                <select
-                  aria-label="Historical seed selector"
-                  className="rounded border px-2 py-1"
-                  onChange={(e) =>
-                    seedSelection?.setSeedFile(e.target.value || undefined)
-                  }
-                  value={seedSelection?.seedFile ?? ''}
-                >
-                  <option value="">(auto)</option>
-                  {historicalSeeds.map((s) => (
-                    <option key={s.file} value={s.file}>
-                      {s.title}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  className="rounded border px-2 py-1 hover:bg-muted"
-                  title="Rotate seed"
-                  onClick={() => seedSelection?.rotateSeed()}
-                >
-                  Rotate
-                </button>
-              </div>
-            </div>
-          )} */}
+          <BattleSeedSelector
+            show={
+              import.meta.env.DEV &&
+              options[index]?.id === 'historical-research'
+            }
+            value={effectiveBattleSeedFile}
+            onChange={updateBattleSeedFile}
+            enableFilters={true}
+            searchText={battleSeedSearch}
+            onSearchTextChange={setBattleSeedSearch}
+            themeIdFilter={battleSeedTheme}
+            onThemeIdFilterChange={setBattleSeedTheme}
+          />
         </CardHeader>
         <CardContent>
           {/** Key hint chips (>= sm) */}
