@@ -90,3 +90,11 @@ The `pnpm test` command is part of our CI pipeline. Pull Requests that fail sche
 - **Validation Tests:** `data/historical-evidence/src/seeds.validation.test.ts`
 - **Type Definitions:** `packages/types/src/historical.ts`
 - **Development Overview:** `docs/DEVELOPMENT_EN.md`
+
+## Appendix: Repository-level Filtering
+
+Historical evidence seeds currently are not narrowed by additional repository
+filters beyond potential future support for `themeId` or `significance`. If
+filtering is introduced, it will operate at generation time without requiring
+changes to existing seed files. Monitor the Development Guide changelog for
+updates.

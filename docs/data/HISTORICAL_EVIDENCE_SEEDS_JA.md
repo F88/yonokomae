@@ -90,3 +90,10 @@ instructions-for-ais:
 - **バリデーションテスト:** `data/historical-evidence/src/seeds.validation.test.ts`
 - **型定義:** `packages/types/src/historical.ts`
 - **開発概要:** `docs/DEVELOPMENT_EN.md`
+
+## 付録: リポジトリ層フィルタ
+
+歴史的証拠シードは現時点で追加のリポジトリ層フィルタ (例: `significance`) による
+絞り込み対象ではありません。将来的に導入される場合でも既存シードファイルの変更
+は不要で、生成時にフィルタが適用されます。最新状況は Development Guide の更新を
+参照してください。

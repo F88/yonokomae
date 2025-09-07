@@ -2,6 +2,7 @@ import type {
   BattleReportRepository,
   JudgementRepository,
   Verdict,
+  GenerateBattleReportParams,
 } from '@/yk/repo/core/repositories';
 import type { Battle } from '@yonokomae/types';
 import { uid } from '@/lib/id';
@@ -32,9 +33,18 @@ export class DemoBattleReportRepository implements BattleReportRepository {
     this.delay = options?.delay;
   }
 
-  async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
-    await applyDelay(this.delay, options?.signal);
-    const patterns = this.pack.patterns;
+  async generateReport(arg?: GenerateBattleReportParams): Promise<Battle> {
+    const signal = arg?.signal;
+    const filter = arg?.filter;
+    await applyDelay(this.delay, signal);
+    let patterns = this.pack.patterns;
+    const themeId = filter?.battle?.themeId;
+    const idFilter = filter?.battle?.id;
+    const significance = filter?.battle?.significance;
+    if (themeId) patterns = patterns.filter((p) => p.themeId === themeId);
+    if (idFilter) patterns = patterns.filter((p) => p.id === idFilter);
+    if (significance)
+      patterns = patterns.filter((p) => p.significance === significance);
     if (patterns.length === 0) {
       // Fallback empty battle (ensures type soundness under strict + noUncheckedIndexedAccess)
       return {

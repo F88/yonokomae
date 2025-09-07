@@ -63,7 +63,18 @@ export interface BattleReportRepository {
    * @returns Promise resolving to complete Battle object
    * @throws Error if generation fails or is cancelled
    */
-  generateReport(options?: { signal?: AbortSignal }): Promise<Battle>;
+  generateReport(params?: GenerateBattleReportParams): Promise<Battle>;
+}
+export type BattleReportFilter = {
+  battle?: {
+    id?: string;
+    themeId?: string;
+    significance?: Battle['significance'];
+  };
+};
+export interface GenerateBattleReportParams {
+  filter?: BattleReportFilter;
+  signal?: AbortSignal;
 }
 /**
  * JudgementRepository

@@ -21,6 +21,13 @@ function App() {
   const MAX_CONCURRENT = 6;
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
   const [reports, setReports] = useState<Battle[]>([]);
+  const [battleSeedFile, setBattleSeedFile] = useState<string | undefined>(
+    undefined,
+  );
+  // Active repository-level theme filter (BattleFilter). Undefined => no filtering.
+  const [activeThemeId, setActiveThemeId] = useState<string | undefined>(
+    undefined,
+  );
   // Minimal aggregated metrics for the current reports list (MVP scope)
   const [reportMetrics, setReportMetrics] = useState<BattleReportMetrics>({
     totalReports: 0,
@@ -33,7 +40,7 @@ function App() {
   const modeSelectionRef = useRef<HTMLDivElement | null>(null);
   const [gridCols, setGridCols] = useState('grid-cols-1 lg:grid-cols-2');
 
-  const { generateReport } = useGenerateReport(mode);
+  const { generateReport } = useGenerateReport(mode, battleSeedFile);
 
   // Helper: safe media query checks for non-browser/test envs
   const supportsMatchMedia =
@@ -290,7 +297,11 @@ function App() {
     // Scrolling will occur in the effect after DOM updates
 
     try {
-      const next = await generateReport();
+      const next = await generateReport(
+        activeThemeId
+          ? { filter: { battle: { themeId: activeThemeId } } }
+          : undefined,
+      );
       // Replace the placeholder at the captured index
       let lastIdAfterUpdate: string | undefined;
       setReports((prev) => {
@@ -366,12 +377,21 @@ function App() {
   };
 
   return (
-    <RepositoryProvider mode={mode}>
+    <RepositoryProvider mode={mode} seedFile={battleSeedFile}>
       <main className="min-h-screen bg-background">
         {/* Header */}
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container flex h-14 items-center">
             <Header mode={mode} />
+            {mode?.id === 'historical-research' && battleSeedFile && (
+              <span
+                className="ml-4 inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                title="Active battle seed (fixed)"
+                data-testid="active-battle-seed-badge"
+              >
+                Seed: {battleSeedFile}
+              </span>
+            )}
           </div>
         </header>
 
@@ -413,6 +433,10 @@ function App() {
               <TitleContainer
                 modes={playMode}
                 onSelect={(mode) => setMode(mode)}
+                battleSeedFile={battleSeedFile}
+                onBattleSeedChange={(f) => setBattleSeedFile(f)}
+                selectedThemeId={activeThemeId}
+                onSelectedThemeIdChange={(id) => setActiveThemeId(id)}
               />
             </div>
           )}

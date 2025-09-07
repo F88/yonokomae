@@ -1,4 +1,7 @@
-import type { BattleReportRepository } from '@/yk/repo/core/repositories';
+import type {
+  BattleReportRepository,
+  GenerateBattleReportParams,
+} from '@/yk/repo/core/repositories';
 import type { Battle } from '@yonokomae/types';
 import { applyDelay, type DelayOption } from '@/yk/repo/core/delay-utils';
 import { newsSeeds } from '@yonokomae/data-news-seeds';
@@ -17,8 +20,9 @@ export class NewsReporterFileiBattleReportRepository
     this.delay = opts?.delay;
   }
 
-  async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
-    await applyDelay(this.delay, options?.signal);
+  async generateReport(arg?: GenerateBattleReportParams): Promise<Battle> {
+    const signal = arg?.signal;
+    await applyDelay(this.delay, signal);
     // Select a random news seed from static imports
     const randomIndex = Math.floor(Math.random() * newsSeeds.length);
     const selectedSeed = newsSeeds[randomIndex];

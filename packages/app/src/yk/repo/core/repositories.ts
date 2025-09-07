@@ -69,6 +69,7 @@ export type JudgeIdentity = {
  * @see {@link PlayMode} for mode-based repository selection
  */
 export interface BattleReportRepository {
+  // Filter shape defined below (BattleReportFilter) and referenced via params.filter.
   /**
    * Generate or fetch a complete battle report.
    *
@@ -85,7 +86,25 @@ export interface BattleReportRepository {
    * @returns Promise resolving to complete Battle object
    * @throws Error if generation fails or is cancelled
    */
-  generateReport(options?: { signal?: AbortSignal }): Promise<Battle>;
+  /**
+   * Generate or fetch a complete battle report.
+   * Unified params signature – optional object may include `filter` and/or `signal`.
+   */
+  generateReport(params?: GenerateBattleReportParams): Promise<Battle>;
+}
+
+// ----- Filter / Params Types -----
+export type BattleReportFilter = {
+  battle?: {
+    id?: string;
+    themeId?: string;
+    significance?: Battle['significance'];
+  };
+};
+
+export interface GenerateBattleReportParams {
+  filter?: BattleReportFilter;
+  signal?: AbortSignal;
 }
 
 /**

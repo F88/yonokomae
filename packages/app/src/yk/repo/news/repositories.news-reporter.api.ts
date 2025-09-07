@@ -2,7 +2,10 @@ import { ApiClient } from '@/lib/api-client';
 import { uid } from '@/lib/id';
 import type { Battle } from '@yonokomae/types';
 import { applyDelay, type DelayOption } from '@/yk/repo/core/delay-utils';
-import type { BattleReportRepository } from '@/yk/repo/core/repositories';
+import type {
+  BattleReportRepository,
+  GenerateBattleReportParams,
+} from '@/yk/repo/core/repositories';
 
 type OpenMeteoDailyArrays = {
   daily?: {
@@ -88,8 +91,9 @@ export class NewsReporterApiBattleReportRepository
       });
   }
 
-  async generateReport(options?: { signal?: AbortSignal }): Promise<Battle> {
-    await applyDelay(this.delay, options?.signal);
+  async generateReport(arg?: GenerateBattleReportParams): Promise<Battle> {
+    const signal = arg?.signal;
+    await applyDelay(this.delay, signal);
 
     // Serve from cache if fresh
     const now = Date.now();
@@ -102,15 +106,12 @@ export class NewsReporterApiBattleReportRepository
     try {
       const battle =
         source === 'ipify'
-          ? await this.generateFromIpify(options?.signal)
-          : await this.generateWeatherForecast(options?.signal);
+          ? await this.generateFromIpify(signal)
+          : await this.generateWeatherForecast(signal);
       this.maybeStoreCache(battle);
       return battle;
     } catch {
-      const battle = await this.api.get<Battle>(
-        '/news/battle/report',
-        options?.signal,
-      );
+      const battle = await this.api.get<Battle>('/news/battle/report', signal);
       this.maybeStoreCache(battle);
       return battle;
     }

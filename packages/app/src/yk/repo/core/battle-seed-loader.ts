@@ -23,8 +23,9 @@ export type BattleModule = { default?: RawBattle } | RawBattle;
 export async function loadBattleFromSeeds(params: {
   roots: string[]; // Legacy field - now uses static imports from @yonokomae packages
   file?: string; // optional relative file name to load
+  predicate?: (b: Battle) => boolean; // optional narrowing filter when random selection
 }): Promise<Battle> {
-  const { roots, file } = params;
+  const { roots, file, predicate } = params;
   // Note: Vite requires literal strings for import.meta.glob. We load a superset
   // of seed modules from known roots and filter by the provided roots below.
   const mods = mergeGlobs();
@@ -32,18 +33,44 @@ export async function loadBattleFromSeeds(params: {
   if (files.length === 0) {
     throw new BattleSeedNotFoundError(roots, 'No battle seeds found under');
   }
-  const target =
-    file ??
-    (files.length > 0
-      ? files[Math.floor(Math.random() * files.length)]
-      : undefined);
-  if (!target) {
-    throw new BattleSeedNotFoundError(
-      roots,
-      'No target battle file resolved from roots',
-    );
+  // Fast path: explicit file requested
+  if (file) {
+    const battle = getModuleFor(mods, roots, file);
+    if (!battle) {
+      throw new BattleSeedNotFoundError(roots, `Battle not found: ${file}`);
+    }
+    if (predicate && !predicate(battle)) {
+      throw new BattleSeedNotFoundError(
+        roots,
+        `Specified file does not satisfy provided filter: ${file}`,
+      );
+    }
+    const result = BattleSchema.safeParse(battle);
+    if (!result.success) {
+      throw new BattleSeedValidationError(
+        result.error.issues.map(
+          (i: ZodIssue) => `${i.path.join('.')}: ${i.message}`,
+        ),
+      );
+    }
+    return result.data;
   }
-  const battle = getModuleFor(mods, roots, target);
+
+  // Random selection path with optional predicate narrowing
+  let candidateFiles = files;
+  if (predicate) {
+    candidateFiles = candidateFiles.filter((f) => {
+      const b = getModuleFor(mods, roots, f);
+      return !!b && predicate(b);
+    });
+  }
+  if (candidateFiles.length === 0) {
+    throw new BattleSeedNotFoundError(roots, 'No battle seeds found under');
+  }
+  const target =
+    candidateFiles[Math.floor(Math.random() * candidateFiles.length)];
+  // (defensive) target is always defined due to length check
+  const battle = getModuleFor(mods, roots, target as string);
   if (battle === undefined) {
     throw new BattleSeedNotFoundError(roots, `Battle not found: ${target}`);
   }

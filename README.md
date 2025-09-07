@@ -107,6 +107,16 @@ yonokomae/
     - 8 theme categories (history, culture, community, etc.)
     - 4 significance levels (low, medium, high, legendary)
     - Visual indicators with chips and badges
+- Repository-level battle filtering
+    - `BattleFilter` component feeds `generateReport({ filter })`
+    - Currently supports narrowing by `themeId`
+    - Extensible: future fields (`significance`, explicit `id`) planned
+- Enhanced battle title presentation
+    - `BattleTitleChip` optionally shows a theme icon (`showThemeIcon`)
+    - Consistent semantic labeling for accessibility
+- Battle seed selector improvements
+    - Optional `showIds` prop surfaces internal battle `id` values for debugging / reproducibility
+    - Non-intrusive: disabled by default to keep UI concise
 - Zero-SSR SPA optimized for client-side rendering
 - GitHub Pages deployment with base path configured
 

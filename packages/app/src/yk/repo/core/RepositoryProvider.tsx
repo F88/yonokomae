@@ -55,9 +55,12 @@ import { useHistoricalSeedSelection } from '../seed-system';
 export function RepositoryProvider({
   mode,
   children,
+  seedFile,
 }: {
   mode?: PlayMode;
   children: React.ReactNode;
+  /** Optional explicit battle seed file (overrides historical seed system when provided) */
+  seedFile?: string;
 }) {
   const seedSelection = useHistoricalSeedSelection();
   const value = useMemo<RepoContextValue>(() => {
@@ -66,7 +69,20 @@ export function RepositoryProvider({
     let repoPromise: Promise<BattleReportRepository> | null = null;
     const getOrCreateBattleReportRepo = async () => {
       if (!repoPromise) {
-        repoPromise = getBattleReportRepository(mode, seedSelection?.seedFile);
+        let effectiveSeedFile = seedFile ?? seedSelection?.seedFile;
+        // Loader expects file names with a leading slash when concatenated with root
+        // (random selection produces values like '/celebrity-battle.ja.ts').
+        // Normalize so a user-selected 'celebrity-battle.ja.ts' becomes '/celebrity-battle.ja.ts'.
+        if (effectiveSeedFile && !effectiveSeedFile.startsWith('/')) {
+          effectiveSeedFile = '/' + effectiveSeedFile;
+        }
+        if (process.env.NODE_ENV !== 'production') {
+          console.debug(
+            '[RepositoryProvider] battle seed file =',
+            effectiveSeedFile,
+          );
+        }
+        repoPromise = getBattleReportRepository(mode, effectiveSeedFile);
       }
       return repoPromise;
     };
@@ -86,7 +102,7 @@ export function RepositoryProvider({
       },
     } as JudgementRepository;
     return { battleReport, judgement };
-  }, [mode, seedSelection?.seedFile]);
+  }, [mode, seedSelection?.seedFile, seedFile]);
 
   return <RepoContext.Provider value={value}>{children}</RepoContext.Provider>;
 }
