@@ -121,7 +121,7 @@ describe('ThemeChip', () => {
 
       const chip = screen.getByTestId('theme-chip');
       expect(chip).toHaveClass(
-        'px-1.5',
+        'px-2.5',
         'py-0.5',
         'inline-flex',
         'items-center',

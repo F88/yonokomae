@@ -28,7 +28,7 @@ export const ThemeChip: FC<ThemeChipProps> = ({
     <Badge
       variant={variant}
       className={[
-        'px-1.5 py-0.5 text-[10px] sm:text-xs gap-1',
+        'px-2.5 py-0.5 text-[10px] sm:text-xs gap-1',
         'inline-flex items-center font-medium tracking-tight',
         className ?? '',
       ].join(' ')}
