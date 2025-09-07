@@ -25,7 +25,7 @@ const battle = {
     description:
       '地理的には内陸で海に面さない。多摩川に面するが、漁業・養殖業は大規模には展開されていない。' +
       '親水・環境学習・リバーアクティビティ等の非産業的価値が中心。',
-    power: 50,
+    power: 20,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -34,7 +34,7 @@ const battle = {
     description:
       '地理的には内陸で海に面さない。西側を荒川が流れるが、漁業・養殖業は主要産業ではない。' +
       '水辺利用・防災・環境保全の観点が主となる。',
-    power: 50,
+    power: 20,
   },
   provenance: [
     {

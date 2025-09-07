@@ -18,7 +18,7 @@ const battle = {
     subtitle: '草の根の伝統行事',
     description:
       '失われつつある祭りを復活させ、市民の参加を促す。その情熱は、巨大な力に屈せず、自分たちの歴史と文化を守り抜こうとする、こまえの誇りそのものである。',
-    power: 38000,
+    power: 68,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -26,7 +26,7 @@ const battle = {
     subtitle: 'メトロポリタン・アート',
     description:
       '合併によって誕生した新たな文化を、世界へと発信するため、巨額の予算を投じたアート・プロジェクトを立ち上げる。その洗練された芸術は、よのの先進性と知性を証明するのだ。',
-    power: 38000,
+    power: 68,
   },
   provenance: [
     {

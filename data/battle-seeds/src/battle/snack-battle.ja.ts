@@ -18,7 +18,7 @@ const battle = {
     subtitle: 'めざせみずきりマスター!',
     description:
       'たまがわの いしみたいだけど、チョコだよ。たべると ちからがモリモリわいて、ジャングルジムの てっぺんまで のぼれちゃう！みんなで たべると、もっと なかよしに なれるんだ。',
-    power: 12000,
+    power: 30,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -26,7 +26,7 @@ const battle = {
     subtitle: 'あたまがピカーン!',
     description:
       'おほしさまが きらきらしてる ゼリーだよ。たべると あたまがピカーン！ってなって、むずかしい パズルも すぐできちゃう。これがあれば、よのが いちばん かしこい くにに なれるんだ！',
-    power: 12000,
+    power: 30,
   },
   provenance: [
     {

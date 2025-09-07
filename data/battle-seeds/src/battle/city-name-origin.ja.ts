@@ -18,7 +18,7 @@ export default {
     subtitle: '外来の強者を受け入れた勇気',
     description:
       '「高麗（こま）」という渡来人集団に由来するとされる。その歴史は、孤高を貫く強者集団の誇りの源泉となっている。',
-    power: 25000,
+    power: 50,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -26,7 +26,7 @@ export default {
     subtitle: '人々に恵みを与えし野',
     description:
       '「人々に与える野」という言葉に由来するとされる。その歴史は、大国と協力して栄える知の国家の精神を象徴している。',
-    power: 25000,
+    power: 50,
   },
   provenance: [
     {

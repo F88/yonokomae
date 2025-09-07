@@ -18,7 +18,7 @@ const battle = {
     subtitle: '多摩川の恵みと市民の絆',
     description:
       '多摩川という大河を擁し、その恵みを活かした「狛江古代カップ多摩川いかだレース」で市民の絆を深める。その団結力と自然への敬意は、こまえが誇る最大の資産である。',
-    power: 48000,
+    power: 75,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -26,7 +26,7 @@ const battle = {
     subtitle: '羨望から生まれた技術の結晶',
     description:
       '多摩川を持つこまえに嫉妬し、AIによる最先端のウォータースポーツ施設を建設。自然の恵みに対抗する知と技術の力を見せつけることで、よののプライドを守ろうとする。',
-    power: 48000,
+    power: 75,
   },
   provenance: [
     {

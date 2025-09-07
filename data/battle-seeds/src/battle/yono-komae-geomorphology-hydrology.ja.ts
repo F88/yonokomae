@@ -24,7 +24,7 @@ const battle = {
     description:
       '市の南部を多摩川が東西に流れる。南の低地と北の台地から成り、河川景観が市の歴史・日常と深く結びつく。' +
       '洪水対策として堤防整備が進み、親水空間の活用や避難動線の計画が課題と機会を同時に生む。',
-    power: 50,
+    power: 51,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -33,7 +33,7 @@ const battle = {
     description:
       '旧中山道沿いに市街が形成され、台地性の平坦な地形が面的な更新や歩行・自転車の回遊に適する。' +
       '市域を流れる大きな河川は少ないが、西側を荒川が貫流し、流域圏のインフラ・生態系の基盤となる。',
-    power: 50,
+    power: 51,
   },
   provenance: [
     {

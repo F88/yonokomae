@@ -18,7 +18,7 @@ const battle = {
     subtitle: 'こまえ観光大使',
     description:
       '1983年東京都こまえ出身のお笑い芸人。2013年にこまえ観光大使に就任し、市のPR活動に邁進中。市役所2階入口に設置された彼女の等身大パネルは、市民のSNS投稿を日々賑わせる、市の現代的な顔として絶大な存在感を放っている。',
-    power: 85,
+    power: 88,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,

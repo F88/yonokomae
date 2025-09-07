@@ -18,7 +18,7 @@ const battle = {
     subtitle: '強固な共同体を築いた弥生人',
     description:
       '米作りを通じて定住生活を確立。外来の文化を取り入れつつ、強固なコミュニティを築き上げた弥生人の末裔である。',
-    power: 15000,
+    power: 50,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -26,7 +26,7 @@ const battle = {
     subtitle: '自然と調和した縄文人',
     description:
       '自然の恵みを享受し、狩猟採集で生きた縄文人の末裔。その柔軟な知性は、時代の変化に適応するよのの外交戦略の原点である。',
-    power: 15000,
+    power: 50,
   },
   provenance: [
     {

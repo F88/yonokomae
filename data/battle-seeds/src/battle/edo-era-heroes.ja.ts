@@ -18,7 +18,7 @@ const battle = {
     subtitle: '治水に挑んだ技術者',
     description:
       '川崎定孝。多摩川の治水事業に生涯を捧げ、こまえの地を洪水から守った技術者。彼の探求心は、こまえの市民が持つ独自の技術開発の精神の源流となっている。',
-    power: 35000,
+    power: 60,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -26,7 +26,7 @@ const battle = {
     subtitle: '街道を整備した武士',
     description:
       '大石良雄。中山道整備に貢献した人物とされ、忠義と知略を併せ持つ。その優れた判断力は、よのが誇る外交と情報戦の精神の礎となった。',
-    power: 35000,
+    power: 60,
   },
   provenance: [
     {

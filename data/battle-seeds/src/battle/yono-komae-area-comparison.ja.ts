@@ -22,7 +22,7 @@ const battle = {
     subtitle: '6.39 km² (全国で 2 番目に小さい市)',
     description:
       'コンパクトな市域に住宅地と生活利便施設が凝縮。小規模ゆえの近接性と、沿線アクセスの良さが日常動線を支える。',
-    power: 50,
+    power: 42,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -31,7 +31,7 @@ const battle = {
     description:
       'よのは 8.29 km²。政令市移行時にさいたま新都心の一部が編入され、現行のよのは 8.39 km²。' +
       '市街地更新や拠点開発の余地が相対的に広い。',
-    power: 50,
+    power: 42,
   },
   provenance: [
     {

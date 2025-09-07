@@ -18,7 +18,7 @@ const battle = {
     subtitle: '自然と共生するまちづくり',
     description:
       '多摩川の河川敷を活用し、自然と共生するまちづくりを推進する。その計画は、人と自然、そして人々の絆を大切にするこまえの精神の集大成である。',
-    power: 28000,
+    power: 55,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -26,7 +26,7 @@ const battle = {
     subtitle: '空へと伸びる未来都市',
     description:
       '大宮台地の高台に超高層ビルを建設し、新たな都市のシンボルを築き上げる。その開発ビジョンは、よのが持つ未来志向の知性を象徴している。',
-    power: 28000,
+    power: 55,
   },
   provenance: [
     {
