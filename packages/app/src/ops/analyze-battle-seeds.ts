@@ -31,6 +31,7 @@ interface StatsSummary {
   total: number;
   byTheme: Record<string, { count: number; ratio: number }>;
   bySignificance: Record<string, { count: number; ratio: number }>;
+  crossTab: Record<string, Record<string, number>>; // themeId -> significance -> count
   power: {
     komae: { min: number; max: number; avg: number };
     yono: { min: number; max: number; avg: number };
@@ -85,6 +86,7 @@ function calcStats(battles: Battle[]): StatsSummary {
   const total = battles.length;
   const byTheme: StatsSummary['byTheme'] = {};
   const bySignificance: StatsSummary['bySignificance'] = {};
+  const crossTab: StatsSummary['crossTab'] = {};
   let komaeMin = Infinity,
     komaeMax = -Infinity,
     komaeSum = 0;
@@ -104,6 +106,9 @@ function calcStats(battles: Battle[]): StatsSummary {
       bySignificance[b.significance] = { count: 0, ratio: 0 };
     }
     bySignificance[b.significance]!.count += 1;
+    if (!crossTab[b.themeId]) crossTab[b.themeId] = {};
+    const ctRow = crossTab[b.themeId]!;
+    ctRow[b.significance] = (ctRow[b.significance] ?? 0) + 1;
     const kp = b.komae.power;
     const yp = b.yono.power;
     const cp = kp + yp;
@@ -145,6 +150,7 @@ function calcStats(battles: Battle[]): StatsSummary {
     total,
     byTheme,
     bySignificance,
+      crossTab,
     power: {
       komae: {
         min: komaeMin === Infinity ? 0 : komaeMin,
@@ -196,6 +202,50 @@ function renderText(stats: StatsSummary): string {
     lines.push(
       `  ${sig.padEnd(10, ' ')} ${v.count.toString().padStart(3, ' ')}  ${formatPercent(v.ratio)}%`,
     );
+  }
+  // Cross-tab (Theme x Significance)
+  lines.push('');
+  lines.push(chalk.bold('Theme x Significance:'));
+  const SIGNIFICANCE_ORDER = ['low', 'medium', 'high', 'legendary'] as const;
+  const themeTotals: Array<{ theme: string; total: number }> = Object.entries(
+    stats.byTheme,
+  ).map(([theme, v]) => ({ theme, total: v.count }));
+  themeTotals.sort((a, b) => b.total - a.total);
+  const themeColWidth =
+    Math.max(5, ...themeTotals.map((t) => t.theme.length)) + 2;
+  lines.push(
+    '  ' +
+      'Theme'.padEnd(themeColWidth) +
+      SIGNIFICANCE_ORDER.map((s) => s.slice(0, 3).padStart(5, ' ')).join('') +
+      '  total',
+  );
+  const colTotals: Record<string, number> = {};
+  for (const { theme } of themeTotals) {
+    const rowCounts = SIGNIFICANCE_ORDER.map(
+      (sig) => stats.crossTab[theme]?.[sig] ?? 0,
+    );
+    rowCounts.forEach((c, i) => {
+      const key = SIGNIFICANCE_ORDER[i];
+      colTotals[key as string] = (colTotals[key as string] ?? 0) + c;
+    });
+    const row =
+      '  ' +
+      theme.padEnd(themeColWidth) +
+      rowCounts.map((c) => String(c).padStart(5, ' ')).join('') +
+      '  ' +
+      String(rowCounts.reduce((a, b) => a + b, 0)).padStart(5, ' ');
+    lines.push(row);
+  }
+  if (themeTotals.length > 0) {
+    const totalRow =
+      '  ' +
+      label('TOTAL'.padEnd(themeColWidth)) +
+      SIGNIFICANCE_ORDER.map((s) =>
+        String(colTotals[s] ?? 0).padStart(5, ' '),
+      ).join('') +
+      '  ' +
+      String(stats.total).padStart(5, ' ');
+    lines.push(totalRow);
   }
   lines.push('');
   lines.push(chalk.bold('Power Stats:'));
