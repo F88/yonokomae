@@ -14,16 +14,16 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
-    subtitle: 'みんなの仲良しコイン',
+    title: 'こまえコイン',
+    subtitle: '笑顔と絆を集めるお金',
     description:
       'TOKIO帝国からもらったお小遣いを、みんなで使える「こまえコイン」に変えたすごい発明家たち。このコインで、みんなの笑顔と絆をたくさん集めるのが得意だよ。',
     power: 48000,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
-    subtitle: '宇宙一のお金持ちハブ',
+    title: '宇宙投資銀行',
+    subtitle: 'キラキラの未来を作るお金',
     description:
       '宇宙の果てまで届くような、大きくてかっこいいビルをたくさん建てるのが大好き。でも、友達とのお金や絆は、ちょっと苦手みたい。',
     power: 48000,
