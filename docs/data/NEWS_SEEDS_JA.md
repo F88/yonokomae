@@ -41,8 +41,8 @@ data/news-seeds/
 
 ### ニュースサンプルファイル
 
-**場所**: `data/news-seeds/src/samples/`  
-**パターン**: `news-sample-{number}.ts`  
+**場所**: `data/news-seeds/src/samples/`
+**パターン**: `news-sample-{number}.ts`
 **言語**: 言語中立（主に英語ベース）
 
 各ファイルは `Battle` 型に適合するデフォルトオブジェクトをエクスポートします：
@@ -341,3 +341,9 @@ const newsSample: Battle = {
 - **歴史的証拠**: `docs/data/HISTORICAL_EVIDENCE_SEEDS_JA.md`
 - **型定義**: `packages/types/src/battle.ts`
 - **検証スキーマ**: `packages/schema/src/battle.ts`
+
+## 付録: フィルタリング文脈
+
+ニュースシードはバトルシードと同一の生成パイプラインで扱われます。現状の
+リポジトリ層フィルタは `themeId` のみ絞り込みを行います。ニュースサンプルの記述
+方法に変更は不要で、将来の追加フィルタは事前にドキュメントで告知されます。

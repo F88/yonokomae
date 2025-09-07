@@ -20,6 +20,13 @@
 - test(core): add deterministic and instance checks for BattleSeed\* errors
 - feat(core): add seedable shuffle utilities and tests (regression guard)
 - test(e2e): fix End key navigation assertion to ignore disabled play modes
+- feat(ui): introduce repository-level BattleFilter component
+- refactor(ui): deprecate BattleSeedFilter (shim re-exports BattleFilter; removal next minor)
+- feat(ui): add optional theme icon to BattleTitleChip (`showThemeIcon`)
+- feat(ui): add `showIds` prop to BattleSeedSelector for displaying battle ids
+- fix(core): ensure BattleFilter selected theme propagates to report generation
+- docs(dev): add BattleFilter section to Japanese development guide
+- docs: update contributing guides to reflect accurate monorepo structure (no root src/)
 
 ## 1.1.0
 

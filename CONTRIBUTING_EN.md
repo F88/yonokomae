@@ -19,20 +19,29 @@ This pnpm monorepo project uses [Changesets](https://github.com/changesets/chang
 
 ## Project Structure
 
-This project uses a pnpm monorepo structure with separate data packages:
+This project uses a pnpm monorepo structure with separate data & library packages.
 
-```
+```text
 yonokomae/
 ├── packages/
-│   ├── types/          # Pure TypeScript type definitions
-│   └── schema/         # Zod validation schemas
+│   ├── app/                   # Main React application (no root-level src/)
+│   ├── catalog/               # Domain catalogs / enumerations
+│   ├── types/                 # Shared TypeScript type definitions
+│   └── schema/                # Zod validation schemas
 ├── data/
-│   ├── battle-seeds/   # Statistical battle data
-│   ├── historical-evidence/  # Historical scenario data
-│   └── news-seeds/     # News-style sample data
-├── src/                # Main application
-└── docs/               # Documentation
+│   ├── battle-seeds/          # Statistical battle data (Yono vs Komae)
+│   ├── historical-evidence/   # Historical scenario data
+│   └── news-seeds/            # News-style sample data
+├── docs/                      # Documentation (English is source of truth)
+├── e2e/                       # Playwright tests
+└── mock-api/                  # Local API stub server
 ```
+
+Key recent architectural additions:
+
+- Repository-level filtering (`BattleFilter`) feeding `BattleReportRepository.generateReport({ filter })`
+- Optional theme icon rendering in `BattleTitleChip`
+- Opt-in `showIds` debug capability in `BattleSeedSelector`
 
 ## Contributing to Data Packages
 
@@ -54,16 +63,16 @@ Data packages have independent testing and validation that automatically runs in
 
 ## Development Workflow
 
-1.  **Create a branch:** Create a new branch from `main` for your feature or bug fix.
-2.  **Make changes:** Make your changes to the codebase.
-3.  **Run checks locally:** Before committing, run the CI checks locally to ensure everything is in order. See the [Running CI Checks Locally](#running-ci-checks-locally) section.
-4.  **Commit your changes:** Follow the [Commit Message Conventions](#commit-message-conventions).
-5.  **Create a changeset:** If your changes are user-facing, create a changeset.
+1. **Create a branch:** Create a new branch from `main` for your feature or bug fix.
+2. **Make changes:** Make your changes to the codebase.
+3. **Run checks locally:** Before committing, run the CI checks locally to ensure everything is in order. See the [Running CI Checks Locally](#running-ci-checks-locally) section.
+4. **Commit your changes:** Follow the [Commit Message Conventions](#commit-message-conventions).
+5. **Create a changeset:** If your changes are user-facing, create a changeset.
     ```bash
     pnpm changeset
     ```
     Follow the prompts to select the appropriate version bump (patch, minor, or major) and write a description of the change.
-6.  **Push and create a Pull Request:** Push your branch to GitHub and create a Pull Request against `main`.
+6. **Push and create a Pull Request:** Push your branch to GitHub and create a Pull Request against `main`.
 
 ## Commit Message Conventions
 
@@ -71,7 +80,7 @@ This project follows the [Conventional Commits specification](https://www.conven
 
 A commit message should be structured as follows:
 
-```
+```text
 <type>[optional scope]: <description>
 
 [optional body]
@@ -103,10 +112,10 @@ We use GitHub Actions for our CI/CD pipeline. The workflow is defined in `.githu
 
 When you create a Pull Request, the following checks are automatically run:
 
-1.  **Lint**: Checks the code for style and formatting issues using ESLint.
-2.  **Typecheck**: Verifies the TypeScript types across all packages.
-3.  **Unit tests**: Runs the unit test suite using Vitest.
-4.  **Data package validation**: Ensures that all data packages have valid schemas and unique IDs:
+1. **Lint**: Checks the code for style and formatting issues using ESLint.
+2. **Typecheck**: Verifies the TypeScript types across all packages.
+3. **Unit tests**: Runs the unit test suite using Vitest.
+4. **Data package validation**: Ensures that all data packages have valid schemas and unique IDs:
     - Battle seeds validation (`@yonokomae/data-battle-seeds`)
     - Historical evidence validation (`@yonokomae/data-historical-evidence`)
     - News seeds validation (`@yonokomae/data-news-seeds`)

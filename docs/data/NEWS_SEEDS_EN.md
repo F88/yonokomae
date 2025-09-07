@@ -41,8 +41,8 @@ data/news-seeds/
 
 ### News Sample Files
 
-**Location**: `data/news-seeds/src/samples/`  
-**Pattern**: `news-sample-{number}.ts`  
+**Location**: `data/news-seeds/src/samples/`
+**Pattern**: `news-sample-{number}.ts`
 **Language**: Language-neutral (primarily English-based)
 
 Each file exports a default object conforming to the `Battle` type:
@@ -342,3 +342,10 @@ const newsSample: Battle = {
 - **Historical Evidence**: `docs/data/HISTORICAL_EVIDENCE_SEEDS_EN.md`
 - **Type Definitions**: `packages/types/src/battle.ts`
 - **Validation Schema**: `packages/schema/src/battle.ts`
+
+## Appendix: Filtering Context
+
+News seeds participate in the same generation pipeline as battle seeds. The
+current repository-level filter only narrows by `themeId`. No structural
+changes to news sample authoring are required; future filter fields will be
+documented before activation.

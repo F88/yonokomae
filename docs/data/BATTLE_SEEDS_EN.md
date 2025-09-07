@@ -42,8 +42,8 @@ data/battle-seeds/
 
 ### Battle Data Files
 
-**Location**: `data/battle-seeds/src/battle/`  
-**Pattern**: `yono-komae-{topic}.ja.ts`  
+**Location**: `data/battle-seeds/src/battle/`
+**Pattern**: `yono-komae-{topic}.ja.ts`
 **Language**: Primarily Japanese (`.ja.ts` extension)
 
 Each file exports a default object conforming to the `Battle` type:
@@ -292,3 +292,12 @@ const battle: Battle = {
 - **News Seeds**: `docs/data/NEWS_SEEDS_EN.md`
 - **Type Definitions**: `packages/types/src/battle.ts`
 - **Validation Schema**: `packages/schema/src/battle.ts`
+
+## Appendix: Interaction with Repository-level Filtering
+
+Battle seeds can be narrowed at generation time through the repository-level
+`BattleFilter` UI (currently only by `themeId`). This does not change how seed
+files are authored—continue following the structure above. Planned future
+filters (`significance`, explicit `id`) will remain additive and backward
+compatible; no action is required until documented in the main Development
+Guide.

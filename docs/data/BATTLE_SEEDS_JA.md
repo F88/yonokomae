@@ -42,8 +42,8 @@ data/battle-seeds/
 
 ### バトルデータファイル
 
-**場所**: `data/battle-seeds/src/battle/`  
-**パターン**: `yono-komae-{topic}.ja.ts`  
+**場所**: `data/battle-seeds/src/battle/`
+**パターン**: `yono-komae-{topic}.ja.ts`
 **言語**: 主に日本語 (`.ja.ts` 拡張子)
 
 各ファイルは `Battle` 型に適合するデフォルトオブジェクトをエクスポートします：
@@ -292,3 +292,9 @@ const battle: Battle = {
 - **ニュースシード**: `docs/data/NEWS_SEEDS_JA.md`
 - **型定義**: `packages/types/src/battle.ts`
 - **検証スキーマ**: `packages/schema/src/battle.ts`
+
+## 付録: リポジトリ層フィルタとの連携
+
+バトルシードは生成時にリポジトリ層の `BattleFilter` UI 経由で (現状は `themeId` のみ)
+絞り込み可能です。これはシードファイルの記述方法を変更しません。将来的なフィルタ
+(`significance`, 明示的 `id`) は後方互換的に追加予定であり、追加手順は Development Guide に告知されるまで対応不要です。

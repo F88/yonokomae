@@ -82,6 +82,20 @@ The application uses different repository implementations for different play mod
     - `demo-de` - German demonstration mode
 - **News Reporter Repository:** Tests the multi-source blending (local and API) and caching behavior for the `yk-now` mode.
 
+### Filtering Tests
+
+Repository-level filtering (via `BattleFilter` / `generateReport({ filter })`) includes tests that:
+
+- Assert that specifying a `themeId` reduces the candidate battle pool
+- Ensure randomness persists within the narrowed set (no starvation of remaining items)
+- Verify unfiltered calls remain unaffected by prior filtered generations (statelessness)
+
+When adding new filter dimensions (e.g. `significance`), add:
+
+- A narrowing test (only items matching the predicate are produced over multiple generations)
+- A diversity test (multiple distinct ids appear within a reasonable sample count)
+- A regression guard ensuring legacy implementations ignoring the new field do so explicitly
+
 ### Provider Testing Patterns
 
 The `renderWithProviders` helper simplifies testing components that rely on our repository context.

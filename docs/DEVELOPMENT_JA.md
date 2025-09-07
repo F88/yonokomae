@@ -106,10 +106,13 @@ classDiagram
     import type { Battle } from '@yonokomae/types';
     import { uid } from '@/lib/id';
 
-    export class ExampleBattleReportRepository implements BattleReportRepository {
-        async generateReport(
-            params?: { filter?: { battle?: { themeId?: string } }; signal?: AbortSignal }
-        ): Promise<Battle> {
+    export class ExampleBattleReportRepository
+        implements BattleReportRepository
+    {
+        async generateReport(params?: {
+            filter?: { battle?: { themeId?: string } };
+            signal?: AbortSignal;
+        }): Promise<Battle> {
             // 任意: params.filter で選択を絞り込み
             // 任意: params.signal を尊重 (Abort 対応)
             return {
@@ -119,15 +122,27 @@ classDiagram
                 significance: 'low',
                 subtitle: 'Demo',
                 narrative: { overview: '', scenario: '' },
-                yono: { imageUrl: '', title: 'Yono', subtitle: '', description: '', power: 50 },
-                komae: { imageUrl: '', title: 'Komae', subtitle: '', description: '', power: 50 },
+                yono: {
+                    imageUrl: '',
+                    title: 'Yono',
+                    subtitle: '',
+                    description: '',
+                    power: 50,
+                },
+                komae: {
+                    imageUrl: '',
+                    title: 'Komae',
+                    subtitle: '',
+                    description: '',
+                    power: 50,
+                },
                 status: 'success',
             } as Battle;
         }
     }
     ```
 
-2. **Provider Factory への接続:**
+2.  **Provider Factory への接続:**
     `src/yk/repo/core/repository-provider.ts` 内のファクトリ関数（`getBattleReportRepository`, `getJudgementRepository` など）を更新し、目的の Play Mode に対して新しいリポジトリ実装を返すようにします。
 
     ```typescript
@@ -176,7 +191,7 @@ await repo.generateReport({ signal: controller.signal });
 ### 新しい Play Mode の追加
 
 1. **Play Mode の定義:**
-    `src/yk/play-mode.ts` に新しい `PlayMode` オブジェクトを追加します。
+   `src/yk/play-mode.ts` に新しい `PlayMode` オブジェクトを追加します。
 
     ```typescript
     // src/yk/play-mode.ts
@@ -191,10 +206,10 @@ await repo.generateReport({ signal: controller.signal });
     ```
 
 2. **Repositories の実装:**
-    上記で説明したように、新しいモード用のリポジトリ実装を作成します。
+   上記で説明したように、新しいモード用のリポジトリ実装を作成します。
 
 3. **Provider Factories の更新:**
-    `src/yk/repo/core/repository-provider.ts` のファクトリ関数に、新しい `example-mode` を処理するための分岐を追加します。動的インポート（dynamic import）を使用してリポジトリを遅延読み込みします。
+   `src/yk/repo/core/repository-provider.ts` のファクトリ関数に、新しい `example-mode` を処理するための分岐を追加します。動的インポート（dynamic import）を使用してリポジトリを遅延読み込みします。
 
     ```typescript
     // src/yk/repo/core/repository-provider.ts
@@ -212,7 +227,7 @@ await repo.generateReport({ signal: controller.signal });
     ```
 
 4. **UI での Mode の使用:**
-    UI を更新して新しい Play Mode を選択できるようにし、そのモードが `RepositoryProvider` に渡されるようにします。
+   UI を更新して新しい Play Mode を選択できるようにし、そのモードが `RepositoryProvider` に渡されるようにします。
 
 ## Workspace と依存関係管理
 
@@ -503,3 +518,29 @@ yonokomae/
 ├── mock-api/                     # ローカルモック API サーバ
 └── (リポジトリ直下に root src/ は存在せず、アプリコードは packages/app/src/ 配下)
 ```
+
+### リポジトリ層フィルタリング UI (`BattleFilter`)
+
+`BattleFilter` はリポジトリ層でバトル生成対象集合を制約するための UI です。旧 `BattleSeedFilter` は表示中シードリストのみを UI 側で絞るものでしたが、現在は `BattleReportRepository.generateReport({ filter })` のパラメータとして渡しデータ取得段階で絞り込みます。
+
+現時点の機能:
+
+- テーマ絞り込み (`filter.battle.themeId` 注入)
+- 未選択時は全プールからランダムフォールバック
+
+最近の関連拡張:
+
+- `BattleSeedSelector` に `showIds` (任意) を追加し内部 battle id を QA / 再現性確認向けに表示
+- `BattleTitleChip` に `showThemeIcon` (任意) を追加しテーマアイコンを表示 (アクセシブルネームは安定)
+
+将来予定 (未実装):
+
+- 重要度フィルタ (`filter.battle.significance`)
+- 明示的 id 指定 (`filter.battle.id`) による決定的再生成
+
+新フィルタフィールド追加手順:
+
+1. `repositories.ts` の `GenerateBattleReportParams` を拡張
+2. 各実装で対応 (又は無視を明記)
+3. 絞り込み/ランダム性を検証するテストを追加
+4. 英語版更新後に本ファイル同期
