@@ -27,6 +27,7 @@ import ikadaRace from './battle/ikada-race.ja';
 import industryGrowthJa from './battle/industry-growth.ja';
 import kidsTechBattle from './battle/kids-tech-battle.ja';
 import localCurrencyBattle from './battle/local-currency-battle.ja';
+import metaverseShrine from './battle/metaverse-shrine.ja';
 import meteorologyJa from './battle/meteorology.ja';
 import parentingRobotsBattle from './battle/parenting-robot-battle.ja';
 import populationTrendsJa from './battle/population-trends.ja';
@@ -37,6 +38,7 @@ import showaSuperstarBattle from './battle/showa-superstar-battle.ja';
 import snackBattle from './battle/snack-battle.ja';
 import snsTruthVsLies from './battle/sns-truth-vs-lies.ja';
 import socioeconomicJa from './battle/socioeconomic.ja';
+import tasteAlgorithm from './battle/taste-algorithm.ja';
 import transportationHubBattle from './battle/transportation-hub-battle.ja';
 import undergroundConspiracy from './battle/underground-conspiracy.ja';
 import waterResourceManagementBattle from './battle/water-resource-battle.ja';
@@ -92,6 +94,8 @@ const battleMap: Record<string, Battle> = {
     'disaster-simulation-battle.ja.ts': disasterSimulationBattle,
     'parenting-robot-battle.ja.ts': parentingRobotsBattle,
     'water-resource-battle.ja.ts': waterResourceManagementBattle,
+    'metaverse-shrine.ja.ts': metaverseShrine,
+    'taste-algorithm.ja.ts': tasteAlgorithm,
   },
 };
 
