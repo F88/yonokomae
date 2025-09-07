@@ -11,12 +11,15 @@ import { useRepositoriesOptional } from '@/yk/repo/core/repository-context';
  * synchronous generator so it can be swapped with a real API without
  * changing callers.
  */
-export function useGenerateReport(mode?: PlayMode) {
+export function useGenerateReport(mode?: PlayMode, seedFile?: string) {
   const provided = useRepositoriesOptional();
   const timeoutMs = useMemo(() => 10_000, []);
   const generateReport = useCallback(async (): Promise<Battle> => {
+    // If context provided, it already captured seedFile at creation time.
+    // Fallback path (no provider): pass seedFile directly.
     const repo =
-      provided?.battleReport ?? (await getBattleReportRepository(mode));
+      provided?.battleReport ??
+      (await getBattleReportRepository(mode, seedFile));
     const controller = new AbortController();
     let timer: ReturnType<typeof setTimeout> | null = null;
     try {
@@ -28,7 +31,7 @@ export function useGenerateReport(mode?: PlayMode) {
     } finally {
       if (timer) clearTimeout(timer);
     }
-  }, [mode, provided, timeoutMs]);
+  }, [mode, seedFile, provided, timeoutMs]);
 
   return { generateReport };
 }
