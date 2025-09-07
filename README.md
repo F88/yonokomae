@@ -162,6 +162,36 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 - [Contributing guide (en)](CONTRIBUTING_EN.md)
 - [Contributing guide (ja)](CONTRIBUTING_JA.md)
 
+### Data & Ops CLI (Analysis)
+
+Operational scripts for exporting and analyzing data live under `packages/app/src/ops/` and are exposed via `pnpm` scripts.
+
+Common commands:
+
+```bash
+# Export all battle seeds to JSON (pretty printed)
+pnpm run ops:export-battle-seeds-to-json -- out/battles.json
+
+# Analyze battle seeds (loads dist modules directly)
+pnpm run ops:analyze-battle-seeds
+
+# Analyze previously exported JSON file
+pnpm run ops:analyze-battle-seeds -- out/battles.json
+
+# JSON formatted analysis output (machine-readable)
+pnpm run ops:analyze-battle-seeds -- --format=json
+```
+
+The analyzer prints:
+
+- Totals
+- Distribution by theme and significance
+- Theme × Significance cross-tab matrix
+- Power statistics (min / max / avg for komae, yono, combined)
+- Top 5 battles by combined power
+
+Use the `--format=json` flag for structured automation/CI pipelines (e.g., trend diffing or regression detection on seed distributions).
+
 ### For Data Maintainers
 
 - [Data Maintenance Guide (EN)](./docs/DATA_MAINTENANCE_EN.md)
