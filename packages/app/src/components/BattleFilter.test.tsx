@@ -18,25 +18,35 @@ describe('BattleFilter (chip single-select)', () => {
     expect(screen.getByTestId('battle-filter-wrapper')).toBeTruthy();
     const allChip = screen.getByTestId('battle-filter-chip-all');
     expect(allChip.getAttribute('data-selected')).toBe('true');
+    // Battle list should be hidden while in "All" mode
+    expect(screen.queryByTestId('battle-filter-list')).toBeNull();
   });
 
-  it('clicking a theme chip filters list to that theme', () => {
+  it('selecting a theme shows filtered list; returning to All hides list', () => {
     render(<BattleFilter />);
+    // Initially no list
+    expect(screen.queryByTestId('battle-filter-list')).toBeNull();
     const historyChip = screen.getByTestId('battle-filter-chip-history');
     fireEvent.click(historyChip);
     const list = screen.getByTestId('battle-filter-list');
     expect(list.textContent).toContain('Alpha History');
     expect(list.textContent).toContain('Gamma History');
     expect(list.textContent).not.toContain('Beta Tech');
+    // Back to All should remove list entirely
     fireEvent.click(screen.getByTestId('battle-filter-chip-all'));
-    expect(list.textContent).toContain('Beta Tech');
+    expect(screen.queryByTestId('battle-filter-list')).toBeNull();
   });
 
   it('themeIdsFilter restricts universe (technology only)', () => {
     render(<BattleFilter themeIdsFilter={['technology']} />);
+    // Initially All => no list
+    expect(screen.queryByTestId('battle-filter-list')).toBeNull();
+    const techChip = screen.getByTestId('battle-filter-chip-technology');
+    fireEvent.click(techChip);
     const list = screen.getByTestId('battle-filter-list');
     expect(list.textContent).toContain('Beta Tech');
     expect(list.textContent).not.toContain('Alpha History');
     expect(screen.queryByTestId('battle-filter-chip-history')).toBeNull();
   });
+
 });

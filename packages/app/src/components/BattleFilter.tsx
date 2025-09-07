@@ -1,6 +1,6 @@
 import { battleSeedsByFile } from '@yonokomae/data-battle-seeds';
 import { battleThemeCatalog } from '@yonokomae/catalog';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { ThemeChip } from '@/components/battle/ThemeChip';
 import { BattleTitleChip } from '@/components/battle/BattleTitleChip';
 import type { Battle } from '@yonokomae/types';
@@ -94,6 +94,14 @@ export function BattleFilter({
     return seeds.filter((s) => (s.themeId ? s.themeId === themeId : false));
   }, [seeds, themeId]);
 
+  const selectThemeId = useCallback(
+    (id: string | undefined) => {
+      if (onSelectedThemeIdChange) onSelectedThemeIdChange(id);
+      else setInternalTheme(id);
+      if (onSelectedThemeIdsChange) onSelectedThemeIdsChange(id ? [id] : []);
+    },
+    [onSelectedThemeIdChange, onSelectedThemeIdsChange],
+  );
   if (!show) return null;
 
   return (
@@ -113,18 +121,13 @@ export function BattleFilter({
       <div
         className="flex flex-wrap items-center gap-2"
         data-testid="battle-filter-chips"
-        role="radiogroup"
         aria-label="Theme selection"
       >
         <button
           type="button"
           data-selected={!themeId ? 'true' : 'false'}
           data-testid="battle-filter-chip-all"
-          onClick={() => {
-            setInternalTheme(undefined);
-            if (onSelectedThemeIdChange) onSelectedThemeIdChange(undefined);
-            if (onSelectedThemeIdsChange) onSelectedThemeIdsChange([]);
-          }}
+          onClick={() => selectThemeId(undefined)}
           className={[
             'rounded-full border px-2 py-0.5 text-[11px] sm:text-xs',
             'transition-colors',
@@ -132,8 +135,9 @@ export function BattleFilter({
               ? 'bg-primary text-primary-foreground border-primary'
               : 'hover:bg-muted',
           ].join(' ')}
+          aria-label="All Themes"
         >
-          All
+          ALL
         </button>
         {themeOptions.map((t) => {
           const active = themeId === t.id;
@@ -143,11 +147,7 @@ export function BattleFilter({
               type="button"
               data-selected={active ? 'true' : 'false'}
               data-testid={`battle-filter-chip-${t.id}`}
-              onClick={() => {
-                if (onSelectedThemeIdChange) onSelectedThemeIdChange(t.id);
-                else setInternalTheme(t.id);
-                if (onSelectedThemeIdsChange) onSelectedThemeIdsChange([t.id]);
-              }}
+              onClick={() => selectThemeId(t.id)}
               className={[
                 'group rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60',
                 'transition-shadow',
@@ -169,28 +169,30 @@ export function BattleFilter({
           );
         })}
       </div>
-      <div
-        className="flex flex-wrap gap-2 max-h-48 overflow-auto rounded border p-2"
-        data-testid="battle-filter-list"
-      >
-        {filtered.map((seed) => (
-          <BattleTitleChip
-            key={seed.file}
-            file={seed.file}
-            variant="secondary"
-            className="truncate"
-            showThemeIcon
-          />
-        ))}
-        {filtered.length === 0 && (
-          <span
-            className="px-2 py-1 text-muted-foreground text-[11px]"
-            data-testid="battle-filter-empty"
-          >
-            No matches
-          </span>
-        )}
-      </div>
+      {themeId && (
+        <div
+          className="flex flex-wrap gap-2 max-h-48 overflow-auto rounded border p-2"
+          data-testid="battle-filter-list"
+        >
+          {filtered.map((seed) => (
+            <BattleTitleChip
+              key={seed.file}
+              file={seed.file}
+              variant="secondary"
+              className="truncate"
+              showThemeIcon
+            />
+          ))}
+          {filtered.length === 0 && (
+            <span
+              className="px-2 py-1 text-muted-foreground text-[11px]"
+              data-testid="battle-filter-empty"
+            >
+              No matches
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }
