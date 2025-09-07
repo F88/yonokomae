@@ -54,7 +54,19 @@ export function BattleFilter({
       .filter((s) =>
         allowedSet ? (s.themeId ? allowedSet.has(s.themeId) : false) : true,
       )
-      .sort((a, b) => a.title.localeCompare(b.title));
+      .sort((a, b) => {
+        // Sort by battleThemeCatalog order first, then by title
+        const aIndex = a.themeId
+          ? battleThemeCatalog.findIndex((t) => t.id === a.themeId)
+          : battleThemeCatalog.length;
+        const bIndex = b.themeId
+          ? battleThemeCatalog.findIndex((t) => t.id === b.themeId)
+          : battleThemeCatalog.length;
+        if (aIndex !== bIndex) {
+          return aIndex - bIndex;
+        }
+        return a.title.localeCompare(b.title);
+      });
   }, [themeIdsFilter]);
 
   const [internalTheme, setInternalTheme] = useState<string | undefined>(

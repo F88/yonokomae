@@ -26,16 +26,6 @@ export const battleThemeCatalog = [
       'Artist support, public art, international film festivals, community halls, local festivals, traditional crafts, local cuisine, cultural property protection',
   },
   {
-    id: 'figures',
-    name: 'Figures',
-    icon: '🦸',
-    subThemes: "AI Mayor's Data Politics vs. Charismatic Human Leadership",
-    description:
-      'Leadership dynamics between algorithmic governance and human charisma.',
-    includedElements:
-      'Notable figures (in-game heroes), leaders, bureaucrats, citizens, AI, robots, speeches, elections, public opinion',
-  },
-  {
     id: 'community',
     name: 'Community',
     icon: '🤝',
@@ -89,6 +79,16 @@ export const battleThemeCatalog = [
       'Dual-use innovations: from defense origins to civic applications.',
     includedElements:
       'Robotics, AI, drones, cybernetics, medical technology, security, new materials, energy, communication technology',
+  },
+  {
+    id: 'figures',
+    name: 'Figures',
+    icon: '🦸',
+    subThemes: "AI Mayor's Data Politics vs. Charismatic Human Leadership",
+    description:
+      'Leadership dynamics between algorithmic governance and human charisma.',
+    includedElements:
+      'Notable figures (in-game heroes), leaders, bureaucrats, citizens, AI, robots, speeches, elections, public opinion',
   },
 ] as const satisfies readonly BattleTheme[];
 
