@@ -71,12 +71,10 @@ export function BattleFilter({
     seeds.forEach((s) => {
       if (s.themeId) ids.add(s.themeId);
     });
-    return Array.from(ids)
-      .map((id) => {
-        const t = battleThemeCatalog.find((tt) => tt.id === id);
-        return { id, name: t?.name || id, icon: t?.icon };
-      })
-      .sort((a, b) => a.name.localeCompare(b.name));
+    // Display in the same order as battleThemeCatalog array
+    return battleThemeCatalog
+      .filter((t) => ids.has(t.id))
+      .map((t) => ({ id: t.id, name: t.name, icon: t.icon }));
   }, [seeds]);
 
   const filtered = useMemo(() => {
@@ -95,7 +93,7 @@ export function BattleFilter({
       data-testid="battle-filter-wrapper"
     >
       <div className="flex flex-wrap items-center gap-2">
-        <strong>Battle Repository Filter (theme)</strong>
+        <strong>テーマ</strong>
         <span className="rounded bg-muted px-2 py-0.5" title="Filtered count">
           {filtered.length}
         </span>
@@ -147,7 +145,7 @@ export function BattleFilter({
               <ThemeChip
                 themeId={t.id as Battle['themeId']}
                 variant={active ? 'default' : 'outline'}
-                showName={true}
+                showName={false}
                 className={[
                   'cursor-pointer',
                   active
