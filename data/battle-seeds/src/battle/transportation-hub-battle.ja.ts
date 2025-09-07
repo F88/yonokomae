@@ -5,7 +5,7 @@ const battle = {
   themeId: 'development',
   significance: 'medium',
   title: '交通の覇権',
-  subtitle: '歴史の道か、現代の橋か。勝者は？',
+  subtitle: '歴史の道か、現代の橋か。勝者は?',
   narrative: {
     overview:
       'よのは江戸時代、中山道の宿場町として栄え、こまえは現代、多摩川に架かる橋で大都市を結ぶ。過去と現在、陸路と水路、異なる交通の要衝としての誇りをかけて激突する。',
