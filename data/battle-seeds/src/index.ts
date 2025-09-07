@@ -37,6 +37,7 @@ import robotEthics from './battle/robot-ethics.ja';
 import snsTruthVsLies from './battle/sns-truth-vs-lies.ja';
 import wikipediaJaBattle from './battle/wikipedia-ja-battle.ja';
 import undergroundConspiracy from './battle/underground-conspiracy.ja';
+import localCurrencyBattle from './battle/local-currency-battle.ja';
 
 // Collect all battles in a map
 const battleMap: Record<string, Battle> = {
@@ -80,6 +81,7 @@ const battleMap: Record<string, Battle> = {
     'sns-truth-vs-lies.ja.ts': snsTruthVsLies,
     'wikipedia-ja-battle.ja.ts': wikipediaJaBattle,
     'underground-conspiracy.ja.ts': undergroundConspiracy,
+    'local-currency-battle.ja.ts': localCurrencyBattle,
   },
 };
 
