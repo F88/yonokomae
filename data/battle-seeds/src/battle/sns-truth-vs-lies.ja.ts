@@ -14,16 +14,16 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
-    subtitle: 'SNSの真実を叫ぶ者',
+    title: '市民の声',
+    subtitle: 'SNSで紡がれる混沌の真実',
     description:
       'SNSを駆使したリアルタイムの情報発信で、災害時のコミュニティを支える。混沌の中でも真実を求める市民の熱意は、こまえの誇りである。',
     power: 58000,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
-    subtitle: 'AIが示す真実を信じる者',
+    title: 'AIの判断',
+    subtitle: '統制された秩序ある真実',
     description:
       'AIによる情報精査と統制で、市民のパニックを防ぎ都市の安定を優先する。その合理的で冷徹な判断は、多くの命を救う一方で、隠された犠牲を生み出す。',
     power: 58000,
