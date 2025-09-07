@@ -48,5 +48,4 @@ describe('BattleFilter (chip single-select)', () => {
     expect(list.textContent).not.toContain('Alpha History');
     expect(screen.queryByTestId('battle-filter-chip-history')).toBeNull();
   });
-
 });
