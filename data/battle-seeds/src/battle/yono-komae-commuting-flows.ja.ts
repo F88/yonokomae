@@ -39,6 +39,14 @@ const battle = {
       label: 'Arakawa Crossing Council, Komae HQ',
       note: '通勤・通学・購買行動の傾向整理。推定を含む参考値。',
     },
+    {
+      label: '小田急線こまえ駅の朝の風景',
+      note: '新宿方面へ向かう満員電車に乗り込む人々の列。',
+    },
+    {
+      label: 'JRさいたま新都心駅の夕方の風景',
+      note: '都心から帰宅する人々と、駅周辺の商業施設で楽しむ人々で賑わう。',
+    },
   ],
   status: 'success',
 } satisfies Battle;

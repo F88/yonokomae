@@ -39,6 +39,18 @@ const battle = {
       url: 'https://ja.wikipedia.org/wiki/%E5%B7%9D%E5%B3%B6%E6%B0%B8%E5%97%A3',
       note: 'よの出身',
     },
+    {
+      label: 'こまえ市役所 公式X(旧Twitter)',
+      note: '近藤春菜さんの等身大パネルとの記念写真投稿キャンペーンを実施中。',
+    },
+    {
+      label: 'よのスポーツニュース',
+      note: '「川島永嗣、故郷への想いを語る」特集記事。',
+    },
+    {
+      label: '週刊芸能ヘッドライン',
+      note: '「人気芸人と守護神、故郷への愛はどっちが強い？」という特集記事が組まれた。',
+    },
   ],
   status: 'success',
 } satisfies Battle;

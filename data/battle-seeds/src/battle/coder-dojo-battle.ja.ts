@@ -39,6 +39,18 @@ const battle = {
       url: 'https://coderdojo-saitama.connpass.com/',
       note: 'さいたま市で活動する子ども向けプログラミング道場',
     },
+    {
+      label: 'こまえの小学生の自由研究',
+      note: '「Dojoでつくった、多摩川のいきものをあつめるゲーム」が市のコンクールで金賞を受賞。',
+    },
+    {
+      label: 'よのの保護者の声',
+      note: '「うちの子、ロボット大会で優勝しました！Dojoの先生のおかげです」という喜びのメール。',
+    },
+    {
+      label: '未来のクリエイターマガジン',
+      note: '「創造性を育む狛江、技術力を磨くさいたま」として両Dojoの特色が紹介された。',
+    },
   ],
   status: 'success',
 } satisfies Battle;

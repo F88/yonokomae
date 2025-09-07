@@ -15,7 +15,7 @@ const battle = {
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: 'こまえ',
-    subtitle: '市民の生の声',
+    subtitle: 'SNSの真実を叫ぶ者',
     description:
       'SNSを駆使したリアルタイムの情報発信で、災害時のコミュニティを支える。混沌の中でも真実を求める市民の熱意は、こまえの誇りである。',
     power: 58000,
@@ -23,7 +23,7 @@ const battle = {
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
     title: 'よの',
-    subtitle: 'アルゴリズムの真実',
+    subtitle: 'AIが示す真実を信じる者',
     description:
       'AIによる情報精査と統制で、市民のパニックを防ぎ都市の安定を優先する。その合理的で冷徹な判断は、多くの命を救う一方で、隠された犠牲を生み出す。',
     power: 58000,
@@ -32,6 +32,18 @@ const battle = {
     {
       label: 'ゲーム内設定',
       note: '架空のシナリオ',
+    },
+    {
+      label: 'こまえ市民のX(旧Twitter)投稿',
+      note: '「#狛江水没なう #助けて」という投稿が、救助隊を動かした記録。',
+    },
+    {
+      label: 'よの市危機管理AI「オーディン」のログ',
+      note: '「市民のパニック指数が閾値を超過。情報統制レベル3を発動」という記録。',
+    },
+    {
+      label: '国際ジャーナリストのレポート',
+      note: '「よのは都市を守り、こまえは人を守った。どちらが正しかったのか」と締めくくられている。',
     },
   ],
   status: 'success',

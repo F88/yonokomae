@@ -39,6 +39,18 @@ const battle = {
       url: 'https://www.civictechsaitama.com/',
       note: 'さいたま市のシビックテック団体',
     },
+    {
+      label: 'こまえ市民まつりレポート',
+      note: '「まちみらいラボ」が開発したゴミ拾いアプリが子供たちに大人気。',
+    },
+    {
+      label: 'よのスマートシティ体験会',
+      note: 'AIによる最適なバスルート案内に、高齢者から「便利だけど、少し寂しい」との声も。',
+    },
+    {
+      label: '月刊シビックテックジャーナル',
+      note: '「草の根か、トップダウンか。日本のCivicTechの未来」という特集記事で両者が比較された。',
+    },
   ],
   status: 'success',
 } satisfies Battle;

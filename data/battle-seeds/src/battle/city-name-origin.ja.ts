@@ -39,6 +39,18 @@ export default {
       url: 'https://ja.wikipedia.org/wiki/%E7%8B%9B%E6%B1%9F%E5%B8%82',
       note: '名称の由来に関する情報',
     },
+    {
+      label: '武蔵国風土記（むさしのくにふどき）の写本',
+      note: '「与野」の地名に関する最古の記述とされるが、真偽は不明。',
+    },
+    {
+      label: '狛江市地名研究会',
+      note: '「狛江の由来は高麗尺（こまじゃく）から来ている」という新説を提唱。',
+    },
+    {
+      label: '地元の郷土史家',
+      note: '「どちらの説もロマンがある。地名は歴史の宝箱だ」とのコメント。',
+    },
   ],
   status: 'success',
 } satisfies Battle;
