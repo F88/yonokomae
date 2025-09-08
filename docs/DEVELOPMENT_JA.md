@@ -389,7 +389,7 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 - `packages/{types,schema,catalog}/tsconfig.json`: role.package を薄く継承し `rootDir` と `outDir` のみ設定。
 - `tsconfig.role.seed.json`: シードデータビルド用 (DOM 環境 + composite)。
 - `data/*/tsconfig.json`: 3 つのシードパッケージ (battle, news, historical) は対称性のため完全に同一。
-- `tsconfig.ops.json`: 運用/CLI 用 Node 環境 (出力 `dist/ops`)。
+- `tsconfig.ops.json`: 運用/CLI 用 Node 環境 (出力 `dist/ops-build/ops`)。
 
 > 注 (2025-09-06): `packages/app/tsconfig.app.json` は参照が無いことを確認後に削除済みです。今後は `tsconfig.role.app.json` (ロール設定) + `packages/app/tsconfig.json` (パッケージエントリ) の組み合わせのみを使用してください。
 
@@ -420,7 +420,7 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 
 `src/ops/` 配下 (全て `-h` / `--help` 対応)。
 
-ビルド出力 (2025-09-08): すべての ops スクリプトは現在 `dist/ops-build/ops/` に emit されます (旧パス `dist/ops/` は撤去済み)。古いシェルエイリアスやドキュメント参照がある場合は更新してください。
+ビルド出力: すべての ops スクリプトは `dist/ops-build/ops/` に emit されます。
 
 - `export-battle-seeds-to-json.ts` – battle seeds を JSON 出力
 - `export-users-voice-to-tsv.ts` – user voice を TSV 出力

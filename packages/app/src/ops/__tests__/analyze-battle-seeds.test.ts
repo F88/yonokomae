@@ -11,23 +11,14 @@ import * as path from 'path';
 describe('analyze-battle-seeds CLI', () => {
   it('outputs JSON with expected structure', { timeout: 20_000 }, () => {
     const repoRoot = path.resolve(__dirname, '../../../../..');
-    const candidates = [
-      // Current canonical (2025-09-08+)
-      'dist/ops-build/ops/analyze-battle-seeds.js',
-      // Legacy fallbacks (to be removed once all branches updated)
-      'dist/ops/analyze-battle-seeds.js',
-      'dist/ops/ops/analyze-battle-seeds.js',
-    ];
-    let cliRel = candidates.find((p) => existsSync(path.join(repoRoot, p)));
-    if (!cliRel) {
+    const cliRel = 'dist/ops-build/ops/analyze-battle-seeds.js';
+    if (!existsSync(path.join(repoRoot, cliRel))) {
       // Build only if missing (reduces test time on repeated runs)
       execSync('pnpm run build:packages', { cwd: repoRoot, stdio: 'ignore' });
       execSync('pnpm run ops:build', { cwd: repoRoot, stdio: 'ignore' });
-      cliRel = candidates.find((p) => existsSync(path.join(repoRoot, p)));
-      if (!cliRel) {
+      if (!existsSync(path.join(repoRoot, cliRel))) {
         throw new Error(
-          `analyze-battle-seeds CLI not found after build. Tried:\n` +
-            candidates.map((c) => '  - ' + c).join('\n'),
+          `analyze-battle-seeds CLI not found after build: ${cliRel}`,
         );
       }
     }

@@ -24,7 +24,6 @@
     "build:ghpages": "pnpm -r --sort build && VITE_BASE_PATH=/yonokomae/ pnpm run build:app && cp packages/app/dist/index.html packages/app/dist/404.html",
     "build:packages": "pnpm -r --filter './packages/*' --filter './data/*' build",
     "clean": "pnpm -r clean",
-    "clean:old-ops": "rm -rf dist/ops",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

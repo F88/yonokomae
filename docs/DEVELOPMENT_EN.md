@@ -478,7 +478,7 @@ editor feedback, and consistent declaration output:
 - `data/*/tsconfig.json`: Three mirrored seed packages (battle-seeds,
   news-seeds, historical-evidence) kept intentionally identical for symmetry.
 - `tsconfig.ops.json`: Node environment for operational / CLI scripts emitting
-  JS into `dist/ops`.
+  JS into `dist/ops-build/ops`.
 
 > Note (2025-09-06): `packages/app/tsconfig.app.json` was removed after confirming no remaining references. Use `tsconfig.role.app.json` (role config) together with `packages/app/tsconfig.json` (package entry) going forward.
 
@@ -513,7 +513,7 @@ Guidelines:
 
 Ops scripts live under `src/ops/` and provide data export & analysis utilities. Each supports `-h` / `--help`.
 
-Build output (2025-09-08): All ops scripts now emit to `dist/ops-build/ops/` (previous historical path `dist/ops/` was removed). Any old docs or local shell aliases referencing `dist/ops/` should be updated.
+Build output: All ops scripts emit to `dist/ops-build/ops/`.
 
 - `export-battle-seeds-to-json.ts` – Emit all battle seeds as JSON
 - `export-users-voice-to-tsv.ts` – Export user voice lines as TSV
