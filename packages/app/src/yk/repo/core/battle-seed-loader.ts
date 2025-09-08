@@ -67,6 +67,17 @@ export async function loadBattleFromSeeds(params: {
   if (candidateFiles.length === 0) {
     throw new BattleSeedNotFoundError(roots, 'No battle seeds found under');
   }
+  // Dev-only diagnostic: list candidate files before random selection to analyze repetition.
+  // Guarded so production bundles do not include verbose logs.
+  // If the list becomes large, consider truncating or summarizing.
+  const devEnv = (import.meta as unknown as { env?: { DEV?: boolean } }).env
+    ?.DEV;
+  if (devEnv) {
+    console.debug('[battle-seed-loader] candidate files', {
+      count: candidateFiles.length,
+      files: candidateFiles,
+    });
+  }
   const target =
     candidateFiles[Math.floor(Math.random() * candidateFiles.length)];
   // (defensive) target is always defined due to length check
