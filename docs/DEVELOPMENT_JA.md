@@ -418,7 +418,9 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 
 ## CLI オペレーションスクリプト
 
-`src/ops/` 配下 (全て `-h` / `--help` 対応):
+`src/ops/` 配下 (全て `-h` / `--help` 対応)。
+
+ビルド出力 (2025-09-08): すべての ops スクリプトは現在 `dist/ops-build/ops/` に emit されます (旧パス `dist/ops/` は撤去済み)。古いシェルエイリアスやドキュメント参照がある場合は更新してください。
 
 - `export-battle-seeds-to-json.ts` – battle seeds を JSON 出力
 - `export-users-voice-to-tsv.ts` – user voice を TSV 出力
@@ -428,18 +430,25 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 使用例:
 
 ```bash
+# 推奨: pnpm scripts 経由 (必要なら自動ビルド)
 pnpm run ops:export-battle-seeds-to-json -- out/battles.json
 pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
 pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
-# 直接解析 (dist モジュール読み込み)
+
+# 直接解析 (ビルド済み dist モジュール読み込み)
 pnpm run ops:analyze-battle-seeds
+
 # 事前に書き出した JSON を解析
 pnpm run ops:analyze-battle-seeds -- out/battles.json
-# JSON 形式出力 (CI / 自動化向け)
+
+# JSON 形式出力 (CI / 自動化向け 機械可読)
 pnpm run ops:analyze-battle-seeds -- --format=json
+
+# 任意: 直接 node 実行 (直前にビルド済みであること)
+# node dist/ops-build/ops/export-battle-seeds-to-json.js out/battles.json
 ```
 
-ヘルプ:
+ヘルプ表示例:
 
 ```bash
 pnpm run ops:export-users-voice-to-tsv -- --help

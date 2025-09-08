@@ -1,22 +1,44 @@
 /**
- * Usage: Export battle seeds as JSON from CLI.
+ * Export battle seeds (built artifacts) as JSON.
  *
- * 実行方法:
- * - 標準出力に出す: `pnpm run ops:export-battle-seeds-to-json`
- * - ファイルへ出す: `pnpm run ops:export-battle-seeds-to-json -- out/battles.json`
- * - 手動実行: `pnpm run build:deps && pnpm run ops:build && node dist/ops/export-battle-seeds-to-json.js [outfile]`
+ * 概要:
+ * data/battle-seeds のビルド成果 (`data/battle-seeds/dist/battle/*.js`) を動的 import し
+ * 正規化後 (不要な `undefined` 接頭辞除去) に Battle[] を JSON 出力する CLI。
+ *
+ * 主な用途:
+ * - データ検査 / diff 用スナップショット生成
+ * - 後続解析 (`ops:analyze-battle-seeds`) への入力ファイル作成
+ *
+ * 実行方法 (推奨):
+ *   pnpm run ops:export-battle-seeds-to-json                # 標準出力へ
+ *   pnpm run ops:export-battle-seeds-to-json out/battles.json
+ *   pnpm run ops:export-battle-seeds-to-json -- out/battles.json  # pnpm 形式
+ *
+ * 手動実行 (直接 Node 実行する場合):
+ *   pnpm run build:packages && pnpm run ops:build \\
+ *     && node dist/ops-build/ops/export-battle-seeds-to-json.js [outfile]
  *
  * 引数:
- * - `[outfile]` (任意): 出力先 JSON ファイルパス。未指定時は stdout に出力。
+ *   [outfile] (任意)  出力先 JSON パス。省略時は stdout。
+ *   -h | --help       ヘルプ表示。
  *
- * 出力:
- * - Battle[] を整形済みJSONで出力（UTF-8, 2スペースインデント）
- * - サマリ: 読み込みファイル数・要素数・書き込みサイズ・経過時間
+ * 出力仕様:
+ * - 2 スペースインデント, 末尾改行付き UTF-8 JSON
+ * - stderr (stdout 出力時) / stdout (ファイル出力時) に統計サマリ行
+ *   Files read / Elements / Output / Bytes / Duration(ms)
+ *
+ * 実装メモ:
+ * - Battle モジュールは Vite ビルド生成物を文字列読込後、`import.meta.env.BASE_URL` を空文字に置換し
+ *   data: URL として ESM 動的 import。これにより Node ランタイムでブラウザ向け bundle を安全ロード。
+ * - 探索パスは固定 (process.cwd()/data/battle-seeds/dist/battle)。
+ *
+ * @param [outfile] optional target file path (stdout if omitted)
+ * @example pnpm run ops:export-battle-seeds-to-json
+ * @example pnpm run ops:export-battle-seeds-to-json out/battles.json
  */
 
 import { writeFileSync, readdirSync, readFileSync, mkdirSync } from 'fs';
 import * as path from 'path';
-import { fileURLToPath } from 'url';
 import type { Battle } from '@yonokomae/types';
 import chalk from 'chalk';
 
@@ -38,30 +60,13 @@ async function loadAllBattlesFromDist(): Promise<{
   battles: Battle[];
   filesRead: number;
 }> {
-  const currentDir = path.dirname(fileURLToPath(import.meta.url)); // dist/ops or dist/ops/ops
-  // Support multiple relative layouts depending on how TypeScript emitted output:
-  // 1) dist/ops/export-battle-seeds-to-json.js  (currentDir = dist/ops)
-  //    -> battle dir relative: ../data/battle-seeds/dist/battle (candidate A)
-  // 2) dist/ops/ops/export-battle-seeds-to-json.js (currentDir = dist/ops/ops)
-  //    -> battle dir relative: ../../data/battle-seeds/dist/battle (candidate B)
-  // 3) (legacy) dist/ops/packages/app/src/ops/... (not expected now) (candidate C)
-  const candidates = [
-    path.resolve(currentDir, '../data/battle-seeds/dist/battle'),
-    path.resolve(currentDir, '../../data/battle-seeds/dist/battle'),
-    path.resolve(currentDir, '../../../data/battle-seeds/dist/battle'),
-  ];
-  const battleDir = candidates.find((p) => {
-    try {
-      return readdirSync(p).length >= 0;
-    } catch {
-      return false;
-    }
-  });
-  if (!battleDir) {
+  // Battle seeds built output (absolute from repo root)
+  const battleDir = path.join(process.cwd(), 'data/battle-seeds/dist/battle');
+  try {
+    readdirSync(battleDir);
+  } catch {
     throw new Error(
-      `Battle dist directory not found. Tried:\n${candidates
-        .map((c) => ' - ' + c)
-        .join('\n')}\nDid you run 'pnpm run build:packages'?`,
+      `Battle dist directory not found at ${battleDir}\nDid you run 'pnpm run build:packages'?`,
     );
   }
   const files = readdirSync(battleDir).filter((f) => f.endsWith('.js'));
