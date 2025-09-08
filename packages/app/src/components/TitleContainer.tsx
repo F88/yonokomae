@@ -282,7 +282,6 @@ export function TitleContainer({
                 e,
               ) => {
                 if (m.enabled === false) return;
-                // Defensive: resolve mode by dataset id rather than closure in case of transpilation quirks on iOS WebKit.
                 const target = e.currentTarget as HTMLLabelElement;
                 const modeId = target.dataset.modeId;
                 let resolved: PlayMode | undefined = options[i];
@@ -293,20 +292,6 @@ export function TitleContainer({
                 if (resolved && resolved.enabled !== false) {
                   setIndex(options.indexOf(resolved));
                   onSelect(resolved);
-                  if (import.meta.env.DEV) {
-                    // Instrumentation: Log selection pathway to diagnose iOS Safari / Chrome on iOS mismatch reports
-                    console.debug('[TitleContainer] select', {
-                      tappedLabel: m.id,
-                      datasetModeId: modeId,
-                      resolved: resolved.id,
-                      resolvedTitle: resolved.title,
-                    });
-                  }
-                } else if (import.meta.env.DEV) {
-                  console.warn('[TitleContainer] unresolved mode selection', {
-                    tappedLabel: m.id,
-                    datasetModeId: modeId,
-                  });
                 }
               };
               return (
