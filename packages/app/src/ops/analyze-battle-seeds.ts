@@ -1,29 +1,53 @@
 /**
- * Usage: Analyze battle seeds JSON and print summary statistics.
+ * Analyze battle seeds (either live from built modules or a previously exported JSON file).
  *
- * 実行方法:
- * - 直接解析 (dist からロード): `pnpm run ops:analyze-battle-seeds`
- * - 事前に JSON をファイル出力して解析: `pnpm run ops:export-battle-seeds-to-json -- out/battles.json && pnpm run ops:analyze-battle-seeds -- out/battles.json`
- * - 手動実行: `pnpm run build:packages && pnpm run ops:build && node dist/ops/analyze-battle-seeds.js [infile] [--format=json]`
+ * 概要:
+ * - `data/battle-seeds/dist/battle/*.js` (Vite ビルド生成物) をインライン import し統計集計
+ * - もしくは `ops:export-battle-seeds-to-json` で生成した JSON を入力
+ * - 出力は human-readable テキストまたは `--format=json` による JSON サマリ
+ *
+ * 主な指標 (テキストモード):
+ * - 総件数 / テーマ別件数比率 / 重要度別件数比率
+ * - Theme × Significance クロスタブ
+ * - Power 統計 (min/max/avg for komae, yono, combined)
+ * - Combined Power 上位5件 (id/title/theme/significance/内訳)
+ * - Battle Index (theme,title,id ソート) – 回帰 / grep 補助
+ *
+ * 実行方法 (推奨):
+ *   pnpm run ops:analyze-battle-seeds
+ *   pnpm run ops:export-battle-seeds-to-json -- out/battles.json && pnpm run ops:analyze-battle-seeds -- out/battles.json
+ *   pnpm run ops:analyze-battle-seeds -- out/battles.json --format=json
+ *
+ * 手動実行 (直接 Node):
+ *   pnpm run build:packages && pnpm run ops:build \\
+ *     && node dist/ops-build/ops/analyze-battle-seeds.js [infile] [--format=json]
  *
  * 引数:
- * - `[infile]` (任意): `export-battle-seeds-to-json` で生成した JSON ファイルパス。未指定時は dist の battle modules を直接ロード。
- * - `--format=json` (任意): 出力を JSON 形式にする (デフォルトは human-readable テキスト)。
- * - `-h|--help`: ヘルプを表示
+ *   [infile]       (任意) export JSON パス。省略時はビルド済み battle modules を読む。
+ *   --format=json  JSON 出力。
+ *   -h | --help    ヘルプ表示。
  *
- * 出力(テキストモード):
- * - 総件数
- * - テーマ別件数・割合
- * - 重要度( significance )別件数・割合
- * - power の統計 (komae / yono / combined min max avg)
- * - 上位5件 (combined power) の battle id と title
+ * JSON 出力フィールド例:
+ *   {
+ *     generatedAt, durationMs, total,
+ *     byTheme: { themeId: { count, ratio } },
+ *     bySignificance: { significance: { count, ratio } },
+ *     crossTab: { themeId: { significance: count } },
+ *     power: { komae:{min,max,avg}, yono:{...}, combined:{...} },
+ *     topCombined: [{ id,title,combined,... }],
+ *     index: [{ themeId,id,title }]
+ *   }
  *
- * 出力(JSONモード): 上記を 1 つのオブジェクトにまとめた JSON
+ * 実装メモ:
+ * - export CLI と同様に `import.meta.env.BASE_URL` を空文字へ置換し data: URL 経由で ESM import。
+ * - battle ディレクトリ探索は固定パス (process.cwd()/data/battle-seeds/dist/battle)。
+ *
+ * @example pnpm run ops:analyze-battle-seeds
+ * @example pnpm run ops:analyze-battle-seeds -- out/battles.json --format=json
  */
 
 import { readdirSync, readFileSync, existsSync } from 'fs';
 import * as path from 'path';
-import { fileURLToPath } from 'url';
 import type { Battle } from '@yonokomae/types';
 import chalk from 'chalk';
 
@@ -49,28 +73,16 @@ interface StatsSummary {
   index: Array<{ themeId: string; id: string; title: string }>;
 }
 
-function locateBattleDistDir(currentDir: string): string {
-  const candidates = [
-    // If emitted at dist/ops/*.js (current behavior in repo prior to nested rootDir)
-    path.resolve(currentDir, '../..', 'data/battle-seeds/dist/battle'),
-    // If emitted at dist/ops/ops/*.js (rootDir inferred as packages/app/src)
-    path.resolve(currentDir, '../../..', 'data/battle-seeds/dist/battle'),
-    // Extra defensive (one more level) in case of further nesting
-    path.resolve(currentDir, '../../../..', 'data/battle-seeds/dist/battle'),
-  ];
-  for (const c of candidates) {
-    if (existsSync(c)) return c;
-  }
+function locateBattleDistDir(): string {
+  const dir = path.resolve(process.cwd(), 'data/battle-seeds/dist/battle');
+  if (existsSync(dir)) return dir;
   throw new Error(
-    'Battle seeds dist directory not found. Tried:\n' +
-      candidates.map((c) => '  - ' + c).join('\n') +
-      '\nHave you executed: pnpm run build:packages ?',
+    `Battle seeds dist directory not found at ${dir}\nHave you executed: pnpm run build:packages ?`,
   );
 }
 
 async function loadAllBattlesFromDist(): Promise<Battle[]> {
-  const currentDir = path.dirname(fileURLToPath(import.meta.url));
-  const battleDir = locateBattleDistDir(currentDir);
+  const battleDir = locateBattleDistDir();
   const files = readdirSync(battleDir).filter((f) => f.endsWith('.js'));
   const imports = files.map(async (file) => {
     const filePath = path.join(battleDir, file);
