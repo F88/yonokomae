@@ -144,6 +144,35 @@ When adding new filter fields:
 3. Add tests verifying narrowing & randomness within the constrained pool.
 4. Update this section (EN) then sync `DEVELOPMENT_JA.md`.
 
+### Environment Variables
+
+The file `.env.example` enumerates supported Vite environment variables. Copy it to one of:
+
+- `.env` (all modes)
+- `.env.local` (local overrides, gitignored)
+- `.env.development`
+- `.env.production`
+
+Rules:
+
+- Only `VITE_` prefixed variables are exposed to client code.
+- Restart the dev server after adding or removing variables (Vite caches).
+- Keep secrets out of any committed file; runtime public vars only.
+
+Supported variables (see inline comments in `.env.example` for defaults and detailed semantics):
+
+| Name                            | Purpose                                                        |
+| ------------------------------- | -------------------------------------------------------------- |
+| `VITE_API_BASE_URL`             | Backend API base path or absolute URL (`/api` default)         |
+| `VITE_LOG_JUDGEMENT_CACHE`      | Verbose cache hit/miss logging for judgement collapsers        |
+| `VITE_LOG_JUDGEMENT_TIMING`     | Log timing & duplicate invocation warnings                     |
+| `VITE_LOG_HISTORICAL_REPORTS`   | Verbose historical report repository logging                   |
+| `VITE_NEWS_REPORT_CACHE_TTL_MS` | Cache TTL (ms) for news reporter HTTP responses                |
+| `VITE_BATTLE_RANDOM_WEIGHT_API` | Blend weight (0..1) selecting API vs local data in mixed repos |
+| `VITE_BASE_PATH`                | Build-time base path for subdirectory deployments              |
+
+Not environment driven (code-configured): judgement collapsing defaults live in `packages/app/src/yk/repo/core/judgement-config.ts`.
+
 ## How to Add a New Play Mode or Repository
 
 This section explains how to extend the application with new repositories and Play Modes.
