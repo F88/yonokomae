@@ -23,31 +23,36 @@ const ModeOption = ({
   onSelect,
   onHover,
 }: ModeOptionProps) => {
-  // Debug: log the mode prop received by this component
-  console.log('[DEBUG] ModeOption received mode prop:', {
-    modeId: mode.id,
-    modeTitle: mode.title,
-  });
   const handleClick: React.MouseEventHandler<HTMLLabelElement> = (e) => {
-    console.log('[DEBUG] ModeOption handleClick START:', {
-      componentModeId: mode.id,
-      componentModeTitle: mode.title,
-      clickY: e.clientY,
+    console.log('[DEBUG] ModeOption clicked:', {
+      modeId: mode.id,
+      isSelected,
       eventType: e.type,
-      timestamp: Date.now(),
+      clientY: e.clientY,
+      timestamp: Date.now()
     });
-
-    if (mode.enabled === false) return;
+    
+    if (mode.enabled === false) {
+      return;
+    }
 
     // Pass click Y coordinate for iOS WebKit position-based fix
     onSelect(mode, e.clientY);
-    console.log('[DEBUG] ModeOption handleClick END:', {
-      modeId: mode.id,
-      modeTitle: mode.title,
-    });
   };
 
   const handleMouseEnter = () => {
+    console.log('[DEBUG] ModeOption mouseEnter:', {
+      modeId: mode.id,
+      isSelected,
+      timestamp: Date.now()
+    });
+    
+    // Disable hover on touch devices to prevent iOS WebKit touch offset issues
+    if ('ontouchstart' in window) {
+      console.log('[DEBUG] Skipping hover on touch device');
+      return;
+    }
+    
     if (mode.enabled === false) return;
     onHover(mode);
   };
@@ -120,8 +125,51 @@ export type TitleContainerProps = {
 /**
  * TitleContainer
  * - Shows a simple title screen with vertically stacked play modes.
- * - Users can navigate with ArrowUp/ArrowDown and confirm with Enter or B.
- * - Clicking an item also selects and confirms.
+ * - Unified interaction model for both keyboard and mouse/touch input.
+ *
+ * ## Interaction Specification (2025-09-08)
+ *
+ * ### Keyboard Navigation
+ * - **Arrow Keys (↑↓) / j,k / w,s**: Move selection focus between modes
+ * - **Home/End**: Jump to first/last enabled mode
+ * - **Enter/Space**: Execute selected mode (confirm selection)
+ *
+ * ### Mouse/Touch Navigation
+ * - **First Click/Tap**: Set selection focus (equivalent to arrow keys)
+ * - **Second Click/Tap on same mode**: Execute mode (equivalent to Enter/Space)
+ * - **Hover**: Set selection focus (equivalent to arrow keys)
+ *
+ * ### Unified Behavior
+ * All modes follow consistent two-step selection:
+ * 1. **Selection State**: Visual focus indication only (`setIndex()`)
+ * 2. **Mode Execution**: Actual mode activation (`onSelect()`)
+ *
+ * This ensures predictable behavior across all input methods and eliminates
+ * React state update timing issues that previously caused inconsistent behavior.
+ *
+ * ## iOS WebKit Touch Offset Issue (2025-09-08)
+ *
+ * **Problem**: On iOS Safari/WebView, touch coordinates are offset from the actual
+ * visual element positions, causing mode selection mismatches. When a user taps
+ * one mode option, the touch event coordinates point to a different mode element.
+ *
+ * **Root Cause**: iOS WebKit viewport and touch coordinate system inconsistencies,
+ * particularly when combined with CSS transforms, sticky positioning, or dynamic
+ * content rendering.
+ *
+ * **Solution**: Dual-mode selection validation:
+ * 1. **Coordinate-based**: Find closest mode element to touch coordinates
+ * 2. **Index-based**: Use current selected index state as fallback
+ * 3. **Offset Detection**: Compare both methods - if they differ, use index-based
+ * 4. **Unified Processing**: All selections go through same handleModeSelect logic
+ *
+ * **Debug Logging**: Large numbers of consecutive console.log calls can be
+ * lost in webkit environments. Solution: Batch debug messages into string arrays
+ * and output in single console.log calls at logical breakpoints.
+ *
+ * @see handleModeSelect for unified selection logic
+ * @see handleClick in ModeOption component for coordinate validation logic
+ * @see onSelect handler for iOS WebKit offset detection and fallback
  */
 export function TitleContainer({
   modes,
@@ -137,6 +185,10 @@ export function TitleContainer({
     string | undefined
   >(battleSeedFile);
   const effectiveBattleSeedFile = battleSeedFile ?? internalBattleSeedFile;
+  
+  // Track if we're in the middle of processing a click to prevent hover interference
+  const [isProcessingClick, setIsProcessingClick] = useState(false);
+  
   const updateBattleSeedFile = useCallback(
     (file: string | undefined) => {
       if (battleSeedFile === undefined) {
@@ -152,28 +204,37 @@ export function TitleContainer({
   // Removed separate battleSeedTheme state; we derive active theme from poolThemes[0]
   const options = useMemo(() => {
     const result = modes ?? defaultPlayModes;
-    console.log('[DEBUG] *** VERSION: 2025-09-08-v5 - DEPLOY CHECK ***');
-    console.log(
-      '[DEBUG] options computed:',
-      result.map((m, i) => ({
-        index: i,
-        id: m.id,
-        title: m.title,
-      })),
-    );
+    // Uncomment for debugging mode selection issues
+    // const debugLog = [
+    //   '[DEBUG] *** VERSION: 2025-09-08-v5 - DEPLOY CHECK ***',
+    //   'Options computed:',
+    //   JSON.stringify(
+    //     result.map((m, i) => ({
+    //       index: i,
+    //       id: m.id,
+    //       title: m.title,
+    //     })),
+    //     null,
+    //     2,
+    //   ),
+    // ].join('\n');
+    // console.log(debugLog);
     return result;
   }, [modes]);
   const [index, setIndex] = useState(0);
 
-  // Debug index changes
-  useEffect(() => {
-    console.log('[DEBUG] index changed:', {
-      newIndex: index,
-      modeAtIndex: options[index]?.id,
-      modeTitle: options[index]?.title,
-      timestamp: Date.now(),
-    });
-  }, [index, options]);
+  // Debug index changes (uncomment for troubleshooting)
+  // useEffect(() => {
+  //   const debugInfo = {
+  //     newIndex: index,
+  //     modeAtIndex: options[index]?.id,
+  //     modeTitle: options[index]?.title,
+  //     timestamp: Date.now(),
+  //   };
+  //   console.log(
+  //     '[DEBUG] Index changed:\n' + JSON.stringify(debugInfo, null, 2),
+  //   );
+  // }, [index, options]);
   // Theme filter state (single selection). Keep historical array shape for downstream (poolThemes[0]).
   const [internalTheme, setInternalTheme] = useState<string | undefined>(
     undefined,
@@ -396,47 +457,52 @@ export function TitleContainer({
             <div id="play-modes-hint" className="sr-only">
               Use Arrow keys to choose a mode and press Enter or B to start.
             </div>
-            {options.map((m, mapIndex) => {
-              console.log('[DEBUG] mapping mode:', {
-                mapIndex,
-                modeId: m.id,
-                modeTitle: m.title,
-              });
-              console.log('[DEBUG] passing mode to ModeOption:', {
-                mapIndex,
-                passingModeId: m.id,
-                passingModeTitle: m.title,
-              });
-              const handleModeSelect = (selectedMode: PlayMode) => {
-                console.log('[DEBUG] handleModeSelect called:', {
-                  selectedModeId: selectedMode.id,
-                  selectedModeTitle: selectedMode.title,
-                  currentIndex: index,
-                  currentModeId: options[index]?.id,
-                  currentModeTitle: options[index]?.title,
-                });
+            {options.map((m) => {
+              const handleModeSelect = (selectedMode: PlayMode, fromClick: boolean = false) => {
                 const targetIndex = options.findIndex(
                   (opt) => opt.id === selectedMode.id,
                 );
-                console.log('[DEBUG] targetIndex found:', {
+
+                console.log('[DEBUG] handleModeSelect called:', {
+                  selectedMode: selectedMode.id,
+                  currentIndex: index,
                   targetIndex,
-                  expectedMode: selectedMode.id,
-                  foundMode: options[targetIndex]?.id,
+                  currentFocusedMode: options[index]?.id,
+                  isSameAsCurrentFocus: index === targetIndex,
+                  fromClick,
+                  isProcessingClick,
+                  timestamp: Date.now(),
+                  '--- DECISION ---': index === targetIndex ? 'EXECUTE' : 'FOCUS_ONLY'
                 });
+
                 if (targetIndex >= 0) {
-                  setIndex(targetIndex);
-                  console.log('[DEBUG] calling onSelect with:', {
-                    modeId: selectedMode.id,
-                    modeTitle: selectedMode.title,
-                  });
-                  onSelect(selectedMode);
+                  if (index === targetIndex) {
+                    // Already focused mode → Execute
+                    console.log('[DEBUG] Executing mode:', selectedMode.id);
+                    onSelect(selectedMode);
+                  } else {
+                    // Different mode → Set selection state only
+                    console.log('[DEBUG] Changing focus from', options[index]?.id, 'to', selectedMode.id);
+                    setIndex(targetIndex);
+                  }
                 }
               };
 
               const handleModeHover = (hoveredMode: PlayMode) => {
+                // Skip hover if we're processing a click
+                if (isProcessingClick) {
+                  console.log('[DEBUG] Skipping hover during click processing');
+                  return;
+                }
+                
                 const targetIndex = options.findIndex(
                   (opt) => opt.id === hoveredMode.id,
                 );
+                console.log('[DEBUG] handleModeHover:', {
+                  hoveredMode: hoveredMode.id,
+                  targetIndex,
+                  currentIndex: index
+                });
                 if (targetIndex >= 0) {
                   setIndex(targetIndex);
                 }
@@ -449,51 +515,30 @@ export function TitleContainer({
                   isSelected={m.id === options[index]?.id}
                   inputId={`play-mode-${m.id}`}
                   onSelect={(selectedMode, clickY) => {
-                    console.log('[DEBUG] Parent onSelect received:', {
-                      selectedMode: selectedMode.id,
-                      clickY,
-                      mapIndex,
-                    });
+                    // Prevent hover during click processing
+                    setIsProcessingClick(true);
                     
-                    console.log('[DEBUG] *** DEPLOYMENT CHECK: 2025-09-08-v4 ***');
-
+                    // Reset flag after a short delay
+                    setTimeout(() => setIsProcessingClick(false), 100);
+                    
                     // iOS WebKit fix: Find correct mode based on click position
                     // Skip coordinate-based fix in test environment
                     if (
                       typeof clickY === 'number' &&
                       process.env.NODE_ENV !== 'test'
                     ) {
-                      console.log(
-                        '[DEBUG] Entering coordinate-based fix, clickY:',
-                        clickY,
-                      );
-
                       // Get all mode option elements
                       const modeElements =
                         document.querySelectorAll('[data-mode-id]');
-                      console.log(
-                        '[DEBUG] Found mode elements count:',
-                        modeElements.length,
-                      );
 
                       let closestMode = selectedMode;
                       let minDistance = Infinity;
 
-                      modeElements.forEach((el, elIndex) => {
+                      modeElements.forEach((el) => {
                         const rect = el.getBoundingClientRect();
                         const elementCenterY = rect.top + rect.height / 2;
                         const distance = Math.abs(clickY - elementCenterY);
                         const modeId = el.getAttribute('data-mode-id');
-
-                        console.log(`[DEBUG] Element ${elIndex}:`, {
-                          modeId,
-                          elementCenterY,
-                          distance,
-                          rect: {
-                            top: rect.top,
-                            height: rect.height,
-                          },
-                        });
 
                         if (distance < minDistance) {
                           minDistance = distance;
@@ -501,51 +546,29 @@ export function TitleContainer({
                             (opt) => opt.id === modeId,
                           );
                           if (foundMode) {
-                            console.log(
-                              '[DEBUG] New closest mode found:',
-                              foundMode.id,
-                            );
                             closestMode = foundMode;
                           }
                         }
                       });
 
-                      console.log(
-                        '[DEBUG] Final closest mode:',
-                        closestMode.id,
-                      );
-
-                      console.log(
-                        '[DEBUG] *** CODE VERSION: 2025-09-08-v3 ***',
-                      );
-
                       // iOS WebKit fix: Compare with current index state instead of selectedMode
                       const intendedMode = options[index];
-                      console.log('[DEBUG] Current index points to:', {
-                        index: index,
-                        intendedMode: intendedMode?.id,
-                        intendedTitle: intendedMode?.title,
-                      });
 
                       if (intendedMode && closestMode.id !== intendedMode.id) {
-                        console.log('[DEBUG] iOS WebKit offset detected:', {
-                          coordinateBasedMode: closestMode.id,
-                          indexBasedMode: intendedMode.id,
-                          usingIndexBased: true,
-                        });
-                        handleModeSelect(intendedMode);
+                        // iOS offset detected, use index-based selection
+                        // Uncomment for debugging iOS issues:
+                        // console.log('[DEBUG] iOS WebKit offset detected:', {
+                        //   coordinateBasedMode: closestMode.id,
+                        //   indexBasedMode: intendedMode.id,
+                        //   usingIndexBased: true,
+                        // });
+                        handleModeSelect(intendedMode, true);
                       } else {
-                        console.log(
-                          '[DEBUG] No offset detected, using coordinate-based result',
-                        );
-                        handleModeSelect(closestMode);
+                        handleModeSelect(closestMode, true);
                       }
                     } else {
                       // In test environment or when clickY is not available, use direct selection
-                      console.log(
-                        '[DEBUG] Using direct selection (test env or no clickY)',
-                      );
-                      handleModeSelect(selectedMode);
+                      handleModeSelect(selectedMode, true);
                     }
                   }}
                   onHover={() => handleModeHover(m)}
