@@ -125,7 +125,7 @@ async function main() {
     return;
   }
   const { battles, filesRead } = await loadAllBattlesFromDist();
-  const json = JSON.stringify(battles, null, 2);
+  const json = JSON.stringify(battles, null, 2) + '\n';
   const bytes = Buffer.byteLength(json, 'utf8');
 
   if (args.length === 0) {
