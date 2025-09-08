@@ -23,6 +23,11 @@ const ModeOption = ({
   onSelect,
   onHover,
 }: ModeOptionProps) => {
+  // Debug: log the mode prop received by this component
+  console.log('[DEBUG] ModeOption received mode prop:', {
+    modeId: mode.id,
+    modeTitle: mode.title,
+  });
   const handleClick: React.MouseEventHandler<HTMLLabelElement> = (e) => {
     if (mode.enabled === false) return;
     // Comprehensive debug logging for iOS offset issue
@@ -395,6 +400,11 @@ export function TitleContainer({
                 mapIndex,
                 modeId: m.id,
                 modeTitle: m.title,
+              });
+              console.log('[DEBUG] passing mode to ModeOption:', {
+                mapIndex,
+                passingModeId: m.id,
+                passingModeTitle: m.title,
               });
               const handleModeSelect = (selectedMode: PlayMode) => {
                 console.log('[DEBUG] handleModeSelect called:', {
