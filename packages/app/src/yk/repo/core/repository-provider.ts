@@ -5,6 +5,54 @@
 // Reset only on reload. For accurate analytics, use a proper metrics system.
 let cacheHitCount = 0;
 let cacheMissCount = 0;
+
+// --- logging feature flag configuration (env-driven) ---
+// Supported boolean environment variable values (case-insensitive):
+// '1', 'true', 'yes', 'on' => true | '0', 'false', 'no', 'off' => false
+// Any other / undefined => defaultValue.
+function readBooleanEnv(key: string, defaultValue: boolean): boolean {
+  try {
+    const env = (
+      import.meta as unknown as { env?: Record<string, string | undefined> }
+    ).env;
+    const raw = env?.[key];
+    if (!raw) return defaultValue;
+    const v = raw.trim().toLowerCase();
+    if (['1', 'true', 'yes', 'on'].includes(v)) return true;
+    if (['0', 'false', 'no', 'off'].includes(v)) return false;
+    return defaultValue;
+  } catch {
+    return defaultValue;
+  }
+}
+
+// Detect test mode safely (works in browser + node). Prefer import.meta.env.MODE.
+const __isTestMode = (() => {
+  try {
+    if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'test') return true;
+  } catch {
+    // ignore: process may be undefined in browser
+  }
+  try {
+    const env = (
+      import.meta as unknown as { env?: Record<string, string | undefined> }
+    ).env;
+    if (env?.MODE === 'test' || env?.NODE_ENV === 'test') return true;
+  } catch {
+    // ignore: import.meta.env access may throw in some tooling contexts
+  }
+  return false;
+})();
+
+// Feature flag: judgement cache hit/miss logging
+const JUDGEMENT_CACHE_LOG_ENABLED = __isTestMode
+  ? false
+  : readBooleanEnv('VITE_LOG_JUDGEMENT_CACHE', false);
+// Feature flag: judgement timing (groupCollapsed + duplicate warnings)
+const JUDGEMENT_TIMING_LOG_ENABLED = __isTestMode
+  ? false
+  : readBooleanEnv('VITE_LOG_JUDGEMENT_TIMING', false);
+
 import type {
   BattleReportRepository,
   JudgementRepository,
@@ -371,7 +419,7 @@ function isTestEnv(): boolean {
  */
 function withJudgementTiming<T extends JudgementRepository>(repo: T): T {
   // structural typing allows us to return a decorated object as T
-  const shouldLog = !isTestEnv();
+  const shouldLog = JUDGEMENT_TIMING_LOG_ENABLED && !isTestEnv();
   // Track how many times the same reqId was observed
   const seen: Map<string, number> = new Map();
   const decorated: JudgementRepository = {
@@ -389,7 +437,8 @@ function withJudgementTiming<T extends JudgementRepository>(repo: T): T {
         }
       }
       if (shouldLog) {
-        console.groupCollapsed(
+        // console.groupCollapsed(
+        console.debug(
           `Judgement#${reqId} battle=${'battle' in input ? input.battle.id : '?'}`,
         );
         console.log('start');
@@ -567,6 +616,7 @@ function withJudgementCollapsing<T extends JudgementRepository>(
 
   // Log cache hit/miss rate for development/debugging
   function logCacheRate() {
+    if (!JUDGEMENT_CACHE_LOG_ENABLED) return;
     // Note: These counters are module-scoped and not reset per session/request.
     // For production, use a proper metrics system.
     const total = cacheHitCount + cacheMissCount;
@@ -591,16 +641,20 @@ function withJudgementCollapsing<T extends JudgementRepository>(
       // Fresh cached value
       if (current && current.value !== undefined && current.expiresAt > now) {
         cacheHitCount++;
-        console.count('judgement.cache.hit');
-        logCacheRate();
+        if (JUDGEMENT_CACHE_LOG_ENABLED) {
+          console.count('judgement.cache.hit');
+          logCacheRate();
+        }
         return current.value;
       }
 
       // In-flight promise
       if (current && current.promise) {
         cacheHitCount++;
-        console.count('judgement.cache.hit');
-        logCacheRate();
+        if (JUDGEMENT_CACHE_LOG_ENABLED) {
+          console.count('judgement.cache.hit');
+          logCacheRate();
+        }
         // Respect caller abort without cancelling underlying request:
         if (options?.signal) {
           if (options.signal.aborted) {
@@ -622,8 +676,10 @@ function withJudgementCollapsing<T extends JudgementRepository>(
       }
 
       cacheMissCount++;
-      console.count('judgement.cache.miss');
-      logCacheRate();
+      if (JUDGEMENT_CACHE_LOG_ENABLED) {
+        console.count('judgement.cache.miss');
+        logCacheRate();
+      }
       // Start a new underlying call. Important: do NOT pass caller signal
       // so that one impatient subscriber doesn't cancel others.
       const p = repo
