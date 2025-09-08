@@ -97,8 +97,8 @@ classDiagram
 
 ### 新しい Repository の追加
 
-1.  **Repository 実装の作成:**
-    `src/yk/repo/` 以下に新しいファイルを作成します。例: `src/yk/repo/example/repositories.example.ts`。一つ以上のリポジトリインターフェースを実装します。
+1. **Repository 実装の作成:**
+   `src/yk/repo/` 以下に新しいファイルを作成します。例: `src/yk/repo/example/repositories.example.ts`。一つ以上のリポジトリインターフェースを実装します。
 
     ```typescript
     // src/yk/repo/example/repositories.example.ts
@@ -142,8 +142,8 @@ classDiagram
     }
     ```
 
-2.  **Provider Factory への接続:**
-    `src/yk/repo/core/repository-provider.ts` 内のファクトリ関数（`getBattleReportRepository`, `getJudgementRepository` など）を更新し、目的の Play Mode に対して新しいリポジトリ実装を返すようにします。
+2. **Provider Factory への接続:**
+   `src/yk/repo/core/repository-provider.ts` 内のファクトリ関数（`getBattleReportRepository`, `getJudgementRepository` など）を更新し、目的の Play Mode に対して新しいリポジトリ実装を返すようにします。
 
     ```typescript
     // src/yk/repo/core/repository-provider.ts
@@ -228,6 +228,35 @@ await repo.generateReport({ signal: controller.signal });
 
 4. **UI での Mode の使用:**
    UI を更新して新しい Play Mode を選択できるようにし、そのモードが `RepositoryProvider` に渡されるようにします。
+
+### 環境変数 (Environment Variables)
+
+`.env.example` はサポートされる Vite 環境変数一覧です。以下のいずれかへコピーして利用します:
+
+- `.env` (全モード共有)
+- `.env.local` (ローカル上書き / git ignore 対象)
+- `.env.development`
+- `.env.production`
+
+ルール:
+
+- `VITE_` 接頭辞のみクライアントコードへ露出
+- 追加/削除後は dev サーバ再起動 (Vite キャッシュ反映)
+- 秘密情報はコミットしない (公開前提の値のみ)
+
+サポート変数 (詳細とデフォルトは `.env.example` 内コメント参照):
+
+| Name                            | Purpose                                                    |
+| ------------------------------- | ---------------------------------------------------------- |
+| `VITE_API_BASE_URL`             | Backend API のベースパスまたは絶対 URL (デフォルト `/api`) |
+| `VITE_LOG_JUDGEMENT_CACHE`      | judgement collapse キャッシュのヒット/ミス詳細ログ         |
+| `VITE_LOG_JUDGEMENT_TIMING`     | 処理時間 + 重複呼出し警告ログ                              |
+| `VITE_LOG_HISTORICAL_REPORTS`   | historical report repository の詳細ログ                    |
+| `VITE_NEWS_REPORT_CACHE_TTL_MS` | news reporter HTTP 応答のキャッシュ TTL (ms)               |
+| `VITE_BATTLE_RANDOM_WEIGHT_API` | API vs ローカルデータ選択ブレンド重み (0..1)               |
+| `VITE_BASE_PATH`                | サブディレクトリ配備時のビルド時ベースパス                 |
+
+環境変数ではない (コード構成): judgement collapse のデフォルトは `packages/app/src/yk/repo/core/judgement-config.ts` に存在。
 
 ## Workspace と依存関係管理
 
