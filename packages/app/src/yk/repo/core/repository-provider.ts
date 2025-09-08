@@ -10,21 +10,8 @@ let cacheMissCount = 0;
 // Supported boolean environment variable values (case-insensitive):
 // '1', 'true', 'yes', 'on' => true | '0', 'false', 'no', 'off' => false
 // Any other / undefined => defaultValue.
-function readBooleanEnv(key: string, defaultValue: boolean): boolean {
-  try {
-    const env = (
-      import.meta as unknown as { env?: Record<string, string | undefined> }
-    ).env;
-    const raw = env?.[key];
-    if (!raw) return defaultValue;
-    const v = raw.trim().toLowerCase();
-    if (['1', 'true', 'yes', 'on'].includes(v)) return true;
-    if (['0', 'false', 'no', 'off'].includes(v)) return false;
-    return defaultValue;
-  } catch {
-    return defaultValue;
-  }
-}
+// (moved implementation to env-utils.ts)
+import { readBooleanEnv, getViteEnvVar } from './env-utils';
 
 // Detect test mode safely (works in browser + node). Prefer import.meta.env.MODE.
 const __isTestMode = (() => {
@@ -314,26 +301,6 @@ export async function getJudgementRepository(
  *
  * @param key Environment variable key (e.g., 'VITE_API_BASE_URL')
  * @returns Environment variable value or undefined if not set
- *
- * @internal
- */
-function getViteEnvVar(key: string): string | undefined {
-  // Vite injects env variables into import.meta.env
-  // Type assertion is encapsulated here for maintainability
-  const env = (
-    import.meta as unknown as { env?: Record<string, string | undefined> }
-  ).env;
-  return env?.[key];
-}
-
-/**
- * Get the configured API base URL for REST API communication.
- *
- * **Configuration**:
- * - Primary: `VITE_API_BASE_URL` environment variable
- * - Fallback: `/api` for local development
- *
- * @returns Configured API base URL
  *
  * @internal
  */

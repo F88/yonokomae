@@ -7,27 +7,12 @@ import type {
 } from '@/yk/repo/core/repositories';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 import { loadBattleFromSeeds } from '../core/battle-seed-loader';
+import { readBooleanEnvOptional } from '../core/env-utils';
 
 // ---- logging feature flag (env override) -----------------------------------
 // Control verbose start/done/error/final logs for historical battle reports.
 // Default behavior (when no env override): enabled in non-production, disabled in production.
 // Set VITE_LOG_HISTORICAL_REPORTS=on|off (true/false/1/0/yes/no) to force.
-
-function readBooleanEnv(key: string): boolean | undefined {
-  try {
-    const env = (
-      import.meta as unknown as { env?: Record<string, string | undefined> }
-    ).env;
-    const raw = env?.[key];
-    if (!raw) return undefined;
-    const v = raw.trim().toLowerCase();
-    if (['1', 'true', 'yes', 'on'].includes(v)) return true;
-    if (['0', 'false', 'no', 'off'].includes(v)) return false;
-    return undefined; // treat unrecognized as absent
-  } catch {
-    return undefined;
-  }
-}
 
 const __isProdMode = (() => {
   try {
@@ -51,7 +36,7 @@ const __isProdMode = (() => {
   return false;
 })();
 
-const __historicalLogOverride = readBooleanEnv('VITE_LOG_HISTORICAL_REPORTS');
+const __historicalLogOverride = readBooleanEnvOptional('VITE_LOG_HISTORICAL_REPORTS');
 const SHOULD_LOG_HISTORICAL_REPORTS =
   __historicalLogOverride !== undefined
     ? __historicalLogOverride
