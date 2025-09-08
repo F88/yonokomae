@@ -62,6 +62,7 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
     - `@yonokomae/data-historical-evidence` - Fictional historical scenarios
     - `@yonokomae/data-news-seeds` - News-style demonstration samples
 - **Mock API**: `mock-api/` ローカル開発用スタブサーバ
+- **Operations**: `packages/app/src/ops/` - CLI tools for data analysis and export
 
 リポジトリ構造 (簡易図):
 
@@ -69,6 +70,8 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 yonokomae/
 ├── packages/
 │   ├── app/
+│   │   └── src/
+│   │       └── ops/         # CLI operational tools
 │   ├── catalog/
 │   ├── types/
 │   └── schema/
@@ -78,7 +81,11 @@ yonokomae/
 │   └── news-seeds/
 ├── mock-api/
 ├── docs/
+│   └── data/                # Data-specific documentation
 ├── e2e/
+├── dist/
+│   ├── ops/                 # Compiled ops scripts (legacy)
+│   └── ops-build/           # New ops build output
 └── (no root src/; app code lives under packages/app/src/)
 ```
 
@@ -98,6 +105,7 @@ yonokomae/
     - Async judgement with simulated latency
     - Shadcn skeleton placeholders on the battle field
     - Loading states with aria-busy for accessibility
+    - Custom error classes for battle seed and news reporter repositories
 - Modern UI stack
     - React 19 + Vite 7 + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
     - Dark mode toggle via class-based theme
@@ -117,6 +125,10 @@ yonokomae/
 - Battle seed selector improvements
     - Optional `showIds` prop surfaces internal battle `id` values for debugging / reproducibility
     - Non-intrusive: disabled by default to keep UI concise
+- Environment-driven configuration
+    - Logging control via `VITE_ENABLE_LOGGING`
+    - API base URL configuration
+    - News mode configuration options
 - Zero-SSR SPA optimized for client-side rendering
 - GitHub Pages deployment with base path configured
 
@@ -180,6 +192,15 @@ pnpm run ops:analyze-battle-seeds -- out/battles.json
 
 # JSON formatted analysis output (machine-readable)
 pnpm run ops:analyze-battle-seeds -- --format=json
+
+# Export usage examples to TSV
+pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
+
+# Export user voices to TSV
+pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
+
+# Show help for any ops command
+pnpm run ops:analyze-battle-seeds -- --help
 ```
 
 The analyzer prints:
@@ -243,6 +264,9 @@ Full details, troubleshooting matrix, and manual workflow: see [Deployment Guide
 - ✅ Schema validation for all data entries using Zod
 - ✅ Vitest with isolated test projects (unit and Storybook)
 - ✅ Component testing in real browser environment
+- ✅ Central Vitest workspace configuration for project management
+- ✅ Accessibility testing with axe-core/playwright
+- ✅ Seedable shuffle utilities with regression guards
 
 ### In Progress
 

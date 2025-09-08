@@ -25,6 +25,8 @@ instructions-for-ais:
 yonokomae/
 ├── packages/
 │   ├── app/                   # メイン React アプリ (リポジトリ直下に src/ は存在しない)
+│   │   └── src/
+│   │       └── ops/           # CLI 操作ツール
 │   ├── catalog/               # ドメインカタログ / 列挙
 │   ├── types/                 # 共有 TypeScript 型定義
 │   └── schema/                # Zod 検証スキーマ
@@ -33,8 +35,12 @@ yonokomae/
 │   ├── historical-evidence/   # 歴史シナリオデータ
 │   └── news-seeds/            # ニュース風サンプルデータ
 ├── docs/                      # ドキュメント (英語が正)
+│   └── data/                  # データ固有ドキュメント
 ├── e2e/                       # Playwright テスト
-└── mock-api/                  # ローカル API スタブサーバ
+├── mock-api/                  # ローカル API スタブサーバ
+└── dist/                      # ビルド出力
+    ├── ops-build/             # コンパイル済み ops スクリプト
+    └── data/                  # コンパイル済みデータパッケージ
 ```
 
 最近の主なアーキテクチャ追加:
@@ -42,6 +48,10 @@ yonokomae/
 - リポジトリ層フィルタリング (`BattleFilter`) により `BattleReportRepository.generateReport({ filter })` を直接制御
 - `BattleTitleChip` にテーマアイコン表示オプション
 - `BattleSeedSelector` にデバッグ向け `showIds` オプション (battle id 表示)
+- バトルシードとニュースレポーターリポジトリ用のカスタムエラークラス
+- 回帰ガード付きシード可能シャッフルユーティリティ
+- バトルレポート生成の環境駆動ロギング
+- `--help` フラグ付き強化 ops CLI ツール
 
 ## データパッケージへのコントリビューション
 
@@ -168,16 +178,35 @@ pnpm run deploy:ghpages
 
 詳細 (base path / 404 fallback / トラブルシュート): `docs/DEPLOYMENT_JA.md` を参照。
 
-## データエクスポートスクリプト
+## データエクスポート・分析スクリプト
 
-このプロジェクトには、使用例とユーザーボイス用の TSV エクスポート機能が含まれています:
+このプロジェクトには、データエクスポートと分析のための包括的な CLI ツールが含まれています:
+
+### エクスポートコマンド
 
 - `pnpm run ops:export-usage-examples-to-tsv` - 使用例を TSV 形式でエクスポート
 - `pnpm run ops:export-users-voice-to-tsv` - ユーザーボイスデータを TSV 形式でエクスポート
+- `pnpm run ops:export-battle-seeds-to-json` - すべてのバトルシードを JSON 形式でエクスポート
 
-これらのスクリプトは `tsconfig.ops.json` の TypeScript 設定を使用し、以下からデータを処理します:
+### 分析コマンド
 
-- `src/data/usage-examples.ts` - カテゴリと説明付きの使用例
-- `src/data/users-voice.ts` - ユーザーの体験談とフィードバック
+- `pnpm run ops:analyze-battle-seeds` - バトルシードの分布と統計を分析
+    - 合計、テーマ/重要度の分布、パワー統計を表示
+    - 機械可読出力用の `--format=json` をサポート
+    - dist モジュールまたはエクスポート済み JSON ファイルから分析可能
 
-エクスポートスクリプトは `src/ops/` ディレクトリにあり、データ分析と外部使用に適した TSV ファイルを生成します。
+### スクリプト構造
+
+これらのスクリプトは `tsconfig.ops.json` の TypeScript 設定を使用し、`packages/app/src/ops/` に配置されています。以下からデータを処理します:
+
+- `packages/app/src/data/usage-examples.ts` - カテゴリと説明付きの使用例
+- `packages/app/src/data/users-voice.ts` - ユーザーの体験談とフィードバック
+- `data/battle-seeds/` - バトルシードデータパッケージ
+
+すべての ops コマンドは使用情報用の `--help` フラグをサポートしています:
+
+```bash
+pnpm run ops:analyze-battle-seeds -- --help
+```
+
+コンパイル済みスクリプトは `dist/ops-build/` に出力され、実行されます。

@@ -11,6 +11,14 @@
 
 ### Changes
 
+- feat(ops): enhance battle directory loading with multiple candidate paths
+- feat(ops): add --help flags to export CLI scripts and corresponding tests
+- feat(vitest): add central Vitest workspace configuration for project management
+- fix(tsconfig): update include patterns to support nested TypeScript files
+- feat(logging): add environment-driven logging for battle report generation
+- chore(deps): update eslint and related packages to latest versions
+- chore(env): add logging and news configuration options to .env.example
+
 - refactor: update repository provider documentation to reflect current implementation
 - docs: update play mode documentation to clarify available modes
 - test(e2e): update title navigation tests without mixed-nuts mode
@@ -59,10 +67,14 @@
 
 - feat(usage): Add UsageExamples and UserVoices components with interactive displays
 - feat(export): Add TSV export functionality for usage examples and user voices data
-- feat(ops): Add build scripts for data export (`pnpm run build:usage-examples-tsv`, `pnpm run build:users-voice-tsv`)
+- feat(ops): Add comprehensive CLI tools for data export and analysis
+    - Export commands for TSV and JSON formats
+    - Battle seed analysis with distribution statistics
+    - Help flags for all ops commands
 - feat(ui): Add marquee animation effects for user testimonials
 - docs: Update documentation to reflect new features and components
 - feat(config): Update TypeScript configuration for improved module handling
+- test(repository-provider): add mapping tests for 'yk-now' play mode
 
 ### Bug Fixes
 
