@@ -25,6 +25,8 @@ This project uses a pnpm monorepo structure with separate data & library package
 yonokomae/
 ├── packages/
 │   ├── app/                   # Main React application (no root-level src/)
+│   │   └── src/
+│   │       └── ops/           # CLI operational tools
 │   ├── catalog/               # Domain catalogs / enumerations
 │   ├── types/                 # Shared TypeScript type definitions
 │   └── schema/                # Zod validation schemas
@@ -33,8 +35,12 @@ yonokomae/
 │   ├── historical-evidence/   # Historical scenario data
 │   └── news-seeds/            # News-style sample data
 ├── docs/                      # Documentation (English is source of truth)
+│   └── data/                  # Data-specific documentation
 ├── e2e/                       # Playwright tests
-└── mock-api/                  # Local API stub server
+├── mock-api/                  # Local API stub server
+└── dist/                      # Build output
+    ├── ops-build/             # Compiled ops scripts
+    └── data/                  # Compiled data packages
 ```
 
 Key recent architectural additions:
@@ -42,6 +48,10 @@ Key recent architectural additions:
 - Repository-level filtering (`BattleFilter`) feeding `BattleReportRepository.generateReport({ filter })`
 - Optional theme icon rendering in `BattleTitleChip`
 - Opt-in `showIds` debug capability in `BattleSeedSelector`
+- Custom error classes for battle seed and news reporter repositories
+- Seedable shuffle utilities with regression guards
+- Environment-driven logging for battle report generation
+- Enhanced ops CLI tools with `--help` flags
 
 ## Contributing to Data Packages
 
@@ -168,16 +178,35 @@ pnpm run deploy:ghpages
 
 See `docs/DEPLOYMENT_EN.md` for base path, 404 fallback, and troubleshooting details.
 
-## Data Export Scripts
+## Data Export and Analysis Scripts
 
-The project includes TSV export functionality for usage examples and user voices:
+The project includes comprehensive CLI tools for data export and analysis:
+
+### Export Commands
 
 - `pnpm run ops:export-usage-examples-to-tsv` - Exports usage examples to TSV format
 - `pnpm run ops:export-users-voice-to-tsv` - Exports user voices data to TSV format
+- `pnpm run ops:export-battle-seeds-to-json` - Exports all battle seeds to JSON format
 
-These scripts use the TypeScript configurations in `tsconfig.ops.json` and process data from:
+### Analysis Commands
 
-- `src/data/usage-examples.ts` - Usage examples with categories and descriptions
-- `src/data/users-voice.ts` - User testimonials and feedback
+- `pnpm run ops:analyze-battle-seeds` - Analyzes battle seed distribution and statistics
+    - Shows totals, theme/significance distribution, power statistics
+    - Supports `--format=json` for machine-readable output
+    - Can analyze from dist modules or exported JSON files
 
-Export scripts are located in `src/ops/` directory and generate TSV files suitable for data analysis and external use.
+### Script Structure
+
+These scripts use the TypeScript configurations in `tsconfig.ops.json` and are located in `packages/app/src/ops/`. They process data from:
+
+- `packages/app/src/data/usage-examples.ts` - Usage examples with categories and descriptions
+- `packages/app/src/data/users-voice.ts` - User testimonials and feedback
+- `data/battle-seeds/` - Battle seed data packages
+
+All ops commands support `--help` flags for usage information:
+
+```bash
+pnpm run ops:analyze-battle-seeds -- --help
+```
+
+Compiled scripts are output to `dist/ops-build/` for execution.

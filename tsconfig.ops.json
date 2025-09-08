@@ -1,10 +1,12 @@
 {
   "extends": "./tsconfig.env.node.json",
   "compilerOptions": {
-    "outDir": "dist/ops",
+    "outDir": "dist/ops-build",
+    "rootDir": "packages/app/src",
     "esModuleInterop": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["packages/app/src/ops/*.ts", "packages/app/src/data/*.ts"]
+  "include": ["packages/app/src/ops/**/*.ts"],
+  "exclude": ["**/__tests__/**"]
 }

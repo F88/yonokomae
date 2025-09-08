@@ -16,6 +16,10 @@ dist-ssr
 packages/*/dist/
 data/*/dist/
 
+# Legacy (pre-2025-09) ops build output directory (now replaced by dist/ops-build/ops)
+# This is already covered by the top-level "dist" ignore, kept here for historical clarity.
+# dist/ops/
+
 # Editor directories and files
 node_modules/.types/
 .vscode/*

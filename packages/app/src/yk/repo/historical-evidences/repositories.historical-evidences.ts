@@ -7,6 +7,47 @@ import type {
 } from '@/yk/repo/core/repositories';
 import { applyDelay, type DelayOption } from '../core/delay-utils';
 import { loadBattleFromSeeds } from '../core/battle-seed-loader';
+import { readBooleanEnvOptional } from '../core/env-utils';
+
+// ---- logging feature flag (env override) -----------------------------------
+// Control verbose start/done/error/final logs for historical battle reports.
+// Default behavior (when no env override): enabled in non-production, disabled in production.
+// Set VITE_LOG_HISTORICAL_REPORTS=on|off (true/false/1/0/yes/no) to force.
+
+const __isProdMode = (() => {
+  try {
+    if (
+      typeof process !== 'undefined' &&
+      process?.env?.NODE_ENV === 'production'
+    )
+      return true;
+  } catch {
+    // ignore
+  }
+  try {
+    const env = (
+      import.meta as unknown as { env?: Record<string, string | undefined> }
+    ).env;
+    if (env?.MODE === 'production' || env?.NODE_ENV === 'production')
+      return true;
+  } catch {
+    // ignore
+  }
+  return false;
+})();
+
+const __historicalLogOverride = readBooleanEnvOptional(
+  'VITE_LOG_HISTORICAL_REPORTS',
+);
+const SHOULD_LOG_HISTORICAL_REPORTS =
+  __historicalLogOverride !== undefined
+    ? __historicalLogOverride
+    : !__isProdMode;
+
+// Dev diagnostic: total invocation count for generateReport (historical-evidences)
+let historicalGenerateReportCallCount = 0;
+// Mini instrumentation: track in-flight invocations (dev diagnostics only)
+const inFlightHistoricalReports = new Map<number, { startedAt: number }>();
 
 /**
  * BattleReportRepository that loads battle data from historical evidence seeds.
@@ -33,6 +74,20 @@ export class HistoricalEvidencesBattleReportRepository
   }
 
   async generateReport(params?: GenerateBattleReportParams): Promise<Battle> {
+    const seq = ++historicalGenerateReportCallCount;
+    const startedAt =
+      typeof performance !== 'undefined' && performance.now
+        ? performance.now()
+        : Date.now();
+    inFlightHistoricalReports.set(seq, { startedAt });
+    if (SHOULD_LOG_HISTORICAL_REPORTS) {
+      console.debug('[HistoricalEvidencesBattleReportRepository] start', {
+        seq,
+        callCount: historicalGenerateReportCallCount,
+        filter: params?.filter?.battle ?? null,
+      });
+    }
+
     await applyDelay(this.delay, params?.signal);
     const roots = [
       '/seeds/historical-evidences/battle/',
@@ -52,11 +107,62 @@ export class HistoricalEvidencesBattleReportRepository
           }
         : undefined;
 
-    return loadBattleFromSeeds({
-      roots,
-      file: this.file,
-      predicate,
-    });
+    try {
+      const battle = await loadBattleFromSeeds({
+        roots,
+        file: this.file,
+        predicate,
+      });
+
+      const end =
+        typeof performance !== 'undefined' && performance.now
+          ? performance.now()
+          : Date.now();
+      const started =
+        inFlightHistoricalReports.get(seq)?.startedAt ?? startedAt;
+      const durationMs = Math.round(end - started);
+      inFlightHistoricalReports.delete(seq);
+      if (SHOULD_LOG_HISTORICAL_REPORTS) {
+        console.debug('[HistoricalEvidencesBattleReportRepository] done', {
+          seq,
+          callCount: historicalGenerateReportCallCount,
+          durationMs,
+          id: battle.id,
+          themeId: battle.themeId,
+          significance: battle.significance,
+        });
+      }
+      return battle;
+    } catch (err) {
+      const end =
+        typeof performance !== 'undefined' && performance.now
+          ? performance.now()
+          : Date.now();
+      const started =
+        inFlightHistoricalReports.get(seq)?.startedAt ?? startedAt;
+      const durationMs = Math.round(end - started);
+      inFlightHistoricalReports.delete(seq);
+      if (SHOULD_LOG_HISTORICAL_REPORTS) {
+        console.debug('[HistoricalEvidencesBattleReportRepository] error', {
+          seq,
+          callCount: historicalGenerateReportCallCount,
+          durationMs,
+          message: err instanceof Error ? err.message : String(err),
+        });
+      }
+      throw err;
+    } finally {
+      // Final log always emitted (after success or error) with remaining in-flight count
+      // Ensure cleanup idempotent
+      inFlightHistoricalReports.delete(seq);
+      if (SHOULD_LOG_HISTORICAL_REPORTS) {
+        console.debug('[HistoricalEvidencesBattleReportRepository] final', {
+          seq,
+          callCount: historicalGenerateReportCallCount,
+          inFlight: inFlightHistoricalReports.size,
+        });
+      }
+    }
   }
 }
 // (intentionally empty between loader import and class)

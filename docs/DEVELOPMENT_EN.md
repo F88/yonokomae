@@ -144,6 +144,35 @@ When adding new filter fields:
 3. Add tests verifying narrowing & randomness within the constrained pool.
 4. Update this section (EN) then sync `DEVELOPMENT_JA.md`.
 
+### Environment Variables
+
+The file `.env.example` enumerates supported Vite environment variables. Copy it to one of:
+
+- `.env` (all modes)
+- `.env.local` (local overrides, gitignored)
+- `.env.development`
+- `.env.production`
+
+Rules:
+
+- Only `VITE_` prefixed variables are exposed to client code.
+- Restart the dev server after adding or removing variables (Vite caches).
+- Keep secrets out of any committed file; runtime public vars only.
+
+Supported variables (see inline comments in `.env.example` for defaults and detailed semantics):
+
+| Name                            | Purpose                                                        |
+| ------------------------------- | -------------------------------------------------------------- |
+| `VITE_API_BASE_URL`             | Backend API base path or absolute URL (`/api` default)         |
+| `VITE_LOG_JUDGEMENT_CACHE`      | Verbose cache hit/miss logging for judgement collapsers        |
+| `VITE_LOG_JUDGEMENT_TIMING`     | Log timing & duplicate invocation warnings                     |
+| `VITE_LOG_HISTORICAL_REPORTS`   | Verbose historical report repository logging                   |
+| `VITE_NEWS_REPORT_CACHE_TTL_MS` | Cache TTL (ms) for news reporter HTTP responses                |
+| `VITE_BATTLE_RANDOM_WEIGHT_API` | Blend weight (0..1) selecting API vs local data in mixed repos |
+| `VITE_BASE_PATH`                | Build-time base path for subdirectory deployments              |
+
+Not environment driven (code-configured): judgement collapsing defaults live in `packages/app/src/yk/repo/core/judgement-config.ts`.
+
 ## How to Add a New Play Mode or Repository
 
 This section explains how to extend the application with new repositories and Play Modes.
@@ -482,7 +511,9 @@ Guidelines:
 
 ### CLI Operations Scripts
 
-Ops scripts live under `src/ops/` and provide data export & analysis utilities. Each supports `-h` / `--help`:
+Ops scripts live under `src/ops/` and provide data export & analysis utilities. Each supports `-h` / `--help`.
+
+Build output (2025-09-08): All ops scripts now emit to `dist/ops-build/ops/` (previous historical path `dist/ops/` was removed). Any old docs or local shell aliases referencing `dist/ops/` should be updated.
 
 - `export-battle-seeds-to-json.ts` – Emit all battle seeds as JSON
 - `export-users-voice-to-tsv.ts` – Export user voice lines as TSV
@@ -492,15 +523,22 @@ Ops scripts live under `src/ops/` and provide data export & analysis utilities. 
 Usage pattern:
 
 ```bash
+# Export / analysis via package scripts (preferred; auto-build if necessary)
 pnpm run ops:export-battle-seeds-to-json -- out/battles.json
 pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
 pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
-# Direct analysis (loads dist modules)
+
+# Direct analysis (loads built dist modules)
 pnpm run ops:analyze-battle-seeds
+
 # Analyze previously exported JSON file
 pnpm run ops:analyze-battle-seeds -- out/battles.json
-# JSON output for automation
+
+# JSON output for automation (machine readable)
 pnpm run ops:analyze-battle-seeds -- --format=json
+
+# (Optional) Direct node invocation after a fresh build:
+# node dist/ops-build/ops/export-battle-seeds-to-json.js out/battles.json
 ```
 
 Help example:
