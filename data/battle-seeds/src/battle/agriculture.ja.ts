@@ -2,7 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 // Yono (Saitama-shi Chuo-ku) vs Komae: agriculture comparison (Japanese)
 const battle = {
-  id: 'yono-komae-agriculture-2025-ja',
+  id: 'agriculture-2025-ja',
   themeId: 'development',
   significance: 'low',
   title: '農業',
@@ -25,7 +25,7 @@ const battle = {
       '江戸〜昭和初期にかけ養蚕・野菜・花卉が盛ん。いまも小規模農地が残り、' +
       '2020年時点の農業生産額は約4.3億円、耕地面積は約42ha。' +
       '都市農業振興基本計画を策定し、防災・環境保全の役割と調和させる取組を推進。',
-    power: 50,
+    power: 48,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -35,7 +35,7 @@ const battle = {
       '江戸期は畑作(麦・野菜)が中心。戦後の宅地化で農地が大幅に減少し、' +
       '統計上、よのの農家数・農地面積はいずれも極めて少ない。' +
       '現在は市民農園や家庭菜園、小規模な都市農業が中心。',
-    power: 50,
+    power: 48,
   },
   provenance: [
     {
@@ -44,6 +44,14 @@ const battle = {
         '歴史: 与野は畑作中心→戦後宅地化で農地減少。こまえは養蚕・野菜・花卉が盛ん。' +
         '現況: 与野は農家数・農地とも極少で市民農園等が中心。こまえは都市農業が残り生産額約4.3億円(2020)。' +
         '面積: こまえの耕地約42ha(2020)。政策: こまえは都市農業振興基本計画で防災・環境と両立を推進。',
+    },
+    {
+      label: 'こまえの農産物直売所',
+      note: '「今朝採れたての枝豆だよ！」という農家さんの声が響く。',
+    },
+    {
+      label: 'よのの市民農園の利用規約',
+      note: '「作物の販売は禁止します」という一文がある。',
     },
   ],
   status: 'success',

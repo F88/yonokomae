@@ -19,7 +19,7 @@ const battle = {
     subtitle: '孤高の強者',
     description:
       '数々の合併の誘いを蹴り、独立を守り抜いた稀代の英雄。単独で生き抜く強固な意志は、何物にも代えがたい「力」となった。',
-    power: 99999,
+    power: 100,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -27,7 +27,7 @@ const battle = {
     subtitle: '合併を取り持った知の英雄',
     description:
       '浦和と大宮の対立を平和裏に解決し、さいたま市を誕生させた英雄的な功績を持つ。武力0で天下統一を成し遂げた伝説の存在。',
-    power: 99999,
+    power: 100,
   },
   provenance: [
     {
@@ -38,6 +38,14 @@ const battle = {
     {
       label: 'よのの伝説',
       note: '地元民の間で語り継がれる口伝',
+    },
+    {
+      label: '浦和・大宮・与野三市長会談の極秘録音',
+      note: 'よの市長が「まあまあ、お二人とも」と場を収める声が記録されているという。',
+    },
+    {
+      label: 'こまえ市議会だより（当時）',
+      note: '「対岸の火事ではない。我々は我々の道を行く」という論説が掲載された。',
     },
   ],
   status: 'success',

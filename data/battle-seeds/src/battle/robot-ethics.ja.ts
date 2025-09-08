@@ -14,24 +14,36 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
-    subtitle: '人々の絆を守る者',
+    title: '共存派',
+    subtitle: 'ロボットと人の絆を守る',
     description:
       '自らの手で街を築き、人々の絆を守ることを何よりも大切にする。戦闘ロボット『武者』を平和的に活用したいという願いを持つ一方、それが市民の仕事を奪うことへの懸念も抱く。',
-    power: 55000,
+    power: 80,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
-    subtitle: '知恵と効率を追求する者',
+    title: '活用派',
+    subtitle: 'ロボットによる効率を追求する',
     description:
       '高度な知性とテクノロジーを持つよのは、戦闘ロボット『武者』の公共事業への転用を提案。技術を最大限に活用し、都市の効率化と市民の安全を確保しようと試みる。',
-    power: 55000,
+    power: 80,
   },
   provenance: [
     {
       label: 'ゲーム内設定',
       note: '架空のシナリオ',
+    },
+    {
+      label: 'こまえ建設組合の声明文',
+      note: '「ロボットに俺たちの仕事は渡さねえ!」という力強いメッセージ。',
+    },
+    {
+      label: 'よの災害対策本部のシミュレーション結果',
+      note: '『武者』導入により、復興速度が3.5倍に向上するとの予測。',
+    },
+    {
+      label: 'ロボット倫理委員会',
+      note: '「『武者』の活用は、効率と人間の尊厳のトレードオフである」という見解を発表。',
     },
   ],
   status: 'success',

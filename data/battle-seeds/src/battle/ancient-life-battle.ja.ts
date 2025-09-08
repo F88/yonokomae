@@ -14,19 +14,19 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
+    title: '弥生の民',
     subtitle: '強固な共同体を築いた弥生人',
     description:
       '米作りを通じて定住生活を確立。外来の文化を取り入れつつ、強固なコミュニティを築き上げた弥生人の末裔である。',
-    power: 15000,
+    power: 50,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
+    title: '縄文の民',
     subtitle: '自然と調和した縄文人',
     description:
       '自然の恵みを享受し、狩猟採集で生きた縄文人の末裔。その柔軟な知性は、時代の変化に適応するよのの外交戦略の原点である。',
-    power: 15000,
+    power: 50,
   },
   provenance: [
     {
@@ -36,6 +36,18 @@ const battle = {
     {
       label: '弥生時代',
       note: '稲作を基盤とした農耕社会が形成された時代',
+    },
+    {
+      label: 'よの市立博物館',
+      note: '「縄文人の知恵」特別展の展示記録。',
+    },
+    {
+      label: 'こまえ郷土資料館',
+      note: '「弥生の米作りと村のくらし」の解説パネル。',
+    },
+    {
+      label: '多摩川の古老の言い伝え',
+      note: '「川の恵みは米作りに、山の恵みは狩りに」という古い歌が残っている。',
     },
   ],
   status: 'success',

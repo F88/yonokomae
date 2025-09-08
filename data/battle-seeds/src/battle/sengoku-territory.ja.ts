@@ -14,19 +14,19 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
-    subtitle: '多摩川を守りし北条の砦',
+    title: '北条の砦',
+    subtitle: '多摩川を盾に国境を守る',
     description:
       '多摩川を天然の要害とし、武蔵国と相模国の境目を守る軍事的な要衝。その役割は、孤高に自立するこまえの強さを象徴している。',
-    power: 38000,
+    power: 88,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
-    subtitle: '大国の狭間に生きる知将',
+    title: '乱世の外交官',
+    subtitle: '大国の狭間を生き抜く知略',
     description:
       '太田氏、そして北条氏という二つの巨大勢力の間を生き抜いた歴史を持つ。外交と情報戦を駆使し、武力に頼らずに生き残るよのの精神を体現する。',
-    power: 38000,
+    power: 88,
   },
   provenance: [
     {
@@ -40,6 +40,18 @@ const battle = {
     {
       label: 'こまえ市 Wikipedia',
       note: '戦国時代の狛江の歴史',
+    },
+    {
+      label: '北条氏の密書',
+      note: '「多摩川の守りは、こまえの兵に任せれば安泰」との記述。',
+    },
+    {
+      label: '太田道灌の日記',
+      note: '「よのの者たちは口がうまい。信用できるかどうか…」と記されている。',
+    },
+    {
+      label: '戦国時代の古地図',
+      note: 'よのとこまえの間に、点線で国境が引かれている。',
     },
   ],
   status: 'success',

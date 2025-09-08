@@ -1,43 +1,48 @@
 import type { Battle } from '@yonokomae/types';
 
-// Import all battle seeds of HWMB
-import hwmbYK from './battle/hwmb-merger-and-independence.ja';
-import hwmbYonoJa from './battle/hwmb-merger-of-glory.ja';
-import hwmbKomaeJa from './battle/hwmb-komae-independence.ja';
-
-// Import all battle seeds of after HWMB
-import yonoKomaeAdjacentMunicipalitiesJa from './battle/yono-komae-adjacent-municipalities.ja.js';
-import yonoKomaeAgricultureJa from './battle/yono-komae-agriculture.ja.js';
-import yonoKomaeAreaComparisonJa from './battle/yono-komae-area-comparison.ja.js';
-import yonoKomaeCommutingFlowsJa from './battle/yono-komae-commuting-flows.ja.js';
-import yonoKomaeFisheriesJa from './battle/yono-komae-fisheries.ja';
-import yonoKomaeGeomorphologyHydrologyJa from './battle/yono-komae-geomorphology-hydrology.ja';
-import yonoKomaeIndustryGrowthJa from './battle/yono-komae-industry-growth.ja';
-import yonoKomaeMeteorologyJa from './battle/yono-komae-meteorology.ja.js';
-import yonoKomaePopulationTrendsJa from './battle/yono-komae-population-trends.ja.js';
-import yonoKomaeSocioeconomicJa from './battle/yono-komae-socioeconomic.ja.js';
-import cityNameOriginJa from './battle/city-name-origin.ja';
-
-// Import new battle files
-import celebrityBattle from './battle/celebrity-battle.ja';
-import showaSuperstarBattle from './battle/showa-superstar-battle.ja';
-import edoEraHeroes from './battle/edo-era-heroes.ja';
-import sengokuTerritory from './battle/sengoku-territory.ja';
+import adjacentMunicipalitiesJa from './battle/adjacent-municipalities.ja';
+import agricultureJa from './battle/agriculture.ja';
+import aiOracle from './battle/ai-oracle.ja';
 import ancientLifeBattle from './battle/ancient-life-battle.ja';
-import ruinsBattle from './battle/ruins-battle.ja';
-import developmentBattle from './battle/development-battle.ja';
-import floodBattle from './battle/flood-battle.ja';
-import transportationHubBattle from './battle/transportation-hub-battle.ja';
-import cultureBattle from './battle/culture-battle.ja';
-import densityBattle from './battle/density-battle.ja';
-import ikadaRace from './battle/ikada-race.ja';
+import areaComparisonJa from './battle/area-comparison.ja';
+import celebrityBattle from './battle/celebrity-battle.ja';
+import childSafetyBattle from './battle/child-safety-battle.ja';
+import cityNameOriginJa from './battle/city-name-origin.ja';
 import civicTechBattle from './battle/civic-tech-battle.ja';
 import coderDojoBattle from './battle/coder-dojo-battle.ja';
-import robotEthics from './battle/robot-ethics.ja';
-import snsTruthVsLies from './battle/sns-truth-vs-lies.ja';
-import wikipediaJaBattle from './battle/wikipedia-ja-battle.ja';
-import undergroundConspiracy from './battle/underground-conspiracy.ja';
+import commutingFlowsJa from './battle/commuting-flows.ja';
+import cultureBattle from './battle/culture-battle.ja';
+import dataGhostHunt from './battle/data-ghost-hunt.ja';
+import densityBattle from './battle/density-battle.ja';
+import developmentBattle from './battle/development-battle.ja';
+import disasterSimulationBattle from './battle/disaster-simulation-battle.ja';
+import edoEraHeroes from './battle/edo-era-heroes.ja';
+import fisheriesJa from './battle/fisheries.ja';
+import floodBattle from './battle/flood-battle.ja';
+import geomorphologyHydrologyJa from './battle/geomorphology-hydrology.ja';
+import hwmbKomaeJa from './battle/hwmb-komae-independence.ja';
+import hwmbYK from './battle/hwmb-merger-and-independence.ja';
+import hwmbYonoJa from './battle/hwmb-merger-of-glory.ja';
+import ikadaRace from './battle/ikada-race.ja';
+import industryGrowthJa from './battle/industry-growth.ja';
+import kidsTechBattle from './battle/kids-tech-battle.ja';
 import localCurrencyBattle from './battle/local-currency-battle.ja';
+import metaverseShrine from './battle/metaverse-shrine.ja';
+import meteorologyJa from './battle/meteorology.ja';
+import parentingRobotsBattle from './battle/parenting-robot-battle.ja';
+import populationTrendsJa from './battle/population-trends.ja';
+import robotEthics from './battle/robot-ethics.ja';
+import ruinsBattle from './battle/ruins-battle.ja';
+import sengokuTerritory from './battle/sengoku-territory.ja';
+import showaSuperstarBattle from './battle/showa-superstar-battle.ja';
+import snackBattle from './battle/snack-battle.ja';
+import snsTruthVsLies from './battle/sns-truth-vs-lies.ja';
+import socioeconomicJa from './battle/socioeconomic.ja';
+import tasteAlgorithm from './battle/taste-algorithm.ja';
+import transportationHubBattle from './battle/transportation-hub-battle.ja';
+import undergroundConspiracy from './battle/underground-conspiracy.ja';
+import waterResourceManagementBattle from './battle/water-resource-battle.ja';
+import wikipediaJaBattle from './battle/wikipedia-ja-battle.ja';
 
 // Collect all battles in a map
 const battleMap: Record<string, Battle> = {
@@ -48,18 +53,16 @@ const battleMap: Record<string, Battle> = {
     'hwmb-komae.ja.ts': hwmbKomaeJa,
   },
   ...{
-    'yono-komae-adjacent-municipalities.ja.ts':
-      yonoKomaeAdjacentMunicipalitiesJa,
-    'yono-komae-agriculture.ja.ts': yonoKomaeAgricultureJa,
-    'yono-komae-area-comparison.ja.ts': yonoKomaeAreaComparisonJa,
-    'yono-komae-commuting-flows.ja.ts': yonoKomaeCommutingFlowsJa,
-    'yono-komae-fisheries.ja.ts': yonoKomaeFisheriesJa,
-    'yono-komae-geomorphology-hydrology.ja.ts':
-      yonoKomaeGeomorphologyHydrologyJa,
-    'yono-komae-industry-growth.ja.ts': yonoKomaeIndustryGrowthJa,
-    'yono-komae-meteorology.ja.ts': yonoKomaeMeteorologyJa,
-    'yono-komae-population-trends.ja.ts': yonoKomaePopulationTrendsJa,
-    'yono-komae-socioeconomic.ja.ts': yonoKomaeSocioeconomicJa,
+    'yono-komae-adjacent-municipalities.ja.ts': adjacentMunicipalitiesJa,
+    'yono-komae-agriculture.ja.ts': agricultureJa,
+    'yono-komae-area-comparison.ja.ts': areaComparisonJa,
+    'yono-komae-commuting-flows.ja.ts': commutingFlowsJa,
+    'yono-komae-fisheries.ja.ts': fisheriesJa,
+    'yono-komae-geomorphology-hydrology.ja.ts': geomorphologyHydrologyJa,
+    'yono-komae-industry-growth.ja.ts': industryGrowthJa,
+    'yono-komae-meteorology.ja.ts': meteorologyJa,
+    'yono-komae-population-trends.ja.ts': populationTrendsJa,
+    'yono-komae-socioeconomic.ja.ts': socioeconomicJa,
     'city-name-origin.ja.ts': cityNameOriginJa,
   },
   ...{
@@ -83,6 +86,16 @@ const battleMap: Record<string, Battle> = {
     'wikipedia-ja-battle.ja.ts': wikipediaJaBattle,
     'underground-conspiracy.ja.ts': undergroundConspiracy,
     'local-currency-battle.ja.ts': localCurrencyBattle,
+    'snack-battle.ja.ts': snackBattle,
+    'kids-tech-battle.ja.ts': kidsTechBattle,
+    'ai-oracle.ja.ts': aiOracle,
+    'data-ghost-hunt.ja.ts': dataGhostHunt,
+    'child-safety-battle.ja.ts': childSafetyBattle,
+    'disaster-simulation-battle.ja.ts': disasterSimulationBattle,
+    'parenting-robot-battle.ja.ts': parentingRobotsBattle,
+    'water-resource-battle.ja.ts': waterResourceManagementBattle,
+    'metaverse-shrine.ja.ts': metaverseShrine,
+    'taste-algorithm.ja.ts': tasteAlgorithm,
   },
 };
 

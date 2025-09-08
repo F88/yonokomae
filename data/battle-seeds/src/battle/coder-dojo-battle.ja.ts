@@ -18,7 +18,7 @@ const battle = {
     subtitle: '子供たちの創造性を信じる者',
     description:
       '「CoderDojo狛江」という市民ボランティアによる活動を推進。決まったカリキュラムを持たず、子供たちの自由な発想を尊重する教育哲学は、こまえの市民が持つ創造性とコミュニティの力を象徴している。',
-    power: 38000,
+    power: 65,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -26,7 +26,7 @@ const battle = {
     subtitle: '効率的な技術習得を目指す者',
     description:
       '合併によって手に入れた巨大な力と、その中心にある「CoderDojoさいたま」を最大限に活用。AIによる個別最適化されたカリキュラムと、最新のロボットプログラミング教材を導入し、未来の技術者として、正確なコードと論理的思考力を子供たちに徹底的に叩き込む。',
-    power: 38000,
+    power: 65,
   },
   provenance: [
     {
@@ -38,6 +38,18 @@ const battle = {
       label: 'CoderDojoさいたま',
       url: 'https://coderdojo-saitama.connpass.com/',
       note: 'さいたま市で活動する子ども向けプログラミング道場',
+    },
+    {
+      label: 'こまえの小学生の自由研究',
+      note: '「Dojoでつくった、多摩川のいきものをあつめるゲーム」が市のコンクールで金賞を受賞。',
+    },
+    {
+      label: 'よのの保護者の声',
+      note: '「うちの子、ロボット大会で優勝しました！Dojoの先生のおかげです」という喜びのメール。',
+    },
+    {
+      label: '未来のクリエイターマガジン',
+      note: '「創造性を育む狛江、技術力を磨くさいたま」として両Dojoの特色が紹介された。',
     },
   ],
   status: 'success',

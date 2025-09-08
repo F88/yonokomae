@@ -4,8 +4,8 @@ const battle = {
   id: 'celebrity-battle',
   themeId: 'figures',
   significance: 'medium',
-  title: '『じゃねーよ！』の咆哮 vs. 世界を止める鋼鉄の壁',
-  subtitle: '市民のアイデンティティを賭けた、笑いと涙のガチバトル！',
+  title: '『じゃねーよ!』の咆哮 vs. 世界を止める鋼鉄の壁',
+  subtitle: '市民のアイデンティティを賭けた、笑いと涙のガチバトル!',
   narrative: {
     overview:
       '東京都で2番目に小さい市であるこまえが、お笑い芸人・近藤春菜氏という強力な広告塔を武器に、その存在意義をアピールする。対するは、合併で行政区は消滅したものの、元日本代表GK・川島永嗣氏という偉大な功績を誇る旧よの。市民の心はどちらにあるのか、歴史に残る一戦が今、始まる。',
@@ -18,7 +18,7 @@ const battle = {
     subtitle: 'こまえ観光大使',
     description:
       '1983年東京都こまえ出身のお笑い芸人。2013年にこまえ観光大使に就任し、市のPR活動に邁進中。市役所2階入口に設置された彼女の等身大パネルは、市民のSNS投稿を日々賑わせる、市の現代的な顔として絶大な存在感を放っている。',
-    power: 85,
+    power: 88,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -38,6 +38,18 @@ const battle = {
       label: '川島永嗣 Wikipedia',
       url: 'https://ja.wikipedia.org/wiki/%E5%B7%9D%E5%B3%B6%E6%B0%B8%E5%97%A3',
       note: 'よの出身',
+    },
+    {
+      label: 'こまえ市役所 公式X(旧Twitter)',
+      note: '近藤春菜さんの等身大パネルとの記念写真投稿キャンペーンを実施中。',
+    },
+    {
+      label: 'よのスポーツニュース',
+      note: '「川島永嗣、故郷への想いを語る」特集記事。',
+    },
+    {
+      label: '週刊芸能ヘッドライン',
+      note: '「人気芸人と守護神、故郷への愛はどっちが強い?」という特集記事が組まれた。',
     },
   ],
   status: 'success',
