@@ -25,7 +25,7 @@ test.describe('Battle container visibility', () => {
     page,
   }) => {
     // show top page
-    await page.goto('/');
+    await page.goto('./');
 
     // container internals should not exist yet
     await assertNoBattleContainers(page);
@@ -37,7 +37,7 @@ test.describe('Battle container visibility', () => {
     page,
   }) => {
     // show top page
-    await page.goto('/');
+    await page.goto('./');
 
     // select mode (game start)
     // Click the first enabled mode option to avoid Enter key side-effects
@@ -55,7 +55,7 @@ test.describe('Battle container visibility', () => {
     page,
   }) => {
     // show top page
-    await page.goto('/');
+    await page.goto('./');
 
     // select mode (game start)
     const modeGroup = page.getByRole('radiogroup', { name: 'Play modes' });
@@ -80,7 +80,7 @@ test.describe('Battle container visibility', () => {
     page,
   }) => {
     // show top page
-    await page.goto('/');
+    await page.goto('./');
 
     // select mode (game start)
     const modeGroup = page.getByRole('radiogroup', { name: 'Play modes' });
@@ -108,7 +108,7 @@ test.describe('Battle container visibility', () => {
       });
 
       // show top page
-      await page.goto('/');
+      await page.goto('./');
 
       // select mode (game start)
       const modeGroup = page.getByRole('radiogroup', { name: 'Play modes' });

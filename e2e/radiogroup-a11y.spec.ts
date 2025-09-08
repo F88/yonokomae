@@ -23,7 +23,7 @@ async function focusRadiogroupByTabbing(page: Page) {
 
 test.describe('Title radiogroup a11y', () => {
   test('shows a visible focus ring on keyboard focus', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('./');
     const group = page.getByRole('radiogroup', { name: 'Play modes' });
     await expect(group).toBeVisible();
 
@@ -53,7 +53,7 @@ test.describe('Title radiogroup a11y', () => {
       'Contrast check is gated by env A11Y_CONTRAST=1',
     );
 
-    await page.goto('/');
+    await page.goto('./');
     const group = page.getByRole('radiogroup', { name: 'Play modes' });
     await expect(group).toBeVisible();
 

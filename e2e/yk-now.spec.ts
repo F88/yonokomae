@@ -12,7 +12,7 @@ test.describe('Play mode: yk-now regression', () => {
   test('selecting yk-now shows correct header badge and not demo', async ({
     page,
   }) => {
-    await page.goto('/');
+    await page.goto('./');
     await assertModeSelectorPresent(page);
 
     // Click the label text for yk-now (Japanese title)

@@ -5,7 +5,7 @@ import { test, expect } from '@playwright/test';
  */
 test.describe('Smoke', () => {
   test('app responds at /', async ({ page }) => {
-    const resp = await page.goto('/');
+    const resp = await page.goto('./');
     expect(resp?.ok()).toBeTruthy();
   });
 });

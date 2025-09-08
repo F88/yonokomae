@@ -46,7 +46,7 @@ test.describe('Title', () => {
     test('shows TOP screen', async ({ page }) => {
       await test.step('Preparation', async () => {
         // Go to the top screen
-        await page.goto('/');
+        await page.goto('./');
       });
 
       // Header title is localized; ensure at least one heading is visible
@@ -116,7 +116,7 @@ test.describe('Title', () => {
     }) => {
       await test.step('Preparation', async () => {
         // Go to the top screen
-        await page.goto('/');
+        await page.goto('./');
       });
 
       // Mode selector visible
@@ -173,7 +173,7 @@ test.describe('Title', () => {
     }) => {
       await test.step('Preparation', async () => {
         // Go to the top screen
-        await page.goto('/');
+        await page.goto('./');
       });
       const group = page.getByRole('radiogroup', { name: 'Play modes' });
       await expect(group).toBeVisible();
@@ -199,7 +199,7 @@ test.describe('Title', () => {
     }) => {
       await test.step('Preparation', async () => {
         // Go to the top screen
-        await page.goto('/');
+        await page.goto('./');
         // Precondition: mode selector is visible before choosing a mode
         await assertModeSelectorPresent(page);
       });

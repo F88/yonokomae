@@ -18,7 +18,7 @@ test.describe('Reduced Motion', () => {
   test('User Manual carousel does not autoplay under reduced motion', async ({
     page,
   }) => {
-    await page.goto('/');
+    await page.goto('./');
     // Open dialog that contains a Carousel instance
     await page.getByRole('button', { name: 'Open user manual' }).click();
     // Locate the carousel region by data-slot set in our component

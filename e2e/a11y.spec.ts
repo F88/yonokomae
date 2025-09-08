@@ -11,7 +11,7 @@ test.describe('Accessibility (axe-core)', () => {
     analyzeA11y,
     expectNoA11yBlockers,
   }) => {
-    await page.goto('/');
+    await page.goto('./');
     const results = await analyzeA11y();
     await expectNoA11yBlockers(results, { failOnImpacts: ['critical'] });
   });
@@ -21,7 +21,7 @@ test.describe('Accessibility (axe-core)', () => {
     analyzeA11y,
     expectNoA11yBlockers,
   }) => {
-    await page.goto('/');
+    await page.goto('./');
     // Confirm the currently highlighted mode via keyboard
     await page.getByRole('radiogroup', { name: 'Play modes' }).focus();
     await page.keyboard.press('Enter');
@@ -36,7 +36,7 @@ test.describe('Accessibility (axe-core)', () => {
     analyzeA11y,
     expectNoA11yBlockers,
   }) => {
-    await page.goto('/');
+    await page.goto('./');
     // Confirm the currently highlighted mode via keyboard
     await page.getByRole('radiogroup', { name: 'Play modes' }).focus();
     await page.keyboard.press('Enter');
