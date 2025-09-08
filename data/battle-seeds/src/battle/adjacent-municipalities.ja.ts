@@ -2,7 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 // Yono (former Yono-shi; present Saitama-shi Chuo-ku core) vs Komae: adjacent municipalities comparison (Japanese)
 const battle = {
-  id: 'yono-komae-adjacent-municipalities-2025-ja',
+  id: 'adjacent-municipalities-2025-ja',
   themeId: 'community',
   significance: 'low',
   title: '隣接自治体',
@@ -23,7 +23,7 @@ const battle = {
     description:
       'こまえは都内でも屈指のコンパクトな市域。隣接は大規模都市/区が中心で、人口・経済規模の差が顕著。' +
       '鉄道/幹線道路/河川空間を介した結節が強く、サービス供給や雇用の面で越境依存が高水準となりやすい。',
-    power: 50,
+    power: 45,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -33,7 +33,7 @@ const battle = {
     description:
       'よのは政令市移行前、旧浦和/旧大宮という大規模市に挟まれていた。面積・人口ともに約1/10規模で、' +
       '通勤/商業/行政サービスの広域補完が常態化。合併後は中核拠点(さいたま新都心等)との一体化が進展。',
-    power: 50,
+    power: 45,
   },
   provenance: [
     {
@@ -42,6 +42,14 @@ const battle = {
         'よのの隣接: 旧浦和市(85.50 km², 約50.5万人)、旧大宮市(128.32 km², 約48.9万人)。' +
         'こまえの隣接: 世田谷区(58.05 km², 約93万人)、調布市(21.58 km², 約24.3万人)、川崎市(143.01 km², 約154万人)。' +
         '分析: 両者とも周辺は大規模都市で、相対的に小規模(約1/10)であることが示唆される。',
+    },
+    {
+      label: 'こまえ市民の声',
+      note: '「買い物は二子玉川、遊びは渋谷。でも帰ってくるのは、やっぱりこまえ」',
+    },
+    {
+      label: '旧よの市民の回想',
+      note: '「浦和にも大宮にもよく行ったけど、俺たちは与野人だっていう誇りがあったよ」',
     },
   ],
   status: 'success',

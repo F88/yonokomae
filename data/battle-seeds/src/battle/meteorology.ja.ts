@@ -2,7 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 // Yono (Saitama-shi Chuo-ku) vs Komae: meteorology comparison (Japanese)
 const battle = {
-  id: 'yono-komae-meteorology-2025-ja',
+  id: 'meteorology-2025-ja',
   themeId: 'development',
   significance: 'medium',
   title: '気象',

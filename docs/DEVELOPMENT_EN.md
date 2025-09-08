@@ -482,11 +482,12 @@ Guidelines:
 
 ### CLI Operations Scripts
 
-Ops scripts live under `src/ops/` and provide data export utilities. Each supports `-h` / `--help`:
+Ops scripts live under `src/ops/` and provide data export & analysis utilities. Each supports `-h` / `--help`:
 
-- `export-battle-seeds-to-json.ts`
-- `export-users-voice-to-tsv.ts`
-- `export-usage-examples-to-tsv.ts`
+- `export-battle-seeds-to-json.ts` – Emit all battle seeds as JSON
+- `export-users-voice-to-tsv.ts` – Export user voice lines as TSV
+- `export-usage-examples-to-tsv.ts` – Export usage examples as TSV
+- `analyze-battle-seeds.ts` – Summarize and cross-tabulate battle seed statistics
 
 Usage pattern:
 
@@ -494,6 +495,12 @@ Usage pattern:
 pnpm run ops:export-battle-seeds-to-json -- out/battles.json
 pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
 pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
+# Direct analysis (loads dist modules)
+pnpm run ops:analyze-battle-seeds
+# Analyze previously exported JSON file
+pnpm run ops:analyze-battle-seeds -- out/battles.json
+# JSON output for automation
+pnpm run ops:analyze-battle-seeds -- --format=json
 ```
 
 Help example:
@@ -501,6 +508,23 @@ Help example:
 ```bash
 pnpm run ops:export-users-voice-to-tsv -- --help
 ```
+
+### Battle Seeds Analyzer Details
+
+`analyze-battle-seeds.ts` outputs a concise statistical profile:
+
+- Total battle count
+- Distribution by `themeId`
+- Distribution by `significance`
+- Theme × Significance cross-tab (matrix)
+- Power statistics (min / max / avg for `komae`, `yono`, and combined)
+- Top 5 battles by combined power (komae.power + yono.power)
+
+Automation tips:
+
+- Use `--format=json` to pipe into diff tools or CI assertions (e.g. detect unintended distribution drift).
+- Combine with `jq` for quick extraction: `pnpm run ops:analyze-battle-seeds -- --format=json | jq '.byTheme.development'`.
+- Run after data package updates to generate a summary artifact.
 
 Testing:
 

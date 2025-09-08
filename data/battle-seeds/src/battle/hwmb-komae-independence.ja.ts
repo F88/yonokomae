@@ -19,7 +19,7 @@ const battle = {
     subtitle: '孤高の強者',
     description:
       '数々の合併の誘いを蹴り、独立を守り抜いた稀代の英雄。単独で生き抜く強固な意志は、何物にも代えがたい「力」となった。',
-    power: 99999,
+    power: 100,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -27,7 +27,7 @@ const battle = {
     subtitle: '大国と手を組んだ英雄',
     description:
       '武力ではない方法で天下を統一し、さいたま市を誕生させた伝説の存在。ただし、こまえに比べると単独で生きていくという道を選べなかったという点で、若干の弱さも垣間見える。',
-    power: 99998,
+    power: 100,
   },
   provenance: [
     {
@@ -37,6 +37,14 @@ const battle = {
     {
       label: 'ゲーム内考察',
       note: '史実を基にした解釈とゲームへの応用',
+    },
+    {
+      label: '当時のこまえ市長の日記',
+      note: '「市民の顔を思い浮かべれば、選ぶ道は一つしかない」との記述。',
+    },
+    {
+      label: '隣接市との合併協議会議事録',
+      note: 'こまえ代表が「我々は我々のままでいる」と発言し、退席した記録が残っている。',
     },
   ],
   status: 'success',

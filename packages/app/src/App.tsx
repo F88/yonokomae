@@ -350,8 +350,11 @@ function App() {
   };
 
   const handleClearReports = () => {
-    setReports([]);
     setMode(undefined);
+    setReports([]);
+    setActiveThemeId(undefined);
+    setBattleSeedFile(undefined);
+
     // Scroll to top after clearing
     // scrollToY(0, { behavior: 'smooth' });
     // Scroll to top of mode selection

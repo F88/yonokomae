@@ -2,7 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 // Yono (Saitama-shi Chuo-ku) vs Komae: fisheries comparison (Japanese)
 const battle = {
-  id: 'yono-komae-fisheries-2025-ja',
+  id: 'fisheries-2025-ja',
   themeId: 'development',
   significance: 'low',
   title: '水産業',
@@ -25,7 +25,7 @@ const battle = {
     description:
       '地理的には内陸で海に面さない。多摩川に面するが、漁業・養殖業は大規模には展開されていない。' +
       '親水・環境学習・リバーアクティビティ等の非産業的価値が中心。',
-    power: 50,
+    power: 20,
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
@@ -34,7 +34,7 @@ const battle = {
     description:
       '地理的には内陸で海に面さない。西側を荒川が流れるが、漁業・養殖業は主要産業ではない。' +
       '水辺利用・防災・環境保全の観点が主となる。',
-    power: 50,
+    power: 20,
   },
   provenance: [
     {
@@ -42,6 +42,14 @@ const battle = {
       note:
         '地理: 双方とも内陸・海なし。水産業の有無: 統計データはなし。' +
         '備考: 与野は荒川近接だが主要産業ではない。こまえは多摩川沿いだが大規模な漁業・養殖は行われていない。',
+    },
+    {
+      label: '多摩川の釣り人',
+      note: '「昔はアユがたくさん釣れたんだけどなあ」と語る。',
+    },
+    {
+      label: '荒川クリーンエイドの活動報告',
+      note: '「魚が住めるきれいな川を取り戻そう」というスローガンが掲げられている。',
     },
   ],
   status: 'success',

@@ -389,11 +389,12 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 
 ## CLI オペレーションスクリプト
 
-`src/ops/` 配下:
+`src/ops/` 配下 (全て `-h` / `--help` 対応):
 
-- `export-battle-seeds-to-json.ts`
-- `export-users-voice-to-tsv.ts`
-- `export-usage-examples-to-tsv.ts`
+- `export-battle-seeds-to-json.ts` – battle seeds を JSON 出力
+- `export-users-voice-to-tsv.ts` – user voice を TSV 出力
+- `export-usage-examples-to-tsv.ts` – usage examples を TSV 出力
+- `analyze-battle-seeds.ts` – battle seeds 統計を集計 / クロスタブ表示
 
 使用例:
 
@@ -401,6 +402,12 @@ E2E テストには Playwright を使用します。テスト仕様 (spec) は `
 pnpm run ops:export-battle-seeds-to-json -- out/battles.json
 pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
 pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
+# 直接解析 (dist モジュール読み込み)
+pnpm run ops:analyze-battle-seeds
+# 事前に書き出した JSON を解析
+pnpm run ops:analyze-battle-seeds -- out/battles.json
+# JSON 形式出力 (CI / 自動化向け)
+pnpm run ops:analyze-battle-seeds -- --format=json
 ```
 
 ヘルプ:
@@ -408,6 +415,23 @@ pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
 ```bash
 pnpm run ops:export-users-voice-to-tsv -- --help
 ```
+
+### Battle Seeds Analyzer 詳細
+
+`analyze-battle-seeds.ts` は以下を出力:
+
+- 総件数
+- `themeId` 別件数 / 割合
+- `significance` 別件数 / 割合
+- テーマ × 重要度 クロスタブ (matrix)
+- power 統計 (komae / yono / combined の min / max / avg)
+- combined power 上位5件 (komae.power + yono.power)
+
+自動化ヒント:
+
+- `--format=json` で機械可読: 分布のドリフト検知や CI 比較に利用可能
+- `jq` 例: `pnpm run ops:analyze-battle-seeds -- --format=json | jq '.byTheme.history'`
+- データ更新後に統計サマリのアーティファクト化に活用
 
 テスト: `src/ops/__tests__/export-cli.test.ts` 参照。
 
