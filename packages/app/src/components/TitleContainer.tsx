@@ -12,7 +12,7 @@ interface ModeOptionProps {
   mode: PlayMode;
   isSelected: boolean;
   inputId: string;
-  onSelect: (mode: PlayMode) => void;
+  onSelect: (mode: PlayMode, clickY?: number) => void;
   onHover: (mode: PlayMode) => void;
 }
 
@@ -29,18 +29,18 @@ const ModeOption = ({
     modeTitle: mode.title,
   });
   const handleClick: React.MouseEventHandler<HTMLLabelElement> = (e) => {
-    if (mode.enabled === false) return;
-    // Comprehensive debug logging for iOS offset issue
     console.log('[DEBUG] ModeOption handleClick START:', {
-      modeId: mode.id,
-      modeTitle: mode.title,
-      isSelected,
-      target: e.target,
-      currentTarget: e.currentTarget,
+      componentModeId: mode.id,
+      componentModeTitle: mode.title,
+      clickY: e.clientY,
       eventType: e.type,
       timestamp: Date.now(),
     });
-    onSelect(mode);
+
+    if (mode.enabled === false) return;
+
+    // Pass click Y coordinate for iOS WebKit position-based fix
+    onSelect(mode, e.clientY);
     console.log('[DEBUG] ModeOption handleClick END:', {
       modeId: mode.id,
       modeTitle: mode.title,
@@ -152,6 +152,7 @@ export function TitleContainer({
   // Removed separate battleSeedTheme state; we derive active theme from poolThemes[0]
   const options = useMemo(() => {
     const result = modes ?? defaultPlayModes;
+    console.log('[DEBUG] *** VERSION: 2025-09-08-v5 - DEPLOY CHECK ***');
     console.log(
       '[DEBUG] options computed:',
       result.map((m, i) => ({
@@ -447,7 +448,106 @@ export function TitleContainer({
                   mode={m}
                   isSelected={m.id === options[index]?.id}
                   inputId={`play-mode-${m.id}`}
-                  onSelect={() => handleModeSelect(m)}
+                  onSelect={(selectedMode, clickY) => {
+                    console.log('[DEBUG] Parent onSelect received:', {
+                      selectedMode: selectedMode.id,
+                      clickY,
+                      mapIndex,
+                    });
+                    
+                    console.log('[DEBUG] *** DEPLOYMENT CHECK: 2025-09-08-v4 ***');
+
+                    // iOS WebKit fix: Find correct mode based on click position
+                    // Skip coordinate-based fix in test environment
+                    if (
+                      typeof clickY === 'number' &&
+                      process.env.NODE_ENV !== 'test'
+                    ) {
+                      console.log(
+                        '[DEBUG] Entering coordinate-based fix, clickY:',
+                        clickY,
+                      );
+
+                      // Get all mode option elements
+                      const modeElements =
+                        document.querySelectorAll('[data-mode-id]');
+                      console.log(
+                        '[DEBUG] Found mode elements count:',
+                        modeElements.length,
+                      );
+
+                      let closestMode = selectedMode;
+                      let minDistance = Infinity;
+
+                      modeElements.forEach((el, elIndex) => {
+                        const rect = el.getBoundingClientRect();
+                        const elementCenterY = rect.top + rect.height / 2;
+                        const distance = Math.abs(clickY - elementCenterY);
+                        const modeId = el.getAttribute('data-mode-id');
+
+                        console.log(`[DEBUG] Element ${elIndex}:`, {
+                          modeId,
+                          elementCenterY,
+                          distance,
+                          rect: {
+                            top: rect.top,
+                            height: rect.height,
+                          },
+                        });
+
+                        if (distance < minDistance) {
+                          minDistance = distance;
+                          const foundMode = options.find(
+                            (opt) => opt.id === modeId,
+                          );
+                          if (foundMode) {
+                            console.log(
+                              '[DEBUG] New closest mode found:',
+                              foundMode.id,
+                            );
+                            closestMode = foundMode;
+                          }
+                        }
+                      });
+
+                      console.log(
+                        '[DEBUG] Final closest mode:',
+                        closestMode.id,
+                      );
+
+                      console.log(
+                        '[DEBUG] *** CODE VERSION: 2025-09-08-v3 ***',
+                      );
+
+                      // iOS WebKit fix: Compare with current index state instead of selectedMode
+                      const intendedMode = options[index];
+                      console.log('[DEBUG] Current index points to:', {
+                        index: index,
+                        intendedMode: intendedMode?.id,
+                        intendedTitle: intendedMode?.title,
+                      });
+
+                      if (intendedMode && closestMode.id !== intendedMode.id) {
+                        console.log('[DEBUG] iOS WebKit offset detected:', {
+                          coordinateBasedMode: closestMode.id,
+                          indexBasedMode: intendedMode.id,
+                          usingIndexBased: true,
+                        });
+                        handleModeSelect(intendedMode);
+                      } else {
+                        console.log(
+                          '[DEBUG] No offset detected, using coordinate-based result',
+                        );
+                        handleModeSelect(closestMode);
+                      }
+                    } else {
+                      // In test environment or when clickY is not available, use direct selection
+                      console.log(
+                        '[DEBUG] Using direct selection (test env or no clickY)',
+                      );
+                      handleModeSelect(selectedMode);
+                    }
+                  }}
                   onHover={() => handleModeHover(m)}
                 />
               );
