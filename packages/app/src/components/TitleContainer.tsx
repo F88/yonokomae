@@ -284,12 +284,12 @@ export function TitleContainer({
                 if (m.enabled === false) return;
                 const target = e.currentTarget as HTMLLabelElement;
                 const modeId = target.dataset.modeId;
-                
+
                 // Always resolve from data-mode-id to avoid closure issues with index 'i'
-                const resolved = modeId 
+                const resolved = modeId
                   ? options.find((opt) => opt.id === modeId)
                   : undefined;
-                
+
                 if (resolved && resolved.enabled !== false) {
                   setIndex(options.indexOf(resolved));
                   onSelect(resolved);
@@ -300,8 +300,15 @@ export function TitleContainer({
                   key={m.id}
                   data-mode-id={m.id}
                   htmlFor={inputId}
-                  onMouseEnter={() => {
-                    if (m.enabled !== false) setIndex(i);
+                  onMouseEnter={(e) => {
+                    // Get mode id from data attribute to avoid closure issues
+                    const targetModeId = e.currentTarget.dataset.modeId;
+                    if (targetModeId && m.enabled !== false) {
+                      const targetIndex = options.findIndex(
+                        (opt) => opt.id === targetModeId,
+                      );
+                      if (targetIndex >= 0) setIndex(targetIndex);
+                    }
                   }}
                   onClick={handleClick}
                   title={`${m.title} — ${m.description}${m.enabled === false ? ' (disabled)' : ''}`}
