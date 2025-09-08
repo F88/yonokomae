@@ -50,6 +50,7 @@
     "ops:export-battle-seeds-to-json": "pnpm run ops:build-all && node dist/ops-build/ops/export-battle-seeds-to-json.js",
     "ops:analyze-battle-seeds": "pnpm run ops:build-all && node dist/ops-build/ops/analyze-battle-seeds.js",
     "e2e": "playwright test --grep-invert @performance",
+    "e2e:prod": "playwright test --config=playwright.config.prod.ts --headed --grep-invert @performance",
     "e2e:ui": "playwright test --ui",
     "e2e:all": "playwright test",
     "e2e:headed": "playwright test --headed --project=chromium",
