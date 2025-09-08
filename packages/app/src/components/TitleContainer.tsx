@@ -284,11 +284,12 @@ export function TitleContainer({
                 if (m.enabled === false) return;
                 const target = e.currentTarget as HTMLLabelElement;
                 const modeId = target.dataset.modeId;
-                let resolved: PlayMode | undefined = options[i];
-                if (modeId) {
-                  const byId = options.find((opt) => opt.id === modeId);
-                  if (byId) resolved = byId;
-                }
+                
+                // Always resolve from data-mode-id to avoid closure issues with index 'i'
+                const resolved = modeId 
+                  ? options.find((opt) => opt.id === modeId)
+                  : undefined;
+                
                 if (resolved && resolved.enabled !== false) {
                   setIndex(options.indexOf(resolved));
                   onSelect(resolved);
