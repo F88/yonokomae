@@ -88,10 +88,19 @@ function printSummary(
 
 async function main() {
   const startedAt = Date.now();
-  const args = process.argv.slice(2);
-  if (args.includes('-h') || args.includes('--help')) {
+  const rawArgs = process.argv.slice(2);
+  // Support invocation patterns where pnpm inserts a standalone `--` before user args:
+  // e.g. `pnpm run ops:export-battle-seeds-to-json -- out/file.json` results in args ["--", "out/file.json"].
+  const args = (() => {
+    const a = [...rawArgs];
+    while (a[0] === '--') a.shift();
+    // Extra safeguard (some environments may still pass a leading '--')
+    if (a[0] === '--') a.shift();
+    return a;
+  })();
+  if (rawArgs.includes('-h') || rawArgs.includes('--help')) {
     process.stdout.write(
-      `Export battle seeds as JSON.\n\nUsage: pnpm run ops:export-battle-seeds-to-json [outfile]\\n  If [outfile] is omitted, JSON is written to stdout.\\n\nExamples:\n  pnpm run ops:export-battle-seeds-to-json\\n  pnpm run ops:export-battle-seeds-to-json -- out/battles.json\\n`,
+      `Export battle seeds as JSON.\n\nUsage: pnpm run ops:export-battle-seeds-to-json [outfile]\n       pnpm run ops:export-battle-seeds-to-json -- [outfile]  (pnpm style)\n  If [outfile] is omitted, JSON is written to stdout.\n\nExamples:\n  pnpm run ops:export-battle-seeds-to-json\n  pnpm run ops:export-battle-seeds-to-json out/battles.json\n  pnpm run ops:export-battle-seeds-to-json -- out/battles.json\n`,
     );
     return;
   }

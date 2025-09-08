@@ -29,7 +29,8 @@ function readBooleanEnv(key: string, defaultValue: boolean): boolean {
 // Detect test mode safely (works in browser + node). Prefer import.meta.env.MODE.
 const __isTestMode = (() => {
   try {
-    if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'test') return true;
+    if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'test')
+      return true;
   } catch {
     // ignore: process may be undefined in browser
   }
