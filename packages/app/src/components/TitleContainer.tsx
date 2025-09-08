@@ -23,9 +23,23 @@ const ModeOption = ({
   onSelect,
   onHover,
 }: ModeOptionProps) => {
-  const handleClick: React.MouseEventHandler<HTMLLabelElement> = () => {
+  const handleClick: React.MouseEventHandler<HTMLLabelElement> = (e) => {
     if (mode.enabled === false) return;
+    // Comprehensive debug logging for iOS offset issue
+    console.log('[DEBUG] ModeOption handleClick START:', {
+      modeId: mode.id,
+      modeTitle: mode.title,
+      isSelected,
+      target: e.target,
+      currentTarget: e.currentTarget,
+      eventType: e.type,
+      timestamp: Date.now(),
+    });
     onSelect(mode);
+    console.log('[DEBUG] ModeOption handleClick END:', {
+      modeId: mode.id,
+      modeTitle: mode.title,
+    });
   };
 
   const handleMouseEnter = () => {
@@ -131,8 +145,29 @@ export function TitleContainer({
   const [battleSeedSearch, setBattleSeedSearch] = useState('');
   // Theme selection unified: BattleFilter drives the theme filter used by BattleSeedSelector
   // Removed separate battleSeedTheme state; we derive active theme from poolThemes[0]
-  const options = useMemo(() => modes ?? defaultPlayModes, [modes]);
+  const options = useMemo(() => {
+    const result = modes ?? defaultPlayModes;
+    console.log(
+      '[DEBUG] options computed:',
+      result.map((m, i) => ({
+        index: i,
+        id: m.id,
+        title: m.title,
+      })),
+    );
+    return result;
+  }, [modes]);
   const [index, setIndex] = useState(0);
+
+  // Debug index changes
+  useEffect(() => {
+    console.log('[DEBUG] index changed:', {
+      newIndex: index,
+      modeAtIndex: options[index]?.id,
+      modeTitle: options[index]?.title,
+      timestamp: Date.now(),
+    });
+  }, [index, options]);
   // Theme filter state (single selection). Keep historical array shape for downstream (poolThemes[0]).
   const [internalTheme, setInternalTheme] = useState<string | undefined>(
     undefined,
@@ -355,13 +390,34 @@ export function TitleContainer({
             <div id="play-modes-hint" className="sr-only">
               Use Arrow keys to choose a mode and press Enter or B to start.
             </div>
-            {options.map((m) => {
+            {options.map((m, mapIndex) => {
+              console.log('[DEBUG] mapping mode:', {
+                mapIndex,
+                modeId: m.id,
+                modeTitle: m.title,
+              });
               const handleModeSelect = (selectedMode: PlayMode) => {
+                console.log('[DEBUG] handleModeSelect called:', {
+                  selectedModeId: selectedMode.id,
+                  selectedModeTitle: selectedMode.title,
+                  currentIndex: index,
+                  currentModeId: options[index]?.id,
+                  currentModeTitle: options[index]?.title,
+                });
                 const targetIndex = options.findIndex(
                   (opt) => opt.id === selectedMode.id,
                 );
+                console.log('[DEBUG] targetIndex found:', {
+                  targetIndex,
+                  expectedMode: selectedMode.id,
+                  foundMode: options[targetIndex]?.id,
+                });
                 if (targetIndex >= 0) {
                   setIndex(targetIndex);
+                  console.log('[DEBUG] calling onSelect with:', {
+                    modeId: selectedMode.id,
+                    modeTitle: selectedMode.title,
+                  });
                   onSelect(selectedMode);
                 }
               };
@@ -381,8 +437,8 @@ export function TitleContainer({
                   mode={m}
                   isSelected={m.id === options[index]?.id}
                   inputId={`play-mode-${m.id}`}
-                  onSelect={handleModeSelect}
-                  onHover={handleModeHover}
+                  onSelect={() => handleModeSelect(m)}
+                  onHover={() => handleModeHover(m)}
                 />
               );
             })}
