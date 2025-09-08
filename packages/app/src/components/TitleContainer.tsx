@@ -152,7 +152,7 @@ export function TitleContainer({
 
   // Stabilize BattleFilter visibility to prevent iOS WebKit re-render issues
   const showBattleFilter = useMemo(
-    () => import.meta.env.DEV && options[index]?.id === 'historical-research',
+    () => options[index]?.id === 'historical-research',
     [index, options],
   );
 
@@ -294,6 +294,7 @@ export function TitleContainer({
             {title}
           </CardTitle>
 
+          {/* BattleSeedSelector: Development-only tool for seed selection testing */}
           <BattleSeedSelector
             showIds
             show={
@@ -308,6 +309,8 @@ export function TitleContainer({
             themeIdFilter={poolThemes[0]}
             onThemeIdFilterChange={(id) => updateTheme(id)}
           />
+
+          {/* BattleFilter: Shows when 'historical-research' mode is selected (production + dev) */}
           <BattleFilter
             show={showBattleFilter}
             showBattleChips={import.meta.env.DEV}
