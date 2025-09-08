@@ -20,9 +20,11 @@ import { USAGE_EXAMPLES } from './usage-examples.js';
  * ```
  */
 export function userVoicesToTSV(voices = USER_VOICES) {
-    const header = ['name', 'age', 'voice'].join('\t');
-    const rows = voices.map((v) => [v.name, v.age, (v.voice ?? '').replace(/\n/g, ' ')].join('\t'));
-    return [header, ...rows].join('\n');
+  const header = ['name', 'age', 'voice'].join('\t');
+  const rows = voices.map((v) =>
+    [v.name, v.age, (v.voice ?? '').replace(/\n/g, ' ')].join('\t'),
+  );
+  return [header, ...rows].join('\n');
 }
 /**
  * USAGE_EXAMPLES を TSV 文字列に変換します。
@@ -44,7 +46,9 @@ export function userVoicesToTSV(voices = USER_VOICES) {
  * ```
  */
 export function usageExamplesToTSV(examples = USAGE_EXAMPLES) {
-    const header = ['title', 'description'].join('\t');
-    const rows = examples.map((e) => [e.title, (e.description ?? '').replace(/\n/g, ' ')].join('\t'));
-    return [header, ...rows].join('\n');
+  const header = ['title', 'description'].join('\t');
+  const rows = examples.map((e) =>
+    [e.title, (e.description ?? '').replace(/\n/g, ' ')].join('\t'),
+  );
+  return [header, ...rows].join('\n');
 }

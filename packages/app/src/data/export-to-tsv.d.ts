@@ -17,11 +17,13 @@
  * console.log(userVoicesToTSV());
  * ```
  */
-export declare function userVoicesToTSV(voices?: {
+export declare function userVoicesToTSV(
+  voices?: {
     name: string;
     age: string;
     voice: string;
-}[]): string;
+  }[],
+): string;
 /**
  * USAGE_EXAMPLES を TSV 文字列に変換します。
  *
@@ -41,8 +43,10 @@ export declare function userVoicesToTSV(voices?: {
  * console.log(usageExamplesToTSV());
  * ```
  */
-export declare function usageExamplesToTSV(examples?: {
+export declare function usageExamplesToTSV(
+  examples?: {
     title: string;
     description: string;
-}[]): string;
+  }[],
+): string;
 //# sourceMappingURL=export-to-tsv.d.ts.map

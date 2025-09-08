@@ -38,12 +38,32 @@ async function loadAllBattlesFromDist(): Promise<{
   battles: Battle[];
   filesRead: number;
 }> {
-  const currentDir = path.dirname(fileURLToPath(import.meta.url)); // dist/ops
-  const battleDir = path.resolve(
-    currentDir,
-    '../..',
-    'data/battle-seeds/dist/battle',
-  );
+  const currentDir = path.dirname(fileURLToPath(import.meta.url)); // dist/ops or dist/ops/ops
+  // Support multiple relative layouts depending on how TypeScript emitted output:
+  // 1) dist/ops/export-battle-seeds-to-json.js  (currentDir = dist/ops)
+  //    -> battle dir relative: ../data/battle-seeds/dist/battle (candidate A)
+  // 2) dist/ops/ops/export-battle-seeds-to-json.js (currentDir = dist/ops/ops)
+  //    -> battle dir relative: ../../data/battle-seeds/dist/battle (candidate B)
+  // 3) (legacy) dist/ops/packages/app/src/ops/... (not expected now) (candidate C)
+  const candidates = [
+    path.resolve(currentDir, '../data/battle-seeds/dist/battle'),
+    path.resolve(currentDir, '../../data/battle-seeds/dist/battle'),
+    path.resolve(currentDir, '../../../data/battle-seeds/dist/battle'),
+  ];
+  const battleDir = candidates.find((p) => {
+    try {
+      return readdirSync(p).length >= 0;
+    } catch {
+      return false;
+    }
+  });
+  if (!battleDir) {
+    throw new Error(
+      `Battle dist directory not found. Tried:\n${candidates
+        .map((c) => ' - ' + c)
+        .join('\n')}\nDid you run 'pnpm run build:packages'?`,
+    );
+  }
   const files = readdirSync(battleDir).filter((f) => f.endsWith('.js'));
 
   const imports = files.map(async (file) => {
