@@ -31,13 +31,20 @@ function readBooleanEnv(key: string): boolean | undefined {
 
 const __isProdMode = (() => {
   try {
-    if (typeof process !== 'undefined' && process?.env?.NODE_ENV === 'production') return true;
+    if (
+      typeof process !== 'undefined' &&
+      process?.env?.NODE_ENV === 'production'
+    )
+      return true;
   } catch {
     // ignore
   }
   try {
-    const env = (import.meta as unknown as { env?: Record<string, string | undefined> }).env;
-    if (env?.MODE === 'production' || env?.NODE_ENV === 'production') return true;
+    const env = (
+      import.meta as unknown as { env?: Record<string, string | undefined> }
+    ).env;
+    if (env?.MODE === 'production' || env?.NODE_ENV === 'production')
+      return true;
   } catch {
     // ignore
   }
@@ -46,7 +53,9 @@ const __isProdMode = (() => {
 
 const __historicalLogOverride = readBooleanEnv('VITE_LOG_HISTORICAL_REPORTS');
 const SHOULD_LOG_HISTORICAL_REPORTS =
-  __historicalLogOverride !== undefined ? __historicalLogOverride : !__isProdMode;
+  __historicalLogOverride !== undefined
+    ? __historicalLogOverride
+    : !__isProdMode;
 
 // Dev diagnostic: total invocation count for generateReport (historical-evidences)
 let historicalGenerateReportCallCount = 0;
@@ -111,60 +120,62 @@ export class HistoricalEvidencesBattleReportRepository
           }
         : undefined;
 
-  try {
-    const battle = await loadBattleFromSeeds({
-      roots,
-      file: this.file,
-      predicate,
-    });
+    try {
+      const battle = await loadBattleFromSeeds({
+        roots,
+        file: this.file,
+        predicate,
+      });
 
-    const end =
-      typeof performance !== 'undefined' && performance.now
-        ? performance.now()
-        : Date.now();
-    const started = inFlightHistoricalReports.get(seq)?.startedAt ?? startedAt;
-    const durationMs = Math.round(end - started);
-    inFlightHistoricalReports.delete(seq);
-    if (SHOULD_LOG_HISTORICAL_REPORTS) {
-      console.debug('[HistoricalEvidencesBattleReportRepository] done', {
-        seq,
-        callCount: historicalGenerateReportCallCount,
-        durationMs,
-        id: battle.id,
-        themeId: battle.themeId,
-        significance: battle.significance,
-      });
+      const end =
+        typeof performance !== 'undefined' && performance.now
+          ? performance.now()
+          : Date.now();
+      const started =
+        inFlightHistoricalReports.get(seq)?.startedAt ?? startedAt;
+      const durationMs = Math.round(end - started);
+      inFlightHistoricalReports.delete(seq);
+      if (SHOULD_LOG_HISTORICAL_REPORTS) {
+        console.debug('[HistoricalEvidencesBattleReportRepository] done', {
+          seq,
+          callCount: historicalGenerateReportCallCount,
+          durationMs,
+          id: battle.id,
+          themeId: battle.themeId,
+          significance: battle.significance,
+        });
+      }
+      return battle;
+    } catch (err) {
+      const end =
+        typeof performance !== 'undefined' && performance.now
+          ? performance.now()
+          : Date.now();
+      const started =
+        inFlightHistoricalReports.get(seq)?.startedAt ?? startedAt;
+      const durationMs = Math.round(end - started);
+      inFlightHistoricalReports.delete(seq);
+      if (SHOULD_LOG_HISTORICAL_REPORTS) {
+        console.debug('[HistoricalEvidencesBattleReportRepository] error', {
+          seq,
+          callCount: historicalGenerateReportCallCount,
+          durationMs,
+          message: err instanceof Error ? err.message : String(err),
+        });
+      }
+      throw err;
+    } finally {
+      // Final log always emitted (after success or error) with remaining in-flight count
+      // Ensure cleanup idempotent
+      inFlightHistoricalReports.delete(seq);
+      if (SHOULD_LOG_HISTORICAL_REPORTS) {
+        console.debug('[HistoricalEvidencesBattleReportRepository] final', {
+          seq,
+          callCount: historicalGenerateReportCallCount,
+          inFlight: inFlightHistoricalReports.size,
+        });
+      }
     }
-    return battle;
-  } catch (err) {
-    const end =
-      typeof performance !== 'undefined' && performance.now
-        ? performance.now()
-        : Date.now();
-    const started = inFlightHistoricalReports.get(seq)?.startedAt ?? startedAt;
-    const durationMs = Math.round(end - started);
-    inFlightHistoricalReports.delete(seq);
-    if (SHOULD_LOG_HISTORICAL_REPORTS) {
-      console.debug('[HistoricalEvidencesBattleReportRepository] error', {
-        seq,
-        callCount: historicalGenerateReportCallCount,
-        durationMs,
-        message: err instanceof Error ? err.message : String(err),
-      });
-    }
-    throw err;
-  } finally {
-    // Final log always emitted (after success or error) with remaining in-flight count
-    // Ensure cleanup idempotent
-    inFlightHistoricalReports.delete(seq);
-    if (SHOULD_LOG_HISTORICAL_REPORTS) {
-      console.debug('[HistoricalEvidencesBattleReportRepository] final', {
-        seq,
-        callCount: historicalGenerateReportCallCount,
-        inFlight: inFlightHistoricalReports.size,
-      });
-    }
-  }
   }
 }
 // (intentionally empty between loader import and class)
