@@ -10,6 +10,7 @@ import { Placeholders } from '@/yk/placeholder';
 import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BattleMetrics } from './components/BattleMetrics';
+import { DebugInfo } from './components/DebugInfo';
 import { Header } from './components/Header';
 import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
@@ -435,7 +436,15 @@ function App() {
             >
               <TitleContainer
                 modes={playMode}
-                onSelect={(mode) => setMode(mode)}
+                onSelect={(mode) => {
+                  console.log('[DEBUG] App.tsx onSelect called with:', {
+                    modeId: mode.id,
+                    modeTitle: mode.title,
+                    modeEnabled: mode.enabled,
+                    timestamp: Date.now(),
+                  });
+                  setMode(mode);
+                }}
                 battleSeedFile={battleSeedFile}
                 onBattleSeedChange={(f) => setBattleSeedFile(f)}
                 selectedThemeId={activeThemeId}
@@ -486,6 +495,9 @@ function App() {
           </footer>
         )}
       </main>
+
+      {/* Debug info overlay - only show in development or for debugging */}
+      <DebugInfo />
     </RepositoryProvider>
   );
 }
