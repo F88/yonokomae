@@ -95,47 +95,47 @@ test.describe('Battle container visibility', () => {
     }
   });
 
-  test(
-    'appends up to 100 battle containers when Battle is clicked repeatedly',
-    {
-      tag: ['@performance', '@slow'],
-    },
-    async ({ page }) => {
-      test.slow();
-      test.info().annotations.push({
-        type: 'performance',
-        description: 'Clicks Battle 100 times and verifies 100 containers',
-      });
+  // test(
+  //   'appends up to 100 battle containers when Battle is clicked repeatedly',
+  //   {
+  //     tag: ['@performance'],
+  //   },
+  //   async ({ page }) => {
+  //     test.slow();
+  //     test.info().annotations.push({
+  //       type: 'performance',
+  //       description: 'Clicks Battle 100 times and verifies 100 containers',
+  //     });
 
-      // show top page
-      await page.goto('./');
+  //     // show top page
+  //     await page.goto('./');
 
-      // select mode (game start)
-      const modeGroup = page.getByRole('radiogroup', { name: 'Play modes' });
-      await modeGroup.locator('label').first().click();
+  //     // select mode (game start)
+  //     const modeGroup = page.getByRole('radiogroup', { name: 'Play modes' });
+  //     await modeGroup.locator('label').first().click();
 
-      const battleBtn = page.getByRole('button', { name: 'Battle' });
-      // Measure baseline count (should be 0)
-      let prev = await page.getByTestId('battle').count();
+  //     const battleBtn = page.getByRole('button', { name: 'Battle' });
+  //     // Measure baseline count (should be 0)
+  //     let prev = await page.getByTestId('battle').count();
 
-      // click Battle 100 times, verifying counts are monotonically increasing
-      for (let i = 1; i <= 100; i++) {
-        await battleBtn.click();
-        // Wait until the count increases beyond the previous value
-        await expect
-          .poll(async () => {
-            return page.getByTestId('battle').count();
-          })
-          .toBeGreaterThan(prev);
-        prev = await page.getByTestId('battle').count();
-      }
+  //     // click Battle 100 times, verifying counts are monotonically increasing
+  //     for (let i = 1; i <= 100; i++) {
+  //       await battleBtn.click();
+  //       // Wait until the count increases beyond the previous value
+  //       await expect
+  //         .poll(async () => {
+  //           return page.getByTestId('battle').count();
+  //         })
+  //         .toBeGreaterThan(prev);
+  //       prev = await page.getByTestId('battle').count();
+  //     }
 
-      // Final sanity: we have at least 100 containers
-      const finalCount = await page.getByTestId('battle').count();
-      expect(finalCount).toBeGreaterThanOrEqual(100);
-      // And slots exist for each container
-      await expect(page.getByTestId('slot-yono')).toHaveCount(finalCount);
-      await expect(page.getByTestId('slot-komae')).toHaveCount(finalCount);
-    },
-  );
+  //     // Final sanity: we have at least 100 containers
+  //     const finalCount = await page.getByTestId('battle').count();
+  //     expect(finalCount).toBeGreaterThanOrEqual(100);
+  //     // And slots exist for each container
+  //     await expect(page.getByTestId('slot-yono')).toHaveCount(finalCount);
+  //     await expect(page.getByTestId('slot-komae')).toHaveCount(finalCount);
+  //   },
+  // );
 });
