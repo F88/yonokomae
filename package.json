@@ -18,6 +18,7 @@
   "homepage": "https://github.com/F88/yonokomae#readme",
   "scripts": {
     "dev": "pnpm --filter @yonokomae/app dev",
+    "dev:lan": "pnpm --filter @yonokomae/app dev:lan",
     "dev:api": "cross-env VITE_API_BASE_URL=http://localhost:8787/api pnpm --filter @yonokomae/app dev",
     "build": "pnpm -r --sort build",
     "build:app": "pnpm --filter @yonokomae/app build",
