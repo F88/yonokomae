@@ -19,8 +19,6 @@ import type { BattleReportMetrics } from '@yonokomae/types';
 import { playMode, type PlayMode } from './yk/play-mode';
 
 function App() {
-  // console.log('[DEBUG] *** APP.TSX MOUNT - VERSION: 2025-09-08-v6 ***');
-
   const MAX_CONCURRENT = 6;
   const [mode, setMode] = useState<PlayMode | undefined>(undefined);
   const [reports, setReports] = useState<Battle[]>([]);
@@ -439,12 +437,12 @@ function App() {
               <TitleContainer
                 modes={playMode}
                 onSelect={(mode) => {
-                  // console.log('[DEBUG] App.tsx onSelect called with:', {
-                  //   modeId: mode.id,
-                  //   modeTitle: mode.title,
-                  //   modeEnabled: mode.enabled,
-                  //   timestamp: Date.now(),
-                  // });
+                  console.log('[DEBUG] App.tsx onSelect called with:', {
+                    modeId: mode.id,
+                    modeTitle: mode.title,
+                    modeEnabled: mode.enabled,
+                    timestamp: Date.now(),
+                  });
                   setMode(mode);
                 }}
                 battleSeedFile={battleSeedFile}
