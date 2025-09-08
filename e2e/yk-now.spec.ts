@@ -18,10 +18,12 @@ test.describe('Play mode: yk-now regression', () => {
     // Click the label element for yk-now using data-mode-id attribute for precision
     const ykNowLabel = page.locator('label[data-mode-id="yk-now"]');
     await expect(ykNowLabel).toBeVisible();
-    
+
     // Click and wait for the controller to appear (confirms click was processed)
     await ykNowLabel.click();
-    await expect(page.getByRole('button', { name: 'Battle' })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('button', { name: 'Battle' })).toBeVisible({
+      timeout: 10_000,
+    });
 
     // Now the mode selector should be gone
     await assertModeSelectorAbsent(page);
