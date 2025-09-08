@@ -10,7 +10,9 @@ function normalize(key: string): string {
 
 function getEnvRecord(): Record<string, string | undefined> | undefined {
   try {
-    return (import.meta as unknown as { env?: Record<string, string | undefined> }).env;
+    return (
+      import.meta as unknown as { env?: Record<string, string | undefined> }
+    ).env;
   } catch {
     return undefined;
   }
@@ -19,8 +21,8 @@ function getEnvRecord(): Record<string, string | undefined> | undefined {
 function parseBoolean(raw: string | undefined): boolean | undefined {
   if (!raw) return undefined;
   const v = raw.trim().toLowerCase();
-  if (["1", "true", "yes", "on"].includes(v)) return true;
-  if (["0", "false", "no", "off"].includes(v)) return false;
+  if (['1', 'true', 'yes', 'on'].includes(v)) return true;
+  if (['0', 'false', 'no', 'off'].includes(v)) return false;
   return undefined;
 }
 

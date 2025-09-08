@@ -36,7 +36,9 @@ const __isProdMode = (() => {
   return false;
 })();
 
-const __historicalLogOverride = readBooleanEnvOptional('VITE_LOG_HISTORICAL_REPORTS');
+const __historicalLogOverride = readBooleanEnvOptional(
+  'VITE_LOG_HISTORICAL_REPORTS',
+);
 const SHOULD_LOG_HISTORICAL_REPORTS =
   __historicalLogOverride !== undefined
     ? __historicalLogOverride
