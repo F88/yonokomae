@@ -12,6 +12,9 @@ describe('analyze-battle-seeds CLI', () => {
   it('outputs JSON with expected structure', { timeout: 20_000 }, () => {
     const repoRoot = path.resolve(__dirname, '../../../../..');
     const candidates = [
+      // Current canonical (2025-09-08+)
+      'dist/ops-build/ops/analyze-battle-seeds.js',
+      // Legacy fallbacks (to be removed once all branches updated)
       'dist/ops/analyze-battle-seeds.js',
       'dist/ops/ops/analyze-battle-seeds.js',
     ];
