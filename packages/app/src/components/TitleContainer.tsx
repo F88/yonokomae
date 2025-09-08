@@ -8,6 +8,80 @@ import { isEditable } from '@/lib/dom-utils';
 import { BattleSeedSelector } from '@/components/BattleSeedSelector';
 import { BattleFilter } from '@/components/BattleFilter';
 
+interface ModeOptionProps {
+  mode: PlayMode;
+  isSelected: boolean;
+  inputId: string;
+  onSelect: (mode: PlayMode) => void;
+  onHover: (mode: PlayMode) => void;
+}
+
+const ModeOption = ({
+  mode,
+  isSelected,
+  inputId,
+  onSelect,
+  onHover,
+}: ModeOptionProps) => {
+  const handleClick: React.MouseEventHandler<HTMLLabelElement> = () => {
+    if (mode.enabled === false) return;
+    onSelect(mode);
+  };
+
+  const handleMouseEnter = () => {
+    if (mode.enabled === false) return;
+    onHover(mode);
+  };
+
+  const handleChange = () => {
+    if (mode.enabled !== false) {
+      onHover(mode);
+    }
+  };
+
+  return (
+    <label
+      key={mode.id}
+      data-mode-id={mode.id}
+      htmlFor={inputId}
+      onMouseEnter={handleMouseEnter}
+      onClick={handleClick}
+      title={`${mode.title} — ${mode.description}${mode.enabled === false ? ' (disabled)' : ''}`}
+      className={[
+        'flex cursor-pointer items-center justify-start gap-3 rounded-md border px-4 py-3 text-left transition-colors',
+        isSelected ? 'border-primary bg-primary/10' : 'hover:bg-muted',
+      ].join(' ')}
+    >
+      <input
+        id={inputId}
+        type="radio"
+        name="play-mode"
+        className="sr-only"
+        disabled={mode.enabled === false}
+        checked={isSelected}
+        onChange={handleChange}
+      />
+      <span
+        aria-hidden
+        className={[
+          'inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border text-xs',
+          isSelected
+            ? 'border-primary bg-primary text-primary-foreground'
+            : 'border-muted-foreground/30 text-muted-foreground',
+        ].join(' ')}
+      >
+        {isSelected ? '>' : ''}
+      </span>
+      <div className="flex min-w-0 flex-col">
+        <span className=" text-base font-semibold">{mode.title}</span>
+        <span className=" text-sm text-muted-foreground">
+          {mode.description}
+        </span>
+      </div>
+    </label>
+  );
+};
+
 export type TitleContainerProps = {
   modes?: PlayMode[];
   onSelect: (mode: PlayMode) => void;
@@ -74,6 +148,12 @@ export function TitleContainer({
       onSelectedThemeIdChange?.(id);
     },
     [selectedThemeId, onSelectedThemeIdChange],
+  );
+
+  // Stabilize BattleFilter visibility to prevent iOS WebKit re-render issues
+  const showBattleFilter = useMemo(
+    () => import.meta.env.DEV && options[index]?.id === 'historical-research',
+    [index, options],
   );
 
   // Keep selected battle seed consistent with active theme filter: if theme changes and current
@@ -229,10 +309,7 @@ export function TitleContainer({
             onThemeIdFilterChange={(id) => updateTheme(id)}
           />
           <BattleFilter
-            show={
-              // import.meta.env.DEV &&
-              options[index]?.id === 'historical-research'
-            }
+            show={showBattleFilter}
             showBattleChips={import.meta.env.DEV}
             showBattleCount={import.meta.env.DEV}
             themeIdsFilter={undefined}
@@ -275,81 +352,35 @@ export function TitleContainer({
             <div id="play-modes-hint" className="sr-only">
               Use Arrow keys to choose a mode and press Enter or B to start.
             </div>
-            {options.map((m, i) => {
-              const selected = i === index;
-              const inputId = `play-mode-${m.id}`;
-              const handleClick: React.MouseEventHandler<HTMLLabelElement> = (
-                e,
-              ) => {
-                if (m.enabled === false) return;
-                const target = e.currentTarget as HTMLLabelElement;
-                const modeId = target.dataset.modeId;
-
-                // Always resolve from data-mode-id to avoid closure issues with index 'i'
-                const resolved = modeId
-                  ? options.find((opt) => opt.id === modeId)
-                  : undefined;
-
-                if (resolved && resolved.enabled !== false) {
-                  setIndex(options.indexOf(resolved));
-                  onSelect(resolved);
+            {options.map((m) => {
+              const handleModeSelect = (selectedMode: PlayMode) => {
+                const targetIndex = options.findIndex(
+                  (opt) => opt.id === selectedMode.id,
+                );
+                if (targetIndex >= 0) {
+                  setIndex(targetIndex);
+                  onSelect(selectedMode);
                 }
               };
+
+              const handleModeHover = (hoveredMode: PlayMode) => {
+                const targetIndex = options.findIndex(
+                  (opt) => opt.id === hoveredMode.id,
+                );
+                if (targetIndex >= 0) {
+                  setIndex(targetIndex);
+                }
+              };
+
               return (
-                <label
+                <ModeOption
                   key={m.id}
-                  data-mode-id={m.id}
-                  htmlFor={inputId}
-                  onMouseEnter={(e) => {
-                    // Get mode id from data attribute to avoid closure issues
-                    const targetModeId = e.currentTarget.dataset.modeId;
-                    if (targetModeId && m.enabled !== false) {
-                      const targetIndex = options.findIndex(
-                        (opt) => opt.id === targetModeId,
-                      );
-                      if (targetIndex >= 0) setIndex(targetIndex);
-                    }
-                  }}
-                  onClick={handleClick}
-                  title={`${m.title} — ${m.description}${m.enabled === false ? ' (disabled)' : ''}`}
-                  className={[
-                    'flex cursor-pointer items-center justify-start gap-3 rounded-md border px-4 py-3 text-left transition-colors',
-                    selected
-                      ? 'border-primary bg-primary/10'
-                      : 'hover:bg-muted',
-                  ].join(' ')}
-                >
-                  <input
-                    id={inputId}
-                    type="radio"
-                    name="play-mode"
-                    className="sr-only"
-                    disabled={m.enabled === false}
-                    checked={selected}
-                    onChange={() => {
-                      if (m.enabled !== false) {
-                        setIndex(i);
-                      }
-                    }}
-                  />
-                  <span
-                    aria-hidden
-                    className={[
-                      'inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-sm border text-xs',
-                      selected
-                        ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-muted-foreground/30 text-muted-foreground',
-                    ].join(' ')}
-                  >
-                    {selected ? '>' : ''}
-                  </span>
-                  <div className="flex min-w-0 flex-col">
-                    <span className=" text-base font-semibold">{m.title}</span>
-                    <span className=" text-sm text-muted-foreground">
-                      {m.description}
-                    </span>
-                  </div>
-                </label>
+                  mode={m}
+                  isSelected={m.id === options[index]?.id}
+                  inputId={`play-mode-${m.id}`}
+                  onSelect={handleModeSelect}
+                  onHover={handleModeHover}
+                />
               );
             })}
           </div>
