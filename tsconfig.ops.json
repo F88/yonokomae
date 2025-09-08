@@ -6,5 +6,6 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["packages/app/src/ops/*.ts", "packages/app/src/data/*.ts"]
+  "include": ["packages/app/src/ops/**/*.ts", "packages/app/src/data/**/*.ts"],
+  "exclude": ["**/__tests__/**"]
 }

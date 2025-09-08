@@ -45,7 +45,7 @@
     "ops:build": "tsc -p tsconfig.ops.json",
     "ops:export-usage-examples-to-tsv": "pnpm run ops:build && node dist/ops/export-usage-examples-to-tsv.js",
     "ops:export-users-voice-to-tsv": "pnpm run ops:build && node dist/ops/export-users-voice-to-tsv.js",
-    "ops:export-battle-seeds-to-json": "pnpm run build:packages && pnpm run ops:build && node dist/ops/export-battle-seeds-to-json.js",
+    "ops:export-battle-seeds-to-json": "pnpm run build:packages && pnpm run ops:build && node dist/ops/export-battle-seeds-to-json.js || node dist/ops/ops/export-battle-seeds-to-json.js",
     "ops:analyze-battle-seeds": "pnpm run build:packages && pnpm run ops:build && (node dist/ops/analyze-battle-seeds.js || node dist/ops/ops/analyze-battle-seeds.js)",
     "e2e": "playwright test --grep-invert @performance",
     "e2e:ui": "playwright test --ui",
