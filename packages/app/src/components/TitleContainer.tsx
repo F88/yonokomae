@@ -278,20 +278,46 @@ export function TitleContainer({
             {options.map((m, i) => {
               const selected = i === index;
               const inputId = `play-mode-${m.id}`;
+              const handleClick: React.MouseEventHandler<HTMLLabelElement> = (
+                e,
+              ) => {
+                if (m.enabled === false) return;
+                // Defensive: resolve mode by dataset id rather than closure in case of transpilation quirks on iOS WebKit.
+                const target = e.currentTarget as HTMLLabelElement;
+                const modeId = target.dataset.modeId;
+                let resolved: PlayMode | undefined = options[i];
+                if (modeId) {
+                  const byId = options.find((opt) => opt.id === modeId);
+                  if (byId) resolved = byId;
+                }
+                if (resolved && resolved.enabled !== false) {
+                  setIndex(options.indexOf(resolved));
+                  onSelect(resolved);
+                  if (import.meta.env.DEV) {
+                    // Instrumentation: Log selection pathway to diagnose iOS Safari / Chrome on iOS mismatch reports
+                    console.debug('[TitleContainer] select', {
+                      tappedLabel: m.id,
+                      datasetModeId: modeId,
+                      resolved: resolved.id,
+                      resolvedTitle: resolved.title,
+                    });
+                  }
+                } else if (import.meta.env.DEV) {
+                  console.warn('[TitleContainer] unresolved mode selection', {
+                    tappedLabel: m.id,
+                    datasetModeId: modeId,
+                  });
+                }
+              };
               return (
                 <label
                   key={m.id}
+                  data-mode-id={m.id}
                   htmlFor={inputId}
                   onMouseEnter={() => {
                     if (m.enabled !== false) setIndex(i);
                   }}
-                  onClick={() => {
-                    if (m.enabled !== false) {
-                      // Confirm immediately on mouse click
-                      setIndex(i);
-                      onSelect(m);
-                    }
-                  }}
+                  onClick={handleClick}
                   title={`${m.title} — ${m.description}${m.enabled === false ? ' (disabled)' : ''}`}
                   className={[
                     'flex cursor-pointer items-center justify-start gap-3 rounded-md border px-4 py-3 text-left transition-colors',
@@ -309,7 +335,6 @@ export function TitleContainer({
                     checked={selected}
                     onChange={() => {
                       if (m.enabled !== false) {
-                        // Only update selection; click handler confirms to avoid double firing
                         setIndex(i);
                       }
                     }}
