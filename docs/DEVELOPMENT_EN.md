@@ -157,12 +157,12 @@ Motivations:
 
 States & semantics:
 
-| State | Meaning | UI Behavior |
-|-------|---------|-------------|
-| `published` | Canonical, user-visible | Chip hidden |
-| `draft` | Early concept / incomplete | Chip shown |
-| `review` | Pending validation / editorial pass | Chip shown |
-| `archived` | Retired / superseded | Chip shown |
+| State       | Meaning                             | UI Behavior |
+| ----------- | ----------------------------------- | ----------- |
+| `published` | Canonical, user-visible             | Chip hidden |
+| `draft`     | Early concept / incomplete          | Chip shown  |
+| `review`    | Pending validation / editorial pass | Chip shown  |
+| `archived`  | Retired / superseded                | Chip shown  |
 
 Rules:
 

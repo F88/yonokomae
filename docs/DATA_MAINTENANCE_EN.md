@@ -104,12 +104,12 @@ data/battle-seeds/
 
 Battle seeds now explicitly support a `publishState` field to indicate lifecycle:
 
-| Value        | Meaning                                         | Display Behavior |
-|--------------|--------------------------------------------------|------------------|
-| `published`  | Canonical, visible to users                      | No chip shown    |
-| `draft`      | Early concept / incomplete                       | Chip shown       |
-| `review`     | Pending editorial / data validation              | Chip shown       |
-| `archived`   | Retired or superseded                            | Chip shown       |
+| Value       | Meaning                             | Display Behavior |
+| ----------- | ----------------------------------- | ---------------- |
+| `published` | Canonical, visible to users         | No chip shown    |
+| `draft`     | Early concept / incomplete          | Chip shown       |
+| `review`    | Pending editorial / data validation | Chip shown       |
+| `archived`  | Retired or superseded               | Chip shown       |
 
 Rules:
 
