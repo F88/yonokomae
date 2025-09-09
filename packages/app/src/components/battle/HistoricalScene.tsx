@@ -17,6 +17,7 @@ import type { FC } from 'react';
 import { useMemo } from 'react';
 import { SignificanceChip } from '../ui/SignificanceChip';
 import { MetaData } from './MetaData';
+import { PublishStateChip } from './PublishStateChip';
 
 export type Props = {
   battle?: Battle | null;
@@ -176,6 +177,15 @@ export const HistoricalScene: FC<Props> = ({
 
           {/* Title block */}
           <div className="space-y-2">
+            {/* Publish State */}
+            {battle.status && battle.publishState !== 'published' && (
+              <>
+                <div className="flex justify-center">
+                  <PublishStateChip state={battle.publishState} />
+                </div>
+              </>
+            )}
+
             {/* Legendary battle */}
             {battle.significance && battle.significance === 'legendary' && (
               <>
