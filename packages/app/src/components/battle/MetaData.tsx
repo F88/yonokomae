@@ -2,7 +2,8 @@ import type { FC } from 'react';
 import type { Battle } from '@yonokomae/types';
 import { ThemeChip } from '@/components/battle/ThemeChip';
 import { BattleContainerIdChip } from './BattleContainerIdChip';
-import { SignificanceChip } from '@/components/ui/significance-chip';
+import { SignificanceChip } from '@/components/ui/SignificanceChip';
+import { PublishStateChip } from './PublishStateChip';
 
 export type MetaDataProps = {
   battle: Battle;
@@ -47,6 +48,11 @@ export const MetaData: FC<MetaDataProps> = ({
     >
       <div className={cx(item, 'flex items-center gap-2', justifyClass)}>
         <BattleContainerIdChip battle={battle} variant="outline" />
+        <PublishStateChip
+          state={battle.publishState}
+          variant={compact ? 'outline' : 'secondary'}
+          showLabel
+        />
         <ThemeChip
           themeId={battle.themeId}
           variant={compact ? 'outline' : 'secondary'}
