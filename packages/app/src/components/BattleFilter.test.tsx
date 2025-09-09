@@ -145,8 +145,8 @@ describe('BattleFilter (chip single-select)', () => {
     const stateChips = list.querySelectorAll(
       '[data-testid="publish-state-chip"]',
     );
-    // Current implementation renders a publish state chip for every battle (published, draft, review, ...)
-    // Adjust expectation to match the seeds defined in this test mock (4 total).
-    expect(stateChips.length).toBe(4);
+    // Current implementation: chip is rendered ONLY when publishState !== 'published'.
+    // Mock seeds: published, draft, review, published -> expect 2 chips (draft + review).
+    expect(stateChips.length).toBe(2);
   });
 });
