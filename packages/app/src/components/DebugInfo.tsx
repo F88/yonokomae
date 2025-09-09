@@ -20,7 +20,7 @@ interface DebugLogEntry {
  *
  * @remarks
  * - Intercepts `console.log` and `console.debug` calls that contain '[DEBUG]' in the message
- * - Displays captured logs in an overlay that can be toggled with triple-tap
+ * - Displays captured logs in an overlay opened by tapping the red badge (bottom-right)
  * - Automatically disabled in test environments to prevent interference
  * - Handles circular reference errors when serializing objects (e.g., DOM elements)
  * - Individual log entries can be copied to clipboard by hovering and clicking the copy button
@@ -36,7 +36,7 @@ interface DebugLogEntry {
  * console.debug('[DEBUG] API call result:', { status: 200, data: response });
  * ```
  *
- * @returns A debug overlay component that shows on triple-tap
+ * @returns A debug overlay component that shows when the floating badge is tapped
  */
 export function DebugInfo() {
   const [logs, setLogs] = useState<DebugLogEntry[]>([]);
@@ -104,46 +104,21 @@ export function DebugInfo() {
     };
   }, []);
 
-  // Toggle visibility with triple tap (for mobile)
-  useEffect(() => {
-    // Skip event listeners in test environment
-    if (typeof window === 'undefined' || process.env.NODE_ENV === 'test') {
-      return;
-    }
-
-    let tapCount = 0;
-    let lastTap = 0;
-
-    const handleTripleTap = () => {
-      const now = Date.now();
-      if (now - lastTap < 500) {
-        tapCount++;
-      } else {
-        tapCount = 1;
-      }
-      lastTap = now;
-
-      if (tapCount === 3) {
-        setIsVisible((prev) => !prev);
-        tapCount = 0;
-      }
-    };
-
-    document.addEventListener('touchend', handleTripleTap);
-    document.addEventListener('click', handleTripleTap);
-
-    return () => {
-      document.removeEventListener('touchend', handleTripleTap);
-      document.removeEventListener('click', handleTripleTap);
-    };
-  }, []);
+  // NOTE: Previous implementation used global triple-tap. Simplified to an explicit badge tap
+  // for clearer discoverability and to avoid accidental toggles.
 
   if (!isVisible) {
     return (
       <div className="fixed bottom-4 right-4 z-50">
-        <div className="bg-red-500 text-white text-xs px-2 py-1 rounded">
-          Triple tap to show debug logs
-        </div>
+        <button
+          type="button"
+          aria-label="Show debug logs"
+          onClick={() => setIsVisible(true)}
+          onTouchEnd={() => setIsVisible(true)}
+          className="bg-red-500 text-white text-xs px-2 py-1 rounded shadow focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-300 active:scale-[0.97] transition"
+        >
+          logs
+        </button>
       </div>
     );
   }
