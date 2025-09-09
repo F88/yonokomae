@@ -185,15 +185,18 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 
 ### Data & Ops CLI (Analysis)
 
-Operational scripts for exporting and analyzing data live under `packages/app/src/ops/` and are exposed via `pnpm` scripts.
+Operational scripts for exporting and analyzing data live under `packages/app/src/ops/` and are exposed via `pnpm` scripts. All commands automatically ensure required data packages and ops build output exist. You can run `pnpm run ops:prepare` manually to force a fresh rebuild of data + ops output, but it is not required for normal usage.
 
-Common commands:
+Common commands (auto build on first run):
 
 ```bash
-# Export all battle seeds to JSON (pretty printed)
+# (Optional) Explicitly prepare data + ops build (normally implicit)
+pnpm run ops:prepare
+
+# Export all battle seeds to JSON (pretty printed; copies from prebuilt bundle)
 pnpm run ops:export-battle-seeds-to-json -- out/battles.json
 
-# Analyze battle seeds (loads dist modules directly)
+# Analyze battle seeds (loads prebuilt battle index / JSON modules)
 pnpm run ops:analyze-battle-seeds
 
 # Analyze previously exported JSON file
@@ -212,7 +215,7 @@ pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
 pnpm run ops:analyze-battle-seeds -- --help
 ```
 
-The analyzer prints:
+The analyzer prints (always using the unified generated index & prebuilt JSON):
 
 - Totals
 - Distribution by theme and significance
