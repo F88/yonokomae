@@ -147,6 +147,7 @@ export class NewsReporterApiBattleReportRepository
       id: uid('battle'),
       themeId: 'information',
       significance: 'low',
+      publishState: 'published',
       title: `IPアドレス ${ip}`,
       subtitle: 'Generated from ipify.org',
       narrative: {
@@ -385,6 +386,7 @@ export class NewsReporterApiBattleReportRepository
       id: uid('battle'),
       themeId: 'information',
       significance: 'low',
+      publishState: 'published',
       title: `最高気温`,
       subtitle: 'あついね',
       narrative: {

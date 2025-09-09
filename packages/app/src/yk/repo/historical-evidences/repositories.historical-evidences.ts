@@ -61,6 +61,8 @@ export class HistoricalEvidencesBattleReportRepository
 {
   private readonly file?: string;
   private readonly delay?: DelayOption;
+  /** When true, restricts random pool to published (non-draft) battle seeds. */
+  private readonly publishedOnly?: boolean;
 
   /**
    * @param opts Optional configuration
@@ -68,9 +70,14 @@ export class HistoricalEvidencesBattleReportRepository
    *                  When omitted, a random file will be chosen.
    * @param opts.delay Optional artificial delay configuration for UX simulation.
    */
-  constructor(opts?: { file?: string; delay?: DelayOption }) {
+  constructor(opts?: {
+    file?: string;
+    delay?: DelayOption;
+    publishedOnly?: boolean;
+  }) {
     this.file = opts?.file;
     this.delay = opts?.delay;
+    this.publishedOnly = opts?.publishedOnly;
   }
 
   async generateReport(params?: GenerateBattleReportParams): Promise<Battle> {
@@ -112,6 +119,8 @@ export class HistoricalEvidencesBattleReportRepository
         roots,
         file: this.file,
         predicate,
+        // Opt-in only (defaults to undefined to preserve previous behavior)
+        publishedOnly: this.publishedOnly,
       });
 
       const end =
