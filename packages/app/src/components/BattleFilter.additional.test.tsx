@@ -69,8 +69,10 @@ describe('BattleFilter - Additional Coverage Tests', () => {
 
   it('handles showPublishStateCounts=false', () => {
     render(<BattleFilter showPublishStateCounts={false} />);
-    const psSelect = screen.getByTestId('battle-filter-publish-state') as HTMLSelectElement;
-    const allOption = Array.from(psSelect.options).find(o => o.value === '');
+    const psSelect = screen.getByTestId(
+      'battle-filter-publish-state',
+    ) as HTMLSelectElement;
+    const allOption = Array.from(psSelect.options).find((o) => o.value === '');
     // Should not show counts in option text
     expect(allOption?.textContent).toBe('(all states)');
   });
@@ -78,40 +80,56 @@ describe('BattleFilter - Additional Coverage Tests', () => {
   it('calls onSelectedThemeIdChange when theme is selected', () => {
     const mockOnThemeChange = vi.fn();
     render(<BattleFilter onSelectedThemeIdChange={mockOnThemeChange} />);
-    
+
     const historyChip = screen.getByTestId('battle-filter-chip-history');
     fireEvent.click(historyChip);
-    
+
     expect(mockOnThemeChange).toHaveBeenCalledWith('history');
   });
 
   it('calls onSelectedPublishStateChange when publish state is selected', () => {
     const mockOnPublishStateChange = vi.fn();
-    render(<BattleFilter onSelectedPublishStateChange={mockOnPublishStateChange} />);
-    
-    const psSelect = screen.getByTestId('battle-filter-publish-state') as HTMLSelectElement;
+    render(
+      <BattleFilter onSelectedPublishStateChange={mockOnPublishStateChange} />,
+    );
+
+    const psSelect = screen.getByTestId(
+      'battle-filter-publish-state',
+    ) as HTMLSelectElement;
     fireEvent.change(psSelect, { target: { value: 'draft' } });
-    
+
     expect(mockOnPublishStateChange).toHaveBeenCalledWith('draft');
   });
 
   it('calls onSelectedThemeIdChange with undefined when ALL is selected', () => {
     const mockOnThemeChange = vi.fn();
-    render(<BattleFilter selectedThemeId="history" onSelectedThemeIdChange={mockOnThemeChange} />);
-    
+    render(
+      <BattleFilter
+        selectedThemeId="history"
+        onSelectedThemeIdChange={mockOnThemeChange}
+      />,
+    );
+
     const allChip = screen.getByTestId('battle-filter-chip-all');
     fireEvent.click(allChip);
-    
+
     expect(mockOnThemeChange).toHaveBeenCalledWith(undefined);
   });
 
   it('calls onSelectedPublishStateChange with undefined when empty value is selected', () => {
     const mockOnPublishStateChange = vi.fn();
-    render(<BattleFilter selectedPublishState="draft" onSelectedPublishStateChange={mockOnPublishStateChange} />);
-    
-    const psSelect = screen.getByTestId('battle-filter-publish-state') as HTMLSelectElement;
+    render(
+      <BattleFilter
+        selectedPublishState="draft"
+        onSelectedPublishStateChange={mockOnPublishStateChange}
+      />,
+    );
+
+    const psSelect = screen.getByTestId(
+      'battle-filter-publish-state',
+    ) as HTMLSelectElement;
     fireEvent.change(psSelect, { target: { value: '' } });
-    
+
     expect(mockOnPublishStateChange).toHaveBeenCalledWith(undefined);
   });
 
@@ -122,25 +140,29 @@ describe('BattleFilter - Additional Coverage Tests', () => {
 
   it('updates local state optimistically', () => {
     const { rerender } = render(<BattleFilter selectedThemeId={undefined} />);
-    
+
     // Local state should update immediately on click
     const historyChip = screen.getByTestId('battle-filter-chip-history');
     fireEvent.click(historyChip);
-    
+
     // Should show as selected even before parent updates
     expect(historyChip.getAttribute('data-selected')).toBe('true');
-    
+
     // When parent prop updates, local state should sync
     rerender(<BattleFilter selectedThemeId="history" />);
     expect(historyChip.getAttribute('data-selected')).toBe('true');
   });
 
   it('syncs local publishState with prop changes', () => {
-    const { rerender } = render(<BattleFilter selectedPublishState={undefined} />);
-    
-    const psSelect = screen.getByTestId('battle-filter-publish-state') as HTMLSelectElement;
+    const { rerender } = render(
+      <BattleFilter selectedPublishState={undefined} />,
+    );
+
+    const psSelect = screen.getByTestId(
+      'battle-filter-publish-state',
+    ) as HTMLSelectElement;
     expect(psSelect.value).toBe('');
-    
+
     // When parent prop updates, local state should sync
     rerender(<BattleFilter selectedPublishState="draft" />);
     expect(psSelect.value).toBe('draft');
@@ -154,35 +176,45 @@ describe('BattleFilter - Additional Coverage Tests', () => {
 
   it('shows correct battle counts for each publish state', () => {
     render(<BattleFilter />);
-    const psSelect = screen.getByTestId('battle-filter-publish-state') as HTMLSelectElement;
-    
+    const psSelect = screen.getByTestId(
+      'battle-filter-publish-state',
+    ) as HTMLSelectElement;
+
     // Check that options show correct counts
-    const draftOption = Array.from(psSelect.options).find(o => o.value === 'draft');
+    const draftOption = Array.from(psSelect.options).find(
+      (o) => o.value === 'draft',
+    );
     expect(draftOption?.textContent).toContain('(1)'); // 1 draft battle
-    
-    const publishedOption = Array.from(psSelect.options).find(o => o.value === 'published');
+
+    const publishedOption = Array.from(psSelect.options).find(
+      (o) => o.value === 'published',
+    );
     expect(publishedOption?.textContent).toContain('(4)'); // 4 published battles (including defaults)
   });
 
   it('sorts battles by theme catalog order then by title', () => {
     render(<BattleFilter />);
     const list = screen.getByTestId('battle-filter-list');
-    
+
     // Should maintain consistent ordering
-    const battleChips = list.querySelectorAll('[data-testid^="battle-title-chip"]');
+    const battleChips = list.querySelectorAll(
+      '[data-testid^="battle-title-chip"]',
+    );
     expect(battleChips.length).toBeGreaterThan(0);
   });
 
   it('filters correctly when both theme and publish state are selected', () => {
     render(<BattleFilter />);
-    
+
     // Select history theme
     fireEvent.click(screen.getByTestId('battle-filter-chip-history'));
-    
+
     // Select review publish state
-    const psSelect = screen.getByTestId('battle-filter-publish-state') as HTMLSelectElement;
+    const psSelect = screen.getByTestId(
+      'battle-filter-publish-state',
+    ) as HTMLSelectElement;
     fireEvent.change(psSelect, { target: { value: 'review' } });
-    
+
     const list = screen.getByTestId('battle-filter-list');
     // Should only show "Gamma History" which is history + review
     expect(list.textContent).toContain('Gamma History');
@@ -192,10 +224,10 @@ describe('BattleFilter - Additional Coverage Tests', () => {
 
   it('handles focus and accessibility', () => {
     render(<BattleFilter />);
-    
+
     const themeChips = screen.getByTestId('battle-filter-chips');
     expect(themeChips).toHaveAttribute('aria-label', 'Theme selection');
-    
+
     const psSelect = screen.getByTestId('battle-filter-publish-state');
     expect(psSelect).toHaveAttribute('aria-label', 'publishState filter');
   });

@@ -8,15 +8,21 @@ describe('ensureString', () => {
   });
 
   it('throws error for empty string', () => {
-    expect(() => ensureString('', 'test value')).toThrow('Expected test value to be a non-empty string');
+    expect(() => ensureString('', 'test value')).toThrow(
+      'Expected test value to be a non-empty string',
+    );
   });
 
   it('throws error for undefined', () => {
-    expect(() => ensureString(undefined, 'test value')).toThrow('Expected test value to be a non-empty string');
+    expect(() => ensureString(undefined, 'test value')).toThrow(
+      'Expected test value to be a non-empty string',
+    );
   });
 
   it('uses custom label in error message', () => {
-    expect(() => ensureString('', 'custom label')).toThrow('Expected custom label to be a non-empty string');
+    expect(() => ensureString('', 'custom label')).toThrow(
+      'Expected custom label to be a non-empty string',
+    );
   });
 
   it('returns single character string', () => {

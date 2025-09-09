@@ -22,7 +22,7 @@ describe('App - Additional Coverage Tests', () => {
     mockGenerateReport.mockReset();
     mockScrollTo.mockClear();
     mockScrollBy.mockClear();
-    
+
     // Mock window scroll functions
     Object.defineProperty(window, 'scrollTo', {
       value: mockScrollTo,
@@ -47,7 +47,7 @@ describe('App - Additional Coverage Tests', () => {
 
     // Mock performance.now for animation timing
     vi.spyOn(performance, 'now').mockReturnValue(0);
-    
+
     // Mock requestAnimationFrame
     vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
       setTimeout(callback, 16);
@@ -55,31 +55,17 @@ describe('App - Additional Coverage Tests', () => {
     });
 
     // Mock getBoundingClientRect for elements
-    Element.prototype.getBoundingClientRect = vi.fn(() => ({
-      top: 100,
-      bottom: 200,
-      left: 0,
-      right: 1024,
-      width: 1024,
-      height: 100,
-      x: 0,
-      y: 100,
-    }));
+    Element.prototype.getBoundingClientRect = vi.fn(
+      () => new DOMRect(0, 100, 1024, 100),
+    );
 
     // Mock document.querySelector for header
     vi.spyOn(document, 'querySelector').mockImplementation((selector) => {
       if (selector === 'header.sticky') {
         const mockHeader = document.createElement('header');
-        mockHeader.getBoundingClientRect = vi.fn(() => ({
-          top: 0,
-          bottom: 60,
-          left: 0,
-          right: 1024,
-          width: 1024,
-          height: 60,
-          x: 0,
-          y: 0,
-        }));
+        mockHeader.getBoundingClientRect = vi.fn(
+          () => new DOMRect(0, 0, 1024, 60),
+        );
         return mockHeader;
       }
       return null;
@@ -93,16 +79,9 @@ describe('App - Additional Coverage Tests', () => {
       if (id.startsWith('battle_')) {
         const mockElement = document.createElement('div');
         mockElement.id = id;
-        mockElement.getBoundingClientRect = vi.fn(() => ({
-          top: 200,
-          bottom: 300,
-          left: 0,
-          right: 1024,
-          width: 1024,
-          height: 100,
-          x: 0,
-          y: 200,
-        }));
+        mockElement.getBoundingClientRect = vi.fn(
+          () => new DOMRect(0, 200, 1024, 100),
+        );
         return mockElement;
       }
       return null;
@@ -135,17 +114,18 @@ describe('App - Additional Coverage Tests', () => {
         description: '',
         power: 2,
       },
+      publishState: 'published',
       status: 'success',
     };
     mockGenerateReport.mockResolvedValue(mockBattle);
 
-    const utils = render(<App />);
-    
+    render(<App />);
+
     // Select mode
     const radioGroup = screen.getByRole('radiogroup', { name: 'Play modes' });
     radioGroup.focus();
     await userEvent.keyboard('{Enter}');
-    
+
     await waitFor(() => {
       expect(screen.queryByText('SELECT MODE')).not.toBeInTheDocument();
     });
@@ -153,12 +133,13 @@ describe('App - Additional Coverage Tests', () => {
     // Generate a battle
     const battleButton = await screen.findByRole('button', { name: /battle/i });
     await userEvent.click(battleButton);
-    
+
     await waitFor(() => {
       expect(mockGenerateReport).toHaveBeenCalled();
     });
 
-    return utils;
+    // No return value needed
+    return;
   }
 
   it('handles keyboard navigation with j key', async () => {
@@ -218,7 +199,7 @@ describe('App - Additional Coverage Tests', () => {
 
     // Generate multiple battles quickly to test concurrency limit
     const battleButton = await screen.findByRole('button', { name: /battle/i });
-    
+
     // Click battle button multiple times rapidly
     for (let i = 0; i < 10; i++) {
       await userEvent.click(battleButton);
@@ -232,13 +213,13 @@ describe('App - Additional Coverage Tests', () => {
     const mockError = new Error('Test error');
     mockGenerateReport.mockRejectedValue(mockError);
 
-    const utils = render(<App />);
-    
+    render(<App />);
+
     // Select mode
     const radioGroup = screen.getByRole('radiogroup', { name: 'Play modes' });
     radioGroup.focus();
     await userEvent.keyboard('{Enter}');
-    
+
     await waitFor(() => {
       expect(screen.queryByText('SELECT MODE')).not.toBeInTheDocument();
     });
@@ -249,9 +230,11 @@ describe('App - Additional Coverage Tests', () => {
 
     // Should handle the error gracefully
     await waitFor(() => {
-      // Check for error-related text that should appear
-      const errorElements = screen.queryByText(/error/i) || screen.queryByText(/failed/i);
-      expect(errorElements || true).toBeTruthy(); // Basic assertion to ensure no crash
+      // Check for error-related text that should appear (allow multiple matches)
+      const errorMatches = screen.queryAllByText(/error/i);
+      const failedMatches = screen.queryAllByText(/failed/i);
+      const total = errorMatches.length + failedMatches.length;
+      expect(total > 0).toBe(true); // Basic assertion to ensure no crash
     });
   });
 
@@ -285,12 +268,12 @@ describe('App - Additional Coverage Tests', () => {
   it('tests the isWideViewport function behavior with different window sizes', async () => {
     // Test with wide viewport
     Object.defineProperty(window, 'innerWidth', { value: 1200 });
-    
+
     render(<App />);
-    
+
     // Test with narrow viewport
     Object.defineProperty(window, 'innerWidth', { value: 800 });
-    
+
     act(() => {
       window.dispatchEvent(new Event('resize'));
     });

@@ -16,17 +16,18 @@ vi.mock('@/App.tsx', () => ({
 
 // Mock the HistoricalSeedProvider
 vi.mock('@/yk/repo/seed-system', () => ({
-  HistoricalSeedProvider: ({ children }: { children: React.ReactNode }) => children,
+  HistoricalSeedProvider: ({ children }: { children: React.ReactNode }) =>
+    children,
 }));
 
 describe('main.tsx', () => {
   beforeEach(() => {
     mockCreateRoot.mockClear();
     mockRender.mockClear();
-    
+
     // Mock document.getElementById to return a mock element
     vi.spyOn(document, 'getElementById').mockReturnValue(
-      document.createElement('div')
+      document.createElement('div'),
     );
   });
 
