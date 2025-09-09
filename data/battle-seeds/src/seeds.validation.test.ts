@@ -1,7 +1,12 @@
 import { BattleSchema } from '@yonokomae/schema';
 import type { Battle } from '@yonokomae/types';
 import { describe, expect, it } from 'vitest';
-import { battleSeeds } from './index';
+// Explicit .ts to avoid resolving a stale compiled JS sibling if present.
+import {
+  battleSeeds,
+  battleSeedPublishStats,
+  publishedBattleSeeds,
+} from './index.ts';
 
 describe('Battle Seeds Validation', () => {
   it('should have unique battle IDs', () => {
@@ -48,5 +53,14 @@ describe('Battle Seeds Validation', () => {
 
   it('should have at least one battle', () => {
     expect(battleSeeds.length).toBeGreaterThan(0);
+  });
+
+  it('publish stats should be consistent', () => {
+    const stats = battleSeedPublishStats();
+    expect(stats.total).toBe(battleSeeds.length);
+    const sum = Object.values(stats.byState).reduce((a, b) => a + b, 0);
+    expect(sum).toBe(stats.total);
+    // publishedBattleSeeds should equal count of published state
+    expect(publishedBattleSeeds.length).toBe(stats.byState['published'] ?? 0);
   });
 });

@@ -1,114 +1,94 @@
 import type { Battle } from '@yonokomae/types';
+// All battle seed imports (published & draft) are now auto-generated.
+// To update after adding / modifying battle files with publishState changes:
+//   pnpm --filter @yonokomae/data-battle-seeds run generate:battles
+// (Runs automatically via package prebuild script.)
+// NOTE: Explicit .js extension needed for Node ESM runtime (type:module) to resolve after tsc emit.
+// For TS sources we can import the .ts (ts-node/tsx) or .js (compiled). Try .js first for emitted builds.
+// Vitest in source mode resolves the .ts via tsconfig paths anyway.
+import {
+  publishedBattleMap,
+  draftBattleMap,
+  allBattleMap,
+  battleMapsByPublishState,
+  battleSeedsByPublishState,
+  publishStateKeys,
+  type PublishStateKey,
+} from './battle/__generated/index.generated.js';
 
-import adjacentMunicipalitiesJa from './battle/adjacent-municipalities.ja';
-import agricultureJa from './battle/agriculture.ja';
-import aiOracle from './battle/ai-oracle.ja';
-import ancientLifeBattle from './battle/ancient-life-battle.ja';
-import areaComparisonJa from './battle/area-comparison.ja';
-import celebrityBattle from './battle/celebrity-battle.ja';
-import childSafetyBattle from './battle/child-safety-battle.ja';
-import cityNameOriginJa from './battle/city-name-origin.ja';
-import civicTechBattle from './battle/civic-tech-battle.ja';
-import coderDojoBattle from './battle/coder-dojo-battle.ja';
-import commutingFlowsJa from './battle/commuting-flows.ja';
-import cultureBattle from './battle/culture-battle.ja';
-import dataGhostHunt from './battle/data-ghost-hunt.ja';
-import densityBattle from './battle/density-battle.ja';
-import developmentBattle from './battle/development-battle.ja';
-import disasterSimulationBattle from './battle/disaster-simulation-battle.ja';
-import edoEraHeroes from './battle/edo-era-heroes.ja';
-import fisheriesJa from './battle/fisheries.ja';
-import floodBattle from './battle/flood-battle.ja';
-import geomorphologyHydrologyJa from './battle/geomorphology-hydrology.ja';
-import hwmbKomaeJa from './battle/hwmb-komae-independence.ja';
-import hwmbYK from './battle/hwmb-merger-and-independence.ja';
-import hwmbYonoJa from './battle/hwmb-merger-of-glory.ja';
-import ikadaRace from './battle/ikada-race.ja';
-import industryGrowthJa from './battle/industry-growth.ja';
-import kidsTechBattle from './battle/kids-tech-battle.ja';
-import localCurrencyBattle from './battle/local-currency-battle.ja';
-import metaverseShrine from './battle/metaverse-shrine.ja';
-import meteorologyJa from './battle/meteorology.ja';
-import parentingRobotsBattle from './battle/parenting-robot-battle.ja';
-import populationTrendsJa from './battle/population-trends.ja';
-import robotEthics from './battle/robot-ethics.ja';
-import ruinsBattle from './battle/ruins-battle.ja';
-import sengokuTerritory from './battle/sengoku-territory.ja';
-import showaSuperstarBattle from './battle/showa-superstar-battle.ja';
-import snackBattle from './battle/snack-battle.ja';
-import snsTruthVsLies from './battle/sns-truth-vs-lies.ja';
-import socioeconomicJa from './battle/socioeconomic.ja';
-import tasteAlgorithm from './battle/taste-algorithm.ja';
-import transportationHubBattle from './battle/transportation-hub-battle.ja';
-import undergroundConspiracy from './battle/underground-conspiracy.ja';
-import waterResourceManagementBattle from './battle/water-resource-battle.ja';
-import wikipediaJaBattle from './battle/wikipedia-ja-battle.ja';
+// Unified map (file-name based). Prefer ID-based lookups in new code.
+const battleMap: Record<string, Battle> = allBattleMap;
 
-// Collect all battles in a map
-const battleMap: Record<string, Battle> = {
-  ...{
-    // Legendary battles
-    'hwmb-yk.ja.ts': hwmbYK,
-    'hwmb-yono.ja.ts': hwmbYonoJa,
-    'hwmb-komae.ja.ts': hwmbKomaeJa,
+// Export all battles as an array (includes unpublished / draft states)
+function normalizeImageUrl(url: string | undefined): string | undefined {
+  if (!url) return url;
+  // Remove any literal 'undefined' prefix (legacy) and handle build-time BASE_URL templates.
+  return url
+    .replace(/^undefined/, '')
+    .replace(/\${import\.meta\.env\.BASE_URL}/g, '');
+}
+
+export const battleSeeds: Battle[] = Object.values(battleMap).map((b) => ({
+  ...b,
+  komae: { ...b.komae, imageUrl: normalizeImageUrl(b.komae.imageUrl) ?? '' },
+  yono: { ...b.yono, imageUrl: normalizeImageUrl(b.yono.imageUrl) ?? '' },
+}));
+
+// ID ベース高速ルックアップ
+export const battleSeedsById: Record<string, Battle> = battleSeeds.reduce(
+  (acc, b) => {
+    acc[b.id] = b;
+    return acc;
   },
-  ...{
-    'yono-komae-adjacent-municipalities.ja.ts': adjacentMunicipalitiesJa,
-    'yono-komae-agriculture.ja.ts': agricultureJa,
-    'yono-komae-area-comparison.ja.ts': areaComparisonJa,
-    'yono-komae-commuting-flows.ja.ts': commutingFlowsJa,
-    'yono-komae-fisheries.ja.ts': fisheriesJa,
-    'yono-komae-geomorphology-hydrology.ja.ts': geomorphologyHydrologyJa,
-    'yono-komae-industry-growth.ja.ts': industryGrowthJa,
-    'yono-komae-meteorology.ja.ts': meteorologyJa,
-    'yono-komae-population-trends.ja.ts': populationTrendsJa,
-    'yono-komae-socioeconomic.ja.ts': socioeconomicJa,
-    'city-name-origin.ja.ts': cityNameOriginJa,
-  },
-  ...{
-    // New battle files
-    'celebrity-battle.ja.ts': celebrityBattle,
-    'showa-superstar-battle.ja.ts': showaSuperstarBattle,
-    'edo-era-heroes.ja.ts': edoEraHeroes,
-    'sengoku-territory.ja.ts': sengokuTerritory,
-    'ancient-life-battle.ja.ts': ancientLifeBattle,
-    'ruins-battle.ja.ts': ruinsBattle,
-    'development-battle.ja.ts': developmentBattle,
-    'flood-battle.ja.ts': floodBattle,
-    'transportation-hub-battle.ja.ts': transportationHubBattle,
-    'culture-battle.ja.ts': cultureBattle,
-    'density-battle.ja.ts': densityBattle,
-    'ikada-race.ja.ts': ikadaRace,
-    'civic-tech-battle.ja.ts': civicTechBattle,
-    'coder-dojo-battle.ja.ts': coderDojoBattle,
-    'robot-ethics.ja.ts': robotEthics,
-    'sns-truth-vs-lies.ja.ts': snsTruthVsLies,
-    'wikipedia-ja-battle.ja.ts': wikipediaJaBattle,
-    'underground-conspiracy.ja.ts': undergroundConspiracy,
-    'local-currency-battle.ja.ts': localCurrencyBattle,
-    'snack-battle.ja.ts': snackBattle,
-    'kids-tech-battle.ja.ts': kidsTechBattle,
-    'ai-oracle.ja.ts': aiOracle,
-    'data-ghost-hunt.ja.ts': dataGhostHunt,
-    'child-safety-battle.ja.ts': childSafetyBattle,
-    'disaster-simulation-battle.ja.ts': disasterSimulationBattle,
-    'parenting-robot-battle.ja.ts': parentingRobotsBattle,
-    'water-resource-battle.ja.ts': waterResourceManagementBattle,
-    'metaverse-shrine.ja.ts': metaverseShrine,
-    'taste-algorithm.ja.ts': tasteAlgorithm,
-  },
+  {} as Record<string, Battle>,
+);
+
+// Published only view
+export const publishedBattleSeeds: Battle[] = Object.values(publishedBattleMap)
+  .map((b) => battleSeedsById[b.id])
+  .filter((b): b is Battle => Boolean(b));
+
+// Draft (non-published) view (convenience)
+export const draftBattleSeeds: Battle[] = Object.values(draftBattleMap)
+  .map((b) => battleSeedsById[b.id])
+  .filter((b): b is Battle => Boolean(b));
+
+// publishState -> Battle[] convenience re-export
+export {
+  battleSeedsByPublishState,
+  battleMapsByPublishState,
+  publishStateKeys,
 };
+export type { PublishStateKey };
 
-// Export all battles as an array
-export const battleSeeds: Battle[] = Object.values(battleMap);
+export function battleSeedPublishStats(): {
+  total: number;
+  byState: Record<string, number>;
+  publishedRatio: number;
+} {
+  const byState: Record<string, number> = {};
+  for (const b of battleSeeds) {
+    const state = b.publishState ?? 'published';
+    byState[state] = (byState[state] ?? 0) + 1;
+  }
+  const total = battleSeeds.length;
+  const publishedCount = byState['published'] ?? 0;
+  return {
+    total,
+    byState,
+    publishedRatio: total > 0 ? publishedCount / total : 0,
+  };
+}
 
-// Export battle map for file-based lookup
+// Legacy file-name map (basename -> Battle)
 export const battleSeedsByFile = battleMap;
 
-// Load battle by file name
 export function loadBattleSeedByFile(file: string): Battle | undefined {
   return battleMap[file];
 }
 
-// Export all battles for discovery
+export function loadBattleSeedById(id: string): Battle | undefined {
+  return battleSeedsById[id];
+}
+
 export const allBattleSeeds = battleSeeds;
