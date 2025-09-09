@@ -407,22 +407,22 @@ Battle seed data (`@yonokomae/data-battle-seeds`) is auto-indexed. A generator
 and emits `__generated/index.generated.ts` with stable exports:
 
 - `publishedBattleMap`, `draftBattleMap`, and per-state maps collected in
-    `battleMapsByPublishState` plus convenience arrays `publishStateKeys` and
-    `battleSeedsByPublishState`.
+  `battleMapsByPublishState` plus convenience arrays `publishStateKeys` and
+  `battleSeedsByPublishState`.
 - `allBattleMap` for quick id/filename based lookups.
 - `battlesByThemeId` and `themeIds` (UI-oriented grouping by the canonical
-    `Battle.themeId` field). Each theme list is internally sorted by battle id
-    for deterministic rendering.
+  `Battle.themeId` field). Each theme list is internally sorted by battle id
+  for deterministic rendering.
 - `ThemeId` (type) as `keyof typeof battlesByThemeId` for downstream narrowing.
 
 Rules / behavior:
 
 1. Missing `publishState` defaults to `published` (a warning is emitted).
 2. Duplicate basenames or duplicate explicit battle ids (the `id` property in
-     a seed) cause the generator to exit with a non-zero code.
+   a seed) cause the generator to exit with a non-zero code.
 3. Only `*.ja.ts` files are indexed; drafts live under `__drafts/` but the
-     generator does not rely on directory names—`publishState` is the single
-     source of truth.
+   generator does not rely on directory names—`publishState` is the single
+   source of truth.
 4. Imports are static and tree-shakeable; no dynamic `require`.
 
 Adding a new battle seed:
@@ -437,7 +437,11 @@ pnpm --filter @yonokomae/data-battle-seeds run generate:battles
 Consuming grouped data in the app:
 
 ```ts
-import { battlesByThemeId, themeIds, ThemeId } from '@yonokomae/data-battle-seeds';
+import {
+    battlesByThemeId,
+    themeIds,
+    ThemeId,
+} from '@yonokomae/data-battle-seeds';
 
 function getThemeBattles(theme: ThemeId) {
     return battlesByThemeId[theme] ?? [];
@@ -462,9 +466,8 @@ pnpm --filter @yonokomae/data-battle-seeds run generate:battles
 Common pitfalls:
 
 - Attempting to build the seed package before `@yonokomae/types` exists in
-    `dist/` (fixed by running the workspace build as above).
+  `dist/` (fixed by running the workspace build as above).
 - Editing the generated file directly (always rerun the generator instead).
-
 
 Project references (`composite: true`) plus `--sort` guarantee declarations are ready before dependents build.
 

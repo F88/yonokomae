@@ -125,7 +125,11 @@ pnpm --filter @yonokomae/data-battle-seeds run generate:battles
 グルーピング利用例 (アプリ側):
 
 ```ts
-import { battlesByThemeId, themeIds, ThemeId } from '@yonokomae/data-battle-seeds';
+import {
+    battlesByThemeId,
+    themeIds,
+    ThemeId,
+} from '@yonokomae/data-battle-seeds';
 
 function getThemeBattles(theme: ThemeId) {
     return battlesByThemeId[theme] ?? [];
@@ -151,7 +155,6 @@ pnpm --filter @yonokomae/data-battle-seeds run generate:battles
 - 生成ファイルを直接編集してしまう (必ずジェネレータ再実行)
 
 ### 新しい Repository の追加
-
 
 1. **Repository 実装の作成:**
    `src/yk/repo/` 以下に新しいファイルを作成します。例: `src/yk/repo/example/repositories.example.ts`。一つ以上のリポジトリインターフェースを実装します。
