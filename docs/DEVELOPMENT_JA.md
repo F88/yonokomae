@@ -95,7 +95,63 @@ classDiagram
 
 このセクションでは、新しいリポジトリや Play Mode でアプリケーションを拡張する方法を説明します。
 
+### バトルシード生成とテーマグルーピング
+
+`@yonokomae/data-battle-seeds` は自動インデックス生成を行います。ジェネレータ
+(`data/battle-seeds/scripts/generate-battle-index.ts`) が `src/battle/` を走査し、
+`__generated/index.generated.ts` を生成して以下を提供します:
+
+- `publishedBattleMap`, `draftBattleMap` と各 publishState のマップ (`battleMapsByPublishState`)
+- `publishStateKeys`, `battleSeedsByPublishState`, まとめ用 `allBattleMap`
+- UI 利便性のための `battlesByThemeId` と `themeIds` (各テーマ配列は battle id でソート)
+- `ThemeId` 型 (`keyof typeof battlesByThemeId`)
+
+ルール / 振る舞い:
+
+1. `publishState` が無い場合は `published` とみなし警告
+2. basename または battle `id` の重複はエラー終了
+3. 対象は `*.ja.ts` のみ。`__drafts/` 位置は補助であり `publishState` が唯一のソースオブトゥルース
+4. 生成は静的 import のみ (tree-shaking 可能)
+
+新しいバトルシード追加:
+
+```bash
+cp data/battle-seeds/src/battle/theme/<theme>/example.ja.ts \
+     data/battle-seeds/src/battle/theme/<theme>/new-id.ja.ts
+# メタデータ編集 (id, title, subtitle, narrative, publishState, significance)
+pnpm --filter @yonokomae/data-battle-seeds run generate:battles
+```
+
+グルーピング利用例 (アプリ側):
+
+```ts
+import { battlesByThemeId, themeIds, ThemeId } from '@yonokomae/data-battle-seeds';
+
+function getThemeBattles(theme: ThemeId) {
+    return battlesByThemeId[theme] ?? [];
+}
+```
+
+シードパッケージのみ手動ビルド:
+
+```bash
+pnpm -w run build:packages
+pnpm --filter @yonokomae/data-battle-seeds build
+```
+
+ジェネレータのみ実行:
+
+```bash
+pnpm --filter @yonokomae/data-battle-seeds run generate:battles
+```
+
+落とし穴:
+
+- `@yonokomae/types` ビルド前にシードを単体ビルドし失敗するケース
+- 生成ファイルを直接編集してしまう (必ずジェネレータ再実行)
+
 ### 新しい Repository の追加
+
 
 1. **Repository 実装の作成:**
    `src/yk/repo/` 以下に新しいファイルを作成します。例: `src/yk/repo/example/repositories.example.ts`。一つ以上のリポジトリインターフェースを実装します。
@@ -435,33 +491,41 @@ iOS Safari でタップ時に意図しないモードが選択される事象を
 
 ## CLI オペレーションスクリプト
 
-`src/ops/` 配下 (全て `-h` / `--help` 対応)。
+`src/ops/` 配下 (全て `-h` / `--help` 対応)。統一準備スクリプト `pnpm run ops:prepare` は以下を行います:
 
-ビルド出力: すべての ops スクリプトは `dist/ops-build/ops/` に emit されます。
+1. すべての `@yonokomae/data-*` パッケージをビルド (battle 統合インデックス / all-battles JSON 生成含む)
+2. ops スクリプトを `dist/ops-build/ops/` にビルド
 
-- `export-battle-seeds-to-json.ts` – battle seeds を JSON 出力
+各個別コマンドは必要に応じ最小限の準備を自動実行します。クリーン再ビルドが必要な場合のみ手動で `ops:prepare` を実行してください。
+
+スクリプト一覧:
+
+- `export-battle-seeds-to-json.ts` – 事前生成された統合 battles JSON をファイルまたは stdout にコピー
 - `export-users-voice-to-tsv.ts` – user voice を TSV 出力
 - `export-usage-examples-to-tsv.ts` – usage examples を TSV 出力
-- `analyze-battle-seeds.ts` – battle seeds 統計を集計 / クロスタブ表示
+- `analyze-battle-seeds.ts` – battle seeds 統計を集計 / クロスタブ表示 (生成モジュールまたは JSON 入力)
 
 使用例:
 
 ```bash
+# 任意: フル準備を強制
+pnpm run ops:prepare
+
 # 推奨: pnpm scripts 経由 (必要なら自動ビルド)
 pnpm run ops:export-battle-seeds-to-json -- out/battles.json
 pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
 pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
 
-# 直接解析 (ビルド済み dist モジュール読み込み)
+# 直接解析 (生成モジュール読み込み)
 pnpm run ops:analyze-battle-seeds
 
-# 事前に書き出した JSON を解析
+# エクスポート済み JSON を解析
 pnpm run ops:analyze-battle-seeds -- out/battles.json
 
-# JSON 形式出力 (CI / 自動化向け 機械可読)
+# JSON 形式出力 (CI / 自動化向け)
 pnpm run ops:analyze-battle-seeds -- --format=json
 
-# 任意: 直接 node 実行 (直前にビルド済みであること)
+# 任意: 直接 node 実行 (ops:prepare 済み前提)
 # node dist/ops-build/ops/export-battle-seeds-to-json.js out/battles.json
 ```
 
@@ -481,12 +545,15 @@ pnpm run ops:export-users-voice-to-tsv -- --help
 - テーマ × 重要度 クロスタブ (matrix)
 - power 統計 (komae / yono / combined の min / max / avg)
 - combined power 上位5件 (komae.power + yono.power)
+- `publishState` 別分布 (published / draft / review / archived など)
+- 未公開 (`draftIds`) battle id 一覧 (差分/トリアージ用)
 
 自動化ヒント:
 
 - `--format=json` で機械可読: 分布のドリフト検知や CI 比較に利用可能
 - `jq` 例: `pnpm run ops:analyze-battle-seeds -- --format=json | jq '.byTheme.history'`
 - データ更新後に統計サマリのアーティファクト化に活用
+- フィルタフラグ: `--published-only` または `--drafts-only` (同時指定不可)
 
 テスト: `src/ops/__tests__/export-cli.test.ts` 参照。
 
