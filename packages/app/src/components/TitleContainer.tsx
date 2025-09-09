@@ -1042,6 +1042,16 @@ export function TitleContainer({
                     });
                   }
                   onSelect(selectedMode);
+                  // Test instrumentation: count confirmed selections (dev/test only)
+                  if (
+                    (import.meta.env.DEV || process.env.NODE_ENV === 'test') &&
+                    typeof window !== 'undefined'
+                  ) {
+                    // @ts-expect-error test counter slot
+                    window.__YK_TEST_ONSELECT_COUNT__ =
+                      // @ts-expect-error test counter slot
+                      (window.__YK_TEST_ONSELECT_COUNT__ || 0) + 1;
+                  }
                 }
               };
 
