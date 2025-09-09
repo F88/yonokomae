@@ -12,8 +12,20 @@ vi.mock('@yonokomae/data-battle-seeds', () => {
     themeId: 'history',
     significance: 'low',
     publishState,
-    komae: { imageUrl: 'about:blank', title: '', subtitle: '', description: '', power: 10 },
-    yono: { imageUrl: 'about:blank', title: '', subtitle: '', description: '', power: 20 },
+    komae: {
+      imageUrl: 'about:blank',
+      title: '',
+      subtitle: '',
+      description: '',
+      power: 10,
+    },
+    yono: {
+      imageUrl: 'about:blank',
+      title: '',
+      subtitle: '',
+      description: '',
+      power: 20,
+    },
     provenance: [],
     status: 'success',
   });
@@ -47,14 +59,18 @@ describe('HistoricalEvidencesBattleReportRepository publishState filtering', () 
   });
 
   it('publishedOnly=true rejects non-published publishState filter (draft)', async () => {
-    const repo = new HistoricalEvidencesBattleReportRepository({ publishedOnly: true });
+    const repo = new HistoricalEvidencesBattleReportRepository({
+      publishedOnly: true,
+    });
     await expect(
       repo.generateReport({ filter: { battle: { publishState: 'draft' } } }),
     ).rejects.toMatchObject({ name: 'BattleSeedNotFoundError' });
   });
 
   it('publishedOnly=true without publishState filter still returns a published battle', async () => {
-    const repo = new HistoricalEvidencesBattleReportRepository({ publishedOnly: true });
+    const repo = new HistoricalEvidencesBattleReportRepository({
+      publishedOnly: true,
+    });
     const battle = await repo.generateReport();
     expect(battle.publishState).toBe('published');
   });

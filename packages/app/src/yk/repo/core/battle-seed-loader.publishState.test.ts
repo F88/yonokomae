@@ -12,8 +12,20 @@ vi.mock('@yonokomae/data-battle-seeds', () => {
     themeId: 'history',
     significance: 'low',
     publishState,
-    komae: { imageUrl: 'about:blank', title: '', subtitle: '', description: '', power: 40 },
-    yono: { imageUrl: 'about:blank', title: '', subtitle: '', description: '', power: 60 },
+    komae: {
+      imageUrl: 'about:blank',
+      title: '',
+      subtitle: '',
+      description: '',
+      power: 40,
+    },
+    yono: {
+      imageUrl: 'about:blank',
+      title: '',
+      subtitle: '',
+      description: '',
+      power: 60,
+    },
     provenance: [],
     status: 'success',
   });
@@ -46,7 +58,10 @@ describe('battle-seed-loader publishState support', () => {
   it('loads explicit draft seed when publishedOnly=false (using dual roots)', async () => {
     // The loader maps each battle to two virtual file paths under both roots.
     const battle = await loadBattleFromSeeds({
-      roots: ['@yonokomae/data-battle-seeds', '/seeds/historical-evidences/battle/'],
+      roots: [
+        '@yonokomae/data-battle-seeds',
+        '/seeds/historical-evidences/battle/',
+      ],
       file: '001-draft.js',
       publishedOnly: false,
     });
