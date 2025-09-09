@@ -192,6 +192,8 @@ async function generate() {
   const importLines: string[] = [];
   const publishedEntries: string[] = [];
   const draftEntries: string[] = [];
+  // 追加: 生成時に直接 basename -> varName を保持
+  const importVariableByBasename: Record<string, string> = {};
   let importIndex = 0;
   function addImport(c: ClassifiedFile): string {
     const varName = `b${importIndex++}`;
@@ -200,6 +202,7 @@ async function generate() {
       ? c.relImport.replace(/\.ts$/, '.js')
       : c.relImport + '.js';
     importLines.push(`import ${varName} from '${runtimeImport}';`);
+    importVariableByBasename[c.basename] = varName; // ここで即マッピング
     return varName;
   }
   for (const c of published) {
@@ -235,22 +238,7 @@ async function generate() {
   stateKeys.push(...extraStates);
   const perStateMapDecls: string[] = [];
   const perStateMapEntries: string[] = [];
-  // Rebuild import variable association deterministically to map basenames -> variable names
-  // (Simpler than tracking individually above)
-  const importVariableByBasename: Record<string, string> = {};
-  importLines.forEach((line) => {
-    // pattern: import b12 from './path';
-    const m = line.match(/import\s+(\w+)\s+from/);
-    if (!m) return;
-    const varName = m[1];
-    // Find file whose relImport matches
-    const imp = line.match(/from\s+'([^']+)'/);
-    if (!imp) return;
-    const rel = imp[1];
-    const cf = classified.find((c) => c.relImport === rel);
-    if (cf) importVariableByBasename[cf.basename] = varName;
-  });
-  // genericStateMapBlocks removed (no longer needed)
+  // 不要だった逆解析ロジックを削除 (importLines からの再マッピング)
   for (const state of stateKeys) {
     const filesForState = byState[state] ?? [];
     const entries = filesForState
