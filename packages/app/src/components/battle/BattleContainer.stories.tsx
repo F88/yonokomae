@@ -30,6 +30,7 @@ function makeSampleBattle(overrides?: Partial<Battle>): Battle {
     id: 'sample-battle-1',
     themeId: 'history',
     significance: 'low',
+    publishState: 'published',
     title: 'YONO vs KOMAE',
     subtitle: 'A classic showdown',
     narrative: {

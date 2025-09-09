@@ -16,6 +16,7 @@ const sampleBattle: Battle = {
   id: 'battle_story_sample_001',
   themeId: 'history',
   significance: 'medium',
+  publishState: 'published',
   title: 'Sample Battle Title',
   subtitle: 'A subtitle for the sample',
   narrative: {

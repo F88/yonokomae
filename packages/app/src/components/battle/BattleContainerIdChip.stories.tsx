@@ -16,6 +16,7 @@ const sampleBattle: Battle = {
   id: 'battle_2025_09_05_001',
   themeId: 'history',
   significance: 'medium',
+  publishState: 'published',
   title: 'Bridge Stand-off',
   subtitle: 'Control the crossing',
   narrative: {
