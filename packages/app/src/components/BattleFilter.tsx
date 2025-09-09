@@ -272,11 +272,13 @@ export function BattleFilter({
                 className="truncate"
                 showThemeIcon
               />
-              <PublishStateChip
-                state={seed.publishState ?? 'published'}
-                variant="outline"
-                showLabel={false}
-              />
+              {seed.publishState && seed.publishState !== 'published' && (
+                <PublishStateChip
+                  state={seed.publishState ?? 'published'}
+                  variant="outline"
+                  showLabel={false}
+                />
+              )}
             </div>
           ))}
           {filtered.length === 0 && (
