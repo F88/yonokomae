@@ -58,7 +58,7 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 - **Catalog Package**: `@yonokomae/catalog` (列挙 / 定数 / ドメインカタログ)
 - **Type Packages**: `@yonokomae/types` (型), `@yonokomae/schema` (Zod スキーマ)
 - **Data Packages**:
-    - `@yonokomae/data-battle-seeds` - Statistical municipal comparison battles
+    - `@yonokomae/data-battle-seeds` - Statistical municipal comparison battles (unified publishState-aware index)
     - `@yonokomae/data-historical-evidence` - Fictional historical scenarios
     - `@yonokomae/data-news-seeds` - News-style demonstration samples
 - **Mock API**: `mock-api/` ローカル開発用スタブサーバ
@@ -101,6 +101,7 @@ yonokomae/
     - Usage examples showcase with category-based organization
     - User testimonials with marquee animation effects
     - TSV export functionality for usage data and user voices
+- publishState-aware seed lifecycle (draft/review/archived surfaced via chips)
 - Robust loading and error states
     - Async judgement with simulated latency
     - Shadcn skeleton placeholders on the battle field

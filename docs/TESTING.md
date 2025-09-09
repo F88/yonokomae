@@ -170,6 +170,18 @@ nearest matching algorithm only for real iOS touch environments (never desktop
 emulation). Tests should validate the resulting UI state (the intended mode is
 highlighted and activated) rather than internal correction heuristics.
 
+## Battle Index Generation Regression Points
+
+The unified battle index generator (generate-battle-index.ts) should remain stable. Suggested regression assertions (unit or snapshot style):
+
+- Duplicate basename or duplicate explicit `id` causes the generator to exit non-zero (negative test harness).
+- Missing `publishState` defaults to `published` and still appears in `publishedBattleMap`.
+- Empty states still produce an empty object map (e.g. `reviewBattleMap` when no review seeds).
+- Adding a new state populates `publishStateKeys` in predictable order (published,draft,review,archived,<extras sorted>).
+- `battlesByThemeId[themeId]` arrays are sorted by `battle.id`.
+
+Lightweight approach: invoke the script in a temp workspace copy with synthetic seeds and assert generated file substrings instead of full snapshot brittleness.
+
 ## CI/CD
 
 Our CI pipeline runs all checks, including linting, type checking, data package validation, and all forms of tests. The pipeline validates:

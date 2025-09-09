@@ -185,7 +185,6 @@ pnpm --filter @yonokomae/data-battle-seeds run generate:battles
 インデックス生成スクリプト:
 
 - `generate-battle-index.ts` 全シード + 正規化 state
-- `generate-draft-index.ts` 非 `published` の列挙
 
 新しい state を追加する手順:
 
@@ -563,7 +562,7 @@ iOS Safari でタップ時に意図しないモードが選択される事象を
 使用例:
 
 ```bash
-# 任意: ��ル準備を強制
+# 任意: ビルド準備を強制
 pnpm run ops:prepare
 
 # 推奨: pnpm scripts 経由 (必要なら自動ビルド)
@@ -608,7 +607,7 @@ pnpm run ops:export-users-voice-to-tsv -- --help
 - `--format=json` で機械可読: 分布のドリフト検知や CI 比較に利用可能
 - `jq` 例: `pnpm run ops:analyze-battle-seeds -- --format=json | jq '.byTheme.history'`
 - データ更新後に統計サマリのアーティファクト化に活用
-- フィルタフラグ: `--published-only` または `--drafts-only` (同時��定不可)
+- フィルタフラグ: `--published-only` または `--drafts-only` (同時指定不可)
 
 テスト: `src/ops/__tests__/export-cli.test.ts` 参照。
 
