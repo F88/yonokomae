@@ -71,257 +71,105 @@ describe('DebugInfo', () => {
   });
 
   describe('Console Log Interception', () => {
-    it('should capture debug console.log messages', async () => {
+    const openOverlay = async () => {
+      const button = screen.getByRole('button', { name: /show debug logs/i });
+      fireEvent.click(button);
+      await waitFor(() => expect(screen.getByText(/Debug Logs/)).toBeTruthy());
+    };
+
+    it('captures debug console.log messages', async () => {
       render(<DebugInfo />);
-
-      // Trigger triple tap to show debug overlay
-      const document = screen
-        .getByText('Triple tap to show debug logs')
-        .closest('div')?.parentElement;
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-
-      // Wait for the debug overlay to appear
-      await waitFor(() => {
-        expect(screen.getByText(/Debug Logs/)).toBeInTheDocument();
-      });
-
-      // Trigger a debug log
+      await openOverlay();
       act(() => {
         console.log('[DEBUG] Test message', { test: 'data' });
       });
-
-      // Check if the debug message appears in the overlay
       await waitFor(() => {
-        expect(
-          screen.getByText(/LOG: \[DEBUG\] Test message/),
-        ).toBeInTheDocument();
+        expect(screen.getByText(/LOG: \[DEBUG\] Test message/)).toBeTruthy();
       });
-
-      // Check if the data is properly serialized and displayed
-      expect(screen.getByText(/"test": "data"/)).toBeInTheDocument();
+      expect(screen.getByText(/"test": "data"/)).toBeTruthy();
     });
 
-    it('should capture debug console.debug messages', async () => {
+    it('captures debug console.debug messages', async () => {
       render(<DebugInfo />);
-
-      // Show debug overlay
-      const document = screen
-        .getByText('Triple tap to show debug logs')
-        .closest('div')?.parentElement;
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Debug Logs/)).toBeInTheDocument();
-      });
-
-      // Trigger a debug message
+      await openOverlay();
       act(() => {
         console.debug('[DEBUG] Debug message', { debug: true });
       });
-
       await waitFor(() => {
-        expect(
-          screen.getByText(/DEBUG: \[DEBUG\] Debug message/),
-        ).toBeInTheDocument();
+        expect(screen.getByText(/DEBUG: \[DEBUG\] Debug message/)).toBeTruthy();
       });
-
-      expect(screen.getByText(/"debug": true/)).toBeInTheDocument();
+      expect(screen.getByText(/"debug": true/)).toBeTruthy();
     });
 
-    it('should ignore non-debug console messages', async () => {
+    it('ignores non-debug messages', async () => {
       render(<DebugInfo />);
-
-      // Show debug overlay
-      const document = screen
-        .getByText('Triple tap to show debug logs')
-        .closest('div')?.parentElement;
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Debug Logs/)).toBeInTheDocument();
-      });
-
-      // Trigger non-debug messages
+      await openOverlay();
       act(() => {
         console.log('Regular log message');
         console.debug('Regular debug message');
       });
-
-      // These should not appear in the debug overlay
-      expect(screen.queryByText(/Regular log message/)).not.toBeInTheDocument();
-      expect(
-        screen.queryByText(/Regular debug message/),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText(/Regular log message/)).toBeNull();
+      expect(screen.queryByText(/Regular debug message/)).toBeNull();
     });
 
-    it('should handle circular reference objects gracefully', async () => {
+    it('handles circular reference objects', async () => {
       render(<DebugInfo />);
-
-      // Show debug overlay
-      const document = screen
-        .getByText('Triple tap to show debug logs')
-        .closest('div')?.parentElement;
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Debug Logs/)).toBeInTheDocument();
-      });
-
-      // Create circular reference
+      await openOverlay();
       const circularObj: any = { name: 'test' };
       circularObj.self = circularObj;
-
       act(() => {
         console.log('[DEBUG] Circular object', circularObj);
       });
-
       await waitFor(() => {
-        expect(
-          screen.getByText(/Circular reference detected/),
-        ).toBeInTheDocument();
+        expect(screen.getByText(/Circular reference detected/)).toBeTruthy();
       });
     });
 
-    it('should limit logs to last 20 entries', async () => {
+    it('limits logs to last 20 entries', async () => {
       render(<DebugInfo />);
-
-      // Show debug overlay
-      const document = screen
-        .getByText('Triple tap to show debug logs')
-        .closest('div')?.parentElement;
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Debug Logs/)).toBeInTheDocument();
-      });
-
-      // Add 25 debug messages
+      await openOverlay();
       act(() => {
         for (let i = 0; i < 25; i++) {
           console.log(`[DEBUG] Message ${i}`);
         }
       });
-
       await waitFor(() => {
-        // Should show "Debug Logs (20)" - limited to 20 entries
-        expect(screen.getByText('Debug Logs (20)')).toBeInTheDocument();
+        expect(screen.getByText('Debug Logs (20)')).toBeTruthy();
       });
-
-      // First 5 messages should not be visible (they were removed)
-      expect(screen.queryByText(/Message 0/)).not.toBeInTheDocument();
-      expect(screen.queryByText(/Message 4/)).not.toBeInTheDocument();
-
-      // Last 20 messages should be visible
-      expect(screen.getByText(/Message 5/)).toBeInTheDocument();
-      expect(screen.getByText(/Message 24/)).toBeInTheDocument();
+      expect(screen.queryByText(/Message 0/)).toBeNull();
+      expect(screen.queryByText(/Message 4/)).toBeNull();
+      expect(screen.getByText(/Message 5/)).toBeTruthy();
+      expect(screen.getByText(/Message 24/)).toBeTruthy();
     });
   });
 
-  describe('Triple Tap Toggle', () => {
-    it('should toggle visibility on triple tap', async () => {
+  describe('Badge Toggle', () => {
+    it('opens overlay when badge is clicked', async () => {
       render(<DebugInfo />);
+      const button = screen.getByRole('button', { name: /show debug logs/i });
+      expect(button).toBeTruthy();
+      fireEvent.click(button);
+      await waitFor(() => expect(screen.getByText(/Debug Logs/)).toBeTruthy());
+    });
 
-      // Initially should show hint message
-      expect(
-        screen.getByText('Triple tap to show debug logs'),
-      ).toBeInTheDocument();
-
-      const document = screen
-        .getByText('Triple tap to show debug logs')
-        .closest('div')?.parentElement;
-
-      // Triple tap
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-
-      // Debug overlay should appear
-      await waitFor(() => {
-        expect(screen.getByText(/Debug Logs/)).toBeInTheDocument();
-      });
-
-      // Triple tap again to hide
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-
-      // Should show hint again
-      await waitFor(() => {
+    it('hides overlay when Hide button clicked', async () => {
+      render(<DebugInfo />);
+      fireEvent.click(screen.getByRole('button', { name: /show debug logs/i }));
+      await waitFor(() => expect(screen.getByText(/Debug Logs/)).toBeTruthy());
+      fireEvent.click(screen.getByText('Hide'));
+      await waitFor(() =>
         expect(
-          screen.getByText('Triple tap to show debug logs'),
-        ).toBeInTheDocument();
-      });
-    });
-
-    it('should reset tap count after timeout', async () => {
-      render(<DebugInfo />);
-
-      const document = screen
-        .getByText('Triple tap to show debug logs')
-        .closest('div')?.parentElement;
-
-      // Two taps, then wait, then one tap
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-
-      // Wait more than 500ms (the timeout)
-      await new Promise((resolve) => setTimeout(resolve, 600));
-
-      fireEvent.click(document!);
-
-      // Should not show debug overlay (tap count should have reset)
-      expect(screen.queryByText(/Debug Logs/)).not.toBeInTheDocument();
-      expect(
-        screen.getByText('Triple tap to show debug logs'),
-      ).toBeInTheDocument();
-    });
-
-    it('should work with touch events', async () => {
-      render(<DebugInfo />);
-
-      const document = screen
-        .getByText('Triple tap to show debug logs')
-        .closest('div')?.parentElement;
-
-      // Triple touch
-      fireEvent.touchEnd(document!);
-      fireEvent.touchEnd(document!);
-      fireEvent.touchEnd(document!);
-
-      // Debug overlay should appear
-      await waitFor(() => {
-        expect(screen.getByText(/Debug Logs/)).toBeInTheDocument();
-      });
+          screen.getByRole('button', { name: /show debug logs/i }),
+        ).toBeTruthy(),
+      );
     });
   });
 
   describe('Clipboard Functionality', () => {
     beforeEach(async () => {
       render(<DebugInfo />);
-
-      // Show debug overlay
-      const document = screen
-        .getByText('Triple tap to show debug logs')
-        .closest('div')?.parentElement;
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Debug Logs/)).toBeInTheDocument();
-      });
-
-      // Add some test logs
+      fireEvent.click(screen.getByRole('button', { name: /show debug logs/i }));
+      await waitFor(() => expect(screen.getByText(/Debug Logs/)).toBeTruthy());
       act(() => {
         console.log('[DEBUG] First message', { data: 'first' });
         console.log('[DEBUG] Second message', { data: 'second' });
@@ -330,17 +178,17 @@ describe('DebugInfo', () => {
 
     it('should show Copy All button', async () => {
       await waitFor(() => {
-        expect(screen.getByText(/First message/)).toBeInTheDocument();
-        expect(screen.getByText(/Second message/)).toBeInTheDocument();
+        expect(screen.getByText(/First message/)).toBeTruthy();
+        expect(screen.getByText(/Second message/)).toBeTruthy();
       });
 
       const copyAllButton = screen.getByText('Copy All');
-      expect(copyAllButton).toBeInTheDocument();
+      expect(copyAllButton).toBeTruthy();
     });
 
     it('should show individual copy buttons on hover', async () => {
       await waitFor(() => {
-        expect(screen.getByText(/First message/)).toBeInTheDocument();
+        expect(screen.getByText(/First message/)).toBeTruthy();
       });
 
       // Individual copy buttons should exist (even if not visible)
@@ -350,14 +198,14 @@ describe('DebugInfo', () => {
 
     it('should clear logs when Clear button is clicked', async () => {
       await waitFor(() => {
-        expect(screen.getByText('Debug Logs (2)')).toBeInTheDocument();
+        expect(screen.getByText('Debug Logs (2)')).toBeTruthy();
       });
 
       const clearButton = screen.getByText('Clear');
       fireEvent.click(clearButton);
 
       await waitFor(() => {
-        expect(screen.getByText('Debug Logs (0)')).toBeInTheDocument();
+        expect(screen.getByText('Debug Logs (0)')).toBeTruthy();
       });
     });
   });
@@ -365,20 +213,8 @@ describe('DebugInfo', () => {
   describe('UI Controls', () => {
     beforeEach(async () => {
       render(<DebugInfo />);
-
-      // Show debug overlay
-      const document = screen
-        .getByText('Triple tap to show debug logs')
-        .closest('div')?.parentElement;
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-      fireEvent.click(document!);
-
-      await waitFor(() => {
-        expect(screen.getByText(/Debug Logs/)).toBeInTheDocument();
-      });
-
-      // Add test logs
+      fireEvent.click(screen.getByRole('button', { name: /show debug logs/i }));
+      await waitFor(() => expect(screen.getByText(/Debug Logs/)).toBeTruthy());
       act(() => {
         console.log('[DEBUG] Test message 1');
         console.log('[DEBUG] Test message 2');
@@ -387,24 +223,24 @@ describe('DebugInfo', () => {
 
     it('should clear all logs when clicking Clear button', async () => {
       await waitFor(() => {
-        expect(screen.getByText('Debug Logs (2)')).toBeInTheDocument();
-        expect(screen.getByText(/Test message 1/)).toBeInTheDocument();
-        expect(screen.getByText(/Test message 2/)).toBeInTheDocument();
+        expect(screen.getByText('Debug Logs (2)')).toBeTruthy();
+        expect(screen.getByText(/Test message 1/)).toBeTruthy();
+        expect(screen.getByText(/Test message 2/)).toBeTruthy();
       });
 
       const clearButton = screen.getByText('Clear');
       fireEvent.click(clearButton);
 
       await waitFor(() => {
-        expect(screen.getByText('Debug Logs (0)')).toBeInTheDocument();
-        expect(screen.queryByText(/Test message 1/)).not.toBeInTheDocument();
-        expect(screen.queryByText(/Test message 2/)).not.toBeInTheDocument();
+        expect(screen.getByText('Debug Logs (0)')).toBeTruthy();
+        expect(screen.queryByText(/Test message 1/)).toBeNull();
+        expect(screen.queryByText(/Test message 2/)).toBeNull();
       });
     });
 
     it('should hide overlay when clicking Hide button', async () => {
       await waitFor(() => {
-        expect(screen.getByText(/Debug Logs/)).toBeInTheDocument();
+        expect(screen.getByText(/Debug Logs/)).toBeTruthy();
       });
 
       const hideButton = screen.getByText('Hide');
@@ -412,15 +248,15 @@ describe('DebugInfo', () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText('Triple tap to show debug logs'),
-        ).toBeInTheDocument();
-        expect(screen.queryByText(/Debug Logs/)).not.toBeInTheDocument();
+          screen.getByRole('button', { name: /show debug logs/i }),
+        ).toBeTruthy();
+        expect(screen.queryByText(/Debug Logs/)).toBeNull();
       });
     });
 
     it('should display timestamps correctly', async () => {
       await waitFor(() => {
-        expect(screen.getByText(/Test message 1/)).toBeInTheDocument();
+        expect(screen.getByText(/Test message 1/)).toBeTruthy();
       });
 
       // Check that timestamps are displayed (they should be in time format)
@@ -430,7 +266,7 @@ describe('DebugInfo', () => {
 
     it('should show log count in header', async () => {
       await waitFor(() => {
-        expect(screen.getByText('Debug Logs (2)')).toBeInTheDocument();
+        expect(screen.getByText('Debug Logs (2)')).toBeTruthy();
       });
 
       // Add another log
@@ -439,7 +275,7 @@ describe('DebugInfo', () => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText('Debug Logs (3)')).toBeInTheDocument();
+        expect(screen.getByText('Debug Logs (3)')).toBeTruthy();
       });
     });
   });
@@ -449,32 +285,11 @@ describe('DebugInfo', () => {
       vi.stubEnv('NODE_ENV', 'test');
     });
 
-    it('should not intercept console in test environment', () => {
+    it('does not intercept console in test environment', () => {
       const { unmount } = render(<DebugInfo />);
-
-      // Console methods should remain unchanged in test env
       expect(console.log).toBe(originalConsoleLog);
       expect(console.debug).toBe(originalConsoleDebug);
-
       unmount();
-    });
-
-    it('should not add event listeners in test environment', () => {
-      const addEventListenerSpy = vi.spyOn(document, 'addEventListener');
-
-      render(<DebugInfo />);
-
-      // Should not add touch/click event listeners in test env
-      expect(addEventListenerSpy).not.toHaveBeenCalledWith(
-        'touchend',
-        expect.any(Function),
-      );
-      expect(addEventListenerSpy).not.toHaveBeenCalledWith(
-        'click',
-        expect.any(Function),
-      );
-
-      addEventListenerSpy.mockRestore();
     });
   });
 
@@ -495,24 +310,6 @@ describe('DebugInfo', () => {
       expect(console.debug).toBe(originalConsoleDebug);
     });
 
-    it('should remove event listeners on unmount', () => {
-      vi.stubEnv('NODE_ENV', 'development');
-      const removeEventListenerSpy = vi.spyOn(document, 'removeEventListener');
-
-      const { unmount } = render(<DebugInfo />);
-
-      unmount();
-
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'touchend',
-        expect.any(Function),
-      );
-      expect(removeEventListenerSpy).toHaveBeenCalledWith(
-        'click',
-        expect.any(Function),
-      );
-
-      removeEventListenerSpy.mockRestore();
-    });
+    // Event listener removal test removed because component no longer attaches global listeners.
   });
 });
