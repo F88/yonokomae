@@ -1,4 +1,7 @@
-import { battleSeedsByFile } from '@yonokomae/data-battle-seeds';
+import {
+  battleSeedsByFile,
+  publishStateKeys,
+} from '@yonokomae/data-battle-seeds';
 import { battleThemeCatalog } from '@yonokomae/catalog';
 import { useMemo, useState, useCallback, useEffect } from 'react';
 import { ThemeChip } from '@/components/battle/ThemeChip';
@@ -20,24 +23,36 @@ export type BattleFilterProps = {
   /** Selected theme id (undefined => all themes). */
   selectedThemeId?: string;
   onSelectedThemeIdChange?: (id: string | undefined) => void;
+  /** Selected publishState (undefined => all states). */
+  selectedPublishState?: string;
+  onSelectedPublishStateChange?: (state: string | undefined) => void;
   className?: string;
   show?: boolean;
   showBattleCount?: boolean; // Whether to show the battle count next to "テーマ" (default true)
   showBattleChips?: boolean; // Whether to show the battle chips below the filter (default true)
+  /** Show the publishState select filter (default true). */
+  showPublishStateFilter?: boolean;
+  /** Show counts in publishState select labels (default true). */
+  showPublishStateCounts?: boolean;
 };
 
 export function BattleFilter({
   themeIdsFilter,
   selectedThemeId,
   onSelectedThemeIdChange,
+  selectedPublishState,
+  onSelectedPublishStateChange,
   className,
   show = true,
   showBattleCount = true,
   showBattleChips = true,
+  showPublishStateFilter = true,
+  showPublishStateCounts = true,
 }: BattleFilterProps) {
   interface BattleShape {
     title?: string;
     themeId?: string;
+    publishState?: string;
   }
 
   const seeds = useMemo(() => {
@@ -48,7 +63,12 @@ export function BattleFilter({
     return Object.entries(battleSeedsByFile)
       .map(([file, battle]) => {
         const b = battle as unknown as BattleShape;
-        return { file, title: b.title || file, themeId: b.themeId };
+        return {
+          file,
+          title: b.title || file,
+          themeId: b.themeId,
+          publishState: b.publishState ?? 'published',
+        };
       })
       .filter((s) =>
         allowedSet ? (s.themeId ? allowedSet.has(s.themeId) : false) : true,
@@ -81,6 +101,14 @@ export function BattleFilter({
     setLocalTheme(selectedThemeId);
   }, [selectedThemeId]);
   const themeId = localTheme;
+  // publishState local mirror (optimistic)
+  const [localPublishState, setLocalPublishState] = useState<
+    string | undefined
+  >(selectedPublishState);
+  useEffect(() => {
+    setLocalPublishState(selectedPublishState);
+  }, [selectedPublishState]);
+  const publishState = localPublishState;
 
   const themeOptions = useMemo(() => {
     const ids = new Set<string>();
@@ -94,9 +122,17 @@ export function BattleFilter({
   }, [seeds]);
 
   const filtered = useMemo(() => {
-    if (!themeId) return seeds;
-    return seeds.filter((s) => (s.themeId ? s.themeId === themeId : false));
-  }, [seeds, themeId]);
+    let list = seeds;
+    if (themeId) {
+      list = list.filter((s) => (s.themeId ? s.themeId === themeId : false));
+    }
+    if (publishState) {
+      list = list.filter(
+        (s) => (s.publishState ?? 'published') === publishState,
+      );
+    }
+    return list;
+  }, [seeds, themeId, publishState]);
 
   const selectThemeId = useCallback(
     (id: string | undefined) => {
@@ -106,6 +142,26 @@ export function BattleFilter({
     },
     [onSelectedThemeIdChange],
   );
+  const selectPublishState = useCallback(
+    (state: string | undefined) => {
+      setLocalPublishState(state);
+      onSelectedPublishStateChange?.(state);
+    },
+    [onSelectedPublishStateChange],
+  );
+  // Counts (final filtered definition A): compute per publishState within the final filtered result.
+  const publishStateCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const key of publishStateKeys) counts[key] = 0;
+    for (const s of filtered) {
+      counts[s.publishState ?? 'published'] =
+        (counts[s.publishState ?? 'published'] ?? 0) + 1;
+    }
+    return counts;
+  }, [filtered]);
+
+  const totalCount = filtered.length;
+
   if (!show) return null;
 
   return (
@@ -122,6 +178,29 @@ export function BattleFilter({
           <span className="rounded bg-muted px-2 py-0.5" title="Filtered count">
             {filtered.length}
           </span>
+        )}
+        {showPublishStateFilter && (
+          <select
+            className="ml-2 rounded border px-2 py-0.5 text-[11px] sm:text-xs"
+            aria-label="publishState filter"
+            data-testid="battle-filter-publish-state"
+            value={publishState ?? ''}
+            onChange={(e) => selectPublishState(e.target.value || undefined)}
+          >
+            <option value="">
+              (all states)
+              {showPublishStateCounts ? ` (${totalCount})` : ''}
+            </option>
+            {publishStateKeys.map((ps) => {
+              const count = publishStateCounts[ps] ?? 0;
+              return (
+                <option key={ps} value={ps} disabled={count === 0}>
+                  {ps}
+                  {showPublishStateCounts ? ` (${count})` : ''}
+                </option>
+              );
+            })}
+          </select>
         )}
       </div>
       <div

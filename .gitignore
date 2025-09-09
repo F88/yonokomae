@@ -54,6 +54,8 @@ coverage/
 data/battle-seeds/src/**/*.js
 data/historical-evidence/src/**/*.js
 data/news-seeds/src/**/*.js
+
+# *.d.ts を追加すると問題が発生するかも.
 data/battle-seeds/src/**/*.d.ts
 data/historical-evidence/src/**/*.d.ts
 data/news-seeds/src/**/*.d.ts

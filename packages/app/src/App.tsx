@@ -278,6 +278,7 @@ function App() {
       id: uid('battle'),
       themeId: 'history',
       significance: 'medium',
+      publishState: 'published',
       title: 'Writing report...',
       subtitle: 'Please wait',
       narrative: {
@@ -332,6 +333,7 @@ function App() {
         id: uid('battle'),
         themeId: 'history',
         significance: 'low',
+        publishState: 'published',
         title: 'Failed to generate report',
         subtitle: 'Error',
         narrative: {
@@ -387,7 +389,7 @@ function App() {
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container flex h-14 items-center">
             <Header mode={mode} />
-            {mode?.id === 'historical-research' && battleSeedFile && (
+            {/* {mode?.id === 'historical-research' && battleSeedFile && (
               <span
                 className="ml-4 inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium text-muted-foreground"
                 title="Active battle seed (fixed)"
@@ -395,7 +397,7 @@ function App() {
               >
                 Seed: {battleSeedFile}
               </span>
-            )}
+            )} */}
           </div>
         </header>
 
