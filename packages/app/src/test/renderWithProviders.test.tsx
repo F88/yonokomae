@@ -21,7 +21,7 @@ describe('renderWithProviders', () => {
       description: 'Test description',
       enabled: true,
     };
-    
+
     renderWithProviders(<TestComponent />, { mode: mockMode });
     expect(screen.getByTestId('test-component')).toBeInTheDocument();
   });
