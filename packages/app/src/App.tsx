@@ -43,6 +43,11 @@ function App() {
 
   const { generateReport } = useGenerateReport(mode, battleSeedFile);
 
+  // Active publishState filter (mirrors theme filter wiring). Undefined => all states.
+  const [activePublishState, setActivePublishState] = useState<
+    string | undefined
+  >(undefined);
+
   // Helper: safe media query checks for non-browser/test envs
   const supportsMatchMedia =
     typeof window !== 'undefined' && typeof window.matchMedia === 'function';
@@ -299,10 +304,19 @@ function App() {
     // Scrolling will occur in the effect after DOM updates
 
     try {
+      const battleFilter:
+        | { battle: { themeId?: string; publishState?: string } }
+        | undefined =
+        activeThemeId || activePublishState
+          ? {
+              battle: {
+                themeId: activeThemeId,
+                publishState: activePublishState as string | undefined,
+              },
+            }
+          : undefined;
       const next = await generateReport(
-        activeThemeId
-          ? { filter: { battle: { themeId: activeThemeId } } }
-          : undefined,
+        battleFilter ? { filter: battleFilter } : undefined,
       );
       // Replace the placeholder at the captured index
       let lastIdAfterUpdate: string | undefined;
@@ -357,6 +371,7 @@ function App() {
     setReports([]);
     setActiveThemeId(undefined);
     setBattleSeedFile(undefined);
+    setActivePublishState(undefined);
 
     // Scroll to top after clearing
     // scrollToY(0, { behavior: 'smooth' });
@@ -456,6 +471,8 @@ function App() {
                 onBattleSeedChange={(f) => setBattleSeedFile(f)}
                 selectedThemeId={activeThemeId}
                 onSelectedThemeIdChange={(id) => setActiveThemeId(id)}
+                selectedPublishState={activePublishState}
+                onSelectedPublishStateChange={(s) => setActivePublishState(s)}
               />
             </div>
           )}
