@@ -138,4 +138,15 @@ describe('BattleFilter (chip single-select)', () => {
     expect(archived).toBeTruthy();
     expect(archived?.disabled).toBe(true);
   });
+
+  it('renders publish state chip inline for non-published battles only', () => {
+    render(<BattleFilter />);
+    const list = screen.getByTestId('battle-filter-list');
+    // Should have chips for draft and review items, not for published ones
+    const stateChips = list.querySelectorAll(
+      '[data-testid="publish-state-chip"]',
+    );
+    // draft + review = 2
+    expect(stateChips.length).toBe(2);
+  });
 });
