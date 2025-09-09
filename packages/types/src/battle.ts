@@ -145,7 +145,7 @@ export interface Battle {
    *
    * Omitted field MUST be treated as `published` for backward compatibility.
    */
-  publishState?: 'draft' | 'review' | 'published' | 'archived';
+  publishState: 'draft' | 'review' | 'published' | 'archived';
   /**
    * The main title of the battle scenario.
    *
