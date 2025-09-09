@@ -54,5 +54,3 @@ export const SignificanceChip: FC<SignificanceChipProps> = ({
     </Badge>
   );
 };
-
-export default SignificanceChip;

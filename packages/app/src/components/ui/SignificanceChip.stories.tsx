@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { SignificanceChip } from './significance-chip';
+import { SignificanceChip } from './SignificanceChip';
 
 const meta: Meta<typeof SignificanceChip> = {
   title: 'Battle/SignificanceChip',

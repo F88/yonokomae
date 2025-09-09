@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { SignificanceChip } from './significance-chip';
+import { SignificanceChip } from './SignificanceChip';
 
 describe('SignificanceChip', () => {
   it('renders with correct significance level and icon', () => {
