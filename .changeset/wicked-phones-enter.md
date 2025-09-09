@@ -6,4 +6,4 @@
 '@yonokomae/app': minor
 ---
 
-add hoge to Battles.
+Add publish states for battles.
