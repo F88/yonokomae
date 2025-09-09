@@ -70,7 +70,12 @@ interface StatsSummary {
     yonoPower: number;
     combined: number;
   }>;
-  index: Array<{ themeId: string; id: string; title: string }>;
+  index: Array<{
+    themeId: string;
+    id: string;
+    title: string;
+    subtitle: string;
+  }>;
 }
 
 function locateBattleDistDir(): string {
@@ -160,7 +165,12 @@ function calcStats(battles: Battle[]): StatsSummary {
     .slice(0, 5);
 
   const index = battles
-    .map((b) => ({ themeId: b.themeId, id: b.id, title: b.title }))
+    .map((b) => ({
+      themeId: b.themeId,
+      id: b.id,
+      title: b.title,
+      subtitle: b.subtitle,
+    }))
     // Order by themeId, then title, then id (as requested: theme,title,id)
     .sort((a, b) => {
       if (a.themeId !== b.themeId) return a.themeId.localeCompare(b.themeId);
@@ -216,6 +226,8 @@ function renderText(stats: StatsSummary): string {
       `  ${theme.padEnd(12, ' ')} ${v.count.toString().padStart(3, ' ')}  ${formatPercent(v.ratio)}%`,
     );
   }
+
+  // Significance
   lines.push('');
   lines.push(chalk.bold('By Significance:'));
   const sigEntries = Object.entries(stats.bySignificance).sort(
@@ -226,6 +238,7 @@ function renderText(stats: StatsSummary): string {
       `  ${sig.padEnd(10, ' ')} ${v.count.toString().padStart(3, ' ')}  ${formatPercent(v.ratio)}%`,
     );
   }
+
   // Cross-tab (Theme x Significance)
   lines.push('');
   lines.push(chalk.bold('Theme x Significance:'));
@@ -270,6 +283,8 @@ function renderText(stats: StatsSummary): string {
       String(stats.total).padStart(5, ' ');
     lines.push(totalRow);
   }
+
+  // Power stats
   lines.push('');
   lines.push(chalk.bold('Power Stats:'));
   lines.push(
@@ -281,6 +296,8 @@ function renderText(stats: StatsSummary): string {
   lines.push(
     `  combined min=${stats.power.combined.min} max=${stats.power.combined.max} avg=${stats.power.combined.avg.toFixed(1)}`,
   );
+
+  // Top 5 Battles by combined power
   lines.push('');
   lines.push(chalk.bold('Top 5 Battles (by combined power):'));
   for (const b of stats.topCombined) {
@@ -291,12 +308,13 @@ function renderText(stats: StatsSummary): string {
   if (stats.topCombined.length === 0) {
     lines.push('  (no battles)');
   }
+
+  // Battle Index (TSV)
   lines.push('');
-  lines.push(chalk.bold('Battle Index (themeId,title,id):'));
+  lines.push(chalk.bold('Battle Index (TSV)'));
+  lines.push(['Theme', 'Title', 'Subtitle', 'ID'].join('\t'));
   for (const row of stats.index) {
-    lines.push(
-      `  ${row.themeId.padEnd(12, ' ')} ${row.title.padEnd(30, ' ')} ${row.id}`,
-    );
+    lines.push([row.themeId, row.title, row.subtitle, row.id].join('\t'));
   }
   return lines.join('\n');
 }
