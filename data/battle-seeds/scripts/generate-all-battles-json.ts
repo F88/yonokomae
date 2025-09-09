@@ -48,7 +48,15 @@ async function readRecursive(dir: string): Promise<string[]> {
   let entries: string[] = [];
   try {
     entries = await fs.readdir(dir);
-  } catch {
+  } catch (e) {
+    // ENOENT は想定され得る(まだ dist が生成されていない)ので静かに空扱い。
+    // それ以外 (EACCES など) は潜在的な問題なので警告を出して気付きやすくする。
+    const code = (e as any)?.code;
+    if (code !== 'ENOENT') {
+      console.warn(
+        `[generate-all-battles-json] warn: failed to read dir ${dir} code=${code} msg=${e instanceof Error ? e.message : e}`,
+      );
+    }
     return [];
   }
   const out: string[] = [];
