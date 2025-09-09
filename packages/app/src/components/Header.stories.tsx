@@ -24,6 +24,7 @@ export const WithMode: Story = {
       title: 'Demo EN',
       description: 'English demo',
       enabled: true,
+      srLabel: 'English demo mode',
     },
   },
 };

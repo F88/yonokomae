@@ -18,18 +18,21 @@ const modes: PlayMode[] = [
     title: 'Demo EN',
     description: 'English demo',
     enabled: true,
+    srLabel: 'English demo mode',
   },
   {
     id: 'demo-de',
     title: 'Demo DE',
     description: 'Deutsch demo',
     enabled: true,
+    srLabel: 'Deutsch Demo Modus',
   },
   {
     id: 'historical-research',
     title: 'Historical Research',
     description: 'Evidence-based mode',
     enabled: true,
+    srLabel: 'Historical research mode',
   },
 ];
 

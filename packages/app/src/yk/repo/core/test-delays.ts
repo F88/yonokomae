@@ -34,6 +34,7 @@ async function testDelays() {
     title: 'HISTORICAL RESEARCH',
     description: 'Test mode',
     enabled: true,
+    srLabel: 'Historical research test mode',
   });
   await providerRepo.generateReport();
   const elapsed3 = Date.now() - start3;
