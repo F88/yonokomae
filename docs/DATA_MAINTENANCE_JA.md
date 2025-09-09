@@ -122,16 +122,16 @@ data/battle-seeds/
 
 ### インデックス生成 / ツール
 
-統合インデックスは以下のスクリプトで管理:
+インデックス生成は単一スクリプトに統合されています:
 
-- `data/battle-seeds/scripts/generate-battle-index.ts` : 全バトル（published + 非公開系メタ）を正規化して index 化。
-- `data/battle-seeds/scripts/generate-draft-index.ts` : 非 `published` の下書き列挙。
+- `data/battle-seeds/scripts/generate-battle-index.ts` : 全バトル（published + 非公開系メタ）を正規化し publishState 別マップを含む統合インデックスを生成。
+
+旧 `generate-draft-index.ts` は削除済みです。過去のワークフローは統合ジェネレータに切替えてください。
 
 `__generated/` 配下は手動編集禁止。再生成する:
 
 ```bash
 pnpm tsx data/battle-seeds/scripts/generate-battle-index.ts
-pnpm tsx data/battle-seeds/scripts/generate-draft-index.ts
 ```
 
 ### 新規テーマバトル追加手順
@@ -257,7 +257,7 @@ pnpm run test:all
 - `data(historical): fix typo in tama-river scenario`
 - `data(news): update news-sample-1 with latest data`
 
-## 型システム
+## 型システ���
 
 全データパッケージは以下の共通型を共有：
 

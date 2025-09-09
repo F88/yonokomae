@@ -17,7 +17,7 @@ instructions-for-ais:
 
 ## アーキテクチャ概要
 
-このアプリケーションは、関心事の分離が明確な pnpm monorepo アーキテクチャを採用しています。中心となる概念は以下の通りです。
+このアプリケーションは、関心事の分離が明確な pnpm monorepo アーキテクチャを採用し���います。中心となる概念は以下の通りです。
 
 - **Components**: レンダリングとユーザーインタラクションを担当する UI 要素。
 - **Repositories**: データソース（データパッケージ、API など）を抽象化するデータアクセス層。
@@ -66,7 +66,7 @@ sequenceDiagram
 
 ### リポジトリのインターフェース
 
-中心となるリポジトリの契約（interfaces）は `src/yk/repo/core/repositories.ts` に定義されています。リポジトリは独立データパッケージからデータを消費します。
+中心となるリポジトリの契約（interfaces）は `src/yk/repo/core/repositories.ts` に定義されています。リポジトリは独立デー��パッケージからデータを消費します。
 
 ```mermaid
 classDiagram
@@ -97,7 +97,7 @@ classDiagram
 
 ### バトルシード生成とテーマグルーピング
 
-`@yonokomae/data-battle-seeds` は自動インデックス生成を行います。ジェネレータ
+`@yonokomae/data-battle-seeds` は自動インデックス生成を行います。統合ジェネレータ
 (`data/battle-seeds/scripts/generate-battle-index.ts`) が `src/battle/` を走査し、
 `__generated/index.generated.ts` を生成して以下を提供します:
 
@@ -105,6 +105,8 @@ classDiagram
 - `publishStateKeys`, `battleSeedsByPublishState`, まとめ用 `allBattleMap`
 - UI 利便性のための `battlesByThemeId` と `themeIds` (各テーマ配列は battle id でソート)
 - `ThemeId` 型 (`keyof typeof battlesByThemeId`)
+
+(旧) `generate-draft-index.ts` は統合済みのため削除されました。既存フローは統合スクリプトのみを利用してください。
 
 ルール / 振る舞い:
 
@@ -561,7 +563,7 @@ iOS Safari でタップ時に意図しないモードが選択される事象を
 使用例:
 
 ```bash
-# 任意: フル準備を強制
+# 任意: ��ル準備を強制
 pnpm run ops:prepare
 
 # 推奨: pnpm scripts 経由 (必要なら自動ビルド)
@@ -606,7 +608,7 @@ pnpm run ops:export-users-voice-to-tsv -- --help
 - `--format=json` で機械可読: 分布のドリフト検知や CI 比較に利用可能
 - `jq` 例: `pnpm run ops:analyze-battle-seeds -- --format=json | jq '.byTheme.history'`
 - データ更新後に統計サマリのアーティファクト化に活用
-- フィルタフラグ: `--published-only` または `--drafts-only` (同時指定不可)
+- フィルタフラグ: `--published-only` または `--drafts-only` (同時��定不可)
 
 テスト: `src/ops/__tests__/export-cli.test.ts` 参照。
 

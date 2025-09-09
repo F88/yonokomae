@@ -119,16 +119,16 @@ Rules:
 
 ### Index Generation & Tooling
 
-Two scripts maintain consolidated indexes:
+Unified index generation is handled by a single script:
 
-- `data/battle-seeds/scripts/generate-battle-index.ts` – builds a unified index of all battles (published + non-published metadata) with normalized `publishState`.
-- `data/battle-seeds/scripts/generate-draft-index.ts` – enumerates draft (non-published) seeds for curation workflows.
+- `data/battle-seeds/scripts/generate-battle-index.ts` – builds a unified index of all battles (published + non-published metadata) with normalized `publishState` and per-state maps.
+
+The legacy `generate-draft-index.ts` (draft-only enumeration) has been removed. Any previous workflow invoking it should switch to the unified generator.
 
 Do not manually edit files under `__generated/`; regenerate instead:
 
 ```bash
 pnpm tsx data/battle-seeds/scripts/generate-battle-index.ts
-pnpm tsx data/battle-seeds/scripts/generate-draft-index.ts
 ```
 
 ### Adding a New Themed Battle

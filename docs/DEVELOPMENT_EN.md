@@ -171,10 +171,9 @@ Rules:
 3. Only non-`published` seeds produce a `PublishStateChip` (HistoricalScene + list renderers).
 4. Filtering: repository layer combines `themeId` + `publishState` (disabled states show 0 and are selectable only when count > 0). Unknown states are treated as `published` if no explicit filter.
 
-Index Generation Scripts:
+Index Generation Scripts (Unified):
 
-- `generate-battle-index.ts`: Consolidated map of ALL seeds with normalized state.
-- `generate-draft-index.ts`: Lightweight enumeration of non-`published` seeds.
+- `generate-battle-index.ts`: Consolidated (draft-only legacy generator removed). The former `generate-draft-index.ts` was deprecated and is now removed; any previous workflow should invoke the unified script.
 
 Adding a new state (guideline):
 
@@ -183,17 +182,6 @@ Adding a new state (guideline):
 3. Extend repository normalization fallback (retain defensive default to `published`).
 4. Add test: seed classification + chip rendering + filter option enable/disable.
 5. Update docs (EN → JA sync) & CHANGELOG.
-
-Edge Cases Covered by Tests:
-
-- Missing `publishState` (defaults to `published`).
-- Disabled option for zero-count state (e.g. `archived` when absent).
-- Combined theme + publish state narrowing returns intersection.
-
-Planned follow-ups:
-
-- Optional surfacing of archived items via separate toggle.
-- Editor tooling for state transitions (draft → review → published).
 
 ### Environment Variables
 
