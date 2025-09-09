@@ -144,6 +144,57 @@ When adding new filter fields:
 3. Add tests verifying narrowing & randomness within the constrained pool.
 4. Update this section (EN) then sync `DEVELOPMENT_JA.md`.
 
+### Publish State & Thematic Battle Seed Structure
+
+Recent enhancement introduced an explicit `publishState` lifecycle for battle seeds and a
+themed directory layout (`data/battle-seeds/src/battle/theme/{themeName}/` + `__drafts/`).
+
+Motivations:
+
+- Improve curator workflow (separate incomplete concepts)
+- Enable UI differentiation via `PublishStateChip` (only non-`published` states render)
+- Prepare for future editorial tooling (review queues, archived surfacing)
+
+States & semantics:
+
+| State | Meaning | UI Behavior |
+|-------|---------|-------------|
+| `published` | Canonical, user-visible | Chip hidden |
+| `draft` | Early concept / incomplete | Chip shown |
+| `review` | Pending validation / editorial pass | Chip shown |
+| `archived` | Retired / superseded | Chip shown |
+
+Rules:
+
+1. Files under `__drafts/` MUST specify a non-`published` `publishState`.
+2. Omitted `publishState` defaults to `published` (backward compatibility; may emit future warning).
+3. Only non-`published` seeds produce a `PublishStateChip` (HistoricalScene + list renderers).
+4. Filtering: repository layer combines `themeId` + `publishState` (disabled states show 0 and are selectable only when count > 0). Unknown states are treated as `published` if no explicit filter.
+
+Index Generation Scripts:
+
+- `generate-battle-index.ts`: Consolidated map of ALL seeds with normalized state.
+- `generate-draft-index.ts`: Lightweight enumeration of non-`published` seeds.
+
+Adding a new state (guideline):
+
+1. Add literal to generator regex + `publishStateKeys` export in data package.
+2. Update UI label map (`PublishStateChip`).
+3. Extend repository normalization fallback (retain defensive default to `published`).
+4. Add test: seed classification + chip rendering + filter option enable/disable.
+5. Update docs (EN → JA sync) & CHANGELOG.
+
+Edge Cases Covered by Tests:
+
+- Missing `publishState` (defaults to `published`).
+- Disabled option for zero-count state (e.g. `archived` when absent).
+- Combined theme + publish state narrowing returns intersection.
+
+Planned follow-ups:
+
+- Optional surfacing of archived items via separate toggle.
+- Editor tooling for state transitions (draft → review → published).
+
 ### Environment Variables
 
 The file `.env.example` enumerates supported Vite environment variables. Copy it to one of:
