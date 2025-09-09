@@ -298,6 +298,22 @@ export const battleSeedsByPublishState: Record<PublishStateKey, Battle[]> =
     },
     {} as Record<PublishStateKey, Battle[]>,
   );
+// Grouping by themeId (stable ordering by battle id) for UI layer convenience
+export const battlesByThemeId: Record<string, Battle[]> = Object.values(allBattleMap).reduce(
+  (acc, b) => {
+    (acc[b.themeId] ||= []).push(b);
+    return acc;
+  },
+  {} as Record<string, Battle[]>,
+);
+for (const key of Object.keys(battlesByThemeId)) {
+  const list = battlesByThemeId[key];
+  if (list) {
+    list.sort((a, b) => a.id.localeCompare(b.id));
+  }
+}
+export const themeIds = Object.keys(battlesByThemeId).sort();
+export type ThemeId = keyof typeof battlesByThemeId;
 `;
 
   // Duplicate detection (basename & battle id) -> hard error now.
@@ -328,6 +344,9 @@ export declare const publishStateKeys: readonly string[];
 export declare type PublishStateKey = typeof publishStateKeys[number];
 export declare const allBattleMap: Record<string, Battle>;
 export declare const battleSeedsByPublishState: Record<PublishStateKey, Battle[]>;
+export declare const battlesByThemeId: Record<string, Battle[]>;
+export declare const themeIds: readonly string[];
+export declare type ThemeId = keyof typeof battlesByThemeId;
 `;
   await fs.writeFile(OUT_FILE.replace(/\.ts$/, '.d.ts'), dts, 'utf8');
 
