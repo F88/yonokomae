@@ -103,13 +103,20 @@ export class HistoricalEvidencesBattleReportRepository
     const themeId = params?.filter?.battle?.themeId;
     const idFilter = params?.filter?.battle?.id;
     const significance = params?.filter?.battle?.significance;
+    // Access extended optional publishState (recently added to BattleReportFilter); cast for backward compatibility during transition.
+    const publishState = (
+      params?.filter?.battle as unknown as {
+        publishState?: Battle['publishState'];
+      }
+    )?.publishState;
 
     const predicate =
-      themeId || idFilter || significance
+      themeId || idFilter || significance || publishState
         ? (b: Battle) => {
             if (themeId && b.themeId !== themeId) return false;
             if (idFilter && b.id !== idFilter) return false;
             if (significance && b.significance !== significance) return false;
+            if (publishState && b.publishState !== publishState) return false;
             return true;
           }
         : undefined;
