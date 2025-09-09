@@ -154,6 +154,56 @@ pnpm --filter @yonokomae/data-battle-seeds run generate:battles
 - `@yonokomae/types` ビルド前にシードを単体ビルドし失敗するケース
 - 生成ファイルを直接編集してしまう (必ずジェネレータ再実行)
 
+### publishState と テーマ別バトルシード構造
+
+バトルシードに `publishState` ライフサイクルとテーマ階層 (`theme/{themeName}/` + `__drafts/`) を導入。
+
+目的:
+
+- 未完成案の分離でキュレーション容易化
+- 非公開状態の UI 可視化 (`PublishStateChip` は非 `published` のみ表示)
+- 将来の編集/レビュー導線準備
+
+状態:
+
+| 状態 | 意味 | UI 振る舞い |
+|------|------|-------------|
+| `published` | 正式公開 | チップ非表示 |
+| `draft` | 初期案 / 未完成 | チップ表示 |
+| `review` | 検証 / 編集待ち | チップ表示 |
+| `archived` | 退役 / 置換済み | チップ表示 |
+
+ルール:
+
+1. `__drafts/` 内は必ず `publishState !== 'published'`。
+2. 欠落は後方互換のため `published` とみなす (将来警告予定)。
+3. 表示チップは非 `published` のみ。
+4. フィルタは theme + publishState を合成。未知値は明示フィルタ無い場合 `published` として扱う。
+
+インデックス生成スクリプト:
+
+- `generate-battle-index.ts` 全シード + 正規化 state
+- `generate-draft-index.ts` 非 `published` の列挙
+
+新しい state を追加する手順:
+
+1. ジェネレータ正規表現と `publishStateKeys` にリテラル追加
+2. UI ラベルマップ (`PublishStateChip`) 更新
+3. 正規化 fallback を確認 (未知→`published`)
+4. テスト追加: 分類 + チップ + フィルタ + 無効 option
+5. ドキュメント EN→JA 同期 + CHANGELOG 追記
+
+テストでカバーしている境界:
+
+- `publishState` 欠落 (published にフォールバック)
+- 0 件 state の無効化 option
+- theme + publishState の積集合フィルタ
+
+今後の予定:
+
+- archived 専用トグル
+- 状態遷移 (draft→review→published) 支援ツール
+
 ### 新しい Repository の追加
 
 1. **Repository 実装の作成:**
