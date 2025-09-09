@@ -125,6 +125,9 @@ yonokomae/
 - Battle seed selector improvements
     - Optional `showIds` prop surfaces internal battle `id` values for debugging / reproducibility
     - Non-intrusive: disabled by default to keep UI concise
+- Touch selection accuracy (iOS/WebKit)
+    - Adjusted coordinate-based nearest mode correction prevents misaligned selection on iOS Safari
+    - Logic activates only on real touch devices; no impact on desktop browsers
 - Environment-driven configuration
     - Logging control via `VITE_ENABLE_LOGGING`
     - API base URL configuration
@@ -147,6 +150,12 @@ achieve full SR support across core flows. We commit to:
 Status: in progress. We track improvements under the Accessibility section of
 the roadmap below and in the developer guides. Contributions to A11y are very
 welcome.
+
+### Production vs Test Instrumentation
+
+Some legacy E2E specs depended on a dev/test-only global counter used to tally
+mode selections. These were removed to keep production E2E parity: tests now
+assert observable UI outcomes rather than internal counters.
 
 ## Reduced Motion (prefers-reduced-motion)
 

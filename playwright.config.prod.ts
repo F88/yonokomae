@@ -20,8 +20,7 @@ export default defineConfig({
     ],
   ],
   use: {
-    baseURL: 'http://localhost:5173',
-    // baseURL: 'https://f88.github.io/yonokomae',
+    baseURL: 'https://f88.github.io/yonokomae/',
     navigationTimeout: 5_000,
     actionTimeout: 5_000,
     trace: process.env.CI ? 'off' : 'on',
@@ -31,15 +30,12 @@ export default defineConfig({
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
     // { name: 'firefox', use: { ...devices['Desktop Firefox'] }, },
-    // { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
     // { name: 'iPadGen7', use: { ...devices['iPad (gen 7)'] } },
     { name: 'Pixel 7', use: { ...devices['Pixel 7'] } },
     // { name: 'iPhoneSE', use: { ...devices['iPhone SE'] } },
     { name: 'iPhone13', use: { ...devices['iPhone 13'] } },
   ],
-  webServer: {
-    command: 'pnpm run dev',
-    port: 5173,
-    reuseExistingServer: !process.env.CI,
-  },
+  // Note: No webServer configuration for production testing
+  // The site should already be deployed to GitHub Pages
 });

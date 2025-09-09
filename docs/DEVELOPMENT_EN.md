@@ -443,6 +443,28 @@ We use Playwright for E2E testing. Specs are located in the `e2e/` directory.
 - `pnpm run e2e:ui` - Interactive UI mode
 - `pnpm run e2e:headed` - Run in headed mode (Chromium)
 
+#### Dev-only Instrumentation & Parity
+
+Historically a global counter (`window.__YK_TEST_ONSELECT_COUNT__`) tracked
+confirmed play mode selections for certain title interaction specs. This code
+is intentionally excluded from production bundles (dev/test guard) and the
+dependent E2E specs were removed to enforce production parity. Going forward:
+
+- Favor assertions on visible state (selected mode styling, aria-selected) or
+  accessible names.
+- Introduce explicit, documented feature flags (e.g. `VITE_ENABLE_E2E_INSTR`)
+  only if instrumentation cannot be avoided.
+- Avoid hidden globals; prefer data-testid only when semantic roles are absent.
+
+#### iOS/WebKit Touch Selection Fix
+
+An iOS Safari specific issue occasionally produced an off-by-one mode
+selection when tapping. The resolution adds a coordinate-based nearest element
+correction that activates solely on genuine iOS touch environments (UA +
+multi-touch heuristics) and only when a vertical click coordinate is present.
+Desktop browsers and test environments (NODE_ENV === 'test') bypass the
+correction to stay deterministic. The logic resides in `TitleContainer`.
+
 **Data Package Testing:**
 
 - `pnpm test` - Run all tests including data package validation

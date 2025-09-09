@@ -18,6 +18,7 @@
   "homepage": "https://github.com/F88/yonokomae#readme",
   "scripts": {
     "dev": "pnpm --filter @yonokomae/app dev",
+    "dev:lan": "pnpm --filter @yonokomae/app dev:lan",
     "dev:api": "cross-env VITE_API_BASE_URL=http://localhost:8787/api pnpm --filter @yonokomae/app dev",
     "build": "pnpm -r --sort build",
     "build:app": "pnpm --filter @yonokomae/app build",
@@ -49,6 +50,7 @@
     "ops:export-battle-seeds-to-json": "pnpm run ops:build-all && node dist/ops-build/ops/export-battle-seeds-to-json.js",
     "ops:analyze-battle-seeds": "pnpm run ops:build-all && node dist/ops-build/ops/analyze-battle-seeds.js",
     "e2e": "playwright test --grep-invert @performance",
+    "e2e:prod": "playwright test --config=playwright.config.prod.ts --headed --grep-invert @performance",
     "e2e:ui": "playwright test --ui",
     "e2e:all": "playwright test",
     "e2e:headed": "playwright test --headed --project=chromium",

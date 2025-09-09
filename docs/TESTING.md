@@ -149,6 +149,27 @@ E2E tests cover critical user flows from a user's perspective. For a detailed po
 - **Focus:** Test user-facing behaviors, not implementation details.
 - **Accessibility:** Assert accessible names and roles for critical controls.
 
+### Instrumentation Policy
+
+Production E2E runs must not rely on dev-only or test-only globals. A previous
+set of title selection specs depended on `window.__YK_TEST_ONSELECT_COUNT__`,
+which is incremented only in development / test builds. These specs were
+removed. Replacement strategy:
+
+- Prefer asserting the final selected mode visible in the UI.
+- Avoid counting internal events unless the counter is deliberately exposed as
+  a documented, stable testing hook.
+- If future instrumentation is required, gate it behind an explicit opt-in
+  variable (e.g. `VITE_ENABLE_E2E_INSTR`) and document the contract.
+
+### iOS/WebKit Touch Selection Correction
+
+An issue on iOS Safari caused occasional misalignment between the tapped
+vertical position and the selected play mode. The fix applies a coordinate-
+nearest matching algorithm only for real iOS touch environments (never desktop
+emulation). Tests should validate the resulting UI state (the intended mode is
+highlighted and activated) rather than internal correction heuristics.
+
 ## CI/CD
 
 Our CI pipeline runs all checks, including linting, type checking, data package validation, and all forms of tests. The pipeline validates:

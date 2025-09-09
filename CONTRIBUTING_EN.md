@@ -52,6 +52,8 @@ Key recent architectural additions:
 - Seedable shuffle utilities with regression guards
 - Environment-driven logging for battle report generation
 - Enhanced ops CLI tools with `--help` flags
+- iOS/WebKit touch mode selection correction (coordinate-nearest matching)
+- Removal of E2E specs depending on dev-only selection counter instrumentation (production parity)
 
 ## Contributing to Data Packages
 
@@ -78,10 +80,13 @@ Data packages have independent testing and validation that automatically runs in
 3. **Run checks locally:** Before committing, run the CI checks locally to ensure everything is in order. See the [Running CI Checks Locally](#running-ci-checks-locally) section.
 4. **Commit your changes:** Follow the [Commit Message Conventions](#commit-message-conventions).
 5. **Create a changeset:** If your changes are user-facing, create a changeset.
+
     ```bash
     pnpm changeset
     ```
+
     Follow the prompts to select the appropriate version bump (patch, minor, or major) and write a description of the change.
+
 6. **Push and create a Pull Request:** Push your branch to GitHub and create a Pull Request against `main`.
 
 ## Commit Message Conventions

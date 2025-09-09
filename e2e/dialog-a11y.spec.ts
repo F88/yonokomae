@@ -10,7 +10,7 @@ test.describe('Dialog accessibility (User Manual)', () => {
     analyzeA11y,
     expectNoA11yBlockers,
   }) => {
-    await page.goto('/');
+    await page.goto('./');
 
     // Open dialog
     await page.getByRole('button', { name: 'Open user manual' }).click();

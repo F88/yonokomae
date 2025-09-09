@@ -35,6 +35,9 @@
 - fix(core): ensure BattleFilter selected theme propagates to report generation
 - docs(dev): add BattleFilter section to Japanese development guide
 - docs: update contributing guides to reflect accurate monorepo structure (no root src/)
+- fix(ui): correct iOS/WebKit touch mode selection misalignment (coordinate-based nearest option correction in TitleContainer)
+- test(e2e): remove title selection specs relying on dev-only selection counter instrumentation
+- docs(test): clarify E2E policy around dev-only instrumentation and production parity
 
 ## 1.1.0
 

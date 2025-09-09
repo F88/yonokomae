@@ -9,6 +9,7 @@ const demoMode: PlayMode = (() => {
     title: 'Demo Mode',
     description: 'Demo mode for Storybook',
     enabled: true,
+    srLabel: 'Demo fallback mode',
   };
   const found = playMode.find((m) => m.id === 'demo-en') ?? playMode[0];
   if (!found) return fallback;
@@ -19,6 +20,8 @@ const demoMode: PlayMode = (() => {
       (found as unknown as { description?: string }).description ??
       fallback.description,
     enabled: found.enabled ?? fallback.enabled,
+    srLabel:
+      (found as unknown as { srLabel?: string }).srLabel ?? fallback.srLabel,
   } satisfies PlayMode;
 })();
 
