@@ -6,6 +6,7 @@ import { battleThemeCatalog } from '@yonokomae/catalog';
 import { useMemo, useState, useCallback, useEffect } from 'react';
 import { ThemeChip } from '@/components/battle/ThemeChip';
 import { BattleTitleChip } from '@/components/battle/BattleTitleChip';
+import { PublishStateChip } from '@/components/battle/PublishStateChip';
 import type { Battle } from '@yonokomae/types';
 
 /**
@@ -203,6 +204,8 @@ export function BattleFilter({
           </select>
         )}
       </div>
+
+      {/* Theme Chips */}
       <div
         className="flex flex-wrap items-center gap-2"
         data-testid="battle-filter-chips"
@@ -254,19 +257,27 @@ export function BattleFilter({
           );
         })}
       </div>
+
+      {/* Battle Chips */}
       {showBattleChips && (
         <div
           className="flex flex-wrap gap-2 max-h-48 overflow-auto rounded border p-2"
           data-testid="battle-filter-list"
         >
           {filtered.map((seed) => (
-            <BattleTitleChip
-              key={seed.file}
-              file={seed.file}
-              variant="secondary"
-              className="truncate"
-              showThemeIcon
-            />
+            <div key={seed.file} className="flex items-center gap-1">
+              <BattleTitleChip
+                file={seed.file}
+                variant="secondary"
+                className="truncate"
+                showThemeIcon
+              />
+              <PublishStateChip
+                state={seed.publishState ?? 'published'}
+                variant="outline"
+                showLabel={false}
+              />
+            </div>
           ))}
           {filtered.length === 0 && (
             <span
