@@ -38,25 +38,26 @@ instructions-for-ais:
 
 1. **適切なデータパッケージに移動**:
 
-    ```bash
-    cd data/{package-name}/
-    ```
+```bash
+cd data/{package-name}/
+```
 
-2. **`src/` ディレクトリ内のデータファイルを編集・追加**
+1. **`src/` ディレクトリ内のデータファイルを編集・追加**
 
-3. **変更内容を検証**:
+1. **変更内容を検証**:
 
-    ```bash
-    pnpm test  # 現在のパッケージのみテスト
-    # または プロジェクトルートから:
-    pnpm test  # 全パッケージをテスト
-    ```
+```bash
+pnpm test  # 現在のパッケージのみテスト
+# または プロジェクトルートから:
+pnpm test  # 全パッケージをテスト
+```
 
-4. **変更をコミット**:
-    ```bash
-    git add data/{package-name}/
-    git commit -m "data({domain}): 変更内容を記述"
-    ```
+1. **変更をコミット**:
+
+```bash
+git add data/{package-name}/
+git commit -m "data({domain}): 変更内容を記述"
+```
 
 ## データパッケージ
 
@@ -64,16 +65,96 @@ instructions-for-ais:
 
 **目的**: 実際の自治体データを使用した与野と狛江の統計的バトル。
 
-**ファイル場所**: `data/battle-seeds/src/battle/`
+### ディレクトリ構造（テーマ + 下書き）
+
+バトルシードはテーマ別ディレクトリと下書き用 `__drafts/` に再構成され、整理性と publishState ベースのツール連携を向上させました。
+
+```text
+data/battle-seeds/
+    src/battle/
+        theme/
+            community/
+            culture/
+            development/
+            figures/
+            finance/
+            history/
+            information/
+            technology/
+        __drafts/           # publishState !== 'published' のバトル概念
+        __generated/        # 生成物（index 等）: 手動編集禁止
+```
+
+旧フラット配置（`yono-komae-*.ja.ts`）は `theme/{themeName}/` へ移動済み。新規追加は必ずテーマ配下に置くこと。
+
+**ファイル場所 (published)**: `data/battle-seeds/src/battle/theme/{themeName}/`
+
+**ファイル場所 (draft / review / archived)**: `data/battle-seeds/src/battle/__drafts/`
+
 **ファイルパターン**: `yono-komae-{topic}.ja.ts`
+
 **型**: `@yonokomae/types` の `Battle`
+
 **検証**: `@yonokomae/schema` の `BattleSchema`
 
 **例**:
 
-- `yono-komae-population-trends.ja.ts`
-- `yono-komae-area-comparison.ja.ts`
-- `yono-komae-agriculture.ja.ts`
+- `theme/history/yono-komae-population-trends.ja.ts`
+- `theme/finance/yono-komae-area-comparison.ja.ts`
+- `theme/development/yono-komae-agriculture.ja.ts`
+
+### Publish State
+
+`publishState` フィールドでライフサイクルを明示:
+
+| 値          | 意味                 | 表示挙動     |
+| ----------- | -------------------- | ------------ |
+| `published` | 公開済み（通常表示） | チップ非表示 |
+| `draft`     | 初期案 / 不完全      | チップ表示   |
+| `review`    | レビュー / 検証待ち  | チップ表示   |
+| `archived`  | 非推奨 / 退役        | チップ表示   |
+
+ルール:
+
+- `__drafts/` 内ファイルは `publishState` を `published` 以外で必須指定。
+- `publishState` 欠落は後方互換のため `published` とみなす（将来的に警告対象）。
+- `published` 以外のみ UI で `PublishStateChip` を表示。
+
+### インデックス生成 / ツール
+
+インデックス生成は単一スクリプトに統合されています:
+
+- `data/battle-seeds/scripts/generate-battle-index.ts` : 全バトル（published + 非公開系メタ）を正規化し publishState 別マップを含む統合インデックスを生成。
+
+旧 `generate-draft-index.ts` は削除済みです。過去のワークフローは統合ジェネレータに切替えてください。
+
+`__generated/` 配下は手動編集禁止。再生成する:
+
+```bash
+pnpm tsx data/battle-seeds/scripts/generate-battle-index.ts
+```
+
+### 新規テーマバトル追加手順
+
+1. `theme/` 配下でテーマディレクトリ（kebab-case）を選択 / 作成
+2. `yono-komae-{topic}.ja.ts` を作成
+3. 初期状態が未完成なら `publishState: 'draft'` 等を指定（完成なら `published`）
+4. `pnpm test` で検証し必要ならインデックス再生成
+5. コミット: `data(battle): add {theme}:{topic} battle`
+
+### 旧ファイル移行
+
+未移行ファイルがある場合:
+
+1. 適切なテーマを決める（例: 人口→ `history` あるいは `figures`）
+2. `theme/{themeName}/` へ移動
+3. 草稿なら `publishState` を付与
+4. 直接参照している import があれば index 経由へ更新を検討
+5. 必要に応じてインデックス再生成
+
+### クエリ / フィルタ挙動
+
+リポジトリ層でテーマ + publishState の複合フィルタをサポート。未知値は明示フィルタが無い限り `published` として扱い除外漏れを防止。
 
 **詳細ガイド**: [docs/data/BATTLE_SEEDS_JA.md](data/BATTLE_SEEDS_JA.md) を参照
 
@@ -176,7 +257,7 @@ pnpm run test:all
 - `data(historical): fix typo in tama-river scenario`
 - `data(news): update news-sample-1 with latest data`
 
-## 型システム
+## 型システ���
 
 全データパッケージは以下の共通型を共有：
 

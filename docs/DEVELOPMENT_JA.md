@@ -17,7 +17,7 @@ instructions-for-ais:
 
 ## アーキテクチャ概要
 
-このアプリケーションは、関心事の分離が明確な pnpm monorepo アーキテクチャを採用しています。中心となる概念は以下の通りです。
+このアプリケーションは、関心事の分離が明確な pnpm monorepo アーキテクチャを採用し���います。中心となる概念は以下の通りです。
 
 - **Components**: レンダリングとユーザーインタラクションを担当する UI 要素。
 - **Repositories**: データソース（データパッケージ、API など）を抽象化するデータアクセス層。
@@ -66,7 +66,7 @@ sequenceDiagram
 
 ### リポジトリのインターフェース
 
-中心となるリポジトリの契約（interfaces）は `src/yk/repo/core/repositories.ts` に定義されています。リポジトリは独立データパッケージからデータを消費します。
+中心となるリポジトリの契約（interfaces）は `src/yk/repo/core/repositories.ts` に定義されています。リポジトリは独立デー��パッケージからデータを消費します。
 
 ```mermaid
 classDiagram
@@ -94,6 +94,116 @@ classDiagram
 ## 新しい Play Mode または Repository の追加方法
 
 このセクションでは、新しいリポジトリや Play Mode でアプリケーションを拡張する方法を説明します。
+
+### バトルシード生成とテーマグルーピング
+
+`@yonokomae/data-battle-seeds` は自動インデックス生成を行います。統合ジェネレータ
+(`data/battle-seeds/scripts/generate-battle-index.ts`) が `src/battle/` を走査し、
+`__generated/index.generated.ts` を生成して以下を提供します:
+
+- `publishedBattleMap`, `draftBattleMap` と各 publishState のマップ (`battleMapsByPublishState`)
+- `publishStateKeys`, `battleSeedsByPublishState`, まとめ用 `allBattleMap`
+- UI 利便性のための `battlesByThemeId` と `themeIds` (各テーマ配列は battle id でソート)
+- `ThemeId` 型 (`keyof typeof battlesByThemeId`)
+
+(旧) `generate-draft-index.ts` は統合済みのため削除されました。既存フローは統合スクリプトのみを利用してください。
+
+ルール / 振る舞い:
+
+1. `publishState` が無い場合は `published` とみなし警告
+2. basename または battle `id` の重複はエラー終了
+3. 対象は `*.ja.ts` のみ。`__drafts/` 位置は補助であり `publishState` が唯一のソースオブトゥルース
+4. 生成は静的 import のみ (tree-shaking 可能)
+
+新しいバトルシード追加:
+
+```bash
+cp data/battle-seeds/src/battle/theme/<theme>/example.ja.ts \
+     data/battle-seeds/src/battle/theme/<theme>/new-id.ja.ts
+# メタデータ編集 (id, title, subtitle, narrative, publishState, significance)
+pnpm --filter @yonokomae/data-battle-seeds run generate:battles
+```
+
+グルーピング利用例 (アプリ側):
+
+```ts
+import {
+    battlesByThemeId,
+    themeIds,
+    ThemeId,
+} from '@yonokomae/data-battle-seeds';
+
+function getThemeBattles(theme: ThemeId) {
+    return battlesByThemeId[theme] ?? [];
+}
+```
+
+シードパッケージのみ手動ビルド:
+
+```bash
+pnpm -w run build:packages
+pnpm --filter @yonokomae/data-battle-seeds build
+```
+
+ジェネレータのみ実行:
+
+```bash
+pnpm --filter @yonokomae/data-battle-seeds run generate:battles
+```
+
+落とし穴:
+
+- `@yonokomae/types` ビルド前にシードを単体ビルドし失敗するケース
+- 生成ファイルを直接編集してしまう (必ずジェネレータ再実行)
+
+### publishState と テーマ別バトルシード構造
+
+バトルシードに `publishState` ライフサイクルとテーマ階層 (`theme/{themeName}/` + `__drafts/`) を導入。
+
+目的:
+
+- 未完成案の分離でキュレーション容易化
+- 非公開状態の UI 可視化 (`PublishStateChip` は非 `published` のみ表示)
+- 将来の編集/レビュー導線準備
+
+状態:
+
+| 状態        | 意味            | UI 振る舞い  |
+| ----------- | --------------- | ------------ |
+| `published` | 正式公開        | チップ非表示 |
+| `draft`     | 初期案 / 未完成 | チップ表示   |
+| `review`    | 検証 / 編集待ち | チップ表示   |
+| `archived`  | 退役 / 置換済み | チップ表示   |
+
+ルール:
+
+1. `__drafts/` 内は必ず `publishState !== 'published'`。
+2. 欠落は後方互換のため `published` とみなす (将来警告予定)。
+3. 表示チップは非 `published` のみ。
+4. フィルタは theme + publishState を合成。未知値は明示フィルタ無い場合 `published` として扱う。
+
+インデックス生成スクリプト:
+
+- `generate-battle-index.ts` 全シード + 正規化 state
+
+新しい state を追加する手順:
+
+1. ジェネレータ正規表現と `publishStateKeys` にリテラル追加
+2. UI ラベルマップ (`PublishStateChip`) 更新
+3. 正規化 fallback を確認 (未知→`published`)
+4. テスト追加: 分類 + チップ + フィルタ + 無効 option
+5. ドキュメント EN→JA 同期 + CHANGELOG 追記
+
+テストでカバーしている境界:
+
+- `publishState` 欠落 (published にフォールバック)
+- 0 件 state の無効化 option
+- theme + publishState の積集合フィルタ
+
+今後の予定:
+
+- archived 専用トグル
+- 状態遷移 (draft→review→published) 支援ツール
 
 ### 新しい Repository の追加
 
@@ -435,33 +545,41 @@ iOS Safari でタップ時に意図しないモードが選択される事象を
 
 ## CLI オペレーションスクリプト
 
-`src/ops/` 配下 (全て `-h` / `--help` 対応)。
+`src/ops/` 配下 (全て `-h` / `--help` 対応)。統一準備スクリプト `pnpm run ops:prepare` は以下を行います:
 
-ビルド出力: すべての ops スクリプトは `dist/ops-build/ops/` に emit されます。
+1. すべての `@yonokomae/data-*` パッケージをビルド (battle 統合インデックス / all-battles JSON 生成含む)
+2. ops スクリプトを `dist/ops-build/ops/` にビルド
 
-- `export-battle-seeds-to-json.ts` – battle seeds を JSON 出力
+各個別コマンドは必要に応じ最小限の準備を自動実行します。クリーン再ビルドが必要な場合のみ手動で `ops:prepare` を実行してください。
+
+スクリプト一覧:
+
+- `export-battle-seeds-to-json.ts` – 事前生成された統合 battles JSON をファイルまたは stdout にコピー
 - `export-users-voice-to-tsv.ts` – user voice を TSV 出力
 - `export-usage-examples-to-tsv.ts` – usage examples を TSV 出力
-- `analyze-battle-seeds.ts` – battle seeds 統計を集計 / クロスタブ表示
+- `analyze-battle-seeds.ts` – battle seeds 統計を集計 / クロスタブ表示 (生成モジュールまたは JSON 入力)
 
 使用例:
 
 ```bash
+# 任意: ビルド準備を強制
+pnpm run ops:prepare
+
 # 推奨: pnpm scripts 経由 (必要なら自動ビルド)
 pnpm run ops:export-battle-seeds-to-json -- out/battles.json
 pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
 pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
 
-# 直接解析 (ビルド済み dist モジュール読み込み)
+# 直接解析 (生成モジュール読み込み)
 pnpm run ops:analyze-battle-seeds
 
-# 事前に書き出した JSON を解析
+# エクスポート済み JSON を解析
 pnpm run ops:analyze-battle-seeds -- out/battles.json
 
-# JSON 形式出力 (CI / 自動化向け 機械可読)
+# JSON 形式出力 (CI / 自動化向け)
 pnpm run ops:analyze-battle-seeds -- --format=json
 
-# 任意: 直接 node 実行 (直前にビルド済みであること)
+# 任意: 直接 node 実行 (ops:prepare 済み前提)
 # node dist/ops-build/ops/export-battle-seeds-to-json.js out/battles.json
 ```
 
@@ -481,12 +599,15 @@ pnpm run ops:export-users-voice-to-tsv -- --help
 - テーマ × 重要度 クロスタブ (matrix)
 - power 統計 (komae / yono / combined の min / max / avg)
 - combined power 上位5件 (komae.power + yono.power)
+- `publishState` 別分布 (published / draft / review / archived など)
+- 未公開 (`draftIds`) battle id 一覧 (差分/トリアージ用)
 
 自動化ヒント:
 
 - `--format=json` で機械可読: 分布のドリフト検知や CI 比較に利用可能
 - `jq` 例: `pnpm run ops:analyze-battle-seeds -- --format=json | jq '.byTheme.history'`
 - データ更新後に統計サマリのアーティファクト化に活用
+- フィルタフラグ: `--published-only` または `--drafts-only` (同時指定不可)
 
 テスト: `src/ops/__tests__/export-cli.test.ts` 参照。
 

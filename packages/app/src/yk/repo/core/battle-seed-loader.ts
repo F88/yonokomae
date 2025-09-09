@@ -14,21 +14,24 @@ type RawProvenance = Array<
   string | { label: string; url?: string; note?: string }
 >;
 
+// Allow partial Battle including optional publishState (back-compat) and relaxed provenance shape.
 type RawBattle = Omit<DeepPartial<Battle>, 'provenance'> & {
   provenance?: RawProvenance;
+  publishState?: Battle['publishState'];
 };
 
 export type BattleModule = { default?: RawBattle } | RawBattle;
 
 export async function loadBattleFromSeeds(params: {
-  roots: string[]; // Legacy field - now uses static imports from @yonokomae packages
-  file?: string; // optional relative file name to load
-  predicate?: (b: Battle) => boolean; // optional narrowing filter when random selection
+  roots: string[];
+  file?: string;
+  predicate?: (b: Battle) => boolean;
+  publishedOnly?: boolean; // when true, restrict random pool to published seeds
 }): Promise<Battle> {
-  const { roots, file, predicate } = params;
+  const { roots, file, predicate, publishedOnly } = params;
   // Note: Vite requires literal strings for import.meta.glob. We load a superset
   // of seed modules from known roots and filter by the provided roots below.
-  const mods = mergeGlobs();
+  const mods = mergeGlobs(publishedOnly === true);
   const files = listRelativeFiles(mods, roots);
   if (files.length === 0) {
     throw new BattleSeedNotFoundError(roots, 'No battle seeds found under');
@@ -121,21 +124,24 @@ export class BattleSeedValidationError extends BattleSeedError {
   }
 }
 
-function mergeGlobs(): Record<string, Battle> {
+function mergeGlobs(publishedOnly = false): Record<string, Battle> {
   // Use static imports from battle-seeds package
   const battleSeedMap: Record<string, Battle> = {};
+  const source = publishedOnly
+    ? battleSeeds.filter((b) => b.publishState === 'published')
+    : battleSeeds;
+  // NOTE: For future enhancements where file structure becomes volatile, prefer
+  // using `battleSeedsById` when you have stable IDs instead of reconstructing
+  // file name mappings.
 
   // Map battle seeds to file paths that match the old glob patterns
-  battleSeeds.forEach((battle: Battle) => {
+  source.forEach((battle: Battle) => {
     // Find the original file name by checking the battleSeedsByFile map
-    for (const [fileName, seedBattle] of Object.entries(
-      battleSeedsByFile as Record<string, Battle>,
-    )) {
-      if ((seedBattle as Battle).id === battle.id) {
-        // Map to both possible root paths for compatibility
-        // 1) Workspace package virtual root
+    // We still emit legacy file-based keys for backward compatibility.
+    // Try to find corresponding file name (O(n)) – acceptable given small set.
+    for (const [fileName, seedBattle] of Object.entries(battleSeedsByFile)) {
+      if (seedBattle.id === battle.id) {
         battleSeedMap[`@yonokomae/data-battle-seeds/${fileName}`] = battle;
-        // 2) Legacy filesystem-style root
         battleSeedMap[`/seeds/historical-evidences/battle/${fileName}`] =
           battle;
         break;
@@ -194,6 +200,8 @@ export function normalizeBattle(mod: BattleModule): Battle {
   const status = raw.status ?? 'success';
   const themeId = raw.themeId ?? 'history';
   const significance = raw.significance ?? 'low';
+  // Default publishState to 'published' for backward compatibility when missing.
+  const publishState: Battle['publishState'] = raw.publishState ?? 'published';
   return {
     id,
     title,
@@ -201,6 +209,7 @@ export function normalizeBattle(mod: BattleModule): Battle {
     narrative: { overview, scenario },
     themeId,
     significance,
+    publishState,
     komae,
     yono,
     provenance,

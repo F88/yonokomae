@@ -43,6 +43,11 @@ function App() {
 
   const { generateReport } = useGenerateReport(mode, battleSeedFile);
 
+  // Active publishState filter (mirrors theme filter wiring). Undefined => all states.
+  const [activePublishState, setActivePublishState] = useState<
+    string | undefined
+  >(undefined);
+
   // Helper: safe media query checks for non-browser/test envs
   const supportsMatchMedia =
     typeof window !== 'undefined' && typeof window.matchMedia === 'function';
@@ -278,6 +283,7 @@ function App() {
       id: uid('battle'),
       themeId: 'history',
       significance: 'medium',
+      publishState: 'published',
       title: 'Writing report...',
       subtitle: 'Please wait',
       narrative: {
@@ -298,10 +304,19 @@ function App() {
     // Scrolling will occur in the effect after DOM updates
 
     try {
+      const battleFilter:
+        | { battle: { themeId?: string; publishState?: string } }
+        | undefined =
+        activeThemeId || activePublishState
+          ? {
+              battle: {
+                themeId: activeThemeId,
+                publishState: activePublishState as string | undefined,
+              },
+            }
+          : undefined;
       const next = await generateReport(
-        activeThemeId
-          ? { filter: { battle: { themeId: activeThemeId } } }
-          : undefined,
+        battleFilter ? { filter: battleFilter } : undefined,
       );
       // Replace the placeholder at the captured index
       let lastIdAfterUpdate: string | undefined;
@@ -332,6 +347,7 @@ function App() {
         id: uid('battle'),
         themeId: 'history',
         significance: 'low',
+        publishState: 'published',
         title: 'Failed to generate report',
         subtitle: 'Error',
         narrative: {
@@ -355,6 +371,7 @@ function App() {
     setReports([]);
     setActiveThemeId(undefined);
     setBattleSeedFile(undefined);
+    setActivePublishState(undefined);
 
     // Scroll to top after clearing
     // scrollToY(0, { behavior: 'smooth' });
@@ -387,7 +404,7 @@ function App() {
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container flex h-14 items-center">
             <Header mode={mode} />
-            {mode?.id === 'historical-research' && battleSeedFile && (
+            {/* {mode?.id === 'historical-research' && battleSeedFile && (
               <span
                 className="ml-4 inline-flex items-center rounded border px-2 py-0.5 text-xs font-medium text-muted-foreground"
                 title="Active battle seed (fixed)"
@@ -395,7 +412,7 @@ function App() {
               >
                 Seed: {battleSeedFile}
               </span>
-            )}
+            )} */}
           </div>
         </header>
 
@@ -454,6 +471,8 @@ function App() {
                 onBattleSeedChange={(f) => setBattleSeedFile(f)}
                 selectedThemeId={activeThemeId}
                 onSelectedThemeIdChange={(id) => setActiveThemeId(id)}
+                selectedPublishState={activePublishState}
+                onSelectedPublishStateChange={(s) => setActivePublishState(s)}
               />
             </div>
           )}

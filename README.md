@@ -58,7 +58,7 @@ Note: This game is full of humorous jokes, but to be clear, it is not a deepfake
 - **Catalog Package**: `@yonokomae/catalog` (列挙 / 定数 / ドメインカタログ)
 - **Type Packages**: `@yonokomae/types` (型), `@yonokomae/schema` (Zod スキーマ)
 - **Data Packages**:
-    - `@yonokomae/data-battle-seeds` - Statistical municipal comparison battles
+    - `@yonokomae/data-battle-seeds` - Statistical municipal comparison battles (unified publishState-aware index)
     - `@yonokomae/data-historical-evidence` - Fictional historical scenarios
     - `@yonokomae/data-news-seeds` - News-style demonstration samples
 - **Mock API**: `mock-api/` ローカル開発用スタブサーバ
@@ -101,6 +101,7 @@ yonokomae/
     - Usage examples showcase with category-based organization
     - User testimonials with marquee animation effects
     - TSV export functionality for usage data and user voices
+- publishState-aware seed lifecycle (draft/review/archived surfaced via chips)
 - Robust loading and error states
     - Async judgement with simulated latency
     - Shadcn skeleton placeholders on the battle field
@@ -185,15 +186,18 @@ Tip (macOS): System Settings > Accessibility > Display > Reduce motion.
 
 ### Data & Ops CLI (Analysis)
 
-Operational scripts for exporting and analyzing data live under `packages/app/src/ops/` and are exposed via `pnpm` scripts.
+Operational scripts for exporting and analyzing data live under `packages/app/src/ops/` and are exposed via `pnpm` scripts. All commands automatically ensure required data packages and ops build output exist. You can run `pnpm run ops:prepare` manually to force a fresh rebuild of data + ops output, but it is not required for normal usage.
 
-Common commands:
+Common commands (auto build on first run):
 
 ```bash
-# Export all battle seeds to JSON (pretty printed)
+# (Optional) Explicitly prepare data + ops build (normally implicit)
+pnpm run ops:prepare
+
+# Export all battle seeds to JSON (pretty printed; copies from prebuilt bundle)
 pnpm run ops:export-battle-seeds-to-json -- out/battles.json
 
-# Analyze battle seeds (loads dist modules directly)
+# Analyze battle seeds (loads prebuilt battle index / JSON modules)
 pnpm run ops:analyze-battle-seeds
 
 # Analyze previously exported JSON file
@@ -212,7 +216,7 @@ pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
 pnpm run ops:analyze-battle-seeds -- --help
 ```
 
-The analyzer prints:
+The analyzer prints (always using the unified generated index & prebuilt JSON):
 
 - Totals
 - Distribution by theme and significance

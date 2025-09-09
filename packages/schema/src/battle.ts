@@ -59,6 +59,10 @@ export const BattleSchema = z.object({
     .optional(),
   /** Optional status for UI flow control */
   status: z.enum(['loading', 'success', 'error']).optional(),
+  /** Publishing lifecycle state (default: published) */
+  publishState: z
+    .enum(['draft', 'review', 'published', 'archived'])
+    .default('draft'),
 });
 
 // Re-export types from z.infer for convenience

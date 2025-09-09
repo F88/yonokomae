@@ -15,286 +15,216 @@ instructions-for-ais:
 
 # バトルシードデータメンテナンスガイド
 
-このガイドでは、`data/battle-seeds/` パッケージ内のバトルシードデータのメンテナンス・更新方法について説明します。バトルシードには、実際のデータを使用した与野と狛江の自治体間の統計的比較が含まれています。
+このガイドは `data/battle-seeds/` パッケージ内のバトルシードデータを維持・更新する方法を説明します。バトルシードは与野と狛江の各種統計を（遊び心ある競争形式で）比較したデータです。
 
 ## 概要
 
-バトルシードは、人口、面積、人口統計、経済指標など、与野と狛江の自治体のさまざまな側面を比較するデータ駆動型のバトルです。各バトルは事実データを競争形式で提示します。
+人口 / 面積 / 人口構成 / インフラ / 財政 / 文化 / 開発 指標など多面的な比較を行い、事実ベースの差異を物語的フォーマットで提示します。各シードは出典 (provenance) を保持し透明性を確保します。
 
-## パッケージ構造
+## 更新済みパッケージ構成（テーマ + 下書き + 生成物）
 
-```
+```text
 data/battle-seeds/
-├── package.json
-├── tsconfig.json
-├── vitest.config.ts
-└── src/
-    ├── index.ts              # メインエクスポート
-    ├── seeds.validation.test.ts # 検証テスト
-    └── battle/
-        ├── yono-komae-agriculture.ja.ts
-        ├── yono-komae-area-comparison.ja.ts
-        ├── yono-komae-population-trends.ja.ts
-        └── ...
+  package.json
+  tsconfig.json
+  src/
+    battle/
+      theme/
+        community/
+        culture/
+        development/
+        figures/
+        finance/
+        history/
+        information/
+        technology/
+      __drafts/            # 非 published シード (publishState !== 'published')
+      __generated/         # 自動生成インデックス (編集禁止)
+    scripts/
+      generate-battle-index.ts  # 統合インデックスジェネレータ (旧 draft 専用廃止済み)
+    seeds.validation.test.ts
+    index.ts (生成物の再エクスポート)
 ```
 
-## ファイル構造
+主要ディレクトリ:
 
-### バトルデータファイル
+- `theme/{themeName}/`: 正式 (または任意 state) のシード配置先
+- `__drafts/`: draft / review / archived など非 published 状態の仮置き（位置は補助、真のソースはフィールド）
+- `__generated/`: ジェネレータ出力（インデックス / 型集約）
 
-**場所**: `data/battle-seeds/src/battle/`
-**パターン**: `yono-komae-{topic}.ja.ts`
-**言語**: 主に日本語 (`.ja.ts` 拡張子)
+## ファイル配置 & 命名
 
-各ファイルは `Battle` 型に適合するデフォルトオブジェクトをエクスポートします：
+**配置:** 新規シードは適切なテーマディレクトリへ。概念段階は `__drafts/` でも可。ただしライフサイクル判定は `publishState` が唯一のソース。
 
-```typescript
-import type { Battle } from '@yonokomae/types';
-
-const battle: Battle = {
-    id: 'unique-battle-id',
-    themeId: 'community', // または 'history', 'culture' など
-    significance: 'medium', // 'low' | 'medium' | 'high' | 'legendary'
-    title: 'バトルタイトル',
-    subtitle: 'バトルサブタイトル',
-    narrative: {
-        overview: '簡潔な説明...',
-        scenario: '詳細なバトルシナリオ...',
-    },
-    komae: {
-        imageUrl: './imgs/neta/komae-example.png',
-        title: 'コマえもん',
-        subtitle: '狛江のチャンピオン',
-        description: '狛江代表データ...',
-        power: 42,
-    },
-    yono: {
-        imageUrl: './imgs/neta/yono-example.png',
-        title: 'ヨノ丸',
-        subtitle: '与野の挑戦者',
-        description: '与野代表データ...',
-        power: 38,
-    },
-    provenance: [
-        {
-            label: 'データソース名',
-            url: 'https://example.com/data',
-            note: 'ソースに関する追加情報',
-        },
-    ],
-};
-
-export default battle;
-```
-
-## データ要件
-
-### Battle 型構造
-
-- **`id`**: 一意識別子 (string)
-- **`themeId`**: カテゴリ分けのためのテーマ識別子 (BattleThemeId)
-- **`significance`**: 重要度レベル ('low' | 'medium' | 'high' | 'legendary')
-- **`title`**: メインバトルタイトル (string)
-- **`subtitle`**: セカンダリタイトル (string)
-- **`narrative`**: 以下を含むオブジェクト:
-    - **`overview`**: 簡潔な説明 (string)
-    - **`scenario`**: 詳細なバトルシナリオ (string)
-- **`komae`**: 狛江を表す Neta オブジェクト
-- **`yono`**: 与野を表す Neta オブジェクト
-- **`provenance`**: データソースの配列 (任意)
-
-### Neta 型構造
-
-- **`imageUrl`**: この Neta を表す画像の URL (string)
-- **`title`**: Neta のメインタイトルまたは名前 (string)
-- **`subtitle`**: 短いサブタイトルまたはキャッチフレーズ (string)
-- **`description`**: Neta の詳細な説明 (string)
-- **`power`**: 数値的パワーレベル (number)
-
-### 命名規則
-
-**ファイル名**: `yono-komae-{topic}.ja.ts`
+**ファイル名パターン:** `yono-komae-{topic}.ja.ts` （日本��主体、kebab-case で簡潔に）。
 
 例:
 
 - `yono-komae-population-trends.ja.ts`
-- `yono-komae-geomorphology-hydrology.ja.ts`
-- `yono-komae-commuting-flows.ja.ts`
+- `yono-komae-agriculture-production.ja.ts`
+- `yono-komae-financial-resilience.ja.ts`
 
-**バトル ID**: 説明的で一意
+## Battle オブジェクト拡張スキーマ
 
-- kebab-case を使用
-- 両自治体名を含める
-- 比較トピックを説明
+各ファイルは `Battle` を default export:
 
-例:
+```ts
+import type { Battle } from '@yonokomae/types';
 
-- `yono-komae-population-2023`
-- `yono-komae-area-density-comparison`
-- `yono-komae-agricultural-output`
-
-## コンテンツガイドライン
-
-### データソース
-
-- 可能な限り公式政府統計を使用
-- `provenance` 配列で適切な帰属を含める
-- 元データソースへの URL を提供
-- データ解釈のための説明ノートを追加
-
-### パワー計算
-
-パワー値は意味のある比較を反映すべきです：
-
-- より大きい/高い値は通常より高いパワーを取得
-- 異なるスケールを適切に正規化
-- 比率や百分率の使用を検討
-- 説明文書で計算方法論を記録
-
-### 言語とトーン
-
-- タイトル、説明、シナリオには日本語を使用
-- 楽しく競争的なトーンを維持
-- キャラクター「コマえもん」（狛江）と「ヨノ丸」（与野）を参照
-- 関連する自治体の文脈と地域知識を含める
-
-## 新しいバトルの追加方法
-
-1. **データ調査**: 与野と狛江を比較する公式統計を見つける
-
-2. **ファイル作成**: `data/battle-seeds/src/battle/` に新しいファイルを追加
-
-    ```bash
-    touch data/battle-seeds/src/battle/yono-komae-your-topic.ja.ts
-    ```
-
-3. **バトル実装**: Battle 型構造を使用
-
-    ```typescript
-    import type { Battle } from '@yonokomae/types';
-
-    const battle: Battle = {
-        id: 'your-topic-2024',
-        title: 'あなたのトピック対決',
-        // ... バトルデータの残り
-    };
-
-    export default battle;
-    ```
-
-4. **検証**: テストを実行してコンプライアンスを確保
-
-    ```bash
-    cd data/battle-seeds
-    pnpm test
-    ```
-
-5. **インデックス更新**（必要に応じて): インデックスファイルは自動的にバトルをエクスポートする
-
-## 検証とテスト
-
-### スキーマ検証
-
-パッケージには以下をチェックする検証テストが含まれます：
-
-- Battle オブジェクトが `Battle` スキーマにマッチしている
-- すべての必須フィールドが存在している
-- すべてのバトルで ID が一意である
-- パワー値が有効な数値である
-
-### テスト実行
-
-```bash
-# battle-seeds ディレクトリから
-cd data/battle-seeds
-pnpm test
-
-# プロジェクトルートから
-pnpm test
-```
-
-### よくある検証エラー
-
-**無効なパワー値**:
-
-- パワーが文字列ではなく数値であることを確認
-- 意図的でない限り負の値を避ける
-- 合理的な範囲を考慮（0-100 が典型的）
-
-**必須フィールドの欠如**:
-
-- `provenance` を除くすべての Battle フィールドが必要
-- `komae` と `yono` の両オブジェクトにすべての Neta フィールドが必要
-
-**重複 ID**:
-
-- 既存のバトルで ID 衝突をチェック
-- 説明的で一意な識別子を使用
-
-## ベストプラクティス
-
-### データ精度
-
-- 公式ソースからの統計を検証
-- 可能な限り最新のデータを使用
-- データ収集日を記録
-- データ変換や計算を説明
-
-### 保守性
-
-- 一貫した命名パターンを使用
-- 特定の比較にフォーカスしたシナリオを維持
-- 過度に複雑なパワー計算を避ける
-- 異常または複雑なデータソースを記録
-
-### ローカライゼーション
-
-- 主要コンテンツは日本語
-- 適切な自治体用語を使用
-- 地域のランドマークと文化を参照
-- 既存のバトルとの一貫性を維持
-
-## 例
-
-### シンプルな人口比較
-
-```typescript
 const battle: Battle = {
-    id: 'population-2023',
-    title: '人口対決2023',
-    subtitle: '市民パワーバトル',
-    overview: '2023年の人口データを基にした対決',
-    scenario: 'より多くの市民を抱える自治体が勝利...',
+    id: 'yono-komae-population-trends-2024',
+    themeId: 'figures', // テーマフォルダと対応
+    significance: 'medium', // 'low' | 'medium' | 'high' | 'legendary'
+    publishState: 'published', // 'published' | 'draft' | 'review' | 'archived' (省略時 published)
+    title: '人口推移激闘2024',
+    subtitle: '長期トレンド対決',
+    narrative: {
+        overview: '両自治体の人口トレンド比較',
+        scenario: '詳細背景...',
+    },
     komae: {
-        name: 'コマえもん',
-        power: 83,
-        description: '狛江市の人口: 83,000人',
+        title: 'コマえもん',
+        subtitle: '粘りの都市',
+        description: '説明...',
+        power: 42,
+        imageUrl: '',
     },
     yono: {
-        name: 'ヨノ丸',
-        power: 135,
-        description: 'さいたま市中央区の人口: 135,000人',
+        title: 'ヨノ丸',
+        subtitle: '成長の街',
+        description: '説明...',
+        power: 55,
+        imageUrl: '',
     },
     provenance: [
         {
-            label: '住民基本台帳人口',
-            url: 'https://example.gov.jp/data',
-            note: '2023年12月31日現在',
+            label: 'Official Stats',
+            url: 'https://example.gov/data',
+            note: '2024 annual bulletin',
         },
     ],
 };
+export default battle;
 ```
+
+### 必須フィールド
+
+- `id`: リポジトリ全体で一意（集計 / グルーピングで利用、安定維持）
+- `themeId`: 既存テーマフォルダ名と一致
+- `significance`: UI チップ / 将来重み付け基礎
+- `publishState`: ライフサイクル（未指定は published 正規化）
+- `narrative.overview` / `narrative.scenario`
+- `komae`, `yono`: 各 Neta オブジェクト (`title`,`subtitle`,`description`,`power` 必須)
+
+### 任意フィールド
+
+- `provenance[]`: 強く推奨（透明性確保）
+- `imageUrl`: 空でも可（正規化で `undefined` プレフィクス除去）
+
+## ライフサイクル (`publishState`)
+
+| 値        | 意味                     | チップ | 典型配置                 |
+| --------- | ------------------------ | ------ | ------------------------ |
+| published | 正式公開                 | 非表示 | theme/{themeName}/       |
+| draft     | 初期案 / 不完全          | 表示   | \_\_drafts/ または theme |
+| review    | 検証 / 編集レビュー保留  | 表示   | \_\_drafts/ または theme |
+| archived  | 退役 / 参照用 (履歴保持) | 表示   | \_\_drafts/ または theme |
+
+注意:
+
+- ディレクトリ位置は補助であり `publishState` が真実。
+- 未知 state は無視され fallback 的に published と同扱い（追加時はジェネレータ修正要）。
+
+## 統合インデックス生成
+
+単一スクリプトを使用:
+
+```bash
+pnpm --filter @yonokomae/data-battle-seeds run generate:battles
+```
+
+生成（`__generated/index.generated.ts`）:
+
+- `publishedBattleMap` / `draftBattleMap`
+- 状態別マップ集合 `battleMapsByPublishState`
+- `publishStateKeys`, `battleSeedsByPublishState`
+- `allBattleMap`
+- グルーピング: `battlesByThemeId`, `themeIds`
+
+生成物は編集禁止。変更時は再実行。
+
+## 追加手順チェックリスト
+
+1. データ調査（出典確保）
+2. テーマ選択 / 必要なら新規作成（命名一貫性確保）
+3. ファイル作成 & 必須フィールド記述
+4. `publishState` 設定（明示しない場合は published）
+5. 検証実行:
+    ```bash
+    pnpm --filter @yonokomae/data-battle-seeds test
+    ```
+6. インデックス再生成（テスト内で呼ばれない場合のみ）
+7. コミット: `data(battle): add <theme>:<topic> battle`
+
+## 検証 & CI
+
+- スキーマ & 一意性: `seeds.validation.test.ts`
+- basename 重複 or `id` 重複: ジェネレータがエラー終了
+- `publishState` 欠落: published として受理（警告化の余地）
+
+## パワー値ガイド
+
+- 目安帯域: 0–150（極端値は説明文で根拠明示）
+- 偶発的同値は必要性ある場合のみ
+- 異種指標は正規化（比率 / 人口比 等）後に power マッピング
+
+## 出典 (Provenance) ベストプラクティス
+
+- 一次ソース（自治体 / 統計局）優先
+- `label`, 安定 `url`, 簡潔 `note`（年 / 時点 / 変換）
+- 複数可（重要度順）
+
+## テーマ整理指針
+
+異質トピックが 8–10 を超え肥大化するテーマは分割検討。早期細分化は避ける（まず docs PR）。
+
+## よくある落とし穴
+
+| 問題              | 症状                   | 対処                            |
+| ----------------- | ---------------------- | ------------------------------- |
+| publishState 無し | 暗黙 published         | 明示的に追加                    |
+| themeId タイポ    | 期待グループに現れない | フォルダ名と一致させる          |
+| id 重複           | テスト失敗 / 生成失敗  | リネーム（全体検索）            |
+| narrative 過度    | 翻訳/検証困難          | overview 簡潔 / 詳細は scenario |
+
+## アプリでの利用例
+
+```ts
+import {
+    battlesByThemeId,
+    themeIds,
+    battleSeedsByPublishState,
+} from '@yonokomae/data-battle-seeds';
+
+const publishedHistory = Object.values(
+    battlesByThemeId['history'] || [],
+).filter((b) => b.publishState === 'published');
+```
+
+## 将来拡張（後方互換想定）
+
+- 新しい publishState (例: `experimental`) 追加
+- 状態別重み付け
+- 機械可読な出典タクソノミ
 
 ## 関連ドキュメント
 
-- **メインデータガイド**: `docs/DATA_MAINTENANCE_JA.md`
-- **歴史的証拠**: `docs/data/HISTORICAL_EVIDENCE_SEEDS_JA.md`
-- **ニュースシード**: `docs/data/NEWS_SEEDS_JA.md`
-- **型定義**: `packages/types/src/battle.ts`
-- **検証スキーマ**: `packages/schema/src/battle.ts`
+- メインデータガイド: `docs/DATA_MAINTENANCE_JA.md`
+- 歴史的証拠: `docs/data/HISTORICAL_EVIDENCE_SEEDS_JA.md`
+- ニュースシード: `docs/data/NEWS_SEEDS_JA.md`
+- 型定義: `packages/types/src/battle.ts`
+- スキーマ: `packages/schema/src/battle.ts`
 
-## 付録: リポジトリ層フィルタとの連携
+## 付録: リポジトリ層フィルタ
 
-バトルシードは生成時にリポジトリ層の `BattleFilter` UI 経由で (現状は `themeId` のみ)
-絞り込み可能です。これはシードファイルの記述方法を変更しません。将来的なフィルタ
-(`significance`, 明示的 `id`) は後方互換的に追加予定であり、追加手順は Development Guide に告知されるまで対応不要です。
+現状 `BattleFilter` は `themeId` のみ絞り込み。将来 `significance` / 明示的 `id` などを追加予定（後方互換）。著者側の構造変更不��。

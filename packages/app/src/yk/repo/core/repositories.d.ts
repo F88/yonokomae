@@ -70,6 +70,8 @@ export type BattleReportFilter = {
     id?: string;
     themeId?: string;
     significance?: Battle['significance'];
+    /** Optional publishState filter (when set, restricts random selection to this state). */
+    publishState?: Battle['publishState'];
   };
 };
 export interface GenerateBattleReportParams {

@@ -17,6 +17,7 @@ const baseBattle: Battle = {
   id: 'battle_story_integrated_001',
   themeId: 'history',
   significance: 'medium',
+  publishState: 'published',
   title: 'Historic Crossroads',
   subtitle: 'Identity vs Development',
   narrative: {

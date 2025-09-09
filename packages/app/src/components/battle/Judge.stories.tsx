@@ -9,6 +9,7 @@ const battle: Battle = {
   id: 'judge-battle-1',
   themeId: 'history',
   significance: 'low',
+  publishState: 'published',
   title: 'Verdict Preview',
   subtitle: 'Judging outcomes',
   narrative: {

@@ -10,13 +10,14 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
 import { battleThemeCatalog } from '@yonokomae/catalog';
 import type { Battle } from '@yonokomae/types';
 import type { FC } from 'react';
 import { useMemo } from 'react';
-import { cn } from '@/lib/utils';
-import SignificanceChip from '../ui/significance-chip';
+import { SignificanceChip } from '../ui/SignificanceChip';
 import { MetaData } from './MetaData';
+import { PublishStateChip } from './PublishStateChip';
 
 export type Props = {
   battle?: Battle | null;
@@ -176,6 +177,13 @@ export const HistoricalScene: FC<Props> = ({
 
           {/* Title block */}
           <div className="space-y-2">
+            {/* Publish State (HistoricalScene only shows when NOT published) */}
+            {battle.publishState !== 'published' && (
+              <div className="flex justify-center">
+                <PublishStateChip state={battle.publishState} showLabel />
+              </div>
+            )}
+
             {/* Legendary battle */}
             {battle.significance && battle.significance === 'legendary' && (
               <>

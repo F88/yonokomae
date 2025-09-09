@@ -61,6 +61,8 @@ export class HistoricalEvidencesBattleReportRepository
 {
   private readonly file?: string;
   private readonly delay?: DelayOption;
+  /** When true, restricts random pool to published (non-draft) battle seeds. */
+  private readonly publishedOnly?: boolean;
 
   /**
    * @param opts Optional configuration
@@ -68,9 +70,14 @@ export class HistoricalEvidencesBattleReportRepository
    *                  When omitted, a random file will be chosen.
    * @param opts.delay Optional artificial delay configuration for UX simulation.
    */
-  constructor(opts?: { file?: string; delay?: DelayOption }) {
+  constructor(opts?: {
+    file?: string;
+    delay?: DelayOption;
+    publishedOnly?: boolean;
+  }) {
     this.file = opts?.file;
     this.delay = opts?.delay;
+    this.publishedOnly = opts?.publishedOnly;
   }
 
   async generateReport(params?: GenerateBattleReportParams): Promise<Battle> {
@@ -96,13 +103,20 @@ export class HistoricalEvidencesBattleReportRepository
     const themeId = params?.filter?.battle?.themeId;
     const idFilter = params?.filter?.battle?.id;
     const significance = params?.filter?.battle?.significance;
+    // Access extended optional publishState (recently added to BattleReportFilter); cast for backward compatibility during transition.
+    const publishState = (
+      params?.filter?.battle as unknown as {
+        publishState?: Battle['publishState'];
+      }
+    )?.publishState;
 
     const predicate =
-      themeId || idFilter || significance
+      themeId || idFilter || significance || publishState
         ? (b: Battle) => {
             if (themeId && b.themeId !== themeId) return false;
             if (idFilter && b.id !== idFilter) return false;
             if (significance && b.significance !== significance) return false;
+            if (publishState && b.publishState !== publishState) return false;
             return true;
           }
         : undefined;
@@ -112,6 +126,8 @@ export class HistoricalEvidencesBattleReportRepository
         roots,
         file: this.file,
         predicate,
+        // Opt-in only (defaults to undefined to preserve previous behavior)
+        publishedOnly: this.publishedOnly,
       });
 
       const end =

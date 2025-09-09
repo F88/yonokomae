@@ -12,7 +12,11 @@
     }
   },
   "scripts": {
+    "prebuild": "tsx scripts/generate-battle-index.ts",
     "build": "tsc",
+    "generate:battles": "tsx scripts/generate-battle-index.ts",
+    "generate:drafts": "tsx scripts/generate-battle-index.ts",
+    "postbuild": "tsx scripts/generate-all-battles-json.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "clean": "rm -rf dist"

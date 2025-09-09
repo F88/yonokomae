@@ -2,7 +2,7 @@
  * Analyze battle seeds (either live from built modules or a previously exported JSON file).
  *
  * 概要:
- * - `data/battle-seeds/dist/battle/*.js` (Vite ビルド生成物) をインライン import し統計集計
+ * - `@yonokomae/data-battle-seeds` が提供する `battleSeeds` (全 publishState 含む) を直接利用
  * - もしくは `ops:export-battle-seeds-to-json` で生成した JSON を入力
  * - 出力は human-readable テキストまたは `--format=json` による JSON サマリ
  *
@@ -46,16 +46,25 @@
  * @example pnpm run ops:analyze-battle-seeds -- out/battles.json --format=json
  */
 
-import { readdirSync, readFileSync, existsSync } from 'fs';
+import { readFileSync, readdirSync, statSync, existsSync } from 'fs';
 import * as path from 'path';
 import type { Battle } from '@yonokomae/types';
 import chalk from 'chalk';
+// NOTE: Direct import of battleSeeds was reverted because individual battle seed
+// modules reference `${import.meta.env.BASE_URL}` in template literals. Under
+// plain Node (ops build) `import.meta.env` is undefined causing a runtime crash.
+// Instead we now:
+//   1. Recursively scan data/battle-seeds/dist/battle for .js files (including drafts in subdirs)
+//   2. Read each file as text and sanitize occurrences of `${import.meta.env.BASE_URL}` -> ''
+//   3. Dynamically import via a data: URL so no intermediate temp files are needed.
+// This guarantees ALL publishState entries (published + draft + future states) are loaded.
 
 interface StatsSummary {
   total: number;
   byTheme: Record<string, { count: number; ratio: number }>;
   bySignificance: Record<string, { count: number; ratio: number }>;
   crossTab: Record<string, Record<string, number>>; // themeId -> significance -> count
+  byPublishState: Record<string, { count: number; ratio: number }>; // published / draft / review / archived etc.
   power: {
     komae: { min: number; max: number; avg: number };
     yono: { min: number; max: number; avg: number };
@@ -70,29 +79,102 @@ interface StatsSummary {
     yonoPower: number;
     combined: number;
   }>;
-  index: Array<{ themeId: string; id: string; title: string }>;
+  index: Array<{
+    themeId: string;
+    publishState: string;
+    id: string;
+    title: string;
+    subtitle: string;
+  }>;
+  draftIds: string[]; // convenience for quick diff / triage
 }
 
-function locateBattleDistDir(): string {
-  const dir = path.resolve(process.cwd(), 'data/battle-seeds/dist/battle');
-  if (existsSync(dir)) return dir;
-  throw new Error(
-    `Battle seeds dist directory not found at ${dir}\nHave you executed: pnpm run build:packages ?`,
+// NOTE: パッケージ API 直接 import 方式は Node 実行時の `import.meta.env` 未定義エラーのため撤回。
+//       現在は dist ファイル再走査 (再帰) → 動的 import により publishState 全件を取得。
+
+async function loadBattlesFromDist(): Promise<Battle[]> {
+  // Fast path: if prebuilt consolidated JSON exists, use it.
+  const prebuiltJson = path.resolve(
+    process.cwd(),
+    'data/battle-seeds/dist/battle/__generated/all-battles.json',
   );
-}
-
-async function loadAllBattlesFromDist(): Promise<Battle[]> {
-  const battleDir = locateBattleDistDir();
-  const files = readdirSync(battleDir).filter((f) => f.endsWith('.js'));
-  const imports = files.map(async (file) => {
-    const filePath = path.join(battleDir, file);
-    const src = readFileSync(filePath, 'utf8');
-    const sanitized = src.replaceAll('import.meta.env.BASE_URL', "''");
-    const dataUrl = `data:text/javascript;base64,${Buffer.from(sanitized, 'utf8').toString('base64')}`;
-    const mod = await import(dataUrl);
-    return (mod.default ?? mod) as Battle;
-  });
-  return Promise.all(imports);
+  if (existsSync(prebuiltJson)) {
+    try {
+      const raw = readFileSync(prebuiltJson, 'utf8');
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        return arr as Battle[];
+      }
+    } catch {
+      // fall through to dynamic scan
+    }
+  }
+  const root = path.resolve(process.cwd(), 'data/battle-seeds/dist/battle');
+  const files: string[] = [];
+  const walk = (dir: string) => {
+    let entries: string[] = [];
+    try {
+      entries = readdirSync(dir);
+    } catch {
+      return; // silently ignore missing path
+    }
+    for (const entry of entries) {
+      const full = path.join(dir, entry);
+      let st;
+      try {
+        st = statSync(full);
+      } catch {
+        continue;
+      }
+      if (st.isDirectory()) {
+        if (entry === '__generated') {
+          // Skip auto-generated aggregation modules; analyzer wants only raw battle definitions.
+          continue;
+        }
+        walk(full);
+      } else if (st.isFile()) {
+        if (entry.endsWith('.js')) {
+          // Exclude aggregate generated index modules – we only want raw battle definitions.
+          if (!/index\.generated\.js$/.test(entry)) {
+            files.push(full);
+          }
+        }
+      }
+    }
+  };
+  walk(root);
+  files.sort();
+  const battles: Battle[] = [];
+  for (const file of files) {
+    let src: string;
+    try {
+      src = readFileSync(file, 'utf8');
+    } catch {
+      continue;
+    }
+    // Remove problematic Vite-only placeholder usage.
+    const sanitized = src.replace(/\$\{import\.meta\.env\.BASE_URL\}/g, '');
+    // data URL import keeps relative source mapping irrelevant for analysis.
+    const dataUrl =
+      'data:text/javascript;base64,' +
+      Buffer.from(sanitized, 'utf8').toString('base64');
+    try {
+      const mod = (await import(dataUrl)) as { default?: unknown };
+      const battle = mod.default as Partial<Battle> | undefined;
+      if (battle && typeof battle === 'object') {
+        // Coerce minimal shape safeguards
+        if (!battle.id || !battle.themeId) continue;
+        battles.push(battle as Battle);
+      }
+    } catch {
+      // Skip modules that fail to import; log minimal diagnostic.
+      console.error(
+        chalk.red('[analyze-battle-seeds] failed to import:'),
+        path.basename(file),
+      );
+    }
+  }
+  return battles;
 }
 
 function calcStats(battles: Battle[]): StatsSummary {
@@ -100,6 +182,7 @@ function calcStats(battles: Battle[]): StatsSummary {
   const byTheme: StatsSummary['byTheme'] = {};
   const bySignificance: StatsSummary['bySignificance'] = {};
   const crossTab: StatsSummary['crossTab'] = {};
+  const byPublishState: StatsSummary['byPublishState'] = {};
   let komaeMin = Infinity,
     komaeMax = -Infinity,
     komaeSum = 0;
@@ -119,6 +202,11 @@ function calcStats(battles: Battle[]): StatsSummary {
       bySignificance[b.significance] = { count: 0, ratio: 0 };
     }
     bySignificance[b.significance]!.count += 1;
+    const ps = b.publishState ?? 'published';
+    if (!byPublishState[ps]) {
+      byPublishState[ps] = { count: 0, ratio: 0 };
+    }
+    byPublishState[ps]!.count += 1;
     if (!crossTab[b.themeId]) crossTab[b.themeId] = {};
     const ctRow = crossTab[b.themeId]!;
     ctRow[b.significance] = (ctRow[b.significance] ?? 0) + 1;
@@ -143,6 +231,9 @@ function calcStats(battles: Battle[]): StatsSummary {
   Object.values(bySignificance).forEach((v) => {
     v.ratio = ratio(v.count);
   });
+  Object.values(byPublishState).forEach((v) => {
+    v.ratio = ratio(v.count);
+  });
 
   const avg = (sum: number) => (total === 0 ? 0 : sum / total);
 
@@ -160,7 +251,13 @@ function calcStats(battles: Battle[]): StatsSummary {
     .slice(0, 5);
 
   const index = battles
-    .map((b) => ({ themeId: b.themeId, id: b.id, title: b.title }))
+    .map((b) => ({
+      themeId: b.themeId,
+      publishState: b.publishState ?? 'published',
+      id: b.id,
+      title: b.title,
+      subtitle: b.subtitle,
+    }))
     // Order by themeId, then title, then id (as requested: theme,title,id)
     .sort((a, b) => {
       if (a.themeId !== b.themeId) return a.themeId.localeCompare(b.themeId);
@@ -168,11 +265,17 @@ function calcStats(battles: Battle[]): StatsSummary {
       return a.id.localeCompare(b.id);
     });
 
+  const draftIds = battles
+    .filter((b) => (b.publishState ?? 'published') !== 'published')
+    .map((b) => b.id)
+    .sort();
+
   return {
     total,
     byTheme,
     bySignificance,
     crossTab,
+    byPublishState,
     power: {
       komae: {
         min: komaeMin === Infinity ? 0 : komaeMin,
@@ -192,6 +295,7 @@ function calcStats(battles: Battle[]): StatsSummary {
     },
     topCombined,
     index,
+    draftIds,
   };
 }
 
@@ -206,6 +310,16 @@ function renderText(stats: StatsSummary): string {
   lines.push(chalk.bold(`Battle Seeds Analysis`));
   lines.push('');
   lines.push(`${label('Total Battles:')} ${num(stats.total)}`);
+  if (stats.byPublishState.published) {
+    const published = stats.byPublishState.published.count;
+    const publishedPct = formatPercent(stats.byPublishState.published.ratio);
+    const drafts = Object.entries(stats.byPublishState)
+      .filter(([k]) => k !== 'published')
+      .reduce((a, [, v]) => a + v.count, 0);
+    lines.push(
+      `${label('Published:')} ${published} (${publishedPct}%)  ${label('Unpublished Total:')} ${drafts}`,
+    );
+  }
   lines.push('');
   lines.push(chalk.bold('By Theme:'));
   const themeEntries = Object.entries(stats.byTheme).sort(
@@ -216,8 +330,22 @@ function renderText(stats: StatsSummary): string {
       `  ${theme.padEnd(12, ' ')} ${v.count.toString().padStart(3, ' ')}  ${formatPercent(v.ratio)}%`,
     );
   }
+
+  // Significance
   lines.push('');
   lines.push(chalk.bold('By Significance:'));
+  // Publish State distribution
+  lines.push('');
+  lines.push(chalk.bold('By Publish State:'));
+  const psEntries = Object.entries(stats.byPublishState).sort(
+    (a, b) => b[1].count - a[1].count,
+  );
+  for (const [ps, v] of psEntries) {
+    lines.push(
+      `  ${ps.padEnd(12, ' ')} ${v.count.toString().padStart(3, ' ')}  ${formatPercent(v.ratio)}%`,
+    );
+  }
+
   const sigEntries = Object.entries(stats.bySignificance).sort(
     (a, b) => b[1].count - a[1].count,
   );
@@ -226,6 +354,7 @@ function renderText(stats: StatsSummary): string {
       `  ${sig.padEnd(10, ' ')} ${v.count.toString().padStart(3, ' ')}  ${formatPercent(v.ratio)}%`,
     );
   }
+
   // Cross-tab (Theme x Significance)
   lines.push('');
   lines.push(chalk.bold('Theme x Significance:'));
@@ -270,6 +399,8 @@ function renderText(stats: StatsSummary): string {
       String(stats.total).padStart(5, ' ');
     lines.push(totalRow);
   }
+
+  // Power stats
   lines.push('');
   lines.push(chalk.bold('Power Stats:'));
   lines.push(
@@ -281,6 +412,8 @@ function renderText(stats: StatsSummary): string {
   lines.push(
     `  combined min=${stats.power.combined.min} max=${stats.power.combined.max} avg=${stats.power.combined.avg.toFixed(1)}`,
   );
+
+  // Top 5 Battles by combined power
   lines.push('');
   lines.push(chalk.bold('Top 5 Battles (by combined power):'));
   for (const b of stats.topCombined) {
@@ -291,30 +424,67 @@ function renderText(stats: StatsSummary): string {
   if (stats.topCombined.length === 0) {
     lines.push('  (no battles)');
   }
+
+  // Battle Index (TSV)
   lines.push('');
-  lines.push(chalk.bold('Battle Index (themeId,title,id):'));
+  lines.push(chalk.bold('Battle Index (TSV)'));
+  lines.push(['Theme', 'Publish State', 'Title', 'Subtitle', 'ID'].join('\t'));
   for (const row of stats.index) {
     lines.push(
-      `  ${row.themeId.padEnd(12, ' ')} ${row.title.padEnd(30, ' ')} ${row.id}`,
+      [row.themeId, row.publishState, row.title, row.subtitle, row.id].join(
+        '\t',
+      ),
     );
+  }
+  // Draft / unpublished list
+  lines.push('');
+  lines.push(chalk.bold('Unpublished (non-published) Battle IDs:'));
+  if (stats.draftIds.length === 0) {
+    lines.push('  (none)');
+  } else {
+    for (const id of stats.draftIds) lines.push(`  - ${id}`);
   }
   return lines.join('\n');
 }
 
 async function main() {
   const started = Date.now();
-  const args = process.argv.slice(2);
-  if (args.includes('-h') || args.includes('--help')) {
+  // Strip the standalone "--" argument that npm/pnpm inserts before user flags.
+  const args = process.argv.slice(2).filter((a) => a !== '--');
+  const showHelp = args.includes('-h') || args.includes('--help');
+  const formatJson = args.includes('--format=json');
+  const hasPublishedOnly = args.includes('--published-only');
+  const hasDraftsOnly = args.includes('--drafts-only');
+  if (hasPublishedOnly && hasDraftsOnly) {
+    throw new Error(
+      'Flags --published-only and --drafts-only are mutually exclusive',
+    );
+  }
+  const filteredArgs = args.filter(
+    (a) =>
+      a !== '--format=json' &&
+      a !== '--published-only' &&
+      a !== '--drafts-only',
+  );
+  if (showHelp) {
     process.stdout.write(
-      `Analyze battle seeds.\n\nUsage: pnpm run ops:analyze-battle-seeds [infile] [--format=json]\n  If [infile] is omitted, battles are loaded from dist modules.\n\nExamples:\n  pnpm run ops:analyze-battle-seeds\n  pnpm run ops:export-battle-seeds-to-json -- out/battles.json && pnpm run ops:analyze-battle-seeds -- out/battles.json\n  pnpm run ops:analyze-battle-seeds -- out/battles.json --format=json\n`,
+      `Analyze battle seeds.\n\n` +
+        `Usage: pnpm run ops:analyze-battle-seeds [infile] [--format=json] [--published-only|--drafts-only]\n` +
+        `  If [infile] is omitted, battles are loaded from dist modules.\n` +
+        `  Filtering flags narrow the in-memory set prior to statistics.\n\n` +
+        `Examples:\n` +
+        `  pnpm run ops:analyze-battle-seeds\n` +
+        `  pnpm run ops:export-battle-seeds-to-json -- out/battles.json && pnpm run ops:analyze-battle-seeds -- out/battles.json\n` +
+        `  pnpm run ops:analyze-battle-seeds -- out/battles.json --format=json\n` +
+        `  pnpm run ops:analyze-battle-seeds -- --format=json --published-only\n` +
+        `  pnpm run ops:analyze-battle-seeds -- --format=json --drafts-only\n`,
     );
     return;
   }
-  const formatJson = args.includes('--format=json');
-  const filteredArgs = args.filter((a) => a !== '--format=json');
   let battles: Battle[] = [];
   if (filteredArgs.length === 0) {
-    battles = await loadAllBattlesFromDist();
+    // dist/battle 再帰走査で全 publishState 取得
+    battles = await loadBattlesFromDist();
   } else {
     const inFile = filteredArgs[0];
     if (typeof inFile !== 'string' || inFile.length === 0) {
@@ -327,6 +497,19 @@ async function main() {
     }
     battles = parsed as Battle[];
   }
+  // Apply filtering flags AFTER loading but BEFORE stats computation.
+  let filterLabel: 'published-only' | 'drafts-only' | 'all' = 'all';
+  if (hasPublishedOnly) {
+    battles = battles.filter(
+      (b) => (b.publishState ?? 'published') === 'published',
+    );
+    filterLabel = 'published-only';
+  } else if (hasDraftsOnly) {
+    battles = battles.filter(
+      (b) => (b.publishState ?? 'published') !== 'published',
+    );
+    filterLabel = 'drafts-only';
+  }
   const stats = calcStats(battles);
   if (formatJson) {
     process.stdout.write(
@@ -334,6 +517,9 @@ async function main() {
         {
           generatedAt: new Date().toISOString(),
           durationMs: Date.now() - started,
+          source:
+            filteredArgs.length === 0 ? 'package:battleSeeds' : 'json:file',
+          filter: filterLabel,
           ...stats,
         },
         null,

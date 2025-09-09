@@ -144,6 +144,45 @@ When adding new filter fields:
 3. Add tests verifying narrowing & randomness within the constrained pool.
 4. Update this section (EN) then sync `DEVELOPMENT_JA.md`.
 
+### Publish State & Thematic Battle Seed Structure
+
+Recent enhancement introduced an explicit `publishState` lifecycle for battle seeds and a
+themed directory layout (`data/battle-seeds/src/battle/theme/{themeName}/` + `__drafts/`).
+
+Motivations:
+
+- Improve curator workflow (separate incomplete concepts)
+- Enable UI differentiation via `PublishStateChip` (only non-`published` states render)
+- Prepare for future editorial tooling (review queues, archived surfacing)
+
+States & semantics:
+
+| State       | Meaning                             | UI Behavior |
+| ----------- | ----------------------------------- | ----------- |
+| `published` | Canonical, user-visible             | Chip hidden |
+| `draft`     | Early concept / incomplete          | Chip shown  |
+| `review`    | Pending validation / editorial pass | Chip shown  |
+| `archived`  | Retired / superseded                | Chip shown  |
+
+Rules:
+
+1. Files under `__drafts/` MUST specify a non-`published` `publishState`.
+2. Omitted `publishState` defaults to `published` (backward compatibility; may emit future warning).
+3. Only non-`published` seeds produce a `PublishStateChip` (HistoricalScene + list renderers).
+4. Filtering: repository layer combines `themeId` + `publishState` (disabled states show 0 and are selectable only when count > 0). Unknown states are treated as `published` if no explicit filter.
+
+Index Generation Scripts (Unified):
+
+- `generate-battle-index.ts`: Consolidated (draft-only legacy generator removed). The former `generate-draft-index.ts` was deprecated and is now removed; any previous workflow should invoke the unified script.
+
+Adding a new state (guideline):
+
+1. Add literal to generator regex + `publishStateKeys` export in data package.
+2. Update UI label map (`PublishStateChip`).
+3. Extend repository normalization fallback (retain defensive default to `published`).
+4. Add test: seed classification + chip rendering + filter option enable/disable.
+5. Update docs (EN → JA sync) & CHANGELOG.
+
 ### Environment Variables
 
 The file `.env.example` enumerates supported Vite environment variables. Copy it to one of:
@@ -400,6 +439,75 @@ pnpm -r exec echo {name}                    # list all workspace package names
 2. Data packages (if they reference types / schema)
 3. App (consumes all)
 
+### Battle Seed Generation & Theme Grouping
+
+Battle seed data (`@yonokomae/data-battle-seeds`) is auto-indexed. A generator
+(`data/battle-seeds/scripts/generate-battle-index.ts`) scans `src/battle/`
+and emits `__generated/index.generated.ts` with stable exports:
+
+- `publishedBattleMap`, `draftBattleMap`, and per-state maps collected in
+  `battleMapsByPublishState` plus convenience arrays `publishStateKeys` and
+  `battleSeedsByPublishState`.
+- `allBattleMap` for quick id/filename based lookups.
+- `battlesByThemeId` and `themeIds` (UI-oriented grouping by the canonical
+  `Battle.themeId` field). Each theme list is internally sorted by battle id
+  for deterministic rendering.
+- `ThemeId` (type) as `keyof typeof battlesByThemeId` for downstream narrowing.
+
+Rules / behavior:
+
+1. Missing `publishState` defaults to `published` (a warning is emitted).
+2. Duplicate basenames or duplicate explicit battle ids (the `id` property in
+   a seed) cause the generator to exit with a non-zero code.
+3. Only `*.ja.ts` files are indexed; drafts live under `__drafts/` but the
+   generator does not rely on directory names—`publishState` is the single
+   source of truth.
+4. Imports are static and tree-shakeable; no dynamic `require`.
+
+Adding a new battle seed:
+
+```bash
+cp data/battle-seeds/src/battle/theme/<some-theme>/existing-example.ja.ts \
+     data/battle-seeds/src/battle/theme/<some-theme>/new-battle-id.ja.ts
+# Edit metadata: id, title, subtitle, narrative, publishState, significance
+pnpm --filter @yonokomae/data-battle-seeds run generate:battles
+```
+
+Consuming grouped data in the app:
+
+```ts
+import {
+    battlesByThemeId,
+    themeIds,
+    ThemeId,
+} from '@yonokomae/data-battle-seeds';
+
+function getThemeBattles(theme: ThemeId) {
+    return battlesByThemeId[theme] ?? [];
+}
+```
+
+Manual seed package build (outside full workspace build):
+
+```bash
+# Ensure types/schema are built first
+pnpm -w run build:packages
+pnpm --filter @yonokomae/data-battle-seeds build
+```
+
+If you intentionally only touch seed source files you may run just the
+generator:
+
+```bash
+pnpm --filter @yonokomae/data-battle-seeds run generate:battles
+```
+
+Common pitfalls:
+
+- Attempting to build the seed package before `@yonokomae/types` exists in
+  `dist/` (fixed by running the workspace build as above).
+- Editing the generated file directly (always rerun the generator instead).
+
 Project references (`composite: true`) plus `--sort` guarantee declarations are ready before dependents build.
 
 ### Common Issues / Diagnostics
@@ -533,24 +641,32 @@ Guidelines:
 
 ### CLI Operations Scripts
 
-Ops scripts live under `src/ops/` and provide data export & analysis utilities. Each supports `-h` / `--help`.
+Ops scripts live under `src/ops/` and provide data export & analysis utilities. Each supports `-h` / `--help` and auto-runs prerequisite builds. A unified preparation script `pnpm run ops:prepare` performs:
 
-Build output: All ops scripts emit to `dist/ops-build/ops/`.
+1. Build all `@yonokomae/data-*` packages (ensuring fresh generated battle indexes / unified all-battles JSON)
+2. Build ops scripts into `dist/ops-build/ops/`
 
-- `export-battle-seeds-to-json.ts` – Emit all battle seeds as JSON
+Most individual ops commands automatically trigger the minimal required steps. Manually run `ops:prepare` only when you need a clean rebuild.
+
+Scripts:
+
+- `export-battle-seeds-to-json.ts` – Export (copy) the prebuilt unified battles JSON to file or stdout
 - `export-users-voice-to-tsv.ts` – Export user voice lines as TSV
 - `export-usage-examples-to-tsv.ts` – Export usage examples as TSV
-- `analyze-battle-seeds.ts` – Summarize and cross-tabulate battle seed statistics
+- `analyze-battle-seeds.ts` – Summarize and cross-tabulate battle seed statistics (loads generated modules or an explicit JSON file)
 
 Usage pattern:
 
 ```bash
+# (Optional) force full preparation
+pnpm run ops:prepare
+
 # Export / analysis via package scripts (preferred; auto-build if necessary)
 pnpm run ops:export-battle-seeds-to-json -- out/battles.json
 pnpm run ops:export-users-voice-to-tsv -- out/users-voice.tsv
 pnpm run ops:export-usage-examples-to-tsv -- out/usage-examples.tsv
 
-# Direct analysis (loads built dist modules)
+# Direct analysis (loads generated modules)
 pnpm run ops:analyze-battle-seeds
 
 # Analyze previously exported JSON file
@@ -559,7 +675,7 @@ pnpm run ops:analyze-battle-seeds -- out/battles.json
 # JSON output for automation (machine readable)
 pnpm run ops:analyze-battle-seeds -- --format=json
 
-# (Optional) Direct node invocation after a fresh build:
+# (Optional) Direct node invocation (after ops:prepare)
 # node dist/ops-build/ops/export-battle-seeds-to-json.js out/battles.json
 ```
 
@@ -579,12 +695,15 @@ pnpm run ops:export-users-voice-to-tsv -- --help
 - Theme × Significance cross-tab (matrix)
 - Power statistics (min / max / avg for `komae`, `yono`, and combined)
 - Top 5 battles by combined power (komae.power + yono.power)
+- Distribution by `publishState` (published / draft / review / archived)
+- List of unpublished (`draftIds`) battle ids for quick triage
 
 Automation tips:
 
 - Use `--format=json` to pipe into diff tools or CI assertions (e.g. detect unintended distribution drift).
 - Combine with `jq` for quick extraction: `pnpm run ops:analyze-battle-seeds -- --format=json | jq '.byTheme.development'`.
 - Run after data package updates to generate a summary artifact.
+- Use `--published-only` or `--drafts-only` flags to focus analysis (mutually exclusive).
 
 Testing:
 

@@ -130,6 +130,23 @@ export interface Battle {
    */
   significance: 'low' | 'medium' | 'high' | 'legendary';
   /**
+   * Publishing lifecycle state of this battle data.
+   *
+   * This controls which environments / selection flows should surface the
+   * battle. Selection (e.g. random generation) SHOULD by default include only
+   * `published` items in production. Other states are intended for development
+   * and curation workflows.
+   *
+   * States:
+   * - `draft`     – Under active creation; content and IDs may still change.
+   * - `review`    – Content frozen for editorial / data quality review.
+   * - `published` – Stable and eligible for end-user selection (default).
+   * - `archived`  – Retained for history; normally excluded from random pick.
+   *
+   * Omitted field MUST be treated as `published` for backward compatibility.
+   */
+  publishState: 'draft' | 'review' | 'published' | 'archived';
+  /**
    * The main title of the battle scenario.
    *
    * Displayed as a heading and used in tests. Keep it meaningful and concise.

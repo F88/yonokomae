@@ -87,7 +87,9 @@ export function RepositoryProvider({
       return repoPromise;
     };
     const battleReport = {
-      generateReport: async (opts?: { signal?: AbortSignal }) => {
+      generateReport: async (
+        opts?: import('./repositories').GenerateBattleReportParams,
+      ) => {
         const repo = await getOrCreateBattleReportRepo();
         return repo.generateReport(opts);
       },

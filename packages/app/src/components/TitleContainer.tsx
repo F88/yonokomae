@@ -631,6 +631,10 @@ export type TitleContainerProps = {
   selectedThemeId?: string;
   /** Notify parent when the active theme filter changes (undefined => all). */
   onSelectedThemeIdChange?: (id: string | undefined) => void;
+  /** Selected publishState (undefined => all states). Mirrors BattleFilter pass-through. */
+  selectedPublishState?: string;
+  /** Notify parent when the active publishState filter changes. */
+  onSelectedPublishStateChange?: (state: string | undefined) => void;
   /** Include description text in SR announcement (default false = srLabel only). */
   srIncludeDescription?: boolean;
 };
@@ -649,6 +653,8 @@ export function TitleContainer({
   onBattleSeedChange,
   selectedThemeId,
   onSelectedThemeIdChange,
+  selectedPublishState,
+  onSelectedPublishStateChange,
   srIncludeDescription = false,
 }: TitleContainerProps) {
   // -------------------------------------------------------------------
@@ -714,6 +720,38 @@ export function TitleContainer({
     },
     [selectedThemeId, onSelectedThemeIdChange],
   );
+
+  // -------------------------------------------------------------------
+  // publishState filter pass-through (mirrors theme filtering pattern)
+  // -------------------------------------------------------------------
+  const [internalPublishState, setInternalPublishState] = useState<
+    string | undefined
+  >(undefined);
+  const publishState =
+    selectedPublishState !== undefined
+      ? selectedPublishState
+      : internalPublishState;
+  const updatePublishState = useCallback(
+    (state: string | undefined) => {
+      if (selectedPublishState === undefined) {
+        setInternalPublishState(state);
+      }
+      onSelectedPublishStateChange?.(state);
+    },
+    [selectedPublishState, onSelectedPublishStateChange],
+  );
+
+  // If currently selected battle seed becomes incompatible with active publishState, clear it.
+  useEffect(() => {
+    if (!publishState || !effectiveBattleSeedFile) return;
+    const seed = battleSeedsByFile[effectiveBattleSeedFile] as
+      | { publishState?: string }
+      | undefined;
+    const seedState = seed?.publishState ?? 'published';
+    if (seedState !== publishState) {
+      updateBattleSeedFile(undefined);
+    }
+  }, [publishState, effectiveBattleSeedFile, updateBattleSeedFile]);
 
   // Stabilize BattleFilter visibility to prevent iOS WebKit re-render issues
   const showBattleFilter = useMemo(
@@ -1016,6 +1054,8 @@ export function TitleContainer({
             onSearchTextChange={setBattleSeedSearch}
             themeIdFilter={poolThemes[0]}
             onThemeIdFilterChange={(id) => updateTheme(id)}
+            publishStateFilter={publishState}
+            onPublishStateFilterChange={(s) => updatePublishState(s)}
           />
 
           {/* BattleFilter: Shows when 'historical-research' mode is selected (production + dev) */}
@@ -1026,6 +1066,8 @@ export function TitleContainer({
             themeIdsFilter={undefined}
             selectedThemeId={poolThemes[0]}
             onSelectedThemeIdChange={(id) => updateTheme(id)}
+            selectedPublishState={publishState}
+            onSelectedPublishStateChange={(s) => updatePublishState(s)}
             className="mt-2"
           />
         </CardHeader>

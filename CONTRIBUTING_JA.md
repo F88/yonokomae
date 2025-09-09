@@ -78,10 +78,13 @@ yonokomae/
 3. **ローカルでチェック実行**: コミット前に、CI チェックをローカルで実行し、すべてが正常であることを確認します。[ローカルでの CI チェック実行](#ローカルでの-ci-チェック実行)セクションを参照してください。
 4. **変更をコミット**: [コミットメッセージ規則](#コミットメッセージ規則)に従います。
 5. **チェンジセットを作成**: ユーザー向けの変更の場合、チェンジセットを作成します。
+
     ```bash
     pnpm changeset
     ```
+
     プロンプトに従って適切なバージョンバンプ（patch、minor、major）を選択し、変更の説明を記述します。
+
 6. **プッシュして Pull Request を作成**: ブランチを GitHub にプッシュし、`main` に対する Pull Request を作成します。
 
 ## コミットメッセージ規則
@@ -178,19 +181,19 @@ pnpm run deploy:ghpages
 
 詳細 (base path / 404 fallback / トラブルシュート): `docs/DEPLOYMENT_JA.md` を参照。
 
-## データエクスポート・分析スクリプト
+## データエクスポートと分析スクリプト
 
-このプロジェクトには、データエクスポートと分析のための包括的な CLI ツールが含まれています:
+本プロジェクトにはデータエクスポートと分析用の包括的な CLI ツールが含まれています。各コマンドは必要なデータパッケージビルドと ops ビルド ( `pnpm run ops:prepare` 相当 ) を必要に応じ自動実行します。フル再ビルドを強制したい場合のみ `pnpm run ops:prepare` を手動実行してください。
 
-### エクスポートコマンド
+### エクスポートコマンド (自動ビルド対応)
 
 - `pnpm run ops:export-usage-examples-to-tsv` - 使用例を TSV 形式でエクスポート
 - `pnpm run ops:export-users-voice-to-tsv` - ユーザーボイスデータを TSV 形式でエクスポート
-- `pnpm run ops:export-battle-seeds-to-json` - すべてのバトルシードを JSON 形式でエクスポート
+- `pnpm run ops:export-battle-seeds-to-json` - すべてのバトルシードを JSON 形式でエクスポート (事前生成された統合 JSON をコピー)
 
-### 分析コマンド
+### 分析コマンド (自動ビルド対応)
 
-- `pnpm run ops:analyze-battle-seeds` - バトルシードの分布と統計を分析
+- `pnpm run ops:analyze-battle-seeds` - バトルシードの分布と統計を分析 (統合生成インデックスまたはエクスポート JSON を読み込み)
     - 合計、テーマ/重要度の分布、パワー統計を表示
     - 機械可読出力用の `--format=json` をサポート
     - dist モジュールまたはエクスポート済み JSON ファイルから分析可能

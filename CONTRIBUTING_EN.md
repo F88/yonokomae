@@ -185,17 +185,17 @@ See `docs/DEPLOYMENT_EN.md` for base path, 404 fallback, and troubleshooting det
 
 ## Data Export and Analysis Scripts
 
-The project includes comprehensive CLI tools for data export and analysis:
+The project includes comprehensive CLI tools for data export and analysis. Each command auto-runs prerequisite data package builds and the ops build (equivalent to `pnpm run ops:prepare`) when needed. You may run `pnpm run ops:prepare` explicitly to force a fresh rebuild.
 
-### Export Commands
+### Export Commands (auto-build aware)
 
 - `pnpm run ops:export-usage-examples-to-tsv` - Exports usage examples to TSV format
 - `pnpm run ops:export-users-voice-to-tsv` - Exports user voices data to TSV format
-- `pnpm run ops:export-battle-seeds-to-json` - Exports all battle seeds to JSON format
+- `pnpm run ops:export-battle-seeds-to-json` - Exports all battle seeds to JSON format (copies prebuilt unified JSON)
 
-### Analysis Commands
+### Analysis Commands (auto-build aware)
 
-- `pnpm run ops:analyze-battle-seeds` - Analyzes battle seed distribution and statistics
+- `pnpm run ops:analyze-battle-seeds` - Analyzes battle seed distribution and statistics (reads unified generated index or an exported JSON file)
     - Shows totals, theme/significance distribution, power statistics
     - Supports `--format=json` for machine-readable output
     - Can analyze from dist modules or exported JSON files

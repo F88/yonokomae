@@ -38,6 +38,8 @@
 - fix(ui): correct iOS/WebKit touch mode selection misalignment (coordinate-based nearest option correction in TitleContainer)
 - test(e2e): remove title selection specs relying on dev-only selection counter instrumentation
 - docs(test): clarify E2E policy around dev-only instrumentation and production parity
+- chore(seeds): remove legacy draft index generator and leftover stubs (generate-draft-index.ts, \_\_drafts/index.generated.\*)
+- docs(dev,dev-ja,data-ja): sync removal of legacy draft generator; unify index generation docs
 
 ## 1.1.0
 

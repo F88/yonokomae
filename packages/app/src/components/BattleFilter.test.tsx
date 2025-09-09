@@ -1,14 +1,32 @@
+/* @vitest-environment jsdom */
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { BattleFilter } from './BattleFilter';
 
 vi.mock('@yonokomae/data-battle-seeds', () => ({
+  publishStateKeys: ['published', 'draft', 'review', 'archived'],
   battleSeedsByFile: {
-    'a-history.js': { title: 'Alpha History', themeId: 'history' },
-    'b-tech.js': { title: 'Beta Tech', themeId: 'technology' },
-    'c-history.js': { title: 'Gamma History', themeId: 'history' },
-    'd-culture.js': { title: 'Delta Culture', themeId: 'culture' },
+    'a-history.js': {
+      title: 'Alpha History',
+      themeId: 'history',
+      publishState: 'published',
+    },
+    'b-tech.js': {
+      title: 'Beta Tech',
+      themeId: 'technology',
+      publishState: 'draft',
+    },
+    'c-history.js': {
+      title: 'Gamma History',
+      themeId: 'history',
+      publishState: 'review',
+    },
+    'd-culture.js': {
+      title: 'Delta Culture',
+      themeId: 'culture',
+      publishState: 'published',
+    },
   },
 }));
 
@@ -78,5 +96,57 @@ describe('BattleFilter (chip single-select)', () => {
     const techButton = screen.getByTestId('battle-filter-chip-technology');
     const inactiveChip = techButton.querySelector('[data-testid="theme-chip"]');
     expect(inactiveChip?.className).not.toMatch(/ring-2/);
+  });
+
+  it('shows publishState select and filters by publishState', () => {
+    render(<BattleFilter />);
+    const psSelect = screen.getByTestId(
+      'battle-filter-publish-state',
+    ) as HTMLSelectElement;
+    // Ensure options include states with counts (draft, review etc.)
+    expect(Array.from(psSelect.options).some((o) => o.value === 'draft')).toBe(
+      true,
+    );
+    fireEvent.change(psSelect, { target: { value: 'draft' } });
+    const list = screen.getByTestId('battle-filter-list');
+    expect(list.textContent).toContain('Beta Tech');
+    expect(list.textContent).not.toContain('Alpha History');
+    expect(list.textContent).not.toContain('Gamma History');
+  });
+
+  it('combines theme + publishState filters (history + review)', () => {
+    render(<BattleFilter />);
+    // theme: history
+    fireEvent.click(screen.getByTestId('battle-filter-chip-history'));
+    const psSelect = screen.getByTestId(
+      'battle-filter-publish-state',
+    ) as HTMLSelectElement;
+    fireEvent.change(psSelect, { target: { value: 'review' } });
+    const list = screen.getByTestId('battle-filter-list');
+    expect(list.textContent).toContain('Gamma History');
+    expect(list.textContent).not.toContain('Alpha History');
+  });
+
+  it('disabled option appears for 0-count state (archived)', () => {
+    render(<BattleFilter />);
+    const psSelect = screen.getByTestId(
+      'battle-filter-publish-state',
+    ) as HTMLSelectElement;
+    const archived = Array.from(psSelect.options).find(
+      (o) => o.value === 'archived',
+    );
+    expect(archived).toBeTruthy();
+    expect(archived?.disabled).toBe(true);
+  });
+
+  it('renders publish state chip inline for non-published battles only', () => {
+    render(<BattleFilter />);
+    const list = screen.getByTestId('battle-filter-list');
+    const stateChips = list.querySelectorAll(
+      '[data-testid="publish-state-chip"]',
+    );
+    // Current implementation: chip is rendered ONLY when publishState !== 'published'.
+    // Mock seeds: published, draft, review, published -> expect 2 chips (draft + review).
+    expect(stateChips.length).toBe(2);
   });
 });

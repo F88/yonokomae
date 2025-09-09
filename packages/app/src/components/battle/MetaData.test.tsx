@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react';
 import { MetaData } from './MetaData';
 import type { Battle } from '@yonokomae/types';
 
-// Mock child components
+// Mock child components (updated to reflect new structure and remove label text coupling)
 vi.mock('./ThemeChip', () => ({
   ThemeChip: ({ themeId, variant }: { themeId: string; variant: string }) => (
     <div data-testid="theme-chip" data-theme={themeId} data-variant={variant}>
-      Theme: {themeId}
+      {themeId}
     </div>
   ),
 }));
@@ -25,12 +25,11 @@ vi.mock('./BattleContainerIdChip', () => ({
       data-battle-id={battle.id}
       data-variant={variant}
     >
-      Battle: {battle.id}
+      {battle.id}
     </div>
   ),
 }));
-
-vi.mock('@/components/ui/significance-chip', () => ({
+vi.mock('@/components/ui/SignificanceChip', () => ({
   SignificanceChip: ({
     significance,
     variant,
@@ -46,7 +45,28 @@ vi.mock('@/components/ui/significance-chip', () => ({
       data-variant={variant}
       data-show-label={showLabel}
     >
-      Significance: {significance}
+      {showLabel ? significance : null}
+    </div>
+  ),
+}));
+
+vi.mock('./PublishStateChip', () => ({
+  PublishStateChip: ({
+    state,
+    variant,
+    showLabel,
+  }: {
+    state: string;
+    variant: string;
+    showLabel: boolean;
+  }) => (
+    <div
+      data-testid="publish-state-chip"
+      data-state={state}
+      data-variant={variant}
+      data-show-label={showLabel}
+    >
+      {showLabel ? state : null}
     </div>
   ),
 }));
@@ -77,6 +97,7 @@ describe('MetaData', () => {
       power: 100,
     },
     status: 'success',
+    publishState: 'published' as const,
   };
 
   describe('Basic Rendering', () => {
@@ -87,6 +108,7 @@ describe('MetaData', () => {
       expect(screen.getByTestId('battle-id-chip')).toBeInTheDocument();
       expect(screen.getByTestId('theme-chip')).toBeInTheDocument();
       expect(screen.getByTestId('significance-chip')).toBeInTheDocument();
+      expect(screen.getByTestId('publish-state-chip')).toBeInTheDocument();
     });
 
     it('should pass correct props to child components', () => {
@@ -104,14 +126,28 @@ describe('MetaData', () => {
       expect(significanceChip).toHaveAttribute('data-significance', 'medium');
       expect(significanceChip).toHaveAttribute('data-variant', 'secondary');
       expect(significanceChip).toHaveAttribute('data-show-label', 'true');
+      const stateChip = screen.getByTestId('publish-state-chip');
+      expect(stateChip).toHaveAttribute('data-state', 'published');
+      // In MetaData implementation PublishStateChip variant is secondary when not compact
+      expect(stateChip).toHaveAttribute('data-variant', 'secondary');
+      expect(stateChip).toHaveAttribute('data-show-label', 'true');
     });
 
     it('should render battle content text', () => {
       render(<MetaData battle={mockBattle} />);
 
-      expect(screen.getByText('Battle: test-battle')).toBeInTheDocument();
-      expect(screen.getByText('Theme: technology')).toBeInTheDocument();
-      expect(screen.getByText('Significance: medium')).toBeInTheDocument();
+      expect(screen.getByTestId('battle-id-chip')).toHaveTextContent(
+        'test-battle',
+      );
+      expect(screen.getByTestId('theme-chip')).toHaveTextContent('technology');
+      expect(screen.getByTestId('significance-chip')).toHaveAttribute(
+        'data-significance',
+        'medium',
+      );
+      expect(screen.getByTestId('publish-state-chip')).toHaveAttribute(
+        'data-state',
+        'published',
+      );
     });
   });
 
@@ -144,6 +180,8 @@ describe('MetaData', () => {
 
       const significanceChip = screen.getByTestId('significance-chip');
       expect(significanceChip).toHaveAttribute('data-variant', 'secondary');
+      const stateChip = screen.getByTestId('publish-state-chip');
+      expect(stateChip).toHaveAttribute('data-variant', 'secondary');
     });
   });
 
@@ -307,12 +345,15 @@ describe('MetaData', () => {
       const chipContainer = container.querySelector('.flex');
       const childChips = chipContainer?.querySelectorAll('[data-testid]');
 
-      // Should have 3 child chips
-      expect(childChips).toHaveLength(3);
-
+      // Should have 4 child chips now (id, publishState, theme, significance)
+      expect(childChips).toHaveLength(4);
       expect(childChips?.[0]).toHaveAttribute('data-testid', 'battle-id-chip');
-      expect(childChips?.[1]).toHaveAttribute('data-testid', 'theme-chip');
-      expect(childChips?.[2]).toHaveAttribute(
+      expect(childChips?.[1]).toHaveAttribute(
+        'data-testid',
+        'publish-state-chip',
+      );
+      expect(childChips?.[2]).toHaveAttribute('data-testid', 'theme-chip');
+      expect(childChips?.[3]).toHaveAttribute(
         'data-testid',
         'significance-chip',
       );

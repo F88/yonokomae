@@ -1,6 +1,33 @@
-import { battleSeedsByFile } from '@yonokomae/data-battle-seeds';
+import {
+  battleSeedsByFile,
+  publishStateKeys,
+} from '@yonokomae/data-battle-seeds';
 import { battleThemeCatalog } from '@yonokomae/catalog';
 import { useMemo, useState } from 'react';
+
+/**
+ * BattleSeedSelector (Development Utility Only)
+ * ---------------------------------------------------------------------------
+ * PURPOSE
+ * A lightweight developer-only helper to deterministically pick a battle seed
+ * while testing generation flows. Provides quick filtering (text / theme /
+ * publishState) plus rotate & clear actions. Hidden in production via the
+ * parent `show` prop (typically gated by `import.meta.env.DEV`).
+ *
+ * A11Y WAIVER (INTENTIONAL)
+ * This component intentionally omits full accessibility hardening (advanced
+ * ARIA semantics, keyboard focus management beyond native form behavior,
+ * labeling audits, etc.). It is NOT intended for end-user exposure and may
+ * not satisfy WCAG guidelines. Do NOT repurpose it in production surfaces
+ * without adding proper accessibility support.
+ *
+ * GUARANTEES / NON-GUARANTEES
+ * - Stable props for internal tooling (may evolve without semantic versioning).
+ * - Minimal rerenders via memoization.
+ * - No runtime side-effects beyond calling `onChange`.
+ * - Not localized (developer English only).
+ * - No styling guarantees outside current Tailwind utility usage.
+ */
 
 export type BattleSeedSelectorProps = {
   value?: string;
@@ -15,6 +42,9 @@ export type BattleSeedSelectorProps = {
   /** Controlled themeId filter (optional). */
   themeIdFilter?: string;
   onThemeIdFilterChange?: (themeId: string | undefined) => void;
+  /** Controlled publishState filter (optional). */
+  publishStateFilter?: string;
+  onPublishStateFilterChange?: (state: string | undefined) => void;
   /** Show underlying battle seed id (battle.id inside the seed) next to the title. */
   showIds?: boolean;
 };
@@ -35,6 +65,8 @@ export function BattleSeedSelector({
   onSearchTextChange,
   themeIdFilter,
   onThemeIdFilterChange,
+  publishStateFilter,
+  onPublishStateFilterChange,
   showIds = false,
 }: BattleSeedSelectorProps) {
   // Build seed metadata once (stable unless battleSeedsByFile changes at build time)
@@ -44,11 +76,13 @@ export function BattleSeedSelector({
     id?: string;
     themeId?: string;
     themeName?: string;
+    publishState?: string;
   };
   interface BattleShape {
     id?: string;
     title?: string;
     themeId?: string;
+    publishState?: string;
   }
   const themeNameById = useMemo(() => {
     const map = new Map<string, string>();
@@ -65,6 +99,7 @@ export function BattleSeedSelector({
           id: b.id,
           themeId: b.themeId,
           themeName: b.themeId ? themeNameById.get(b.themeId) : undefined,
+          publishState: b.publishState ?? 'published',
         } satisfies SeedMeta;
       }),
     [themeNameById],
@@ -75,8 +110,12 @@ export function BattleSeedSelector({
   const [internalTheme, setInternalTheme] = useState<string | undefined>(
     undefined,
   );
+  const [internalPublishState, setInternalPublishState] = useState<
+    string | undefined
+  >(undefined);
   const effectiveSearch = searchText ?? internalSearch;
   const effectiveTheme = themeIdFilter ?? internalTheme;
+  const effectivePublishState = publishStateFilter ?? internalPublishState;
 
   const themeOptions = useMemo(() => {
     // Collect unique themeIds actually present in current seeds, then map to catalog for icon + name
@@ -100,15 +139,50 @@ export function BattleSeedSelector({
     return seeds
       .filter((s) => (effectiveTheme ? s.themeId === effectiveTheme : true))
       .filter((s) =>
+        effectivePublishState
+          ? (s.publishState ?? 'published') === effectivePublishState
+          : true,
+      )
+      .filter((s) =>
         needle
           ? s.title.toLowerCase().includes(needle) ||
             s.file.toLowerCase().includes(needle)
           : true,
       )
       .sort((a, b) => a.title.localeCompare(b.title));
-  }, [seeds, effectiveSearch, effectiveTheme]);
+  }, [seeds, effectiveSearch, effectiveTheme, effectivePublishState]);
 
   const files = filtered.map((f) => f.file);
+
+  // Facet-style counts for publishState options (counts reflect current theme + search filters
+  // but ignore the active publishState filter itself so users can see alternative counts).
+  const publishStateCounts = useMemo(() => {
+    const needle = effectiveSearch.trim().toLowerCase();
+    const counts: Record<string, number> = {};
+    for (const s of seeds) {
+      if (effectiveTheme && s.themeId !== effectiveTheme) continue;
+      if (
+        needle &&
+        !(
+          s.title.toLowerCase().includes(needle) ||
+          s.file.toLowerCase().includes(needle)
+        )
+      )
+        continue;
+      const st = s.publishState ?? 'published';
+      counts[st] = (counts[st] ?? 0) + 1;
+    }
+    return counts;
+  }, [seeds, effectiveTheme, effectiveSearch]);
+
+  // Publish state options (stable order via publishStateKeys). Only show states with > 0 count.
+  const publishStateOptions = useMemo(
+    () =>
+      publishStateKeys
+        .map((state) => ({ state, count: publishStateCounts[state] ?? 0 }))
+        .filter((o) => o.count > 0),
+    [publishStateCounts],
+  );
 
   if (!show) return null; // after hooks
 
@@ -119,6 +193,10 @@ export function BattleSeedSelector({
   const handleThemeChange = (theme: string | undefined) => {
     if (onThemeIdFilterChange) onThemeIdFilterChange(theme);
     else setInternalTheme(theme);
+  };
+  const handlePublishStateChange = (state: string | undefined) => {
+    if (onPublishStateFilterChange) onPublishStateFilterChange(state);
+    else setInternalPublishState(state);
   };
 
   return (
@@ -133,15 +211,25 @@ export function BattleSeedSelector({
         <span>Battle Seed:</span>
         {enableFilters && (
           <>
-            <input
-              type="text"
-              placeholder="filter by name"
-              className="w-32 rounded border px-2 py-1"
-              value={effectiveSearch}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              aria-label="Battle seed name filter"
-              data-testid="battle-seed-filter-text"
-            />
+            {/* Publish State Filter */}
+            <select
+              className="rounded border px-2 py-1"
+              aria-label="Battle seed publishState filter"
+              value={effectivePublishState ?? ''}
+              onChange={(e) =>
+                handlePublishStateChange(e.target.value || undefined)
+              }
+              data-testid="battle-seed-filter-publish-state"
+            >
+              <option value="">(all states)</option>
+              {publishStateOptions.map((ps) => (
+                <option key={ps.state} value={ps.state}>
+                  {ps.state} ({ps.count})
+                </option>
+              ))}
+            </select>
+
+            {/* Theme Filter */}
             <select
               className="rounded border px-2 py-1"
               aria-label="Battle seed theme filter"
@@ -156,6 +244,17 @@ export function BattleSeedSelector({
                 </option>
               ))}
             </select>
+
+            {/* Text Search Filter */}
+            <input
+              type="text"
+              placeholder="filter by name"
+              className="w-32 rounded border px-2 py-1"
+              value={effectiveSearch}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              aria-label="Battle seed name filter"
+              data-testid="battle-seed-filter-text"
+            />
           </>
         )}
         <select
