@@ -3,6 +3,7 @@ import type { Battle } from '@yonokomae/types';
 // Sample news seed for NewsReporterFileiBattleReportRepository
 const data: Battle = {
   id: 'battle-news-1',
+  publishState: 'published',
   themeId: 'information',
   significance: 'low',
   title: '朝のブリーフ: 与野 vs 狛江',
