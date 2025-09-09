@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'density-battle',
+  publishState: 'published',
   themeId: 'development',
   significance: 'medium',
   title: '密です',

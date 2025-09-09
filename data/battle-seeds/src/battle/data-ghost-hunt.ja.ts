@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'data-ghost-hunt',
+  publishState: 'published',
   themeId: 'information',
   significance: 'high',
   title: 'サイバーゴーストの追跡',

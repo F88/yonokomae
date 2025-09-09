@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'underground-conspiracy',
+  publishState: 'published',
   themeId: 'development',
   significance: 'high',
   title: '地下水脈の密航者',

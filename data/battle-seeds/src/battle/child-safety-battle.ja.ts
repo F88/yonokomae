@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'child-safety-battle',
+  publishState: 'published',
   themeId: 'technology',
   significance: 'high',
   title: '子どもの安全バトル',

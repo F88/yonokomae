@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'parenting-robot-battle',
+  publishState: 'published',
   themeId: 'technology',
   significance: 'high',
   title: '‍子育てロボットの導入',

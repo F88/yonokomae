@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'edo-era-heroes',
+  publishState: 'published',
   themeId: 'figures',
   significance: 'medium',
   title: '江戸を築きし者たちの戦い',

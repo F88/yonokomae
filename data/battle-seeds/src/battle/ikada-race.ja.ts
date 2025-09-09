@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ikada-race',
+  publishState: 'published',
   themeId: 'community',
   significance: 'medium',
   title: '大河川の恵み',

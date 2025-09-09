@@ -3,6 +3,7 @@ import type { Battle } from '@yonokomae/types';
 // Yono (Saitama-shi Chuo-ku) vs Komae: agriculture comparison (Japanese)
 const battle = {
   id: 'agriculture-2025-ja',
+  publishState: 'published',
   themeId: 'development',
   significance: 'low',
   title: '農業',

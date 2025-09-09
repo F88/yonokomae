@@ -3,6 +3,7 @@ import type { Battle } from '@yonokomae/types';
 // Yono vs Komae: commuting flows and mobility (Japanese version)
 const battle = {
   id: 'commuting-flows-1995-2025-ja',
+  publishState: 'published',
   themeId: 'development',
   significance: 'medium',
   title: '通勤流動と交流人口',

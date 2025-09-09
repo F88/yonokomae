@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ai-oracle',
+  publishState: 'published',
   themeId: 'information',
   significance: 'high',
   title: '神託AI vs. 人間の意志',

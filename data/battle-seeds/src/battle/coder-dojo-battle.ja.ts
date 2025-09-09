@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'coder-dojo-battle',
+  publishState: 'published',
   themeId: 'technology',
   significance: 'medium',
   title: 'CoderDojo',

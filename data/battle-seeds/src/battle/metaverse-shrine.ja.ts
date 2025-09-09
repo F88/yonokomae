@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ancient-oracle-battle',
+  publishState: 'published',
   themeId: 'culture',
   significance: 'medium',
   title: '古代の神託対決',

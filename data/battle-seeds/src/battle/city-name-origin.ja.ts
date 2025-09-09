@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 export default {
   id: 'city-name-origin',
+  publishState: 'published',
   themeId: 'history',
   significance: 'low',
   title: '市の名の由来を巡る論争',

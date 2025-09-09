@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'kids-tech-battle',
+  publishState: 'published',
   themeId: 'technology',
   significance: 'low',
   title: 'せんせい、みてみて! すごいロボット!',

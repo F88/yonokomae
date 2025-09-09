@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'disaster-simulation-battle',
+  publishState: 'published',
   themeId: 'technology',
   significance: 'high',
   title: '防災シミュレーション',

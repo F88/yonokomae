@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'snack-battle',
+  publishState: 'published',
   themeId: 'culture',
   significance: 'low',
   title: 'おかしなだいせんそう',

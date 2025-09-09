@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'culture-battle',
+  publishState: 'published',
   themeId: 'culture',
   significance: 'medium',
   title: '文化の創造と継承',

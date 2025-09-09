@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ruins-battle',
+  publishState: 'published',
   themeId: 'history',
   significance: 'medium',
   title: '古代の先輩後輩バトル',

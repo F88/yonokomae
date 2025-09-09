@@ -3,6 +3,7 @@ import type { Battle } from '@yonokomae/types';
 // Yono vs Komae: population trends (Japanese version)
 const battle = {
   id: 'population-trends-1920-2050-ja',
+  publishState: 'published',
   themeId: 'development',
   significance: 'high',
   title: '人口動向',

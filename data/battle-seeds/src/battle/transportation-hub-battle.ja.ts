@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'transportation-hub-battle',
+  publishState: 'published',
   themeId: 'development',
   significance: 'medium',
   title: '交通の覇権',

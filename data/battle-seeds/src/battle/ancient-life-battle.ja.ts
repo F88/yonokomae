@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ancient-life-battle',
+  publishState: 'published',
   themeId: 'history',
   significance: 'low',
   title: '縄文・弥生生活様式の対決',

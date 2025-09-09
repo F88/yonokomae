@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'showa-superstar-battle',
+  publishState: 'published',
   themeId: 'figures',
   significance: 'medium',
   title: '昭和の夜空に輝く双星',

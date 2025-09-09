@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'flood-battle',
+  publishState: 'published',
   themeId: 'development',
   significance: 'high',
   title: '治水バトル',

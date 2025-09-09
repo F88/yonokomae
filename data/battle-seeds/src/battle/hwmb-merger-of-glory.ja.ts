@@ -3,6 +3,7 @@ import type { Battle } from '@yonokomae/types';
 // Yono (former Yono-shi; present Saitama-shi Chuo-ku core) vs Komae: adjacent municipalities comparison (Japanese)
 const battle = {
   id: 'hwmb-merger-of-glory',
+  publishState: 'published',
   themeId: 'history',
   significance: 'legendary',
   title: 'よの 歴史を変える',

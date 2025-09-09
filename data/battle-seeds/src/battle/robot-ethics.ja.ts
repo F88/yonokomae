@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'robot-ethics',
+  publishState: 'published',
   themeId: 'technology',
   significance: 'high',
   title: 'ロボット倫理の境界線',

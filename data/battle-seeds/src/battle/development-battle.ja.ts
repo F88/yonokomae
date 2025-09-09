@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'development-battle',
+  publishState: 'published',
   themeId: 'development',
   significance: 'medium',
   title: '土地開発を巡る戦い',

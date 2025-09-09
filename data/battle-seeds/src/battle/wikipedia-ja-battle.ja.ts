@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'wikipedia-ja-battle',
+  publishState: 'published',
   themeId: 'information',
   significance: 'medium',
   title: '百科事典の真実',

@@ -2,6 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'water-resource-battle',
+  publishState: 'published',
   themeId: 'development',
   significance: 'high',
   title: '水資源の管理',
