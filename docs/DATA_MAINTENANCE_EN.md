@@ -38,25 +38,26 @@ Each package is independent and can be maintained separately while sharing commo
 
 1. **Navigate to the appropriate data package**:
 
-    ```bash
-    cd data/{package-name}/
-    ```
+```bash
+cd data/{package-name}/
+```
 
-2. **Edit or add data files** in the `src/` directory
+1. **Edit or add data files** in the `src/` directory
 
-3. **Validate your changes**:
+1. **Validate your changes**:
 
-    ```bash
-    pnpm test  # Test current package only
-    # OR from project root:
-    pnpm test  # Test all packages
-    ```
+```bash
+pnpm test  # Test current package only
+# OR from project root:
+pnpm test  # Test all packages
+```
 
-4. **Commit your changes**:
-    ```bash
-    git add data/{package-name}/
-    git commit -m "data({domain}): describe your changes"
-    ```
+1. **Commit your changes**:
+
+```bash
+git add data/{package-name}/
+git commit -m "data({domain}): describe your changes"
+```
 
 ## Data Packages
 
@@ -64,16 +65,93 @@ Each package is independent and can be maintained separately while sharing commo
 
 **Purpose**: Statistical battles between Yono and Komae using real municipal data.
 
-**File Location**: `data/battle-seeds/src/battle/`
+### Updated Directory Structure (themed + drafts)
+
+The battle seeds directory has been reorganized to support thematic grouping and explicit draft separation. This enables cleaner curation, easier discovery, and publish state–aware tooling.
+
+```text
+data/battle-seeds/
+    src/battle/
+        theme/
+            community/
+            culture/
+            development/
+            figures/
+            finance/
+            history/
+            information/
+            technology/
+        __drafts/           # Non-published battle concepts (publishState !== 'published')
+        __generated/        # Build artifacts (indexes) – do not edit manually
+```
+
+**Legacy flat files** (previously: `data/battle-seeds/src/battle/yono-komae-*.ja.ts`) have been migrated into the appropriate `theme/{themeName}/` subdirectory. New files MUST follow the thematic structure.
+
+**File Location (published)**: `data/battle-seeds/src/battle/theme/{themeName}/`
+**File Location (draft / review / archived)**: `data/battle-seeds/src/battle/__drafts/`
+
 **File Pattern**: `yono-komae-{topic}.ja.ts`
 **Type**: `Battle` from `@yonokomae/types`
 **Validation**: `BattleSchema` from `@yonokomae/schema`
 
 **Examples**:
 
-- `yono-komae-population-trends.ja.ts`
-- `yono-komae-area-comparison.ja.ts`
-- `yono-komae-agriculture.ja.ts`
+- `theme/history/yono-komae-population-trends.ja.ts`
+- `theme/finance/yono-komae-area-comparison.ja.ts`
+- `theme/development/yono-komae-agriculture.ja.ts`
+
+### Publish State
+
+Battle seeds now explicitly support a `publishState` field to indicate lifecycle:
+
+| Value        | Meaning                                         | Display Behavior |
+|--------------|--------------------------------------------------|------------------|
+| `published`  | Canonical, visible to users                      | No chip shown    |
+| `draft`      | Early concept / incomplete                       | Chip shown       |
+| `review`     | Pending editorial / data validation              | Chip shown       |
+| `archived`   | Retired or superseded                            | Chip shown       |
+
+Rules:
+
+- Files placed under `__drafts/` MUST declare a non-`published` `publishState`.
+- Missing `publishState` defaults to `published` (backward compatibility) – a warning may be emitted by generation scripts later.
+- Only non-`published` states surface a `PublishStateChip` in the UI.
+
+### Index Generation & Tooling
+
+Two scripts maintain consolidated indexes:
+
+- `data/battle-seeds/scripts/generate-battle-index.ts` – builds a unified index of all battles (published + non-published metadata) with normalized `publishState`.
+- `data/battle-seeds/scripts/generate-draft-index.ts` – enumerates draft (non-published) seeds for curation workflows.
+
+Do not manually edit files under `__generated/`; regenerate instead:
+
+```bash
+pnpm tsx data/battle-seeds/scripts/generate-battle-index.ts
+pnpm tsx data/battle-seeds/scripts/generate-draft-index.ts
+```
+
+### Adding a New Themed Battle
+
+1. Pick or create a theme directory under `theme/` (use lowercase kebab-case)
+2. Create `yono-komae-{topic}.ja.ts`
+3. Include `publishState: 'published'` (or another explicit state if not ready)
+4. Run validation tests (`pnpm test`) and (optionally) regenerate indexes
+5. Commit with: `data(battle): add {theme}:{topic} battle`
+
+### Migrating Legacy Files
+
+If you still have un-migrated flat files:
+
+1. Determine appropriate theme (e.g. population → `history` or `figures` depending on narrative)
+2. Move file into `theme/{themeName}/`
+3. (Optional) Add `publishState` if conceptually a draft
+4. Update imports if referenced directly (prefer index consumption inside app)
+5. Regenerate indexes if needed
+
+### Query & Filtering Behavior
+
+Downstream repository filtering now supports combined theme + publish state constraints. Unknown states gracefully default to `published` to avoid accidental exclusion.
 
 **Detailed Guide**: See [docs/data/BATTLE_SEEDS_EN.md](data/BATTLE_SEEDS_EN.md)
 
