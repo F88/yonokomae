@@ -437,12 +437,17 @@ function App() {
               <TitleContainer
                 modes={playMode}
                 onSelect={(mode) => {
-                  console.log('[DEBUG] App.tsx onSelect called with:', {
-                    modeId: mode.id,
-                    modeTitle: mode.title,
-                    modeEnabled: mode.enabled,
-                    timestamp: Date.now(),
-                  });
+                  if (
+                    import.meta.env.VITE_TITLE_DEBUG === '1' ||
+                    import.meta.env.VITE_TITLE_DEBUG === 'true'
+                  ) {
+                    console.log('[DEBUG] App.tsx onSelect called with:', {
+                      modeId: mode.id,
+                      modeTitle: mode.title,
+                      modeEnabled: mode.enabled,
+                      timestamp: Date.now(),
+                    });
+                  }
                   setMode(mode);
                 }}
                 battleSeedFile={battleSeedFile}
