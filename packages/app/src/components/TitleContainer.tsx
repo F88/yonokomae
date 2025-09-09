@@ -1131,9 +1131,6 @@ export function TitleContainer({
                         clickY,
                         mapIndex,
                       });
-                      debugLog(
-                        '[DEBUG] *** DEPLOYMENT CHECK: 2025-09-08-v4 ***',
-                      );
                     }
                     // Improved iOS-only coordinate-based correction.
                     // Desktopで誤って常に先頭モードになる問題: 旧実装は stale な index を参照して intendedMode を比較していた。
