@@ -177,13 +177,11 @@ export const HistoricalScene: FC<Props> = ({
 
           {/* Title block */}
           <div className="space-y-2">
-            {/* Publish State */}
-            {battle.status && battle.publishState !== 'published' && (
-              <>
-                <div className="flex justify-center">
-                  <PublishStateChip state={battle.publishState} />
-                </div>
-              </>
+            {/* Publish State (HistoricalScene only shows when NOT published) */}
+            {battle.publishState !== 'published' && (
+              <div className="flex justify-center">
+                <PublishStateChip state={battle.publishState} showLabel />
+              </div>
             )}
 
             {/* Legendary battle */}
