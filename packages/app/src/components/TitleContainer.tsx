@@ -364,6 +364,8 @@ interface ModeOptionProps {
   inputId: string;
   onSelect: (mode: PlayMode, clickY?: number) => void;
   onHover: (mode: PlayMode) => void;
+  /** If true, include description in SR output (via aria-labelledby chain). */
+  srIncludeDescription: boolean;
 }
 
 const ModeOption = ({
@@ -372,6 +374,7 @@ const ModeOption = ({
   inputId,
   onSelect,
   onHover,
+  srIncludeDescription,
 }: ModeOptionProps) => {
   // Detect touch-capable (iPad/iPhone etc.)
   const isTouchDevice = useMemo(() => {
@@ -552,6 +555,13 @@ const ModeOption = ({
     }
   };
 
+  // Provide explicit SR-only nodes to fully control what is spoken.
+  // This avoids duplication some SRs produce when combining aria-label + label text.
+  const srLabelId = `${inputId}-sr-label`;
+  const srDescId = `${inputId}-sr-desc`;
+  const ariaLabelledBy = srIncludeDescription
+    ? `${srLabelId} ${srDescId}`
+    : srLabelId;
   return (
     <label
       key={mode.id}
@@ -567,6 +577,15 @@ const ModeOption = ({
         isSelected ? 'border-primary bg-primary/10' : 'hover:bg-muted',
       ].join(' ')}
     >
+      <span id={srLabelId} className="sr-only">
+        {mode.srLabel}
+        {mode.enabled === false ? ' (無効)' : ''}
+      </span>
+      {srIncludeDescription && (
+        <span id={srDescId} className="sr-only">
+          {mode.description}
+        </span>
+      )}
       <input
         id={inputId}
         type="radio"
@@ -575,6 +594,7 @@ const ModeOption = ({
         disabled={mode.enabled === false}
         checked={isSelected}
         onChange={handleChange}
+        aria-labelledby={ariaLabelledBy}
       />
       <span
         aria-hidden
@@ -587,7 +607,7 @@ const ModeOption = ({
       >
         {isSelected ? '>' : ''}
       </span>
-      <div className="flex min-w-0 flex-col">
+      <div className="flex min-w-0 flex-col" aria-hidden="true">
         <span className=" text-base font-semibold">{mode.title}</span>
         <span className=" text-sm text-muted-foreground">
           {mode.description}
@@ -611,6 +631,8 @@ export type TitleContainerProps = {
   selectedThemeId?: string;
   /** Notify parent when the active theme filter changes (undefined => all). */
   onSelectedThemeIdChange?: (id: string | undefined) => void;
+  /** Include description text in SR announcement (default false = srLabel only). */
+  srIncludeDescription?: boolean;
 };
 
 /**
@@ -627,6 +649,7 @@ export function TitleContainer({
   onBattleSeedChange,
   selectedThemeId,
   onSelectedThemeIdChange,
+  srIncludeDescription = false,
 }: TitleContainerProps) {
   // -------------------------------------------------------------------
   // Instance tracking for remount diagnostics
@@ -736,6 +759,7 @@ export function TitleContainer({
   // Shared keyboard navigation handler. Returns true if the key was handled.
   const handleNavigationKey = useCallback(
     (key: string): boolean => {
+      // Track that this navigation originated from keyboard to enable focus management
       if (
         key === 'ArrowUp' ||
         key === 'k' ||
@@ -751,6 +775,7 @@ export function TitleContainer({
           }
           return i;
         });
+        lastNavViaKeyboardRef.current = true;
         return true;
       }
       if (
@@ -768,6 +793,7 @@ export function TitleContainer({
           }
           return i;
         });
+        lastNavViaKeyboardRef.current = true;
         return true;
       }
       if (key === 'Home') {
@@ -775,6 +801,7 @@ export function TitleContainer({
           const idx = options.findIndex((o) => o.enabled !== false);
           return idx >= 0 ? idx : 0;
         });
+        lastNavViaKeyboardRef.current = true;
         return true;
       }
       if (key === 'End') {
@@ -784,6 +811,7 @@ export function TitleContainer({
           }
           return 0;
         });
+        lastNavViaKeyboardRef.current = true;
         return true;
       }
       if (key === 'Enter' || key === ' ') {
@@ -817,6 +845,29 @@ export function TitleContainer({
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
     handleKeyEvent(e);
   };
+  // ---------------------------------------------------------------
+  // Keyboard focus management for accessibility
+  // ---------------------------------------------------------------
+  // Screen readers announce the focused control. With custom keyboard navigation
+  // we change index state without moving DOM focus. We focus the active radio
+  // input (visually hidden but accessible) after keyboard-driven index changes.
+  const lastNavViaKeyboardRef = useRef(false);
+  useEffect(() => {
+    if (!lastNavViaKeyboardRef.current) return; // only when navigation came from keyboard
+    const active = options[index];
+    if (!active) return;
+    const id = `play-mode-${active.id}`;
+    const el = document.getElementById(id) as HTMLInputElement | null;
+    if (el) {
+      try {
+        el.focus({ preventScroll: true });
+      } catch {
+        el.focus();
+      }
+    }
+    // Reset flag so pointer interactions won't immediately refocus.
+    lastNavViaKeyboardRef.current = false;
+  }, [index, options]);
   // ---------------------------------------------------------------------
   // Aggregated navigation logging (batch rapid index changes into 1 line)
   // ---------------------------------------------------------------------
@@ -1023,6 +1074,8 @@ export function TitleContainer({
                     currentModeTitle: options[index]?.title,
                   });
                 }
+                // Pointer/click selection should suppress the next keyboard focus push.
+                lastNavViaKeyboardRef.current = false;
                 const targetIndex = options.findIndex(
                   (opt) => opt.id === selectedMode.id,
                 );
@@ -1070,6 +1123,7 @@ export function TitleContainer({
                   mode={m}
                   isSelected={m.id === options[index]?.id}
                   inputId={`play-mode-${m.id}`}
+                  srIncludeDescription={srIncludeDescription}
                   onSelect={(selectedMode, clickY) => {
                     if (IS_VERBOSE) {
                       debugLog('[DEBUG] Parent onSelect received:', {
