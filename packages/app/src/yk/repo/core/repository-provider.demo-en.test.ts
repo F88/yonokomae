@@ -11,6 +11,7 @@ describe('repository-provider mapping for demo-en', () => {
       title: 'DEMO (en)',
       description: '',
       enabled: true,
+      srLabel: 'English demonstration mode',
     });
     const battle = await repo.generateReport({ signal: undefined });
 
@@ -27,6 +28,7 @@ describe('repository-provider mapping for demo-en', () => {
       title: 'DEMO(en)',
       description: '',
       enabled: true,
+      srLabel: 'English demonstration mode',
     });
     // Use trivial battle to assert algorithm and that call works
     const verdict = await judge.determineWinner(
@@ -36,6 +38,7 @@ describe('repository-provider mapping for demo-en', () => {
           id: 'b',
           themeId: 'history' as const,
           significance: 'low' as const,
+          publishState: 'published',
           title: 'Demo-2 Battle',
           subtitle: 'Variant Showcase',
           narrative: { overview: '', scenario: '' },

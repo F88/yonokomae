@@ -55,6 +55,7 @@ describe('NewsReporterApiBattleReportRepository', () => {
       id: 'battle-1',
       themeId: 'history',
       significance: 'low',
+      publishState: 'published',
       title: 'Fallback News',
       subtitle: 'Local API-like',
       narrative: {
@@ -172,6 +173,7 @@ describe('NewsReporterApiBattleReportRepository', () => {
         id: 'battle-fallback',
         themeId: 'history',
         significance: 'low',
+        publishState: 'published',
         title: 'Fallback on 4xx/5xx',
         subtitle: 'Local API-like',
         narrative: {
@@ -260,6 +262,7 @@ describe('NewsReporterApiBattleReportRepository', () => {
       id: 'battle-weather-fallback',
       themeId: 'history',
       significance: 'low',
+      publishState: 'published',
       title: 'Weather Fallback',
       subtitle: 'Local API-like',
       narrative: {

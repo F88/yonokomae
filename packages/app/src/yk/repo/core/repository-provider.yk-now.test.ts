@@ -14,6 +14,7 @@ describe('repository-provider mapping for yk-now', () => {
     title: 'よのこまライブ',
     description: '',
     enabled: true,
+    srLabel: 'よのこまライブ。よーのとこみまが今日のよのこまに鋭く斬り込む。',
   } as const;
 
   it('returns NewsReporterMultiSourceReportRepository for battle reports', async () => {
@@ -32,6 +33,7 @@ describe('repository-provider mapping for yk-now', () => {
           id: 'b',
           themeId: 'information',
           significance: 'low',
+          publishState: 'published',
           title: 'Temp',
           subtitle: 'Temp',
           narrative: { overview: '', scenario: '' },

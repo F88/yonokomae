@@ -8,6 +8,7 @@ function makeBattle(yonoPower: number, komaePower: number): Battle {
     id: 'test-battle',
     themeId: 'history',
     significance: 'low',
+    publishState: 'published',
     title: 't',
     subtitle: 's',
     narrative: { overview: 'o', scenario: 'sc' },
@@ -189,6 +190,7 @@ describe('HistoricalEvidencesJudgementRepository probabilistic bias with power f
       title: 't',
       description: 'd',
       enabled: true,
+      srLabel: 't',
     } as const;
     const repo = await getJudgementRepository(mode);
 
