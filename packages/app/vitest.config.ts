@@ -41,6 +41,7 @@ export default mergeConfig(
           plugins: viteConfig.plugins,
           test: {
             name: 'unit',
+            root: dirname,
             globals: true,
             environment: 'jsdom',
             css: true,
