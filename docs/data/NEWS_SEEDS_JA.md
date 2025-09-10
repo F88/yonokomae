@@ -53,6 +53,7 @@ import type { Battle } from '@yonokomae/types';
 const newsSample: Battle = {
     id: 'news-sample-unique-id',
     themeId: 'information',
+    publishState: 'published',
     significance: 'high',
     title: 'ニュースバトルタイトル',
     subtitle: 'ニュース風サブタイトル',

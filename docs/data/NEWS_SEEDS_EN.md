@@ -309,6 +309,7 @@ const newsSample: Battle = {
 ```typescript
 const newsSample: Battle = {
     id: 'news-sample-local-cuisine-showdown',
+    publishState: 'published',
     title: 'Local Cuisine Champions Face Off',
     subtitle: 'Regional specialties compete for culinary supremacy',
     overview:
