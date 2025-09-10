@@ -138,7 +138,9 @@ describe('seeds', () => {
 
       expect(result.default).toEqual(complexSeed);
       expect(result.default).toHaveProperty('extraProperty');
-      expect((result.default as any).extraProperty).toBe('extra value');
+      expect((result.default as typeof complexSeed).extraProperty).toBe(
+        'extra value',
+      );
     });
 
     it('handles different file extensions', async () => {
