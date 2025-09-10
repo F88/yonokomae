@@ -1,4 +1,5 @@
 import type { PlayMode } from '@/yk/play-mode';
+import type { RepoContextValue } from './repository-context';
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as SeedSystem from '../seed-system';
@@ -22,6 +23,7 @@ describe('RepositoryProvider', () => {
     id: 'test-mode',
     title: 'Test Mode',
     description: 'Test mode description',
+    srLabel: 'SR Test Mode',
     enabled: true,
   };
 
@@ -47,7 +49,7 @@ describe('RepositoryProvider', () => {
 
   describe('RepositoryProvider', () => {
     it('provides repository context to children', () => {
-      let repositoryContext: any;
+      let repositoryContext: RepoContextValue | undefined;
 
       const TestComponent = () => {
         repositoryContext = useRepositories();
@@ -61,8 +63,8 @@ describe('RepositoryProvider', () => {
       );
 
       expect(repositoryContext).toBeDefined();
-      expect(repositoryContext.battleReport).toBeDefined();
-      expect(repositoryContext.judgement).toBeDefined();
+      expect(repositoryContext!.battleReport).toBeDefined();
+      expect(repositoryContext!.judgement).toBeDefined();
     });
 
     it('handles mode prop', () => {
@@ -126,7 +128,9 @@ describe('RepositoryProvider', () => {
     it('uses seedFile from seed selection when no explicit seedFile', async () => {
       vi.mocked(SeedSystem.useHistoricalSeedSelection).mockReturnValue({
         seedFile: '/selection-seed.ts',
-      } as any);
+        setSeedFile: vi.fn(),
+        rotateSeed: vi.fn(),
+      });
 
       const TestComponent = () => {
         const repos = useRepositories();
@@ -150,7 +154,9 @@ describe('RepositoryProvider', () => {
     it('handles seedFile normalization for selection without leading slash', async () => {
       vi.mocked(SeedSystem.useHistoricalSeedSelection).mockReturnValue({
         seedFile: 'selection-no-slash.ts',
-      } as any);
+        setSeedFile: vi.fn(),
+        rotateSeed: vi.fn(),
+      });
 
       const TestComponent = () => {
         const repos = useRepositories();
@@ -196,7 +202,9 @@ describe('RepositoryProvider', () => {
     it('provides battleReport repository with lazy instantiation', async () => {
       const TestComponent = () => {
         const repos = useRepositories();
-        repos.battleReport.generateReport({ themeId: 'test' });
+        repos.battleReport.generateReport({
+          filter: { battle: { themeId: 'test' } },
+        });
         return <div>Test</div>;
       };
 
@@ -212,14 +220,15 @@ describe('RepositoryProvider', () => {
         RepositoryProviderModule.getBattleReportRepository,
       ).toHaveBeenCalledWith(mockMode, undefined);
       expect(mockBattleRepo.generateReport).toHaveBeenCalledWith({
-        themeId: 'test',
+        filter: { battle: { themeId: 'test' } },
       });
     });
 
     it('provides judgement repository', async () => {
       const TestComponent = () => {
         const repos = useRepositories();
-        repos.judgement.determineWinner({ battle: 'test' } as any);
+        // @ts-expect-error Intentionally passing minimal shape for test; repository is mocked
+        repos.judgement.determineWinner({ battle: 'test' });
         return <div>Test</div>;
       };
 

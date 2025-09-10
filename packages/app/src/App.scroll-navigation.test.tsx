@@ -4,9 +4,11 @@ import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import type { Battle } from '@yonokomae/types';
+import type { GenerateBattleReportParams } from '@/yk/repo/core/repositories';
 
 // Mock the generate report hook
-const mockGenerateReport = vi.fn<(params?: any) => Promise<Battle>>();
+const mockGenerateReport =
+  vi.fn<(params?: GenerateBattleReportParams) => Promise<Battle>>();
 vi.mock('@/hooks/use-generate-report', () => ({
   useGenerateReport: () => ({
     generateReport: mockGenerateReport,
@@ -241,7 +243,7 @@ describe('App - Additional Coverage Tests', () => {
   it('handles no matchMedia support gracefully', async () => {
     // Remove matchMedia support
     const originalMatchMedia = window.matchMedia;
-    delete (window as any).matchMedia;
+    delete (window as unknown as Record<string, unknown>).matchMedia;
 
     render(<App />);
 
@@ -249,7 +251,11 @@ describe('App - Additional Coverage Tests', () => {
     expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
 
     // Restore matchMedia
-    (window as any).matchMedia = originalMatchMedia;
+    Object.defineProperty(window, 'matchMedia', {
+      value: originalMatchMedia,
+      writable: true,
+      configurable: true,
+    });
   });
 
   it('tests scroll behavior after clearing reports', async () => {

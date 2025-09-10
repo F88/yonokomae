@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { NetaView } from './Neta';
+import { NetaView, type Props as NetaProps } from './Neta';
 import type { Neta } from '@yonokomae/types';
 
 describe('NetaView', () => {
@@ -160,7 +160,10 @@ describe('NetaView', () => {
   });
 
   describe('different aspect ratios', () => {
-    const testAspectRatios: Array<{ ratio: string; expectedClass: string }> = [
+    const testAspectRatios: Array<{
+      ratio: NonNullable<NetaProps['cropAspectRatio']>;
+      expectedClass: string;
+    }> = [
       { ratio: '16/1', expectedClass: 'aspect-[16/1]' },
       { ratio: '16/8', expectedClass: 'aspect-[16/8]' },
       { ratio: '32/16', expectedClass: 'aspect-[32/16]' },
@@ -173,7 +176,7 @@ describe('NetaView', () => {
           <NetaView
             {...baseMockNeta}
             cropTopBanner={true}
-            cropAspectRatio={ratio as any}
+            cropAspectRatio={ratio}
           />,
         );
 
@@ -184,15 +187,17 @@ describe('NetaView', () => {
   });
 
   describe('different focus positions', () => {
-    const testFocusPositions: Array<{ focus: string; expectedClass: string }> =
-      [
-        { focus: 'top', expectedClass: 'object-top' },
-        { focus: 'center', expectedClass: 'object-center' },
-        { focus: 'bottom', expectedClass: 'object-bottom' },
-        { focus: 'y-0', expectedClass: 'object-[50%_0%]' },
-        { focus: 'y-50', expectedClass: 'object-[50%_50%]' },
-        { focus: 'y-100', expectedClass: 'object-[50%_100%]' },
-      ];
+    const testFocusPositions: Array<{
+      focus: NonNullable<NetaProps['cropFocusY']>;
+      expectedClass: string;
+    }> = [
+      { focus: 'top', expectedClass: 'object-top' },
+      { focus: 'center', expectedClass: 'object-center' },
+      { focus: 'bottom', expectedClass: 'object-bottom' },
+      { focus: 'y-0', expectedClass: 'object-[50%_0%]' },
+      { focus: 'y-50', expectedClass: 'object-[50%_50%]' },
+      { focus: 'y-100', expectedClass: 'object-[50%_100%]' },
+    ];
 
     testFocusPositions.forEach(({ focus, expectedClass }) => {
       it(`applies correct class for focus position ${focus}`, () => {
@@ -200,7 +205,7 @@ describe('NetaView', () => {
           <NetaView
             {...baseMockNeta}
             cropTopBanner={true}
-            cropFocusY={focus as any}
+            cropFocusY={focus}
           />,
         );
 

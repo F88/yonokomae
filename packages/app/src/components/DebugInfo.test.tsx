@@ -115,8 +115,9 @@ describe('DebugInfo', () => {
     it('handles circular reference objects', async () => {
       render(<DebugInfo />);
       await openOverlay();
-      const circularObj: any = { name: 'test' };
-      circularObj.self = circularObj;
+  type WithSelf = { name: string; self?: WithSelf };
+  const circularObj: WithSelf = { name: 'test' };
+  circularObj.self = circularObj;
       act(() => {
         console.log('[DEBUG] Circular object', circularObj);
       });

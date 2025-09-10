@@ -47,6 +47,7 @@ Object.defineProperty(global.Math, 'random', {
 describe('ConsiderationsAndJudgments', () => {
   const mockBattle: Battle = {
     id: 'test-battle-1',
+    publishState: 'published',
     title: 'Test Battle Title',
     subtitle: '',
     narrative: { overview: '', scenario: '' },
@@ -74,6 +75,7 @@ describe('ConsiderationsAndJudgments', () => {
     id: 'demo',
     title: 'DEMO',
     description: 'Demonstration mode',
+    srLabel: 'Demo Mode',
     enabled: true,
   };
 

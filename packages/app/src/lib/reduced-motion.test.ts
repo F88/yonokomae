@@ -6,15 +6,19 @@ const originalScrollTo = globalThis.window?.scrollTo;
 const originalScrollBy = globalThis.window?.scrollBy;
 
 function setMatchMedia(matches: boolean) {
-  (window as any).matchMedia = (query: string) => ({
-    matches: query.includes('prefers-reduced-motion') ? matches : false,
-    media: query,
-    onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => false,
+  Object.defineProperty(window, 'matchMedia', {
+    value: (query: string) => ({
+      matches: query.includes('prefers-reduced-motion') ? matches : false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }),
+    writable: true,
+    configurable: true,
   });
 }
 
@@ -26,22 +30,40 @@ describe('reduced-motion utilities', () => {
     document.documentElement.classList.remove('reduced-motion');
 
     // jsdom: provide noop implementations so spying doesn't throw "Not implemented"
-
-    (window as any).scrollTo = vi.fn();
-
-    (window as any).scrollBy = vi.fn();
+    Object.defineProperty(window, 'scrollTo', {
+      value: vi.fn(),
+      writable: true,
+      configurable: true,
+    });
+    Object.defineProperty(window, 'scrollBy', {
+      value: vi.fn(),
+      writable: true,
+      configurable: true,
+    });
   });
 
   afterEach(() => {
     if (originalMatchMedia) {
-      (window as any).matchMedia = originalMatchMedia;
+      Object.defineProperty(window, 'matchMedia', {
+        value: originalMatchMedia,
+        writable: true,
+        configurable: true,
+      });
     }
     // restore original scroll functions (which may throw in jsdom, but keeps global clean)
     if (originalScrollTo) {
-      (window as any).scrollTo = originalScrollTo;
+      Object.defineProperty(window, 'scrollTo', {
+        value: originalScrollTo,
+        writable: true,
+        configurable: true,
+      });
     }
     if (originalScrollBy) {
-      (window as any).scrollBy = originalScrollBy;
+      Object.defineProperty(window, 'scrollBy', {
+        value: originalScrollBy,
+        writable: true,
+        configurable: true,
+      });
     }
   });
 

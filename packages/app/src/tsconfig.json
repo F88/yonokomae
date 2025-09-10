@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "paths": { "@/*": ["./*"] },
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["**/*"]
+}

@@ -14,25 +14,29 @@ function makeMatchMediaController(initial: { width: number }) {
     return width >= min;
   };
   const install = () => {
-    (window as any).matchMedia = (query: string) => {
-      const mql: Partial<MediaQueryList> = {
-        media: query,
-        onchange: null,
-        addEventListener: (_: string, handler: Handler) =>
-          listeners.add(handler),
-        removeEventListener: (_: string, handler: Handler) =>
-          listeners.delete(handler),
-        addListener: (handler: Handler) => listeners.add(handler),
-        removeListener: (handler: Handler) => listeners.delete(handler),
-        dispatchEvent: () => false,
-      };
-      Object.defineProperty(mql, 'matches', {
-        get() {
-          return getMatches(query);
-        },
-      });
-      return mql as MediaQueryList;
-    };
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: (query: string): MediaQueryList => {
+        const mql: Partial<MediaQueryList> = {
+          media: query,
+          onchange: null,
+          addEventListener: (_: string, handler: Handler) =>
+            listeners.add(handler),
+          removeEventListener: (_: string, handler: Handler) =>
+            listeners.delete(handler),
+          addListener: (handler: Handler) => listeners.add(handler),
+          removeListener: (handler: Handler) => listeners.delete(handler),
+          dispatchEvent: () => false,
+        };
+        Object.defineProperty(mql, 'matches', {
+          get() {
+            return getMatches(query);
+          },
+        });
+        return mql as MediaQueryList;
+      },
+    });
   };
   const setWidth = (w: number) => {
     width = w;

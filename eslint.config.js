@@ -28,8 +28,9 @@ export default tseslint.config(
     {
       files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
       rules: {
-        '@typescript-eslint/no-require-imports': 'off',
-        '@typescript-eslint/no-explicit-any': 'off',
+        // '@typescript-eslint/no-require-imports': 'off',
+        // Keep tests strict to avoid fragile patterns
+        // '@typescript-eslint/no-explicit-any': 'off',
         // Keep signal but avoid blocking CI for harmless test variables
         '@typescript-eslint/no-unused-vars': [
           'warn',

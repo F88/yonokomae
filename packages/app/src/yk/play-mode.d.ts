@@ -1,11 +1,17 @@
 /**
- * Play modes available in the game.
+ * Represents a selectable play mode shown on the title screen.
  */
 export interface PlayMode {
+  /** Stable internal identifier (logic & routing). Not localized. */
   id: string;
+  /** Visual heading text for the mode (localized, may contain emoji). */
   title: string;
+  /** Secondary explanatory copy shown under the title (localized). */
   description: string;
+  /** Whether the user can currently select this mode. */
   enabled: boolean;
+  /** Required screen-reader specific accessible name (succinct, localized). */
+  srLabel: string;
 }
 /**
  * Play modes available in the game.

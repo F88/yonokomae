@@ -4,15 +4,19 @@ import userEvent from '@testing-library/user-event';
 
 // Helper to mock matchMedia for prefers-reduced-motion
 function setMatchMedia(matches: boolean) {
-  (window as any).matchMedia = (query: string) => ({
-    matches: query.includes('prefers-reduced-motion') ? matches : false,
-    media: query,
-    onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => false,
+  Object.defineProperty(window, 'matchMedia', {
+    value: (query: string) => ({
+      matches: query.includes('prefers-reduced-motion') ? matches : false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }),
+    writable: true,
+    configurable: true,
   });
 }
 

@@ -5,15 +5,19 @@ import UserVoicesCarousel from './UserVoicesCarousel';
 const originalMatchMedia = globalThis.window?.matchMedia;
 
 function setMatchMedia(matches: boolean) {
-  (window as any).matchMedia = (query: string) => ({
-    matches: query.includes('prefers-reduced-motion') ? matches : false,
-    media: query,
-    onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => false,
+  Object.defineProperty(window, 'matchMedia', {
+    value: (query: string) => ({
+      matches: query.includes('prefers-reduced-motion') ? matches : false,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }),
+    writable: true,
+    configurable: true,
   });
 }
 
@@ -23,7 +27,11 @@ describe('UserVoicesCarousel (reduced motion)', () => {
   });
   afterEach(() => {
     if (originalMatchMedia) {
-      (window as any).matchMedia = originalMatchMedia;
+      Object.defineProperty(window, 'matchMedia', {
+        value: originalMatchMedia,
+        writable: true,
+        configurable: true,
+      });
     }
   });
 

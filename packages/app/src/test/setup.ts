@@ -6,45 +6,65 @@ import { server } from './msw';
 if (typeof window !== 'undefined' && !('matchMedia' in window)) {
   // Minimal matchMedia mock used by Embla's options handler
   // See: https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).matchMedia = (query: string) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: () => {},
-    removeListener: () => {},
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    dispatchEvent: () => false,
+  Object.defineProperty(window, 'matchMedia', {
+    configurable: true,
+    writable: true,
+    value: (query: string): MediaQueryList =>
+      ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      }) as unknown as MediaQueryList,
   });
 }
 
 // ResizeObserver polyfill for react-fast-marquee
 if (typeof window !== 'undefined' && !('ResizeObserver' in window)) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).ResizeObserver = class ResizeObserver {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-  };
+  class MockResizeObserver implements ResizeObserver {
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+    // These properties exist on the interface but aren't used in tests
+    readonly boxOptions?: ReadonlyArray<ResizeObserverBoxOptions> | undefined;
+  }
+  Object.defineProperty(window, 'ResizeObserver', {
+    configurable: true,
+    writable: true,
+    value: MockResizeObserver,
+  });
 }
 
 // IntersectionObserver polyfill for Embla
 if (typeof window !== 'undefined' && !('IntersectionObserver' in window)) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).IntersectionObserver = class IntersectionObserver {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-    constructor(_cb: any, _opts?: any) {}
-    observe() {}
-    unobserve() {}
-    disconnect() {}
-    takeRecords() {
+  class MockIntersectionObserver implements IntersectionObserver {
+    readonly root: Element | Document | null = null;
+    readonly rootMargin = '';
+    readonly thresholds: ReadonlyArray<number> = [];
+    constructor(
+      _cb: IntersectionObserverCallback,
+      _opts?: IntersectionObserverInit,
+    ) {
+      // mark as used to satisfy lint rules
+      void _cb;
+      void _opts;
+    }
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+    takeRecords(): IntersectionObserverEntry[] {
       return [];
     }
-    root = null;
-    rootMargin = '';
-    thresholds: number[] = [];
-  };
+  }
+  Object.defineProperty(window, 'IntersectionObserver', {
+    configurable: true,
+    writable: true,
+    value: MockIntersectionObserver,
+  });
 }
 
 // Establish API mocking before all tests.
@@ -65,8 +85,14 @@ afterAll(() => {
 
 // jsdom: Polyfill scroll APIs with no-ops to avoid noisy "Not implemented" errors
 if (typeof window !== 'undefined') {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).scrollTo = () => {};
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).scrollBy = () => {};
+  Object.defineProperty(window, 'scrollTo', {
+    configurable: true,
+    writable: true,
+    value: () => {},
+  });
+  Object.defineProperty(window, 'scrollBy', {
+    configurable: true,
+    writable: true,
+    value: () => {},
+  });
 }

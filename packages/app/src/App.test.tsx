@@ -6,7 +6,9 @@ import App from './App';
 import type { Battle } from '@yonokomae/types';
 
 // Mock the generate report hook to avoid dynamic imports and delays
-const mockGenerateReport = vi.fn<(params?: any) => Promise<Battle>>();
+import type { GenerateBattleReportParams } from '@/yk/repo/core/repositories';
+const mockGenerateReport =
+  vi.fn<(params?: GenerateBattleReportParams) => Promise<Battle>>();
 vi.mock('@/hooks/use-generate-report', () => ({
   useGenerateReport: () => ({
     generateReport: mockGenerateReport,
@@ -17,7 +19,8 @@ beforeEach(() => {
   mockGenerateReport.mockReset();
   // jsdom doesn't implement scrollTo; provide a noop mock
 
-  (window as any).scrollTo = vi.fn();
+  // jsdom doesn't implement scrollTo; provide a noop mock with correct type
+  Object.defineProperty(window, 'scrollTo', { value: vi.fn(), writable: true });
 });
 
 async function setupWithModeSelected() {
@@ -85,6 +88,7 @@ describe('App', () => {
         description: '',
         power: 2,
       },
+      publishState: 'published',
       status: 'success',
     };
     mockGenerateReport.mockResolvedValueOnce(mockBattle);
@@ -124,6 +128,7 @@ describe('App', () => {
         description: '',
         power: 2,
       },
+      publishState: 'published',
       status: 'success',
     };
     mockGenerateReport.mockResolvedValueOnce(mockBattle);
@@ -153,10 +158,11 @@ describe('App', () => {
     const call = mockGenerateReport.mock.calls.at(-1)?.[0];
     if (allButton) {
       // Only assert filter wiring when BattleFilter actually rendered
-      if (call) {
-        expect(call).toHaveProperty('filter');
-        expect(call.filter).toHaveProperty('battle');
-        expect(call.filter.battle).toHaveProperty('themeId');
+      const filter = call?.filter as
+        | { battle?: { themeId?: string } }
+        | undefined;
+      if (filter?.battle) {
+        expect(filter.battle).toHaveProperty('themeId');
       }
     }
   });
@@ -183,6 +189,7 @@ describe('App', () => {
         description: '',
         power: 2,
       },
+      publishState: 'published',
       status: 'success',
     });
 
@@ -224,6 +231,7 @@ describe('App', () => {
         description: '',
         power: 2,
       },
+      publishState: 'published',
       status: 'success',
     });
 
