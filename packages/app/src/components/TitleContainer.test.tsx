@@ -36,7 +36,7 @@ describe('TitleContainer', () => {
       title: 'Demo Mode',
       description: 'Demo mode description',
       enabled: true,
-      srLabel: 'Demo Mode',
+      srLabel: 'Demo Mode for SR',
     },
   ];
 
@@ -48,12 +48,7 @@ describe('TitleContainer', () => {
 
   describe('Basic rendering', () => {
     it('renders with default title', () => {
-      render(
-        <TitleContainer
-          modes={mockModes}
-          onSelect={mockOnSelect}
-        />
-      );
+      render(<TitleContainer modes={mockModes} onSelect={mockOnSelect} />);
 
       expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
     });
@@ -64,21 +59,23 @@ describe('TitleContainer', () => {
           modes={mockModes}
           onSelect={mockOnSelect}
           title="CUSTOM TITLE"
-        />
+        />,
       );
 
       expect(screen.getByText('CUSTOM TITLE')).toBeInTheDocument();
     });
 
     it('renders mode options', () => {
-      render(
-        <TitleContainer
-          modes={mockModes}
-          onSelect={mockOnSelect}
-        />
-      );
-
+      render(<TitleContainer modes={mockModes} onSelect={mockOnSelect} />);
+      screen.debug();
       expect(screen.getByText('Demo Mode')).toBeInTheDocument();
+      expect(screen.getByText('Demo Mode for SR')).toBeInTheDocument();
+      expect(screen.getByText('Demo mode description')).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          'Use Arrow keys to choose a mode and press Enter or B to start.',
+        ),
+      ).toBeInTheDocument();
     });
   });
 
@@ -89,7 +86,7 @@ describe('TitleContainer', () => {
           modes={mockModes}
           onSelect={mockOnSelect}
           battleSeedFile="test-seed.ts"
-        />
+        />,
       );
 
       // Component should render without error
@@ -104,7 +101,7 @@ describe('TitleContainer', () => {
           modes={mockModes}
           onSelect={mockOnSelect}
           onBattleSeedChange={mockOnBattleSeedChange}
-        />
+        />,
       );
 
       expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
@@ -119,7 +116,7 @@ describe('TitleContainer', () => {
           onSelect={mockOnSelect}
           selectedThemeId="history"
           onSelectedThemeIdChange={mockOnThemeChange}
-        />
+        />,
       );
 
       expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
@@ -134,7 +131,7 @@ describe('TitleContainer', () => {
           onSelect={mockOnSelect}
           selectedPublishState="published"
           onSelectedPublishStateChange={mockOnPublishStateChange}
-        />
+        />,
       );
 
       expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
@@ -146,7 +143,7 @@ describe('TitleContainer', () => {
           modes={mockModes}
           onSelect={mockOnSelect}
           srIncludeDescription={true}
-        />
+        />,
       );
 
       expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
@@ -155,22 +152,13 @@ describe('TitleContainer', () => {
 
   describe('Mode filtering', () => {
     it('handles empty modes array', () => {
-      render(
-        <TitleContainer
-          modes={[]}
-          onSelect={mockOnSelect}
-        />
-      );
+      render(<TitleContainer modes={[]} onSelect={mockOnSelect} />);
 
       expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
     });
 
     it('handles undefined modes (uses default)', () => {
-      render(
-        <TitleContainer
-          onSelect={mockOnSelect}
-        />
-      );
+      render(<TitleContainer onSelect={mockOnSelect} />);
 
       expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
     });
@@ -178,12 +166,7 @@ describe('TitleContainer', () => {
 
   describe('Accessibility', () => {
     it('has proper radiogroup structure', () => {
-      render(
-        <TitleContainer
-          modes={mockModes}
-          onSelect={mockOnSelect}
-        />
-      );
+      render(<TitleContainer modes={mockModes} onSelect={mockOnSelect} />);
 
       const radiogroup = screen.getByRole('radiogroup');
       expect(radiogroup).toBeInTheDocument();
@@ -191,28 +174,22 @@ describe('TitleContainer', () => {
     });
 
     it('provides screen reader hints', () => {
-      render(
-        <TitleContainer
-          modes={mockModes}
-          onSelect={mockOnSelect}
-        />
-      );
+      render(<TitleContainer modes={mockModes} onSelect={mockOnSelect} />);
 
-      expect(screen.getByText(/Use Arrow keys to choose a mode/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Use Arrow keys to choose a mode/),
+      ).toBeInTheDocument();
     });
   });
 
   describe('Component structure', () => {
     it('renders with proper card structure', () => {
-      render(
-        <TitleContainer
-          modes={mockModes}
-          onSelect={mockOnSelect}
-        />
-      );
+      render(<TitleContainer modes={mockModes} onSelect={mockOnSelect} />);
 
       // Should have card structure
-      const card = screen.getByText('SELECT MODE').closest('[data-slot="card"]');
+      const card = screen
+        .getByText('SELECT MODE')
+        .closest('[data-slot="card"]');
       expect(card).toBeInTheDocument();
     });
   });

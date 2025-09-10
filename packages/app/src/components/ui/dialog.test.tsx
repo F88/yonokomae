@@ -21,7 +21,7 @@ describe('Dialog Components', () => {
           <h2>Dialog Title</h2>
         </DialogHeader>,
       );
-      
+
       const header = document.querySelector('[data-slot="dialog-header"]');
       expect(header).toBeInTheDocument();
       expect(header?.tagName.toLowerCase()).toBe('div');
@@ -35,7 +35,7 @@ describe('Dialog Components', () => {
           <h2>Dialog Title</h2>
         </DialogHeader>,
       );
-      
+
       const header = document.querySelector('[data-slot="dialog-header"]');
       expect(header).toHaveClass('custom-header', 'flex', 'flex-col', 'gap-2');
     });
@@ -46,7 +46,7 @@ describe('Dialog Components', () => {
           <h2>Dialog Title</h2>
         </DialogHeader>,
       );
-      
+
       expect(screen.getByTestId('custom-header')).toBeInTheDocument();
     });
   });
@@ -59,7 +59,7 @@ describe('Dialog Components', () => {
           <button>OK</button>
         </DialogFooter>,
       );
-      
+
       const footer = document.querySelector('[data-slot="dialog-footer"]');
       expect(footer).toBeInTheDocument();
       expect(footer?.tagName.toLowerCase()).toBe('div');
@@ -74,7 +74,7 @@ describe('Dialog Components', () => {
           <button>Cancel</button>
         </DialogFooter>,
       );
-      
+
       const footer = document.querySelector('[data-slot="dialog-footer"]');
       expect(footer).toHaveClass('custom-footer', 'flex', 'flex-col-reverse');
     });
@@ -85,7 +85,7 @@ describe('Dialog Components', () => {
           <button>Cancel</button>
         </DialogFooter>,
       );
-      
+
       expect(screen.getByTestId('custom-footer')).toBeInTheDocument();
     });
   });
@@ -150,7 +150,10 @@ describe('Dialog Components', () => {
     });
 
     it('DialogTitle merges classes correctly', () => {
-      const element = DialogTitle({ children: 'Title', className: 'custom-title' });
+      const element = DialogTitle({
+        children: 'Title',
+        className: 'custom-title',
+      });
       expect(element.props.className).toContain('custom-title');
       expect(element.props.className).toContain('text-lg');
       expect(element.props.className).toContain('leading-none');
@@ -158,9 +161,9 @@ describe('Dialog Components', () => {
     });
 
     it('DialogDescription merges classes correctly', () => {
-      const element = DialogDescription({ 
-        children: 'Description', 
-        className: 'custom-description' 
+      const element = DialogDescription({
+        children: 'Description',
+        className: 'custom-description',
       });
       expect(element.props.className).toContain('custom-description');
       expect(element.props.className).toContain('text-muted-foreground');
@@ -176,17 +179,17 @@ describe('Dialog Components', () => {
     });
 
     it('excludes close button when showCloseButton is false', () => {
-      const element = DialogContent({ 
-        children: 'Content', 
-        showCloseButton: false 
+      const element = DialogContent({
+        children: 'Content',
+        showCloseButton: false,
       });
       expect(element).toBeDefined();
     });
 
     it('includes close button when showCloseButton is true', () => {
-      const element = DialogContent({ 
-        children: 'Content', 
-        showCloseButton: true 
+      const element = DialogContent({
+        children: 'Content',
+        showCloseButton: true,
       });
       expect(element).toBeDefined();
     });

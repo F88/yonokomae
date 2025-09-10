@@ -1,6 +1,9 @@
 import { render, renderHook } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { RepositoryProvider, RepositoryProviderSuspense } from './RepositoryProvider';
+import {
+  RepositoryProvider,
+  RepositoryProviderSuspense,
+} from './RepositoryProvider';
 import { useRepositories } from './repository-context';
 import * as RepositoryProviderModule from './repository-provider';
 import * as SeedSystem from '../seed-system';
@@ -35,16 +38,20 @@ describe('RepositoryProvider', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    
-    vi.mocked(RepositoryProviderModule.getBattleReportRepository).mockResolvedValue(mockBattleRepo);
-    vi.mocked(RepositoryProviderModule.getJudgementRepository).mockResolvedValue(mockJudgementRepo);
+
+    vi.mocked(
+      RepositoryProviderModule.getBattleReportRepository,
+    ).mockResolvedValue(mockBattleRepo);
+    vi.mocked(
+      RepositoryProviderModule.getJudgementRepository,
+    ).mockResolvedValue(mockJudgementRepo);
     vi.mocked(SeedSystem.useHistoricalSeedSelection).mockReturnValue(null);
   });
 
   describe('RepositoryProvider', () => {
     it('provides repository context to children', () => {
       let repositoryContext: any;
-      
+
       const TestComponent = () => {
         repositoryContext = useRepositories();
         return <div>Test</div>;
@@ -53,7 +60,7 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode}>
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
       expect(repositoryContext).toBeDefined();
@@ -71,7 +78,7 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode}>
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
       expect(SeedSystem.useHistoricalSeedSelection).toHaveBeenCalled();
@@ -88,16 +95,15 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode} seedFile="explicit-seed.ts">
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
       // Allow async operations to settle
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
-      expect(RepositoryProviderModule.getBattleReportRepository).toHaveBeenCalledWith(
-        mockMode,
-        '/explicit-seed.ts'
-      );
+      expect(
+        RepositoryProviderModule.getBattleReportRepository,
+      ).toHaveBeenCalledWith(mockMode, '/explicit-seed.ts');
     });
 
     it('normalizes seedFile path when missing leading slash', async () => {
@@ -110,15 +116,14 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode} seedFile="no-slash-seed.ts">
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
-      expect(RepositoryProviderModule.getBattleReportRepository).toHaveBeenCalledWith(
-        mockMode,
-        '/no-slash-seed.ts'
-      );
+      expect(
+        RepositoryProviderModule.getBattleReportRepository,
+      ).toHaveBeenCalledWith(mockMode, '/no-slash-seed.ts');
     });
 
     it('uses seedFile from seed selection when no explicit seedFile', async () => {
@@ -135,15 +140,14 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode}>
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
-      expect(RepositoryProviderModule.getBattleReportRepository).toHaveBeenCalledWith(
-        mockMode,
-        '/selection-seed.ts'
-      );
+      expect(
+        RepositoryProviderModule.getBattleReportRepository,
+      ).toHaveBeenCalledWith(mockMode, '/selection-seed.ts');
     });
 
     it('handles seedFile normalization for selection without leading slash', async () => {
@@ -160,15 +164,14 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode}>
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
-      expect(RepositoryProviderModule.getBattleReportRepository).toHaveBeenCalledWith(
-        mockMode,
-        '/selection-no-slash.ts'
-      );
+      expect(
+        RepositoryProviderModule.getBattleReportRepository,
+      ).toHaveBeenCalledWith(mockMode, '/selection-no-slash.ts');
     });
 
     it('handles null seed selection', async () => {
@@ -183,15 +186,14 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode}>
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
-      expect(RepositoryProviderModule.getBattleReportRepository).toHaveBeenCalledWith(
-        mockMode,
-        undefined
-      );
+      expect(
+        RepositoryProviderModule.getBattleReportRepository,
+      ).toHaveBeenCalledWith(mockMode, undefined);
     });
 
     it('provides battleReport repository with lazy instantiation', async () => {
@@ -204,16 +206,17 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode}>
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
-      expect(RepositoryProviderModule.getBattleReportRepository).toHaveBeenCalledWith(
-        mockMode,
-        undefined
-      );
-      expect(mockBattleRepo.generateReport).toHaveBeenCalledWith({ themeId: 'test' });
+      expect(
+        RepositoryProviderModule.getBattleReportRepository,
+      ).toHaveBeenCalledWith(mockMode, undefined);
+      expect(mockBattleRepo.generateReport).toHaveBeenCalledWith({
+        themeId: 'test',
+      });
     });
 
     it('provides judgement repository', async () => {
@@ -226,15 +229,17 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode}>
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
-      expect(RepositoryProviderModule.getJudgementRepository).toHaveBeenCalledWith(mockMode);
+      expect(
+        RepositoryProviderModule.getJudgementRepository,
+      ).toHaveBeenCalledWith(mockMode);
       expect(mockJudgementRepo.determineWinner).toHaveBeenCalledWith(
         { battle: 'test' },
-        undefined
+        undefined,
       );
     });
 
@@ -250,20 +255,24 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode}>
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       // Should only call getBattleReportRepository once due to caching
-      expect(RepositoryProviderModule.getBattleReportRepository).toHaveBeenCalledTimes(1);
+      expect(
+        RepositoryProviderModule.getBattleReportRepository,
+      ).toHaveBeenCalledTimes(1);
     });
 
     it('logs debug info in non-production', async () => {
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'development';
-      
-      const consoleSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+
+      const consoleSpy = vi
+        .spyOn(console, 'debug')
+        .mockImplementation(() => {});
 
       const TestComponent = () => {
         const repos = useRepositories();
@@ -274,14 +283,14 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode} seedFile="debug-seed.ts">
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       expect(consoleSpy).toHaveBeenCalledWith(
         '[RepositoryProvider] battle seed file =',
-        '/debug-seed.ts'
+        '/debug-seed.ts',
       );
 
       process.env.NODE_ENV = originalEnv;
@@ -291,8 +300,10 @@ describe('RepositoryProvider', () => {
     it('skips debug logging in production', async () => {
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'production';
-      
-      const consoleSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+
+      const consoleSpy = vi
+        .spyOn(console, 'debug')
+        .mockImplementation(() => {});
 
       const TestComponent = () => {
         const repos = useRepositories();
@@ -303,10 +314,10 @@ describe('RepositoryProvider', () => {
       render(
         <RepositoryProvider mode={mockMode} seedFile="debug-seed.ts">
           <TestComponent />
-        </RepositoryProvider>
+        </RepositoryProvider>,
       );
 
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
 
       expect(consoleSpy).not.toHaveBeenCalled();
 
@@ -328,7 +339,7 @@ describe('RepositoryProvider', () => {
     });
 
     it.skip('memoizes repository initialization by mode', () => {
-      // Suspense provider requires React 18 use() hook which is complex to test  
+      // Suspense provider requires React 18 use() hook which is complex to test
       expect(true).toBe(true);
     });
   });

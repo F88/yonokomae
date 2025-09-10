@@ -11,7 +11,7 @@ vi.mock('@yonokomae/data-historical-evidence', () => ({
       title: 'Test Seed 1',
     },
     {
-      id: 'test-seed-2', 
+      id: 'test-seed-2',
       file: 'test-seed-2.ts',
       title: 'Test Seed 2',
     },
@@ -29,15 +29,17 @@ describe('seeds', () => {
       expect(historicalSeeds).toBeDefined();
       expect(Array.isArray(historicalSeeds)).toBe(true);
       expect(historicalSeeds.length).toBeGreaterThan(0);
-      
+
       // Check that it's a readonly array
-      expect(historicalSeeds).toEqual(expect.arrayContaining([
-        expect.objectContaining({
-          id: expect.any(String),
-          file: expect.any(String),
-          title: expect.any(String),
-        })
-      ]));
+      expect(historicalSeeds).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            file: expect.any(String),
+            title: expect.any(String),
+          }),
+        ]),
+      );
     });
 
     it('contains seed metadata with required properties', () => {
@@ -83,17 +85,19 @@ describe('seeds', () => {
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(null);
 
       await expect(loadSeedByFile('non-existent.ts')).rejects.toThrow(
-        'Seed not found: non-existent.ts'
+        'Seed not found: non-existent.ts',
       );
-      
-      expect(DataPackage.loadSeedByFile).toHaveBeenCalledWith('non-existent.ts');
+
+      expect(DataPackage.loadSeedByFile).toHaveBeenCalledWith(
+        'non-existent.ts',
+      );
     });
 
     it('handles undefined return from data package', async () => {
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(undefined);
 
       await expect(loadSeedByFile('undefined-seed.ts')).rejects.toThrow(
-        'Seed not found: undefined-seed.ts'
+        'Seed not found: undefined-seed.ts',
       );
     });
 
@@ -157,7 +161,9 @@ describe('seeds', () => {
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(mockSeed);
 
       await loadSeedByFile('nested/path/seed.ts');
-      expect(DataPackage.loadSeedByFile).toHaveBeenCalledWith('nested/path/seed.ts');
+      expect(DataPackage.loadSeedByFile).toHaveBeenCalledWith(
+        'nested/path/seed.ts',
+      );
     });
   });
 
@@ -165,9 +171,9 @@ describe('seeds', () => {
     it('validates that seed IDs are unique', () => {
       // This test verifies the build-time validation works
       // The actual validation happens during module import/evaluation
-      const seedIds = historicalSeeds.map(seed => seed.id);
+      const seedIds = historicalSeeds.map((seed) => seed.id);
       const uniqueIds = new Set(seedIds);
-      
+
       expect(uniqueIds.size).toBe(seedIds.length);
     });
 
@@ -175,7 +181,7 @@ describe('seeds', () => {
       // Verify that the imported metadata follows expected structure
       expect(historicalSeeds).toBeDefined();
       expect(Array.isArray(historicalSeeds)).toBe(true);
-      
+
       if (historicalSeeds.length > 0) {
         const sample = historicalSeeds[0];
         expect(sample).toHaveProperty('id');
@@ -204,7 +210,7 @@ describe('seeds', () => {
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(mockSeed);
 
       const result = await loadSeedByFile('interface-test.ts');
-      
+
       expect(result).toHaveProperty('default');
       expect(result.default).toEqual(mockSeed);
     });
