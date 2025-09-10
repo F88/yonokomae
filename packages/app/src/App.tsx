@@ -45,7 +45,7 @@ function App() {
 
   // Active publishState filter (mirrors theme filter wiring). Undefined => all states.
   const [activePublishState, setActivePublishState] = useState<
-    string | undefined
+    'draft' | 'review' | 'published' | 'archived' | undefined
   >(undefined);
 
   // Helper: safe media query checks for non-browser/test envs
@@ -305,13 +305,13 @@ function App() {
 
     try {
       const battleFilter:
-        | { battle: { themeId?: string; publishState?: string } }
+        | { battle: { themeId?: string; publishState?: 'draft' | 'review' | 'published' | 'archived' } }
         | undefined =
         activeThemeId || activePublishState
           ? {
               battle: {
                 themeId: activeThemeId,
-                publishState: activePublishState as string | undefined,
+                publishState: activePublishState,
               },
             }
           : undefined;
@@ -472,7 +472,7 @@ function App() {
                 selectedThemeId={activeThemeId}
                 onSelectedThemeIdChange={(id) => setActiveThemeId(id)}
                 selectedPublishState={activePublishState}
-                onSelectedPublishStateChange={(s) => setActivePublishState(s)}
+                onSelectedPublishStateChange={(s) => setActivePublishState(s as 'draft' | 'review' | 'published' | 'archived' | undefined)}
               />
             </div>
           )}
