@@ -242,10 +242,10 @@ describe('battle-seed-loader', () => {
     });
 
     it('handles legacy overview/scenario fields', () => {
-  const legacyModule: BattleModule = {
-    overview: 'Legacy overview',
-    scenario: 'Legacy scenario',
-  } as unknown as BattleModule;
+      const legacyModule: BattleModule = {
+        overview: 'Legacy overview',
+        scenario: 'Legacy scenario',
+      } as unknown as BattleModule;
 
       const result = normalizeBattle(legacyModule);
 
@@ -254,14 +254,14 @@ describe('battle-seed-loader', () => {
     });
 
     it('prefers narrative fields over legacy fields', () => {
-  const mixedModule: BattleModule = {
-    overview: 'Legacy overview',
-    scenario: 'Legacy scenario',
-    narrative: {
-      overview: 'New overview',
-      scenario: 'New scenario',
-    },
-  } as unknown as BattleModule;
+      const mixedModule: BattleModule = {
+        overview: 'Legacy overview',
+        scenario: 'Legacy scenario',
+        narrative: {
+          overview: 'New overview',
+          scenario: 'New scenario',
+        },
+      } as unknown as BattleModule;
 
       const result = normalizeBattle(mixedModule);
 
@@ -336,16 +336,16 @@ describe('battle-seed-loader', () => {
     });
 
     it('handles invalid power values', () => {
-    const moduleWithInvalidPower: BattleModule = {
-      yono: {
-        title: 'YONO',
-        power: 'not a number' as unknown as number,
-      },
-      komae: {
-        title: 'KOMAE',
-        power: null as unknown as number,
-      },
-    };
+      const moduleWithInvalidPower: BattleModule = {
+        yono: {
+          title: 'YONO',
+          power: 'not a number' as unknown as number,
+        },
+        komae: {
+          title: 'KOMAE',
+          power: null as unknown as number,
+        },
+      };
 
       const result = normalizeBattle(moduleWithInvalidPower);
 

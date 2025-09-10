@@ -211,13 +211,13 @@ describe('Scenario', () => {
 
   describe('edge cases', () => {
     it('handles null scenario value', () => {
-    const battleWithNullScenario: Battle = {
-      ...mockBattleWithScenario,
-      narrative: {
-        ...mockBattleWithScenario.narrative,
-        scenario: null as unknown as string,
-      },
-    };
+      const battleWithNullScenario: Battle = {
+        ...mockBattleWithScenario,
+        narrative: {
+          ...mockBattleWithScenario.narrative,
+          scenario: null as unknown as string,
+        },
+      };
 
       const { container } = render(
         <Scenario battle={battleWithNullScenario} />,
@@ -227,13 +227,13 @@ describe('Scenario', () => {
     });
 
     it('handles non-string scenario value', () => {
-    const battleWithNonStringScenario: Battle = {
-      ...mockBattleWithScenario,
-      narrative: {
-        ...mockBattleWithScenario.narrative,
-        scenario: 456 as unknown as string,
-      },
-    };
+      const battleWithNonStringScenario: Battle = {
+        ...mockBattleWithScenario,
+        narrative: {
+          ...mockBattleWithScenario.narrative,
+          scenario: 456 as unknown as string,
+        },
+      };
 
       const { container } = render(
         <Scenario battle={battleWithNonStringScenario} />,

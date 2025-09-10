@@ -211,13 +211,13 @@ describe('OverView', () => {
 
   describe('edge cases', () => {
     it('handles null overview value', () => {
-    const battleWithNullOverview: Battle = {
-      ...mockBattleWithOverview,
-      narrative: {
-        ...mockBattleWithOverview.narrative,
-        overview: null as unknown as string,
-      },
-    };
+      const battleWithNullOverview: Battle = {
+        ...mockBattleWithOverview,
+        narrative: {
+          ...mockBattleWithOverview.narrative,
+          overview: null as unknown as string,
+        },
+      };
 
       const { container } = render(
         <OverView battle={battleWithNullOverview} />,
@@ -227,13 +227,13 @@ describe('OverView', () => {
     });
 
     it('handles non-string overview value', () => {
-    const battleWithNonStringOverview: Battle = {
-      ...mockBattleWithOverview,
-      narrative: {
-        ...mockBattleWithOverview.narrative,
-        overview: 123 as unknown as string,
-      },
-    };
+      const battleWithNonStringOverview: Battle = {
+        ...mockBattleWithOverview,
+        narrative: {
+          ...mockBattleWithOverview.narrative,
+          overview: 123 as unknown as string,
+        },
+      };
 
       const { container } = render(
         <OverView battle={battleWithNonStringOverview} />,

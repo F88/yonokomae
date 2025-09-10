@@ -261,12 +261,12 @@ describe('Component Integration Tests', () => {
         .mockImplementation(() => {});
 
       // Create a battle that might cause issues
-  const problematicBattle = {
-    ...mockBattle,
-    id: undefined as unknown,
-  } as unknown as Battle;
+      const problematicBattle = {
+        ...mockBattle,
+        id: undefined as unknown,
+      } as unknown as Battle;
 
-  render(<MetaData battle={problematicBattle} />);
+      render(<MetaData battle={problematicBattle} />);
 
       // Component should either render with fallbacks or be caught by error boundary
       expect(screen.getByTestId('battle-metadata')).toBeInTheDocument();
