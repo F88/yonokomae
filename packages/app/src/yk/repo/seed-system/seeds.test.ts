@@ -142,12 +142,12 @@ describe('seeds', () => {
     });
 
     it('handles different file extensions', async () => {
-      const mockSeed = { 
-        id: 'json-seed', 
+      const mockSeed = {
+        id: 'json-seed',
         title: 'JSON Seed',
         subtitle: 'JSON subtitle',
-        overview: 'JSON overview', 
-        narrative: 'JSON narrative'
+        overview: 'JSON overview',
+        narrative: 'JSON narrative',
       };
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(mockSeed);
 
@@ -162,12 +162,12 @@ describe('seeds', () => {
     });
 
     it('handles files with path separators', async () => {
-      const mockSeed = { 
-        id: 'nested-seed', 
+      const mockSeed = {
+        id: 'nested-seed',
         title: 'Nested Seed',
         subtitle: 'Nested subtitle',
         overview: 'Nested overview',
-        narrative: 'Nested narrative'
+        narrative: 'Nested narrative',
       };
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(mockSeed);
 

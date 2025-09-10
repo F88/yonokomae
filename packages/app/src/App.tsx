@@ -305,7 +305,12 @@ function App() {
 
     try {
       const battleFilter:
-        | { battle: { themeId?: string; publishState?: 'draft' | 'review' | 'published' | 'archived' } }
+        | {
+            battle: {
+              themeId?: string;
+              publishState?: 'draft' | 'review' | 'published' | 'archived';
+            };
+          }
         | undefined =
         activeThemeId || activePublishState
           ? {
@@ -472,7 +477,16 @@ function App() {
                 selectedThemeId={activeThemeId}
                 onSelectedThemeIdChange={(id) => setActiveThemeId(id)}
                 selectedPublishState={activePublishState}
-                onSelectedPublishStateChange={(s) => setActivePublishState(s as 'draft' | 'review' | 'published' | 'archived' | undefined)}
+                onSelectedPublishStateChange={(s) =>
+                  setActivePublishState(
+                    s as
+                      | 'draft'
+                      | 'review'
+                      | 'published'
+                      | 'archived'
+                      | undefined,
+                  )
+                }
               />
             </div>
           )}
