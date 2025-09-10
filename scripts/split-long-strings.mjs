@@ -1,9 +1,40 @@
 #!/usr/bin/env node
+/**
+ * Script: split-long-strings.mjs
+ * Purpose: Split long single-quoted string literals in Japanese battle seed
+ * files into shorter concatenated segments at sentence boundaries for
+ * readability and maintainability.
+ *
+ * Scope:
+ * - Targets files under data/battle-seeds/src/battle with extension ".ja.ts".
+ * - Only processes the keys: overview, scenario, description.
+ *
+ * Behavior:
+ * - If a string value length exceeds MAX_LEN characters, the string is split
+ *   at punctuation delimiters (。！？!?) into trimmed segments and rewritten as
+ *   concatenated literals.
+ * - Already-concatenated blocks are detected and skipped to keep the script
+ *   idempotent.
+ *
+ * Usage:
+ *   node ./scripts/split-long-strings.mjs
+ *
+ * Idempotency:
+ * - Safe to run multiple times; only files that need changes are rewritten.
+ *
+ * Limitations:
+ * - Expects simple single-quoted string literals ending with a trailing comma.
+ * - Template literals, unusual quoting/escaping, or nested expressions are not
+ *   supported by design.
+ */
 import fs from 'node:fs';
 import path from 'node:path';
 
+/** Root directory containing battle seed files to process. */
 const ROOT = path.resolve(process.cwd(), 'data/battle-seeds/src/battle');
+/** File extension to target. */
 const TARGET_EXT = '.ja.ts';
+/** Maximum string length threshold before splitting. */
 const MAX_LEN = 100; // threshold for splitting
 
 /** Recursively collect files under dir matching .ja.ts */
@@ -17,6 +48,12 @@ function collectFiles(dir, out = []) {
   return out;
 }
 
+/**
+ * Split a string into sentence-like segments using Japanese and Latin
+ * punctuation as delimiters. Trims segments and removes empty tails.
+ * @param {string} text - The input string to segment.
+ * @returns {string[]} A list of trimmed segments.
+ */
 function splitIntoSegments(text) {
   const breakers = new Set(['。', '！', '？', '!', '?']);
   const segments = [];
@@ -33,6 +70,12 @@ function splitIntoSegments(text) {
   return segments.map((s) => s.trim());
 }
 
+/**
+ * Transform a single .ja.ts file in-place, splitting long literals for target
+ * keys (overview, scenario, description).
+ * @param {string} filePath - Absolute path to the .ja.ts file.
+ * @returns {boolean} True if the file content was modified.
+ */
 function processFile(filePath) {
   const orig = fs.readFileSync(filePath, 'utf8');
   const lines = orig.split(/\r?\n/);
@@ -118,6 +161,10 @@ function processFile(filePath) {
   return changed;
 }
 
+/**
+ * Entrypoint: walk target files, process each, and print a summary.
+ * Logs: "Processed <total> files. Modified <count> files."
+ */
 function main() {
   const files = collectFiles(ROOT);
   let count = 0;
