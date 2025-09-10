@@ -1,0 +1,4 @@
+{
+  "vitest.maximumConfigs": 15,
+  "vitest.workspaceConfig": "./vitest.workspace.ts"
+}
