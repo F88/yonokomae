@@ -14,6 +14,21 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'html', 'lcov'],
+        exclude: [
+          '**/*.js',
+          '**/*.d.ts',
+          '**/src/test/**',
+          '**/__mocks__/**',
+          '**/*.stories.{ts,tsx}',
+          '**/.storybook/**',
+          '**/storybook-static/**',
+          '**/*.config.*',
+        ],
+        // include: ['src/**/*.{ts,tsx}'],
+      },
       // Define two isolated projects: unit (jsdom) and storybook (browser)
       projects: [
         // Unit/integration tests (Node + JSDOM)
