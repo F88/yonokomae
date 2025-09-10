@@ -85,7 +85,8 @@ function processFile(filePath) {
   const isConcatenatedBlock = (startIdx) => {
     for (let k = startIdx; k < Math.min(lines.length, startIdx + 6); k += 1) {
       if (lines[k].includes('+')) return true;
-      if (lines[k].trim().endsWith("',") || lines[k].trim().endsWith('",')) return false;
+      if (lines[k].trim().endsWith("',") || lines[k].trim().endsWith('",'))
+        return false;
     }
     return false;
   };
@@ -127,7 +128,8 @@ function processFile(filePath) {
     // Extract between first ' and ending ',
     const firstQuote = literal.indexOf("'");
     const lastQuote = literal.lastIndexOf("',");
-    if (firstQuote === -1 || lastQuote === -1 || lastQuote <= firstQuote) continue;
+    if (firstQuote === -1 || lastQuote === -1 || lastQuote <= firstQuote)
+      continue;
     const value = literal.slice(firstQuote + 1, lastQuote);
 
     if (value.length <= MAX_LEN) {

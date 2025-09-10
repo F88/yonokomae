@@ -1,14 +1,14 @@
 import { JudgeCard } from '@/components/battle/Judge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import type { Battle } from '@yonokomae/types';
 import type { PlayMode } from '@/yk/play-mode';
+import type { Battle } from '@yonokomae/types';
 import { ScrollText } from 'lucide-react';
 import { type FC, useEffect } from 'react';
 // import { scrollToY } from '@/lib/reduced-motion';
-import { scrollToAnchor } from '@/lib/scroll';
 import { BREAKPOINTS } from '@/hooks/use-breakpoint';
-import { JUDGES } from '@/yk/judges';
+import { scrollToAnchor } from '@/lib/scroll';
 import { shuffleInPlace } from '@/lib/shuffle';
+import { JUDGES } from '@/yk/judges';
 
 /**
  * Props for ConsiderationsAndJudgments.

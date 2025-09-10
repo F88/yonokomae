@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { TitleContainer } from './TitleContainer';
 import type { PlayMode } from '@/yk/play-mode';
+import { render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { TitleContainer } from './TitleContainer';
 
 // Mock the debug env
 Object.defineProperty(import.meta, 'env', {
