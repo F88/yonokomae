@@ -7,6 +7,7 @@ function b(id: string, status?: Battle['status']): Battle {
     id,
     themeId: 'history',
     significance: 'low',
+    publishState: 'published',
     title: 't',
     subtitle: 's',
     narrative: { overview: 'o', scenario: 'c' },

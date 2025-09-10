@@ -20,6 +20,7 @@ describe('renderWithProviders', () => {
       title: 'Test Mode',
       description: 'Test description',
       enabled: true,
+      srLabel: 'Test Mode',
     };
 
     renderWithProviders(<TestComponent />, { mode: mockMode });

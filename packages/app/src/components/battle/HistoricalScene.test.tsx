@@ -7,6 +7,7 @@ const makeBattle = (overrides: Partial<Battle> = {}): Battle => ({
   id: 'b1',
   themeId: 'history',
   significance: 'low',
+  publishState: 'published',
   title: 'T',
   subtitle: 'S',
   narrative: { overview: 'O', scenario: 'N' },

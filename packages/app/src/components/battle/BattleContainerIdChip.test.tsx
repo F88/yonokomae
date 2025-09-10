@@ -277,6 +277,7 @@ describe('BattleContainerIdChip', () => {
         id: 'minimal',
         themeId: 'technology',
         significance: 'low',
+        publishState: 'published',
         title: 'Minimal',
         subtitle: 'Test',
         narrative: { overview: 'test', scenario: 'test' },
