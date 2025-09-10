@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { getBattleReportRepository } from '../core/repository-provider';
 // Minimal PlayMode type for this test (avoids path alias issues in test env)
 type PlayMode = {
@@ -6,16 +6,23 @@ type PlayMode = {
   title: string;
   description: string;
   enabled: boolean;
+  srLabel: string;
 };
 
 const heMode: PlayMode = {
   id: 'historical-evidences',
   title: 'HISTORICAL EVIDENCES',
-  description: '',
+  description: 'description',
   enabled: true,
+  srLabel: 'Historical evidences mode',
 };
 
 describe('historical-evidences mode repository', () => {
+  // Warm-up to avoid first-call transform/startup overhead impacting per-test timeout
+  beforeAll(async () => {
+    const repo = await getBattleReportRepository(heMode);
+    await repo.generateReport();
+  });
   // Unstable output data
   it.skip('returns the file-based repo and loads the requested battle file', async () => {
     const repo = await getBattleReportRepository(heMode, 'demo.en.ts');
@@ -34,7 +41,7 @@ describe('historical-evidences mode repository', () => {
       });
       expect(b.themeId).toBe('history');
     }
-  });
+  }, 20000);
 
   it('throws when explicit file does not satisfy themeId filter', async () => {
     // Choose a known file via seedFile param that likely has themeId !== technology (using historical evidences mode random) –
