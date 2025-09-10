@@ -1,6 +1,6 @@
 {
   "name": "@yonokomae/catalog",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Canonical catalogs for Yonokomae (themes, etc.)",
   "type": "module",
   "main": "dist/index.js",

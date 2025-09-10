@@ -1,6 +1,6 @@
 {
   "name": "@yonokomae/data-news-seeds",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "News seed data samples for Yono Komae War",
   "type": "module",
   "main": "./dist/index.js",

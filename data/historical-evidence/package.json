@@ -1,6 +1,6 @@
 {
   "name": "@yonokomae/data-historical-evidence",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Historical evidence data and scenarios for Yono Komae War",
   "type": "module",
   "main": "./dist/index.js",
