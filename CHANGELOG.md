@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.2.0
 
 ### Breaking Changes (Unreleased)
 
@@ -9,7 +9,7 @@
 - refactor(api): remove dedicated api battle report repository mode
 - refactor: streamline documentation and remove unused scenario repositories
 
-### Changes
+### Minor Changes (1.2.0)
 
 - feat(ops): enhance battle directory loading with multiple candidate paths
 - feat(ops): add --help flags to export CLI scripts and corresponding tests
