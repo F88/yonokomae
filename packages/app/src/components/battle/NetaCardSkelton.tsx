@@ -88,7 +88,6 @@ export const NetaCardSkelton: FC<NetaCardSkeltonProps> = ({
 }) => {
   const hasCardBackground =
     typeof cardBackground !== 'undefined' && cardBackground !== null;
-  const fgBehavior = cardBackground?.foregroundBehavior ?? 'keep';
   const cardBgUrlRaw = cardBackground?.imageUrl;
   const hasCardBgImage =
     typeof cardBgUrlRaw === 'string' && cardBgUrlRaw.trim() !== '';
@@ -98,31 +97,7 @@ export const NetaCardSkelton: FC<NetaCardSkeltonProps> = ({
     Math.min(1, cardBackground?.opacity ?? 0.3),
   );
   const cardBgOpacityClass = toOpacityClass(cardBgOpacity);
-  // Foreground placeholder tuning (opacity/blur) for parity with NetaCard
-  const fgOpacity = Math.max(
-    0,
-    Math.min(1, cardBackground?.foregroundOpacity ?? 1),
-  );
-  const fgOpacityClass = toOpacityClass(fgOpacity);
-  const fgBlurRaw = cardBackground?.foregroundBlur;
-  let fgBlurClass = '';
-  switch (fgBlurRaw) {
-    case true:
-    case 'sm':
-      fgBlurClass = 'blur-sm';
-      break;
-    case 'md':
-      fgBlurClass = 'blur';
-      break;
-    case 'lg':
-      fgBlurClass = 'blur-md';
-      break;
-    default:
-      fgBlurClass = '';
-  }
-  const forceBanner = fgBehavior === 'banner';
-  const effectiveCropTop = forceBanner ? true : cropTopBanner;
-  const ratio = effectiveCropTop ? (cropAspectRatio ?? '16/7') : undefined;
+  const ratio = cropTopBanner ? (cropAspectRatio ?? '16/7') : undefined;
   let ratioClass = '';
   switch (ratio) {
     case '16/1':
@@ -305,12 +280,9 @@ export const NetaCardSkelton: FC<NetaCardSkeltonProps> = ({
       )}
 
       {/* Image area placeholder (optional banner-like) */}
-      {effectiveCropTop && fgBehavior !== 'hide' && (
+      {cropTopBanner && (
         <div className={['w-full overflow-hidden', ratioClass].join(' ')}>
-          <Skeleton
-            className={['h-full w-full', fgOpacityClass, fgBlurClass].join(' ')}
-            animated={!reducedMotion}
-          />
+          <Skeleton className="h-full w-full" animated={!reducedMotion} />
         </div>
       )}
 
