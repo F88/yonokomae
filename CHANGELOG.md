@@ -6,7 +6,7 @@
   (`*.js`, `*.d.ts.map`)
 - fix(types): restore ambient import.meta.env declarations (env.d.ts) in data
   packages to fix tsc errors
-- chore(gitignore): tighten ignore rules for data/*/src while allowing
+- chore(gitignore): tighten ignore rules for data/\*/src while allowing
   env.d.ts
 - docs(data): document scripts/split-long-strings.mjs utility in Data
   Maintenance Guide and cross-link from battle seeds guide
