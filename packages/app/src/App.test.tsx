@@ -254,4 +254,63 @@ describe('App', () => {
       expect(screen.getByText('SELECT MODE')).toBeInTheDocument();
     });
   });
+
+  it('passes publishState filter param when selected via BattleFilter before starting', async () => {
+    const mockBattle: Battle = {
+      id: 'battle_ps',
+      themeId: 'history',
+      significance: 'low',
+      title: 'PS Battle',
+      subtitle: 'Sub',
+      narrative: { overview: 'Overview', scenario: 'Scenario' },
+      komae: {
+        imageUrl: '',
+        title: 'Komae',
+        subtitle: '',
+        description: '',
+        power: 1,
+      },
+      yono: {
+        imageUrl: '',
+        title: 'Yono',
+        subtitle: '',
+        description: '',
+        power: 2,
+      },
+      publishState: 'published',
+      status: 'success',
+    };
+    mockGenerateReport.mockResolvedValueOnce(mockBattle);
+
+    render(<App />);
+    // While on title screen, choose a publishState via BattleFilter
+    const psSelect = await screen.findByTestId('battle-filter-publish-state');
+    // Pick the first enabled non-empty option to keep test resilient to dataset
+    const available = Array.from(
+      (psSelect as HTMLSelectElement).querySelectorAll('option'),
+    ).find((opt) => !opt.disabled && opt.value !== '');
+    const chosen = available?.value ?? 'published';
+    await userEvent.selectOptions(psSelect, chosen);
+
+    // Start by selecting the default mode (Enter)
+    const radioGroup = screen.getByRole('radiogroup', { name: 'Play modes' });
+    radioGroup.focus();
+    await userEvent.keyboard('{Enter}');
+    await waitFor(() => {
+      expect(screen.queryByText('SELECT MODE')).not.toBeInTheDocument();
+    });
+
+    // Click Battle and verify publishState is forwarded in filter
+    const battleButton = await screen.findByRole('button', { name: /battle/i });
+    await userEvent.click(battleButton);
+
+    await waitFor(() => {
+      expect(mockGenerateReport).toHaveBeenCalled();
+    });
+    const call = mockGenerateReport.mock.calls.at(-1)?.[0];
+    const filter = call?.filter as
+      | { battle?: { themeId?: string; publishState?: string } }
+      | undefined;
+    expect(filter?.battle?.publishState).toBe(chosen);
+  });
 });
