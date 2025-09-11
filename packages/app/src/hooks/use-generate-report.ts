@@ -3,9 +3,9 @@ import type {
   BattleReportFilter,
   GenerateBattleReportParams,
 } from '@/yk/repo/core/repositories';
+import type { Battle } from '@yonokomae/types';
 import { useRepositoriesOptional } from '@/yk/repo/core/repository-context';
 import { getBattleReportRepository } from '@/yk/repo/core/repository-provider';
-import type { Battle } from '@yonokomae/types';
 import { useCallback, useMemo } from 'react';
 
 /**
