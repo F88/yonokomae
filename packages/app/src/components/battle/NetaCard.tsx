@@ -107,7 +107,6 @@ export type Props = Exclude<Neta, 'imageUrl'> & {
 };
 
 export const NetaCard: FC<Props> = ({
-  // imageUrl,
   title,
   subtitle,
   description,
@@ -119,10 +118,8 @@ export const NetaCard: FC<Props> = ({
   cropFocusY,
   cropAspectRatio,
 }) => {
-  const hasImage =
-    cardImage &&
-    typeof cardImage.imageUrl === 'string' &&
-    cardImage.imageUrl.trim() !== '';
+  // Resolve the foreground image URL with `cardImage.imageUrl` taking precedence over legacy `imageUrl`.
+  const hasImage = cardImage?.imageUrl && cardImage.imageUrl.trim() !== '';
   const hasCardBackground =
     typeof cardBackground !== 'undefined' && cardBackground !== null;
   const cardBgUrlRaw = cardBackground?.imageUrl;
