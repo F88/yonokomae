@@ -150,6 +150,7 @@ const LEGENDARY_IMAGES = [
   // Served from packages/app/public at the app base URL
   'showdown-on-the-great-river.png',
   'crossroads-of-destiny.png',
+  'ninja-cat-ancient-playground.png',
 ] as const;
 
 function seededIndex(seed: string, mod: number): number {
