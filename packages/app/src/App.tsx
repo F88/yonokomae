@@ -7,6 +7,7 @@ import { isEditable } from '@/lib/dom-utils';
 import { uid } from '@/lib/id';
 import { scrollByY, scrollToY } from '@/lib/reduced-motion';
 import { Placeholders } from '@/yk/placeholder';
+import { isRenderableBattle } from './lib/battle-guards';
 import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BattleMetrics } from './components/BattleMetrics';
@@ -488,10 +489,8 @@ function App() {
           {mode != null && reports.length > 0 && (
             <section className="mx-auto w-full max-w-[2800px]">
               <div className={`${gridCols} gap-4 lg:gap-6`}>
-                {reports.map((battle: Battle) => {
-                  if (!battle) return null; // defensive (strict + future-proof)
-                  if (!battle.id) return null;
-                  return (
+                {reports.map((battle: Battle) =>
+                  isRenderableBattle(battle) ? (
                     <div
                       key={battle.id}
                       id={battle.id}
@@ -503,8 +502,8 @@ function App() {
                         // showMetaData
                       />
                     </div>
-                  );
-                })}
+                  ) : null,
+                )}
               </div>
             </section>
           )}
