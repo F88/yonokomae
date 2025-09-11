@@ -782,57 +782,110 @@ Action:
 
 #### HistoricalScene background: internal configuration and propagation
 
-HistoricalScene defines an internal optional decorative background image layer (not a public prop). This layer sits behind the content while the Card surface styling remains intact.
+HistoricalScene uses a centralized background builder (`buildHistoricalSceneBackground`) to determine decorative background settings. The background system has two distinct layers:
 
-Internal shape (not part of the component API):
+1. **Scene-level background**: A decorative image layer rendered behind all content in HistoricalScene
+2. **Card-level background**: Transparent card surfaces with optional decorative images inside each NetaCard
 
-- `sceneBackground: { imageUrl?: string; opacity?: number; backdropBlur?: boolean } | undefined`
-    - When `imageUrl` is a non-empty string, a background image layer is rendered (behind the content) with:
-        - Opacity: defaults to approximately 0.30 on mobile and 0.40 on `sm+` via utility classes when `opacity` is omitted.
-        - Blur: rendered only when `backdropBlur === true`.
-    - When `imageUrl` is missing or empty, the decorative background layer is not rendered.
+Background builder and types (`lib/build-historical-scene-background.ts`):
 
-Propagation to child components:
+- `HistoricalSceneBackground`: Configuration for the scene's decorative layer
+    - `hasImage: boolean` - Explicit rendering intent (true = render image layer)
+    - `sceneBgUrl?: string` - URL for the scene background image
+    - `opacityClass: string` - Tailwind opacity utilities (e.g., 'opacity-30 sm:opacity-40')
+    - `blur: boolean` - Whether to apply backdrop blur overlay
+    - `netaCardBackground?: NetaCardBackground` - Settings forwarded to NetaCard
 
-- HistoricalScene forwards the internal background settings to Field via `netaCardBackground`, which then passes them to NetaCard as `cardBackground`.
-- Mapping rules (current implementation):
-    - `imageUrl`: forwarded as-is.
-    - `opacity`: forwarded as-is; NetaCard clamps into `[0..1]` and snaps to predefined opacity steps for utility classes.
-    - `backdropBlur`: if the internal `sceneBackground` exists but `backdropBlur` is not specified, HistoricalScene defaults it to `true` for NetaCard to enhance legibility; otherwise use the explicit boolean value.
+- `NetaCardBackground`: Configuration for individual card backgrounds
+    - `imageUrl?: string` - Optional background image URL for the card
+    - `opacity?: number` - Desired opacity [0..1], mapped to Tailwind classes
+    - `backdropBlur?: boolean` - Enable mild backdrop blur for legibility
 
-Diagram (background flow):
+Current strategy (default):
+
+- Only `legendary` significance battles get decorative backgrounds
+- Uses deterministic selection from available assets based on battle ID
+- Returns conservative defaults (no background) for other cases
+- Reduced motion disables all decorative backgrounds
+
+Propagation chain:
 
 ```mermaid
-flowchart LR
-    HS["HistoricalScene (internal sceneBackground)"]
-    F["Field netaCardBackground"]
-    NC["NetaCard cardBackground"]
+flowchart TD
+    B["Battle data"]
+    RM["Reduced Motion check"]
+    Builder["buildHistoricalSceneBackground()"]
+    HS["HistoricalScene"]
+    F["Field"]
+    NC1["NetaCard (Yono)"]
+    NC2["NetaCard (Komae)"]
 
-    HS -->|maps to| F
-    F -->|passthrough| NC
+    B --> Builder
+    RM --> Builder
+    Builder --> HS
 
-    subgraph Decorative_Layer_HistoricalScene
-        HSbg["Image layer behind content; renders only if sceneBackground.imageUrl; Opacity default 0.30 mobile / 0.40 sm+; Blur only when backdropBlur===true"]
+    HS -->|"bg?.netaCardBackground"| F
+    F -->|"cardBackground prop"| NC1
+    F -->|"cardBackground prop"| NC2
+
+    subgraph Scene_Background
+        HSbg["Scene image layer<br/>Renders when bg.hasImage && bg.sceneBgUrl<br/>Uses bg.opacityClass<br/>Optional blur overlay"]
+    end
+
+    subgraph Card_Backgrounds
+        NCbg1["Card image layer (Yono)<br/>Transparent card surface<br/>Internal decorative image"]
+        NCbg2["Card image layer (Komae)<br/>Transparent card surface<br/>Internal decorative image"]
     end
 
     HS -.-> HSbg
+    NC1 -.-> NCbg1
+    NC2 -.-> NCbg2
 ```
+
+NetaCard implementation details:
+
+- When `cardBackground` is provided, the Card surface becomes transparent (`!bg-transparent`)
+- Background image rendering:
+    - Checks for non-empty `cardBackground.imageUrl`
+    - Renders decorative image layer with z-index -10
+    - Applies opacity via utility class mapping (snaps to nearest: 0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
+    - Adds gradient overlay for text readability
+- Backdrop blur:
+    - Only renders when `cardBackground.backdropBlur === true`
+    - Applies `backdrop-blur-sm` for mild blur effect
 
 Usage:
 
 ```tsx
+// HistoricalScene internally builds background
 <HistoricalScene
     battle={battle}
     cropTopBanner
-    cropAspectRatio="16/7"
+    cropAspectRatio="32/7"
     cropFocusY="center"
+    reducedMotion={prefersReducedMotion()}
+/>
+
+// Field receives and forwards background
+<Field
+    yono={battle.yono}
+    komae={battle.komae}
+    netaCardBackground={bg?.netaCardBackground}
+    cropTopBanner={cropTopBanner}
+/>
+
+// NetaCard applies background settings
+<NetaCard
+    {...neta}
+    cardBackground={netaCardBackground}
+    cropTopBanner={cropTopBanner}
 />
 ```
 
 Testing hooks:
 
-- When enabled internally, the HistoricalScene background image element carries `data-testid="scene-background-image"` and the optional blur overlay uses `data-testid="scene-background-blur"`.
-- NetaCard performs its own background rendering based on `cardBackground` and exposes visuals without additional test ids.
+- Scene background: `data-testid="scene-background-image"` and `data-testid="scene-background-blur"`
+- Card background: `data-testid="card-background-image"` and `data-testid="card-background-blur"`
 
 - **FontSizeControl**: Responsive font size adjustment control
     - Compact mode for mobile devices
