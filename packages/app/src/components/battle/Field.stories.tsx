@@ -108,7 +108,6 @@ export const CardBg_Image: Story = {
   },
 };
 
-
 export const CardBg_Opacity20: Story = {
   name: 'netaCardBackground.opacity = 0.2',
   args: {
@@ -141,4 +140,3 @@ export const CardBg_BackdropBlur: Story = {
     },
   },
 };
-
