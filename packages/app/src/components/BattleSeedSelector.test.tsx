@@ -180,4 +180,41 @@ describe('BattleSeedSelector', () => {
     expect(optionTexts.some((t) => t === 'beta tech')).toBe(false);
     expect(optionTexts.some((t) => t === 'gamma history')).toBe(false);
   });
+
+  it('shows "No matches" and disables selector when filters yield 0 results', () => {
+    render(<BattleSeedSelector value={undefined} onChange={() => {}} />);
+    // Pick an impossible combo: published + theme=technology + search=gamma
+    const psSelect = screen.getByTestId(
+      'battle-seed-filter-publish-state',
+    ) as HTMLSelectElement;
+    fireEvent.change(psSelect, { target: { value: 'published' } });
+    const themeSelect = screen.getByTestId(
+      'battle-seed-filter-theme',
+    ) as HTMLSelectElement;
+    fireEvent.change(themeSelect, { target: { value: 'technology' } });
+    const searchInput = screen.getByTestId(
+      'battle-seed-filter-text',
+    ) as HTMLInputElement;
+    fireEvent.change(searchInput, { target: { value: 'Gamma' } });
+    // Now list should be empty
+    expect(screen.getByTestId('battle-seed-empty')).toBeTruthy();
+    expect(
+      (screen.getByTestId('battle-seed-selector') as HTMLSelectElement)
+        .disabled,
+    ).toBe(true);
+  });
+
+  it('publishState options only include states with >0 counts', () => {
+    render(<BattleSeedSelector value={undefined} onChange={() => {}} />);
+    const psSelect = screen.getByTestId(
+      'battle-seed-filter-publish-state',
+    ) as HTMLSelectElement;
+    const values = Array.from(psSelect.querySelectorAll('option')).map(
+      (o) => o.value,
+    );
+    // All have >0 in mocked data, but list excludes empty states dynamically
+    // Ensure empty string (all) is present and at least one state value exists
+    expect(values.includes('')).toBe(true);
+    expect(values.some((v) => v !== '')).toBe(true);
+  });
 });

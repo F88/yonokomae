@@ -313,4 +313,70 @@ describe('App', () => {
       | undefined;
     expect(filter?.battle?.publishState).toBe(chosen);
   });
+
+  it('passes both themeId and publishState when both are selected before starting', async () => {
+    const mockBattle: Battle = {
+      id: 'battle_combo',
+      themeId: 'technology',
+      significance: 'low',
+      title: 'Combo Battle',
+      subtitle: 'Sub',
+      narrative: { overview: 'Overview', scenario: 'Scenario' },
+      komae: {
+        imageUrl: '',
+        title: 'Komae',
+        subtitle: '',
+        description: '',
+        power: 1,
+      },
+      yono: {
+        imageUrl: '',
+        title: 'Yono',
+        subtitle: '',
+        description: '',
+        power: 2,
+      },
+      publishState: 'published',
+      status: 'success',
+    };
+    mockGenerateReport.mockResolvedValueOnce(mockBattle);
+
+    render(<App />);
+    // Select a theme chip other than All if present
+    const allButton = screen.queryByTestId('battle-filter-chip-all');
+    const themeBtns = Array.from(
+      document.querySelectorAll('[data-testid^="battle-filter-chip-"]'),
+    ) as HTMLButtonElement[];
+    const firstTheme = themeBtns.find((b) => b !== allButton);
+    if (firstTheme) {
+      await userEvent.click(firstTheme);
+    }
+    // Select any available publishState option (non-empty)
+    const psSelect = await screen.findByTestId('battle-filter-publish-state');
+    const available = Array.from(
+      (psSelect as HTMLSelectElement).querySelectorAll('option'),
+    ).find((opt) => !opt.disabled && opt.value !== '');
+    const chosen = available?.value ?? 'published';
+    await userEvent.selectOptions(psSelect, chosen);
+
+    // Start mode
+    const radioGroup = screen.getByRole('radiogroup', { name: 'Play modes' });
+    radioGroup.focus();
+    await userEvent.keyboard('{Enter}');
+
+    // Battle -> verify both params forwarded
+    const battleButton = await screen.findByRole('button', { name: /battle/i });
+    await userEvent.click(battleButton);
+    await waitFor(() => {
+      expect(mockGenerateReport).toHaveBeenCalled();
+    });
+    const call = mockGenerateReport.mock.calls.at(-1)?.[0];
+    const filter = call?.filter as
+      | { battle?: { themeId?: string; publishState?: string } }
+      | undefined;
+    expect(filter?.battle?.publishState).toBe(chosen);
+    if (firstTheme) {
+      expect(filter?.battle).toHaveProperty('themeId');
+    }
+  });
 });
