@@ -9,6 +9,8 @@ export type BattleContainerProps = {
   mode: PlayMode;
   /** Toggle visibility of metadata (ID/Theme/Significance chips) in HistoricalScene. */
   showMetaData?: boolean;
+  /** App-level Reduced Motion flag propagated down. */
+  reducedMotion?: boolean;
 };
 
 const cropSettings = {
@@ -47,6 +49,7 @@ export const BattleContainer: FC<BattleContainerProps> = ({
   battle,
   mode,
   showMetaData,
+  reducedMotion,
 }) => {
   const isBattleReportLoading = battle.status === 'loading';
 
@@ -59,6 +62,7 @@ export const BattleContainer: FC<BattleContainerProps> = ({
       <HistoricalScene
         battle={isBattleReportLoading ? undefined : battle}
         isLoading={isBattleReportLoading}
+        reducedMotion={reducedMotion}
         cropTopBanner={cropSettingsForMode.enableCropTopBanner}
         cropAspectRatio={cropSettingsForMode.aspect}
         cropFocusY={cropSettingsForMode.focusY}

@@ -72,3 +72,73 @@ export const LongContent: Story = {
     },
   },
 };
+
+// netaCardBackground variations
+
+export const CardBg_Combined: Story = {
+  name: 'netaCardBackground: image + opacity + blur',
+  args: {
+    yono,
+    komae,
+    netaCardBackground: {
+      imageUrl: '/showdown-on-the-great-river.png',
+      opacity: 0.5,
+      backdropBlur: true,
+    },
+  },
+};
+
+export const CardBg_Transparent: Story = {
+  name: 'netaCardBackground (transparent only)',
+  args: {
+    yono,
+    komae,
+    netaCardBackground: {},
+  },
+};
+
+export const CardBg_Image: Story = {
+  name: 'netaCardBackground.imageUrl = /icon.png',
+  args: {
+    yono,
+    komae,
+    netaCardBackground: {
+      imageUrl: '/showdown-on-the-great-river.png',
+    },
+  },
+};
+
+
+export const CardBg_Opacity20: Story = {
+  name: 'netaCardBackground.opacity = 0.2',
+  args: {
+    yono,
+    komae,
+    netaCardBackground: {
+      opacity: 0.2,
+    },
+  },
+};
+
+export const CardBg_Opacity70: Story = {
+  name: 'netaCardBackground.opacity = 0.7',
+  args: {
+    yono,
+    komae,
+    netaCardBackground: {
+      opacity: 0.7,
+    },
+  },
+};
+
+export const CardBg_BackdropBlur: Story = {
+  name: 'netaCardBackground.backdropBlur = true',
+  args: {
+    yono,
+    komae,
+    netaCardBackground: {
+      backdropBlur: true,
+    },
+  },
+};
+
