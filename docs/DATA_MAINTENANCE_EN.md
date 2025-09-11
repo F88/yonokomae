@@ -333,10 +333,10 @@ Scope:
 Behavior:
 
 - When a string exceeds an internal threshold (currently 100 chars), it is
-    split at Japanese/Latin punctuation (`。！？!?`) into trimmed segments, and
-    rewritten as concatenated literals, one per line, ending with a comma.
+  split at Japanese/Latin punctuation (`。！？!?`) into trimmed segments, and
+  rewritten as concatenated literals, one per line, ending with a comma.
 - Already concatenated blocks are detected and left unchanged so the script is
-    idempotent.
+  idempotent.
 
 Usage:
 
@@ -348,11 +348,11 @@ Safety and limitations:
 
 - Designed for simple single-quoted string literals, not template literals.
 - Multi-line or escaped quoting patterns beyond the conventional format are
-    intentionally unsupported.
+  intentionally unsupported.
 - Changes are deterministic; commit results after review.
 
 When to use:
 
 - Before submitting large content updates to battle seeds where long paragraphs
-    appear in `overview`, `scenario`, or `description`.
+  appear in `overview`, `scenario`, or `description`.
 - After bulk content imports to normalize formatting for reviewers.
