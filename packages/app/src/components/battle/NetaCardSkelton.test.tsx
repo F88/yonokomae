@@ -47,10 +47,10 @@ describe('NetaCardSkelton', () => {
 
   it('renders banner placeholder when cropTopBanner=true with default ratio', () => {
     render(<NetaCardSkelton cropTopBanner />);
-    const banner = screen
-      .getByTestId('placeholder')
-      .querySelector('.aspect-[16/7]');
-    expect(banner).toBeTruthy();
+    const hasAspect = Array.from(
+      screen.getByTestId('placeholder').querySelectorAll('*'),
+    ).some((el) => (el as HTMLElement).classList?.contains('aspect-[16/7]'));
+    expect(hasAspect).toBe(true);
   });
 
   it('supports multiple aspect ratios', () => {
@@ -59,10 +59,10 @@ describe('NetaCardSkelton', () => {
       const { unmount } = render(
         <NetaCardSkelton cropTopBanner cropAspectRatio={r} />,
       );
-      const banner = screen
-        .getByTestId('placeholder')
-        .querySelector(`.aspect-[${r}]`);
-      expect(banner, `missing class for ${r}`).toBeTruthy();
+      const hasAspect = Array.from(
+        screen.getByTestId('placeholder').querySelectorAll('*'),
+      ).some((el) => (el as HTMLElement).classList?.contains(`aspect-[${r}]`));
+      expect(hasAspect, `missing class for ${r}`).toBe(true);
       unmount();
     });
   });

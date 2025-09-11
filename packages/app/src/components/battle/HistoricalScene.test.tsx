@@ -37,11 +37,8 @@ describe('HistoricalScene', () => {
 
   it('sets aria-busy when loading', () => {
     render(<HistoricalScene battle={makeBattle()} isLoading />);
-    const container =
-      screen.getByRole('article', { hidden: true }) ||
-      document.querySelector('.relative.w-full.overflow-hidden');
+    const container = document.querySelector('[aria-busy="true"]');
     expect(container).toBeTruthy();
-    expect((container as HTMLElement).getAttribute('aria-busy')).toBe('true');
   });
 
   it('renders provenance list when provided', () => {
@@ -87,7 +84,9 @@ describe('HistoricalScene', () => {
       />,
     );
     // Assert that Field rendered NetaCard with aspect class through to DOM
-    const anyAspect = document.querySelector('.aspect-[32/16]');
-    expect(anyAspect).toBeTruthy();
+    const hasAspect = Array.from(document.querySelectorAll('*')).some((el) =>
+      (el as HTMLElement).classList?.contains('aspect-[32/16]'),
+    );
+    expect(hasAspect).toBe(true);
   });
 });

@@ -5,11 +5,8 @@ import { HistoricalSceneSkelton } from './HistoricalSceneSkelton';
 describe('HistoricalSceneSkelton', () => {
   it('sets aria-busy and renders without background by default', () => {
     render(<HistoricalSceneSkelton isBusy />);
-    const card =
-      screen.getByRole('region', { hidden: true }) ||
-      document.querySelector('.relative.w-full.overflow-hidden');
+    const card = document.querySelector('[aria-busy="true"]');
     expect(card).toBeTruthy();
-    expect((card as HTMLElement).getAttribute('aria-busy')).toBe('true');
     expect(screen.queryByTestId('scene-background-image')).toBeNull();
   });
 
