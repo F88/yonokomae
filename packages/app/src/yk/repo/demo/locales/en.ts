@@ -5,7 +5,7 @@ export const enPack: DemoLocalePack = {
     {
       id: 'template-en-1',
       themeId: 'history',
-      significance: 'low',
+      significance: 'legendary',
       title: 'Bridge Skirmish at Dusk',
       subtitle: 'Balance Checks on Narrow Planks',
       overview:
@@ -163,7 +163,7 @@ export const enPack: DemoLocalePack = {
     {
       id: 'template-en-7',
       themeId: 'history',
-      significance: 'low',
+      significance: 'legendary',
       title: 'Hilltop Beacon Exercise',
       subtitle: 'Light Fast, Notes Faster',
       overview: 'A chain of signals tests timing against wind and whim.',

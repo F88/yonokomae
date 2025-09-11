@@ -5,7 +5,7 @@ export const dePack: DemoLocalePack = {
     {
       id: 'template-de-1',
       themeId: 'history',
-      significance: 'low',
+      significance: 'legendary',
       title: 'Brückengefecht bei Dämmerung',
       subtitle: 'Gleichgewicht als Pflichtfach',
       overview:
@@ -169,7 +169,7 @@ export const dePack: DemoLocalePack = {
     {
       id: 'template-de-7',
       themeId: 'history',
-      significance: 'low',
+      significance: 'legendary',
       title: 'Höhenfeuer-Übung',
       subtitle: 'Licht schnell, Notizen schneller',
       overview: 'Ein Signalsystem misst Timing gegen Wind und Laune.',
