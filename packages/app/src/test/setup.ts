@@ -26,11 +26,18 @@ if (typeof window !== 'undefined' && !('matchMedia' in window)) {
 // ResizeObserver polyfill for react-fast-marquee
 if (typeof window !== 'undefined' && !('ResizeObserver' in window)) {
   class MockResizeObserver implements ResizeObserver {
-    observe(): void {}
-    unobserve(): void {}
+    // Minimal instance implementation; params are unused in tests
+    constructor(_cb: ResizeObserverCallback) {
+      void _cb;
+    }
+    observe(_target: Element, _options?: ResizeObserverOptions): void {
+      void _target;
+      void _options;
+    }
+    unobserve(_target: Element): void {
+      void _target;
+    }
     disconnect(): void {}
-    // These properties exist on the interface but aren't used in tests
-    readonly boxOptions?: ReadonlyArray<ResizeObserverBoxOptions> | undefined;
   }
   Object.defineProperty(window, 'ResizeObserver', {
     configurable: true,
