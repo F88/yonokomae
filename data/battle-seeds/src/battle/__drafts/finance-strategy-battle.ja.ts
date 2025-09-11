@@ -4,7 +4,7 @@ const battle = {
   id: 'battle_finance_strategy',
   publishState: 'draft',
   themeId: 'finance',
-  significance: 'medium',
+  significance: 'legendary',
   title: '財政健全化の道筋のバトル',
   subtitle: '合併による効率化か、独立による自立か',
   narrative: {
