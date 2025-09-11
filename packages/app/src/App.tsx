@@ -3,20 +3,24 @@ import { Controller } from '@/components/Controller';
 import { Intro } from '@/components/Intro';
 import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
 import { useGenerateReport } from '@/hooks/use-generate-report';
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 import { isEditable } from '@/lib/dom-utils';
 import { uid } from '@/lib/id';
 import { scrollByY, scrollToY } from '@/lib/reduced-motion';
 import { Placeholders } from '@/yk/placeholder';
-import { isRenderableBattle } from './lib/battle-guards';
 import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
+import type {
+  Battle,
+  BattleReportMetrics,
+  PublishState,
+} from '@yonokomae/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BattleMetrics } from './components/BattleMetrics';
 import { DebugInfo } from './components/DebugInfo';
 import { Header } from './components/Header';
 import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
-import type { Battle, PublishState } from '@yonokomae/types';
-import type { BattleReportMetrics } from '@yonokomae/types';
+import { isRenderableBattle } from './lib/battle-guards';
 import { playMode, type PlayMode } from './yk/play-mode';
 
 function App() {
@@ -48,6 +52,10 @@ function App() {
   const [activePublishState, setActivePublishState] = useState<
     PublishState | undefined
   >(undefined);
+
+  // Reduced Motion preference (single source of truth for the app).
+  // Always derive from the hook so header toggle updates propagate immediately.
+  const prefersRM = usePrefersReducedMotion();
 
   // Helper: safe media query checks for non-browser/test envs
   const supportsMatchMedia =
@@ -499,6 +507,7 @@ function App() {
                       <BattleContainer
                         battle={battle}
                         mode={mode}
+                        reducedMotion={prefersRM}
                         // showMetaData
                       />
                     </div>
