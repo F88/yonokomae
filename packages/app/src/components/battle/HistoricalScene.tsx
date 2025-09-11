@@ -9,13 +9,14 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Skeleton } from '@/components/ui/skeleton';
+import { buildHistoricalSceneBackground } from '@/lib/build-historical-scene-background';
 import { cn } from '@/lib/utils';
 import { battleThemeCatalog } from '@yonokomae/catalog';
 import type { Battle } from '@yonokomae/types';
 import type { FC } from 'react';
 import { useMemo } from 'react';
 import { SignificanceChip } from '../ui/SignificanceChip';
+import { HistoricalSceneSkelton } from './HistoricalSceneSkelton';
 import { MetaData } from './MetaData';
 import { PublishStateChip } from './PublishStateChip';
 
@@ -27,6 +28,8 @@ export type Props = {
   showMetaData?: boolean;
   /** Optional explicit loading flag. When true, sets aria-busy regardless of data. */
   isLoading?: boolean;
+  /** App-level Reduced Motion flag. When true, no decorative backgrounds are applied. */
+  reducedMotion?: boolean;
   /**
    * Optional banner aspect ratio (W/H) used only when `cropTopBanner` is true.
    * Format: 'W/H' (e.g. '16/7'). Default is '16/7'.
@@ -65,7 +68,7 @@ export type Props = {
     | '32/30'
     | '32/31';
   /**
-   * Optional vertical focal point for cropped banner. See NetaView Props `cropFocusY`.
+   * Optional vertical focal point for cropped banner. See NetaCard Props `cropFocusY`.
    */
   cropFocusY?:
     | 'top'
@@ -91,7 +94,14 @@ export const HistoricalScene: FC<Props> = ({
   cropFocusY,
   showMetaData = false,
   isLoading = false,
+  reducedMotion = false,
 }) => {
+  // Internal scene background (originates here; not a public prop)
+  // Default: no decorative background image layer.
+  // Stabilize with useMemo keyed by battle.id and RM flag.
+  const bg = useMemo(() => {
+    return reducedMotion ? null : buildHistoricalSceneBackground(battle);
+  }, [reducedMotion, battle]);
   // Pick one of three icons at mount to avoid re-randomizing on each render
   const randomIconSrc = useMemo(() => {
     const icons = [
@@ -109,45 +119,13 @@ export const HistoricalScene: FC<Props> = ({
   // Render placeholder when no battle is provided
   if (!battle) {
     return (
-      <Card className="w-full" aria-busy={isBusy}>
-        <CardHeader className="text-center px-4 lg:px-6">
-          <div
-            className="mx-auto w-full space-y-5 sm:space-y-6"
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            <span className="sr-only">Loading battle content…</span>
-            {/* Overview placeholder */}
-            <div className="mx-auto w-full space-y-3 text-left sm:text-center">
-              <Skeleton className="mx-auto h-4 w-4/5" />
-            </div>
-
-            <Separator />
-
-            {/* Title block placeholder */}
-            <div className="space-y-2 w-full">
-              <div className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-2 py-2">
-                <Skeleton className="h-10 w-10 rounded" />
-                <Skeleton className="h-8 w-3/5" />
-              </div>
-              <div className="text-center">
-                <Skeleton className="mx-auto h-5 w-3/5" />
-              </div>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0 px-4 lg:px-6">
-          {/* Reuse Field placeholders by passing undefined sides */}
-          <Field
-            yono={undefined}
-            komae={undefined}
-            cropTopBanner={cropTopBanner}
-            cropAspectRatio={cropAspectRatio}
-            cropFocusY={cropFocusY}
-          />
-        </CardContent>
-      </Card>
+      <HistoricalSceneSkelton
+        isBusy={isBusy}
+        cropTopBanner={cropTopBanner}
+        cropAspectRatio={cropAspectRatio}
+        cropFocusY={cropFocusY}
+        background={bg ?? undefined}
+      />
     );
   }
 
@@ -163,19 +141,38 @@ export const HistoricalScene: FC<Props> = ({
   return (
     <Card
       className={cn(
-        'w-full',
+        'relative w-full overflow-hidden',
         battle.significance === 'legendary' && 'legendary-card',
       )}
       aria-busy={isBusy}
-      style={
-        {
-          // backgroundImage: "url('/showdown-on-the-great-river.png')",
-          // backgroundSize: 'cover',
-          // backgroundPosition: 'center',
-        }
-      }
     >
-      <CardHeader className="text-center px-4 lg:px-6">
+      {/* Decorative background image layer (only when imageUrl is provided) */}
+      {bg?.hasImage && bg.sceneBgUrl && (
+        <div
+          aria-hidden="true"
+          className={['absolute inset-0 z-0', bg.opacityClass].join(' ')}
+        >
+          <img
+            src={bg.sceneBgUrl}
+            alt=""
+            className="h-full w-full object-cover object-center select-none pointer-events-none"
+            loading="lazy"
+            decoding="async"
+            draggable={false}
+            data-testid="scene-background-image"
+          />
+          {/* Optional blur overlay to enhance readability over busy backgrounds */}
+          {bg.blur === true && (
+            <div
+              data-testid="scene-background-blur"
+              className="absolute inset-0 backdrop-blur-sm"
+            />
+          )}
+          {/* Subtle top-to-bottom fade to improve text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/5 to-background/40" />
+        </div>
+      )}
+      <CardHeader className="relative z-10 text-center px-4 lg:px-6">
         <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">
           {/* Meta data first (optional) */}
           {showMetaData ? <MetaData battle={battle} align="center" /> : null}
@@ -266,13 +263,14 @@ export const HistoricalScene: FC<Props> = ({
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0 px-4 lg:px-6">
+      <CardContent className="relative z-10 pt-0 px-4 lg:px-6">
         <Field
           yono={battle.yono}
           komae={battle.komae}
           cropTopBanner={cropTopBanner}
           cropAspectRatio={cropAspectRatio}
           cropFocusY={cropFocusY}
+          netaCardBackground={bg?.netaCardBackground}
         />
       </CardContent>
     </Card>
