@@ -160,9 +160,11 @@ pnpm --filter @yonokomae/data-battle-seeds run generate:battles
 3. ファイル作成 & 必須フィールド記述
 4. `publishState` 設定（明示しない場合は published）
 5. 検証実行:
+
     ```bash
     pnpm --filter @yonokomae/data-battle-seeds test
     ```
+
 6. インデックス再生成（テスト内で呼ばれない場合のみ）
 7. コミット: `data(battle): add <theme>:<topic> battle`
 
