@@ -50,10 +50,18 @@ describe('buildHistoricalSceneBackground', () => {
     expect(bg.hasImage).toBe(true);
     expect(typeof bg.sceneBgUrl).toBe('string');
     expect(bg.sceneBgUrl).toBeTruthy();
-    // BASE_URL may prefix path; we only assert file name tail.
-    expect(bg.sceneBgUrl!.endsWith('/showdown-on-the-great-river.png')).toBe(
-      true,
+    // BASE_URL may prefix path; only assert that the tail is one of the known images.
+    const tail = bg.sceneBgUrl!.split('/').pop();
+    expect([
+      'showdown-on-the-great-river.png',
+      'crossroads-of-destiny.png',
+      'ninja-cat-ancient-playground.png',
+    ]).toContain(tail);
+    // Deterministic: same input yields identical URL.
+    const bg2 = buildHistoricalSceneBackground(
+      makeBattle({ id: 'legend-1', significance: 'legendary' }),
     );
+    expect(bg2.sceneBgUrl).toBe(bg.sceneBgUrl);
     // NetaCard background should be set (transparent surface) for legendary,
     // and hint banner behavior.
     expect(bg.netaCardBackground).toBeDefined();

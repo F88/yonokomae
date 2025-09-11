@@ -63,21 +63,7 @@ export type NetaCardSkeltonProps = {
     | '32/31';
 };
 
-const toOpacityClass = (value: number): string => {
-  const steps = [0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] as const;
-  const pct = Math.round(value * 100);
-  let nearest: number = steps[0] ?? 0;
-  let minDiff = Math.abs(pct - nearest);
-  for (let i = 1; i < steps.length; i++) {
-    const s: number = steps[i] ?? nearest;
-    const diff = Math.abs(pct - s);
-    if (diff < minDiff) {
-      nearest = s;
-      minDiff = diff;
-    }
-  }
-  return `opacity-${nearest}`;
-};
+// numeric opacity has been removed in favor of Tailwind class strings
 
 export const NetaCardSkelton: FC<NetaCardSkeltonProps> = ({
   fullHeight = false,
@@ -92,11 +78,7 @@ export const NetaCardSkelton: FC<NetaCardSkeltonProps> = ({
   const hasCardBgImage =
     typeof cardBgUrlRaw === 'string' && cardBgUrlRaw.trim() !== '';
   const cardBgUrl = hasCardBgImage ? cardBgUrlRaw!.trim() : undefined;
-  const cardBgOpacity = Math.max(
-    0,
-    Math.min(1, cardBackground?.opacity ?? 0.3),
-  );
-  const cardBgOpacityClass = toOpacityClass(cardBgOpacity);
+  const cardBgOpacityClass = cardBackground?.opacityClass ?? 'opacity-30';
   const ratio = cropTopBanner ? (cropAspectRatio ?? '16/7') : undefined;
   let ratioClass = '';
   switch (ratio) {

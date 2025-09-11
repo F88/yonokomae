@@ -14,12 +14,12 @@ export default meta;
 type Story = StoryObj<typeof NetaCard>;
 
 const baseArgs = {
-  imageUrl: '/YONO-SYMBOL.png',
   title: 'Sample Neta',
   subtitle: 'Exhibit A',
   description:
     'A demonstration card showcasing the visual layout and power badge.',
   power: 70,
+  cardImage: { imageUrl: '/YONO-SYMBOL.png' },
 };
 
 export const Default: Story = {
@@ -50,8 +50,7 @@ export const FullHeight: Story = {
 export const WithBackgroundWithHeaderImage: Story = {
   args: {
     ...baseArgs,
-    // Hide top image to focus on cardBackground
-    imageUrl: '/YONO-SYMBOL.png',
+    // Keep header image and show cardBackground together
     cardBackground: {
       imageUrl: '/showdown-on-the-great-river.png',
       // uses default opacity (0.3)
@@ -63,7 +62,7 @@ export const WithBackgroundWithNoHeaderImage: Story = {
   args: {
     ...baseArgs,
     // Hide top image to focus on cardBackground
-    imageUrl: undefined,
+    cardImage: undefined,
     cardBackground: {
       imageUrl: '/showdown-on-the-great-river.png',
       // uses default opacity (0.3)
@@ -74,10 +73,9 @@ export const WithBackgroundWithNoHeaderImage: Story = {
 export const BackgroundOpacity10: Story = {
   args: {
     ...baseArgs,
-    imageUrl: '/YONO-SYMBOL.png',
     cardBackground: {
       imageUrl: '/showdown-on-the-great-river.png',
-      opacity: 0.1,
+      opacityClass: 'opacity-10',
     },
   },
 };
@@ -85,10 +83,10 @@ export const BackgroundOpacity10: Story = {
 export const BackgroundOpacity80: Story = {
   args: {
     ...baseArgs,
-    imageUrl: undefined,
+    cardImage: undefined,
     cardBackground: {
       imageUrl: '/showdown-on-the-great-river.png',
-      opacity: 0.8,
+      opacityClass: 'opacity-80',
     },
   },
 };
@@ -96,10 +94,10 @@ export const BackgroundOpacity80: Story = {
 export const BackgroundWithBlur: Story = {
   args: {
     ...baseArgs,
-    imageUrl: undefined,
+    cardImage: undefined,
     cardBackground: {
       imageUrl: '/showdown-on-the-great-river.png',
-      opacity: 0.4,
+      opacityClass: 'opacity-40',
       backdropBlur: true,
     },
   },
@@ -109,7 +107,7 @@ export const BackgroundWithBlur: Story = {
 export const TransparentOverParent: Story = {
   args: {
     ...baseArgs,
-    imageUrl: undefined,
+    cardImage: undefined,
     cardBackground: {},
   },
   decorators: [
@@ -124,7 +122,7 @@ export const TransparentOverParent: Story = {
 export const TransparentOverParentWithBlur: Story = {
   args: {
     ...baseArgs,
-    imageUrl: undefined,
+    cardImage: undefined,
     cardBackground: {
       backdropBlur: true,
     },

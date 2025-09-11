@@ -7,7 +7,7 @@ import type {
   NetaCardImage,
 } from '@/lib/build-historical-scene-background';
 
-export type Props = Exclude<Neta, 'imageUrl'> & {
+export type Props = Omit<Neta, 'imageUrl'> & {
   /**
    * When true, makes the card take full available height to match siblings.
    */
@@ -365,9 +365,11 @@ export const NetaCard: FC<Props> = ({
       {/* Image */}
       {hasImage && (
         <div
+          data-testid="card-image-container"
           className={['w-full overflow-hidden relative', ratioClass].join(' ')}
         >
           <img
+            data-testid="card-image"
             src={cardImage.imageUrl}
             alt={title}
             className={[

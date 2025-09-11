@@ -2,17 +2,17 @@ import { describe, expect, it } from 'vitest';
 import type { NetaCardImage } from '@/lib/build-historical-scene-background';
 import { mergeNetaCardImage } from '@/lib/neta-card-image';
 
-const img = (url?: string, opacity?: number): NetaCardImage => ({
+const img = (url?: string, opacityClass?: string): NetaCardImage => ({
   imageUrl: url,
-  opacity,
+  opacityClass,
 });
 
 describe('mergeNetaCardImage', () => {
   it('prefers neta imageUrl when provided', () => {
-    const base = img('/base.png', 0.7);
+    const base = img('/base.png', 'opacity-70');
     const res = mergeNetaCardImage(base, '/neta.png');
     expect(res?.imageUrl).toBe('/neta.png');
-    expect(res?.opacity).toBe(0.7);
+    expect(res?.opacityClass).toBe('opacity-70');
   });
 
   it('falls back to base.imageUrl when neta image is empty', () => {

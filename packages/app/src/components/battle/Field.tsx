@@ -146,39 +146,51 @@ export const Field: FC<FieldProps> = ({
           className="flex min-w-0 flex-1 flex-col items-stretch space-y-4"
         >
           {yono ? (
-            <NetaCard
-              {...yono}
-              fullHeight
-              cropTopBanner={cropTopBanner}
-              cropFocusY={cropFocusY}
-              cropAspectRatio={cropAspectRatio}
-              cardImage={mergeCardImage(netaCardImage, yono.imageUrl)}
-              cardBackground={netaCardBackground}
-              imageUrl=""
-            />
+            (() => {
+              const { imageUrl: _omitYonoImage, ...yonoProps } = yono;
+              void _omitYonoImage;
+              return (
+                <NetaCard
+                  {...yonoProps}
+                  fullHeight
+                  cropTopBanner={cropTopBanner}
+                  cropFocusY={cropFocusY}
+                  cropAspectRatio={cropAspectRatio}
+                  cardImage={mergeCardImage(netaCardImage, yono.imageUrl)}
+                  cardBackground={netaCardBackground}
+                />
+              );
+            })()
           ) : (
             <Placeholder />
           )}
         </div>
-        {/* KOMAE */}
+        ;{/* KOMAE */}
         <div
           data-testid="slot-komae"
           className="flex min-w-0 flex-1 flex-col items-stretch space-y-4"
         >
           {komae ? (
-            <NetaCard
-              {...komae}
-              fullHeight
-              cropTopBanner={cropTopBanner}
-              cropFocusY={cropFocusY}
-              cropAspectRatio={cropAspectRatio}
-              cardImage={mergeCardImage(netaCardImage, komae.imageUrl)}
-              cardBackground={netaCardBackground}
-            />
+            (() => {
+              const { imageUrl: _omitKomaeImage, ...komaeProps } = komae;
+              void _omitKomaeImage;
+              return (
+                <NetaCard
+                  {...komaeProps}
+                  fullHeight
+                  cropTopBanner={cropTopBanner}
+                  cropFocusY={cropFocusY}
+                  cropAspectRatio={cropAspectRatio}
+                  cardImage={mergeCardImage(netaCardImage, komae.imageUrl)}
+                  cardBackground={netaCardBackground}
+                />
+              );
+            })()
           ) : (
             <Placeholder />
           )}
         </div>
+        ;
       </div>
     </div>
   );

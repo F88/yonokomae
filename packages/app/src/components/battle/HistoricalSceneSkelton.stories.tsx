@@ -56,7 +56,7 @@ const demoBg: HistoricalSceneBackground = {
   netaCardBackground: {
     // imageUrl: '/showdown-on-the-great-river.png',
     imageUrl: undefined,
-    opacity: 0.4,
+    opacityClass: 'opacity-40',
     backdropBlur: true,
   },
 };

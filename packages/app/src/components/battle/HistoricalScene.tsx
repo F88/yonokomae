@@ -102,12 +102,13 @@ export const HistoricalScene: FC<Props> = ({
   const bg = useMemo(() => {
     return reducedMotion ? null : buildHistoricalSceneBackground(battle);
   }, [reducedMotion, battle]);
+
   // Pick one of three icons at mount to avoid re-randomizing on each render
-  const randomIconSrc = useMemo(() => {
-    const icons = ['ykw-icon-4.png', 'ykw-icon-6.png', 'ykw-icon-7.png'];
-    const pick = icons[Math.floor(Math.random() * icons.length)];
-    return `${import.meta.env.BASE_URL}${pick}`;
-  }, []);
+  // const randomIconSrc = useMemo(() => {
+  //   const icons = ['ykw-icon-4.png', 'ykw-icon-6.png', 'ykw-icon-7.png'];
+  //   const pick = icons[Math.floor(Math.random() * icons.length)];
+  //   return `${import.meta.env.BASE_URL}${pick}`;
+  // }, []);
 
   const isBusy = isLoading || !battle;
 
@@ -195,11 +196,11 @@ export const HistoricalScene: FC<Props> = ({
                   significance={battle.significance}
                   showLabel
                 />
-                <img
+                {/* <img
                   src={randomIconSrc}
                   alt="Legendary battle icon"
                   className="mx-auto h-30 w-auto opacity-90"
-                />
+                /> */}
               </>
             )}
 

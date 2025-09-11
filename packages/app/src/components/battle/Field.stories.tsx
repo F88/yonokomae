@@ -82,7 +82,7 @@ export const CardBg_Combined: Story = {
     komae,
     netaCardBackground: {
       imageUrl: '/showdown-on-the-great-river.png',
-      opacity: 0.5,
+      opacityClass: 'opacity-50',
       backdropBlur: true,
     },
   },
@@ -114,7 +114,7 @@ export const CardBg_Opacity20: Story = {
     yono,
     komae,
     netaCardBackground: {
-      opacity: 0.2,
+      opacityClass: 'opacity-20',
     },
   },
 };
@@ -125,7 +125,7 @@ export const CardBg_Opacity70: Story = {
     yono,
     komae,
     netaCardBackground: {
-      opacity: 0.7,
+      opacityClass: 'opacity-70',
     },
   },
 };
