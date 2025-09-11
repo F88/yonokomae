@@ -36,6 +36,7 @@ describe('Judge', () => {
         id: 'test-battle',
         themeId: 'history',
         significance: 'low',
+        publishState: 'published',
         title: 't',
         subtitle: 't',
         narrative: { overview: 'o', scenario: 's' },

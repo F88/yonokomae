@@ -129,7 +129,7 @@ describe('battle-seed-loader', () => {
                 { path: ['power'], message: 'Invalid number' },
               ],
             },
-          }) as any,
+          }) as unknown as ReturnType<typeof mockSchema.BattleSchema.safeParse>,
       );
 
       await expect(
@@ -245,7 +245,7 @@ describe('battle-seed-loader', () => {
       const legacyModule: BattleModule = {
         overview: 'Legacy overview',
         scenario: 'Legacy scenario',
-      } as any;
+      } as unknown as BattleModule;
 
       const result = normalizeBattle(legacyModule);
 
@@ -261,7 +261,7 @@ describe('battle-seed-loader', () => {
           overview: 'New overview',
           scenario: 'New scenario',
         },
-      } as any;
+      } as unknown as BattleModule;
 
       const result = normalizeBattle(mixedModule);
 
@@ -327,7 +327,7 @@ describe('battle-seed-loader', () => {
 
     it('handles non-array provenance', () => {
       const moduleWithInvalidProvenance: BattleModule = {
-        provenance: 'not an array' as any,
+        provenance: 'not an array' as unknown as string[],
       };
 
       const result = normalizeBattle(moduleWithInvalidProvenance);
@@ -339,11 +339,11 @@ describe('battle-seed-loader', () => {
       const moduleWithInvalidPower: BattleModule = {
         yono: {
           title: 'YONO',
-          power: 'not a number' as any,
+          power: 'not a number' as unknown as number,
         },
         komae: {
           title: 'KOMAE',
-          power: null as any,
+          power: null as unknown as number,
         },
       };
 

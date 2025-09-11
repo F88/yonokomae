@@ -7,6 +7,7 @@ import { isEditable } from '@/lib/dom-utils';
 import { uid } from '@/lib/id';
 import { scrollByY, scrollToY } from '@/lib/reduced-motion';
 import { Placeholders } from '@/yk/placeholder';
+import { isRenderableBattle } from './lib/battle-guards';
 import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BattleMetrics } from './components/BattleMetrics';
@@ -14,7 +15,7 @@ import { DebugInfo } from './components/DebugInfo';
 import { Header } from './components/Header';
 import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
-import type { Battle } from '@yonokomae/types';
+import type { Battle, PublishState } from '@yonokomae/types';
 import type { BattleReportMetrics } from '@yonokomae/types';
 import { playMode, type PlayMode } from './yk/play-mode';
 
@@ -45,7 +46,7 @@ function App() {
 
   // Active publishState filter (mirrors theme filter wiring). Undefined => all states.
   const [activePublishState, setActivePublishState] = useState<
-    string | undefined
+    PublishState | undefined
   >(undefined);
 
   // Helper: safe media query checks for non-browser/test envs
@@ -305,13 +306,18 @@ function App() {
 
     try {
       const battleFilter:
-        | { battle: { themeId?: string; publishState?: string } }
+        | {
+            battle: {
+              themeId?: string;
+              publishState?: PublishState;
+            };
+          }
         | undefined =
         activeThemeId || activePublishState
           ? {
               battle: {
                 themeId: activeThemeId,
-                publishState: activePublishState as string | undefined,
+                publishState: activePublishState,
               },
             }
           : undefined;
@@ -472,7 +478,9 @@ function App() {
                 selectedThemeId={activeThemeId}
                 onSelectedThemeIdChange={(id) => setActiveThemeId(id)}
                 selectedPublishState={activePublishState}
-                onSelectedPublishStateChange={(s) => setActivePublishState(s)}
+                onSelectedPublishStateChange={(s) =>
+                  setActivePublishState(s as PublishState | undefined)
+                }
               />
             </div>
           )}
@@ -481,10 +489,8 @@ function App() {
           {mode != null && reports.length > 0 && (
             <section className="mx-auto w-full max-w-[2800px]">
               <div className={`${gridCols} gap-4 lg:gap-6`}>
-                {reports.map((battle: Battle) => {
-                  if (!battle) return null; // defensive (strict + future-proof)
-                  if (!battle.id) return null;
-                  return (
+                {reports.map((battle: Battle) =>
+                  isRenderableBattle(battle) ? (
                     <div
                       key={battle.id}
                       id={battle.id}
@@ -496,8 +502,8 @@ function App() {
                         // showMetaData
                       />
                     </div>
-                  );
-                })}
+                  ) : null,
+                )}
               </div>
             </section>
           )}

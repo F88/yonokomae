@@ -1,4 +1,10 @@
-export type { Battle, Neta, BattleTheme, BattleThemeId } from './battle.js';
+export type {
+  Battle,
+  Neta,
+  BattleTheme,
+  BattleThemeId,
+  PublishState,
+} from './battle.js';
 export type { HistoricalSeed, HistoricalSeedMeta } from './historical.js';
 export type {
   BattleReport,

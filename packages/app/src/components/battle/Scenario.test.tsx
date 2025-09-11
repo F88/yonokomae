@@ -6,6 +6,7 @@ import type { Battle } from '@yonokomae/types';
 describe('Scenario', () => {
   const mockBattleWithScenario: Battle = {
     id: 'test-battle',
+    publishState: 'published',
     title: 'Test Battle',
     subtitle: '',
     themeId: 'history',
@@ -34,6 +35,7 @@ describe('Scenario', () => {
 
   const mockBattleWithoutScenario: Battle = {
     id: 'test-battle-2',
+    publishState: 'published',
     title: 'Test Battle 2',
     subtitle: '',
     themeId: 'culture',
@@ -94,7 +96,7 @@ describe('Scenario', () => {
   it('returns null when narrative is undefined', () => {
     const battleWithoutNarrative: Battle = {
       ...mockBattleWithScenario,
-      narrative: undefined as any,
+      narrative: undefined as unknown as Battle['narrative'],
     };
 
     const { container } = render(<Scenario battle={battleWithoutNarrative} />);
@@ -213,7 +215,7 @@ describe('Scenario', () => {
         ...mockBattleWithScenario,
         narrative: {
           ...mockBattleWithScenario.narrative,
-          scenario: null as any,
+          scenario: null as unknown as string,
         },
       };
 
@@ -229,7 +231,7 @@ describe('Scenario', () => {
         ...mockBattleWithScenario,
         narrative: {
           ...mockBattleWithScenario.narrative,
-          scenario: 456 as any,
+          scenario: 456 as unknown as string,
         },
       };
 

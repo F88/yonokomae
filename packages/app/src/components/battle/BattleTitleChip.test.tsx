@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import React from 'react';
+
 import { BattleTitleChip } from './BattleTitleChip';
 
 vi.mock('@yonokomae/data-battle-seeds', () => ({

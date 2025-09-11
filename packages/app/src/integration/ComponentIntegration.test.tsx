@@ -264,11 +264,9 @@ describe('Component Integration Tests', () => {
       const problematicBattle = {
         ...mockBattle,
         id: undefined as unknown,
-      };
+      } as unknown as Battle;
 
-      // Cast to any here since we intentionally pass a problematic shape
-
-      render(<MetaData battle={problematicBattle as any} />);
+      render(<MetaData battle={problematicBattle} />);
 
       // Component should either render with fallbacks or be caught by error boundary
       expect(screen.getByTestId('battle-metadata')).toBeInTheDocument();

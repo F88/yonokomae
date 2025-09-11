@@ -5,6 +5,7 @@ import * as UseJudgement from '@/hooks/use-judgement';
 import * as ReducedMotion from '@/lib/reduced-motion';
 import type { Battle } from '@yonokomae/types';
 import type { PlayMode } from '@/yk/play-mode';
+import type { JudgementState } from '@/hooks/use-judgement';
 
 // Mock the dependencies
 vi.mock('@/hooks/use-judgement', () => ({
@@ -47,6 +48,7 @@ describe('Judge Components', () => {
       power: 90,
       imageUrl: '',
     },
+    publishState: 'published',
   };
 
   const mockMode: PlayMode = {
@@ -54,6 +56,7 @@ describe('Judge Components', () => {
     title: 'DEMO',
     description: 'demo',
     enabled: true,
+    srLabel: 'Demo mode',
   };
 
   beforeEach(() => {
@@ -77,7 +80,9 @@ describe('Judge Components', () => {
     it('renders judge name correctly', () => {
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'loading',
-      } as any);
+        data: null,
+        error: null,
+      } satisfies JudgementState);
 
       render(
         <JudgeCard
@@ -93,7 +98,9 @@ describe('Judge Components', () => {
     it('shows loading state initially', () => {
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'loading',
-      } as any);
+        data: null,
+        error: null,
+      } satisfies JudgementState);
 
       render(
         <JudgeCard
@@ -109,7 +116,9 @@ describe('Judge Components', () => {
     it('shows error state when judgement fails', () => {
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'error',
-      } as any);
+        data: null,
+        error: new Error('x'),
+      } satisfies JudgementState);
 
       render(
         <JudgeCard
@@ -130,8 +139,9 @@ describe('Judge Components', () => {
 
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'success',
-        data: { winner: 'YONO' },
-      } as any);
+        data: { winner: 'YONO', reason: 'default' },
+        error: null,
+      } satisfies JudgementState);
 
       render(
         <JudgeCard
@@ -158,8 +168,9 @@ describe('Judge Components', () => {
 
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'success',
-        data: { winner: 'KOMAE' },
-      } as any);
+        data: { winner: 'KOMAE', reason: 'default' },
+        error: null,
+      } satisfies JudgementState);
 
       render(
         <JudgeCard
@@ -177,8 +188,9 @@ describe('Judge Components', () => {
       vi.mocked(ReducedMotion.prefersReducedMotion).mockReturnValue(true);
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'success',
-        data: { winner: 'YONO' },
-      } as any);
+        data: { winner: 'YONO', reason: 'default' },
+        error: null,
+      } satisfies JudgementState);
 
       const { rerender } = render(
         <JudgeCard
@@ -195,7 +207,9 @@ describe('Judge Components', () => {
       const newBattle = { ...mockBattle, id: 'new-battle' };
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'loading',
-      } as any);
+        data: null,
+        error: null,
+      } satisfies JudgementState);
 
       rerender(
         <JudgeCard
@@ -213,8 +227,9 @@ describe('Judge Components', () => {
       vi.mocked(ReducedMotion.prefersReducedMotion).mockReturnValue(true);
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'success',
-        data: { winner: 'DRAW' },
-      } as any);
+        data: { winner: 'DRAW', reason: 'default' },
+        error: null,
+      } satisfies JudgementState);
 
       const { rerender } = render(
         <JudgeCard
@@ -230,7 +245,9 @@ describe('Judge Components', () => {
       // Change judge
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'loading',
-      } as any);
+        data: null,
+        error: null,
+      } satisfies JudgementState);
       rerender(
         <JudgeCard
           codeNameOfJudge="JUDGE_B"
@@ -247,7 +264,9 @@ describe('Judge Components', () => {
     it('has proper card structure and styling', () => {
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'loading',
-      } as any);
+        data: null,
+        error: null,
+      } satisfies JudgementState);
 
       render(
         <JudgeCard
@@ -277,8 +296,9 @@ describe('Judge Components', () => {
       vi.mocked(ReducedMotion.prefersReducedMotion).mockReturnValue(false);
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'success',
-        data: { winner: 'YONO' },
-      } as any);
+        data: { winner: 'YONO', reason: 'default' },
+        error: null,
+      } satisfies JudgementState);
 
       // First render with one random value
       mockRandom.mockReturnValueOnce(0.2);
@@ -312,8 +332,9 @@ describe('Judge Components', () => {
       mockRandom.mockReturnValue(0.5);
       vi.mocked(UseJudgement.useJudgement).mockReturnValue({
         status: 'success',
-        data: { winner: 'YONO' },
-      } as any);
+        data: { winner: 'YONO', reason: 'default' },
+        error: null,
+      } satisfies JudgementState);
 
       const clearTimeoutSpy = vi.spyOn(global, 'clearTimeout');
 
@@ -339,8 +360,9 @@ describe('Judge Components', () => {
       winners.forEach((winner, index) => {
         vi.mocked(UseJudgement.useJudgement).mockReturnValue({
           status: 'success',
-          data: { winner },
-        } as any);
+          data: { winner, reason: 'default' },
+          error: null,
+        } satisfies JudgementState);
 
         const { rerender: _rerender, unmount } = render(
           <JudgeCard

@@ -7,7 +7,7 @@ import { useMemo, useState, useCallback, useEffect } from 'react';
 import { ThemeChip } from '@/components/battle/ThemeChip';
 import { BattleTitleChip } from '@/components/battle/BattleTitleChip';
 import { PublishStateChip } from '@/components/battle/PublishStateChip';
-import type { Battle } from '@yonokomae/types';
+import type { Battle, PublishState } from '@yonokomae/types';
 
 /**
  * BattleFilter
@@ -25,8 +25,8 @@ export type BattleFilterProps = {
   selectedThemeId?: string;
   onSelectedThemeIdChange?: (id: string | undefined) => void;
   /** Selected publishState (undefined => all states). */
-  selectedPublishState?: string;
-  onSelectedPublishStateChange?: (state: string | undefined) => void;
+  selectedPublishState?: PublishState;
+  onSelectedPublishStateChange?: (state: PublishState | undefined) => void;
   className?: string;
   show?: boolean;
   showBattleCount?: boolean; // Whether to show the battle count next to "テーマ" (default true)
@@ -53,7 +53,7 @@ export function BattleFilter({
   interface BattleShape {
     title?: string;
     themeId?: string;
-    publishState?: string;
+    publishState?: PublishState;
   }
 
   const seeds = useMemo(() => {
@@ -104,7 +104,7 @@ export function BattleFilter({
   const themeId = localTheme;
   // publishState local mirror (optimistic)
   const [localPublishState, setLocalPublishState] = useState<
-    string | undefined
+    PublishState | undefined
   >(selectedPublishState);
   useEffect(() => {
     setLocalPublishState(selectedPublishState);
@@ -144,7 +144,7 @@ export function BattleFilter({
     [onSelectedThemeIdChange],
   );
   const selectPublishState = useCallback(
-    (state: string | undefined) => {
+    (state: PublishState | undefined) => {
       setLocalPublishState(state);
       onSelectedPublishStateChange?.(state);
     },
@@ -152,11 +152,15 @@ export function BattleFilter({
   );
   // Counts (final filtered definition A): compute per publishState within the final filtered result.
   const publishStateCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const key of publishStateKeys) counts[key] = 0;
+    const counts: Record<PublishState, number> = {
+      draft: 0,
+      review: 0,
+      published: 0,
+      archived: 0,
+    };
     for (const s of filtered) {
-      counts[s.publishState ?? 'published'] =
-        (counts[s.publishState ?? 'published'] ?? 0) + 1;
+      const key: PublishState = (s.publishState ?? 'published') as PublishState;
+      counts[key] = (counts[key] ?? 0) + 1;
     }
     return counts;
   }, [filtered]);
@@ -186,14 +190,18 @@ export function BattleFilter({
             aria-label="publishState filter"
             data-testid="battle-filter-publish-state"
             value={publishState ?? ''}
-            onChange={(e) => selectPublishState(e.target.value || undefined)}
+            onChange={(e) =>
+              selectPublishState(
+                e.target.value ? (e.target.value as PublishState) : undefined,
+              )
+            }
           >
             <option value="">
               (all states)
               {showPublishStateCounts ? ` (${totalCount})` : ''}
             </option>
             {publishStateKeys.map((ps) => {
-              const count = publishStateCounts[ps] ?? 0;
+              const count = publishStateCounts[ps as PublishState] ?? 0;
               return (
                 <option key={ps} value={ps} disabled={count === 0}>
                   {ps}

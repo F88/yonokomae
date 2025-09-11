@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ConsiderationsAndJudgments } from './ConsiderationsAndJudgments';
-import type { Battle } from '@yonokomae/types';
 import type { PlayMode } from '@/yk/play-mode';
+import { render, screen } from '@testing-library/react';
+import type { Battle } from '@yonokomae/types';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ConsiderationsAndJudgments } from './ConsiderationsAndJudgments';
 
 // Mock the dependencies
 vi.mock('@/lib/scroll', () => ({
@@ -47,6 +47,7 @@ Object.defineProperty(global.Math, 'random', {
 describe('ConsiderationsAndJudgments', () => {
   const mockBattle: Battle = {
     id: 'test-battle-1',
+    publishState: 'published',
     title: 'Test Battle Title',
     subtitle: '',
     narrative: { overview: '', scenario: '' },
@@ -74,6 +75,7 @@ describe('ConsiderationsAndJudgments', () => {
     id: 'demo',
     title: 'DEMO',
     description: 'Demonstration mode',
+    srLabel: 'Demo Mode',
     enabled: true,
   };
 

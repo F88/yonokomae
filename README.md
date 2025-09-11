@@ -234,6 +234,10 @@ Use the `--format=json` flag for structured automation/CI pipelines (e.g., trend
 - [Historical Evidence Guide](./docs/data/HISTORICAL_EVIDENCE_SEEDS_EN.md)
 - [News Seeds Guide](./docs/data/NEWS_SEEDS_EN.md)
 
+Tip: For long Japanese paragraphs in battle seeds, use the helper script
+`scripts/split-long-strings.mjs` to split single-quoted strings at sentence
+boundaries for cleaner diffs. See the Data Maintenance Guide for details.
+
 ## Deployment (Summary)
 
 Static SPA deployed to GitHub Pages at `/yonokomae/` using scripts:

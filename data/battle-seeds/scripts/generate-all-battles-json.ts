@@ -10,11 +10,12 @@
  */
 import { promises as fs } from 'fs';
 import * as path from 'path';
+import type { PublishState } from '@yonokomae/types';
 
 // Lazy local minimal type (avoid circular dependency on compiled dist types during build sequencing)
 interface BattleLike {
   id: string;
-  publishState?: string;
+  publishState?: PublishState;
   themeId: string;
   significance: string;
   title: string;

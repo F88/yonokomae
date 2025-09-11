@@ -4,6 +4,7 @@ import {
 } from '@yonokomae/data-battle-seeds';
 import { battleThemeCatalog } from '@yonokomae/catalog';
 import { useMemo, useState } from 'react';
+import type { PublishState } from '@yonokomae/types';
 
 /**
  * BattleSeedSelector (Development Utility Only)
@@ -43,8 +44,8 @@ export type BattleSeedSelectorProps = {
   themeIdFilter?: string;
   onThemeIdFilterChange?: (themeId: string | undefined) => void;
   /** Controlled publishState filter (optional). */
-  publishStateFilter?: string;
-  onPublishStateFilterChange?: (state: string | undefined) => void;
+  publishStateFilter?: PublishState;
+  onPublishStateFilterChange?: (state: PublishState | undefined) => void;
   /** Show underlying battle seed id (battle.id inside the seed) next to the title. */
   showIds?: boolean;
 };
@@ -76,13 +77,13 @@ export function BattleSeedSelector({
     id?: string;
     themeId?: string;
     themeName?: string;
-    publishState?: string;
+    publishState?: PublishState;
   };
   interface BattleShape {
     id?: string;
     title?: string;
     themeId?: string;
-    publishState?: string;
+    publishState?: PublishState;
   }
   const themeNameById = useMemo(() => {
     const map = new Map<string, string>();
@@ -111,7 +112,7 @@ export function BattleSeedSelector({
     undefined,
   );
   const [internalPublishState, setInternalPublishState] = useState<
-    string | undefined
+    PublishState | undefined
   >(undefined);
   const effectiveSearch = searchText ?? internalSearch;
   const effectiveTheme = themeIdFilter ?? internalTheme;
@@ -158,7 +159,12 @@ export function BattleSeedSelector({
   // but ignore the active publishState filter itself so users can see alternative counts).
   const publishStateCounts = useMemo(() => {
     const needle = effectiveSearch.trim().toLowerCase();
-    const counts: Record<string, number> = {};
+    const counts: Record<PublishState, number> = {
+      draft: 0,
+      review: 0,
+      published: 0,
+      archived: 0,
+    };
     for (const s of seeds) {
       if (effectiveTheme && s.themeId !== effectiveTheme) continue;
       if (
@@ -169,7 +175,7 @@ export function BattleSeedSelector({
         )
       )
         continue;
-      const st = s.publishState ?? 'published';
+      const st: PublishState = (s.publishState ?? 'published') as PublishState;
       counts[st] = (counts[st] ?? 0) + 1;
     }
     return counts;
@@ -179,7 +185,10 @@ export function BattleSeedSelector({
   const publishStateOptions = useMemo(
     () =>
       publishStateKeys
-        .map((state) => ({ state, count: publishStateCounts[state] ?? 0 }))
+        .map((state) => ({
+          state,
+          count: publishStateCounts[state as PublishState] ?? 0,
+        }))
         .filter((o) => o.count > 0),
     [publishStateCounts],
   );
@@ -194,7 +203,7 @@ export function BattleSeedSelector({
     if (onThemeIdFilterChange) onThemeIdFilterChange(theme);
     else setInternalTheme(theme);
   };
-  const handlePublishStateChange = (state: string | undefined) => {
+  const handlePublishStateChange = (state: PublishState | undefined) => {
     if (onPublishStateFilterChange) onPublishStateFilterChange(state);
     else setInternalPublishState(state);
   };
@@ -217,7 +226,9 @@ export function BattleSeedSelector({
               aria-label="Battle seed publishState filter"
               value={effectivePublishState ?? ''}
               onChange={(e) =>
-                handlePublishStateChange(e.target.value || undefined)
+                handlePublishStateChange(
+                  e.target.value ? (e.target.value as PublishState) : undefined,
+                )
               }
               data-testid="battle-seed-filter-publish-state"
             >

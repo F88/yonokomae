@@ -99,6 +99,7 @@ export type BattleReportFilter = {
     id?: string;
     themeId?: string;
     significance?: Battle['significance'];
+    publishState?: Battle['publishState'];
   };
 };
 

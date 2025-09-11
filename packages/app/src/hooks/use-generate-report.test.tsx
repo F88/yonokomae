@@ -26,6 +26,7 @@ const sample: Battle = {
   id: 'id1',
   themeId: 'history',
   significance: 'low',
+  publishState: 'published',
   title: 't',
   subtitle: 's',
   narrative: { overview: 'o', scenario: 'sc' },

@@ -19,6 +19,7 @@ const battle: Battle = {
   id: 'b1',
   themeId: 'history',
   significance: 'low',
+  publishState: 'published',
   title: 't',
   subtitle: 's',
   narrative: { overview: 'o', scenario: 'sc' },
@@ -42,6 +43,7 @@ const mode: PlayMode = {
   title: 'Demo',
   description: '',
   enabled: true,
+  srLabel: 'Demo',
 };
 
 function Probe({ repoKind }: { repoKind: 'provided' | 'factory' }) {

@@ -22,8 +22,10 @@ describe('useRotateHistoricalSeed', () => {
   it('returns a function that calls context rotateSeed', () => {
     // Mock context with rotateSeed function
     mockUseHistoricalSeedSelection.mockReturnValue({
+      seedFile: undefined,
+      setSeedFile: vi.fn(),
       rotateSeed: mockRotateSeed,
-    } as any);
+    });
 
     const { result } = renderHook(() => useRotateHistoricalSeed());
 
@@ -61,7 +63,9 @@ describe('useRotateHistoricalSeed', () => {
 
   it('handles undefined context gracefully', () => {
     // Mock context as undefined
-    mockUseHistoricalSeedSelection.mockReturnValue(undefined);
+    mockUseHistoricalSeedSelection.mockReturnValue(
+      undefined as unknown as ReturnType<typeof useHistoricalSeedSelection>,
+    );
 
     const { result } = renderHook(() => useRotateHistoricalSeed());
 
@@ -81,8 +85,12 @@ describe('useRotateHistoricalSeed', () => {
 
   it('returns stable callback reference', () => {
     // Mock context with rotateSeed function
-    const mockContext = { rotateSeed: mockRotateSeed };
-    mockUseHistoricalSeedSelection.mockReturnValue(mockContext as any);
+    const mockContext = {
+      seedFile: undefined,
+      setSeedFile: vi.fn(),
+      rotateSeed: mockRotateSeed,
+    };
+    mockUseHistoricalSeedSelection.mockReturnValue(mockContext);
 
     const { result, rerender } = renderHook(() => useRotateHistoricalSeed());
     const firstCallback = result.current;
@@ -98,8 +106,10 @@ describe('useRotateHistoricalSeed', () => {
   it('can be called multiple times safely', () => {
     // Mock context with rotateSeed function
     mockUseHistoricalSeedSelection.mockReturnValue({
+      seedFile: undefined,
+      setSeedFile: vi.fn(),
       rotateSeed: mockRotateSeed,
-    } as any);
+    });
 
     const { result } = renderHook(() => useRotateHistoricalSeed());
 

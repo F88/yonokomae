@@ -160,9 +160,11 @@ pnpm --filter @yonokomae/data-battle-seeds run generate:battles
 3. ファイル作成 & 必須フィールド記述
 4. `publishState` 設定（明示しない場合は published）
 5. 検証実行:
+
     ```bash
     pnpm --filter @yonokomae/data-battle-seeds test
     ```
+
 6. インデックス再生成（テスト内で呼ばれない場合のみ）
 7. コミット: `data(battle): add <theme>:<topic> battle`
 
@@ -196,6 +198,13 @@ pnpm --filter @yonokomae/data-battle-seeds run generate:battles
 | themeId タイポ    | 期待グループに現れない | フォルダ名と一致させる          |
 | id 重複           | テスト失敗 / 生成失敗  | リネーム（全体検索）            |
 | narrative 過度    | 翻訳/検証困難          | overview 簡潔 / 詳細は scenario |
+
+## 執筆補助
+
+日本語の `overview`、`scenario`、`description` が長文になる場合は、
+`node scripts/split-long-strings.mjs` の実行を検討してください。文の区切りで
+単一引用符文字列を分割し、連結リテラルに整形してレビューしやすい差分に
+します。詳細は Data Maintenance Guide を参照してください。
 
 ## アプリでの利用例
 

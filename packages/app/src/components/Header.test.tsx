@@ -72,6 +72,7 @@ describe('Header', () => {
       title: 'Test Mode',
       description: 'Test mode description',
       enabled: true,
+      srLabel: 'Test Mode',
     };
 
     render(<Header mode={mockMode} />);
@@ -187,6 +188,7 @@ describe('Header', () => {
       title: 'Test Mode',
       description: 'Test mode description',
       enabled: true,
+      srLabel: 'Test Mode',
     };
 
     render(<Header mode={mockMode} />);

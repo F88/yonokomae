@@ -13,6 +13,7 @@ class StubRepo implements BattleReportRepository {
       id: `${this.src}-1`,
       themeId: 'history',
       significance: 'low',
+      publishState: 'published',
       title: `${this.src.toUpperCase()} title`,
       subtitle: '',
       narrative: { overview: '', scenario: '' },

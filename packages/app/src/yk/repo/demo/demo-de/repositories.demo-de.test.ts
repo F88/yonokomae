@@ -40,6 +40,7 @@ describe('demo-de repositories', () => {
       id: 'battle_demo_de_test',
       themeId: 'history' as const,
       significance: 'low' as const,
+      publishState: 'published' as const,
       title: 'Demo-DE Battle',
       subtitle: 'Variant Showcase (DE)',
       narrative: { overview: 'n/a', scenario: 'n/a' },

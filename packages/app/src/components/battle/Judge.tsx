@@ -1,11 +1,11 @@
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useJudgement } from '@/hooks/use-judgement';
+import { prefersReducedMotion } from '@/lib/reduced-motion';
+import type { PlayMode } from '@/yk/play-mode';
+import type { Battle } from '@yonokomae/types';
 import type { FC } from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import type { Battle } from '@yonokomae/types';
-import { useJudgement } from '@/hooks/use-judgement';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import type { PlayMode } from '@/yk/play-mode';
-import { prefersReducedMotion } from '@/lib/reduced-motion';
 
 // Base reveal delay to avoid all Judges appearing at once (in milliseconds).
 const REVEAL_DELAY_BASE_MS = 1_000;

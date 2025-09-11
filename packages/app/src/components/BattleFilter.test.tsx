@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import React from 'react';
+
 import { BattleFilter } from './BattleFilter';
 
 vi.mock('@yonokomae/data-battle-seeds', () => ({
@@ -148,5 +148,34 @@ describe('BattleFilter (chip single-select)', () => {
     // Current implementation: chip is rendered ONLY when publishState !== 'published'.
     // Mock seeds: published, draft, review, published -> expect 2 chips (draft + review).
     expect(stateChips.length).toBe(2);
+  });
+
+  it('honors selectedPublishState as a controlled prop and reflects changes', () => {
+    const onChange = vi.fn();
+    const { rerender } = render(
+      <BattleFilter
+        selectedPublishState="draft"
+        onSelectedPublishStateChange={onChange}
+      />,
+    );
+    // Initially filtered list should include only draft
+    const list1 = screen.getByTestId('battle-filter-list');
+    expect(list1.textContent).toContain('Beta Tech');
+    expect(list1.textContent).not.toContain('Alpha History');
+    // Rerender with different state
+    rerender(
+      <BattleFilter
+        selectedPublishState="review"
+        onSelectedPublishStateChange={onChange}
+      />,
+    );
+    const list2 = screen.getByTestId('battle-filter-list');
+    expect(list2.textContent).toContain('Gamma History');
+    expect(list2.textContent).not.toContain('Beta Tech');
+  });
+
+  it('can hide the publishState filter select when showPublishStateFilter=false', () => {
+    render(<BattleFilter showPublishStateFilter={false} />);
+    expect(screen.queryByTestId('battle-filter-publish-state')).toBeNull();
   });
 });

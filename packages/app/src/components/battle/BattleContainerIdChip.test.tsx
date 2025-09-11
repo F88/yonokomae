@@ -7,6 +7,7 @@ describe('BattleContainerIdChip', () => {
   const mockBattle: Battle = {
     id: 'test-battle-id',
     themeId: 'technology',
+    publishState: 'published',
     significance: 'medium',
     title: 'Test Battle',
     subtitle: 'Test vs Test',
@@ -276,6 +277,7 @@ describe('BattleContainerIdChip', () => {
         id: 'minimal',
         themeId: 'technology',
         significance: 'low',
+        publishState: 'published',
         title: 'Minimal',
         subtitle: 'Test',
         narrative: { overview: 'test', scenario: 'test' },

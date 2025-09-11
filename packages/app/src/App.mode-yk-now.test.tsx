@@ -12,7 +12,7 @@ vi.mock('@/hooks/use-generate-report', () => ({
 
 beforeEach(() => {
   mockGenerateReport.mockReset();
-  (window as any).scrollTo = vi.fn();
+  Object.defineProperty(window, 'scrollTo', { value: vi.fn(), writable: true });
 });
 
 describe('App play mode selection: yk-now', () => {

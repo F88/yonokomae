@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { TitleContainer } from './TitleContainer';
 import type { PlayMode } from '@/yk/play-mode';
+import { render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { TitleContainer } from './TitleContainer';
 
 // Mock the debug env
 Object.defineProperty(import.meta, 'env', {
@@ -13,21 +13,17 @@ Object.defineProperty(import.meta, 'env', {
 });
 
 // Comprehensive mock for data-battle-seeds
-vi.mock('@yonokomae/data-battle-seeds', async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    battleSeedsByFile: {
-      'test-seed.ts': {
-        id: 'test-seed',
-        themeId: 'history',
-        publishState: 'published',
-      },
+vi.mock('@yonokomae/data-battle-seeds', () => ({
+  battleSeedsByFile: {
+    'test-seed.ts': {
+      id: 'test-seed',
+      themeId: 'history',
+      publishState: 'published',
     },
-    publishStateKeys: ['published', 'draft', 'review'],
-    themeIds: ['history', 'technology', 'culture'],
-  };
-});
+  },
+  publishStateKeys: ['published', 'draft', 'review'],
+  themeIds: ['history', 'technology', 'culture'],
+}));
 
 describe('TitleContainer', () => {
   const mockModes: PlayMode[] = [

@@ -20,6 +20,7 @@ data/*/dist/
 node_modules/.types/
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 .idea
 .DS_Store
 *.suo
@@ -59,6 +60,17 @@ data/news-seeds/src/**/*.js
 data/battle-seeds/src/**/*.d.ts
 data/historical-evidence/src/**/*.d.ts
 data/news-seeds/src/**/*.d.ts
+
+# Keep source ambient declarations tracked
+!data/battle-seeds/src/env.d.ts
+!data/historical-evidence/src/env.d.ts
+!data/news-seeds/src/env.d.ts
+
+# Also ignore declaration and JS source maps left in src
+data/battle-seeds/src/**/*.d.ts.map
+data/historical-evidence/src/**/*.d.ts.map
+data/news-seeds/src/**/*.d.ts.map
+data/**/src/**/*.js.map
 
 # TypeScript build info
 tsconfig.tsbuildinfo

@@ -160,9 +160,11 @@ Do NOT edit generated files manually; re-run the script instead.
 3. Create file with correct pattern & populate fields
 4. Set `publishState` (omit only if intentionally `published`)
 5. Run validation tests:
+
     ```bash
     pnpm --filter @yonokomae/data-battle-seeds test
     ```
+
 6. Regenerate index (if not already triggered by test)
 7. Commit (`data(battle): add <theme>:<topic> battle`)
 
@@ -196,6 +198,13 @@ If a theme folder grows too broad, consider splitting after ≥8–10 heterogene
 | Theme typo             | Seed absent from expected group    | Match existing folder name / adjust themeId    |
 | Duplicate id           | Test failure / generator error     | Rename id (search repo)                        |
 | Over-complex narrative | Hard to localize or validate       | Keep overview concise; move detail to scenario |
+
+## Authoring Aids
+
+If your Japanese `overview`, `scenario`, or `description` contains very long
+single-quoted strings, consider running `node scripts/split-long-strings.mjs`.
+It splits at sentence boundaries and rewrites lines as concatenated literals
+for clearer diffs. See the Data Maintenance Guide for details.
 
 ## Consuming in Application
 

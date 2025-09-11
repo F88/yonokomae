@@ -11,6 +11,7 @@ describe('repository-provider mapping for demo-de', () => {
       title: 'Demonstrationsmodus (de)',
       description: '',
       enabled: true,
+      srLabel: 'Deutscher Demomodus',
     });
     const battle = await repo.generateReport({ signal: undefined });
 
@@ -26,6 +27,7 @@ describe('repository-provider mapping for demo-de', () => {
       title: 'DEMO(de)',
       description: '',
       enabled: true,
+      srLabel: 'Deutscher Demomodus',
     });
     const verdict = await judge.determineWinner(
       {
@@ -34,6 +36,7 @@ describe('repository-provider mapping for demo-de', () => {
           id: 'b',
           themeId: 'history' as const,
           significance: 'low' as const,
+          publishState: 'published',
           title: 'Demo-DE Schlacht',
           subtitle: 'Varianten-Schaukasten (DE)',
           narrative: { overview: '', scenario: '' },

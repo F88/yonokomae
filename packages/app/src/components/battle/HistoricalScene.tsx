@@ -94,7 +94,12 @@ export const HistoricalScene: FC<Props> = ({
 }) => {
   // Pick one of three icons at mount to avoid re-randomizing on each render
   const randomIconSrc = useMemo(() => {
-    const icons = ['ykw-icon-4.png', 'ykw-icon-6.png', 'ykw-icon-7.png'];
+    const icons = [
+      'ykw-icon-4.png',
+      'ykw-icon-6.png',
+      'ykw-icon-7.png',
+      'showdown-on-the-great-river.png',
+    ];
     const pick = icons[Math.floor(Math.random() * icons.length)];
     return `${import.meta.env.BASE_URL}${pick}`;
   }, []);
@@ -162,6 +167,13 @@ export const HistoricalScene: FC<Props> = ({
         battle.significance === 'legendary' && 'legendary-card',
       )}
       aria-busy={isBusy}
+      style={
+        {
+          // backgroundImage: "url('/showdown-on-the-great-river.png')",
+          // backgroundSize: 'cover',
+          // backgroundPosition: 'center',
+        }
+      }
     >
       <CardHeader className="text-center px-4 lg:px-6">
         <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">

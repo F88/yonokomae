@@ -122,16 +122,23 @@ describe('scroll utilities', () => {
 
     it('should use extraGapSmall for small viewports', () => {
       // Mock small viewport
-      (window as any).matchMedia = vi.fn((query: string) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      }));
+      Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        writable: true,
+        value: vi.fn(
+          (query: string) =>
+            ({
+              matches: false,
+              media: query,
+              onchange: null,
+              addListener: vi.fn(),
+              removeListener: vi.fn(),
+              addEventListener: vi.fn(),
+              removeEventListener: vi.fn(),
+              dispatchEvent: vi.fn(),
+            }) as unknown as MediaQueryList,
+        ),
+      });
 
       scrollToAnchor('test-element', {
         extraGapSmall: 15,
@@ -147,16 +154,24 @@ describe('scroll utilities', () => {
         value: 800,
       });
 
-      (window as any).matchMedia = vi.fn((query: string) => ({
-        matches: query === '(min-width: 900px)' && window.innerWidth >= 900,
-        media: query,
-        onchange: null,
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      }));
+      Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        writable: true,
+        value: vi.fn(
+          (query: string) =>
+            ({
+              matches:
+                query === '(min-width: 900px)' && window.innerWidth >= 900,
+              media: query,
+              onchange: null,
+              addListener: vi.fn(),
+              removeListener: vi.fn(),
+              addEventListener: vi.fn(),
+              removeEventListener: vi.fn(),
+              dispatchEvent: vi.fn(),
+            }) as unknown as MediaQueryList,
+        ),
+      });
 
       scrollToAnchor('test-element', {
         largeMinWidth: 900,
@@ -191,7 +206,11 @@ describe('scroll utilities', () => {
     });
 
     it('should work in SSR environment (no window.matchMedia)', () => {
-      (window as any).matchMedia = undefined;
+      Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        writable: true,
+        value: undefined,
+      });
 
       scrollToAnchor('test-element', {
         extraGapLarge: 25,
@@ -201,9 +220,9 @@ describe('scroll utilities', () => {
     });
 
     it('should work in environment without window', () => {
-      const originalWindow = global.window;
+      const originalWindow = globalThis.window;
 
-      delete (global as any).window;
+      delete (globalThis as Record<string, unknown>).window;
 
       // Mock getElementById to work without window
       vi.spyOn(document, 'getElementById').mockImplementation((id: string) => {
@@ -217,7 +236,7 @@ describe('scroll utilities', () => {
 
       expect(scrollByYMock).toHaveBeenCalledWith(92); // Should use small gap (no window = small viewport)
 
-      (global as any).window = originalWindow;
+      (globalThis as { window?: typeof window }).window = originalWindow;
     });
 
     it('should use default gap values', () => {

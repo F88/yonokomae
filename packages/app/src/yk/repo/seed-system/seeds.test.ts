@@ -44,12 +44,13 @@ describe('seeds', () => {
 
     it('contains seed metadata with required properties', () => {
       const firstSeed = historicalSeeds[0];
+      expect(firstSeed).toBeDefined();
       expect(firstSeed).toHaveProperty('id');
       expect(firstSeed).toHaveProperty('file');
       expect(firstSeed).toHaveProperty('title');
-      expect(typeof firstSeed.id).toBe('string');
-      expect(typeof firstSeed.file).toBe('string');
-      expect(typeof firstSeed.title).toBe('string');
+      expect(typeof firstSeed!.id).toBe('string');
+      expect(typeof firstSeed!.file).toBe('string');
+      expect(typeof firstSeed!.title).toBe('string');
     });
 
     it('has consistent seed structure across all entries', () => {
@@ -70,7 +71,8 @@ describe('seeds', () => {
         id: 'test-seed',
         title: 'Test Seed',
         subtitle: 'Test subtitle',
-        description: 'Test description',
+        overview: 'Test overview',
+        narrative: 'Test narrative',
       };
 
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(mockSeed);
@@ -82,7 +84,7 @@ describe('seeds', () => {
     });
 
     it('throws error when seed not found', async () => {
-      vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(null);
+      vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(undefined);
 
       await expect(loadSeedByFile('non-existent.ts')).rejects.toThrow(
         'Seed not found: non-existent.ts',
@@ -106,8 +108,8 @@ describe('seeds', () => {
         id: 'normalized-seed',
         title: 'Normalized Seed',
         subtitle: 'Normalized subtitle',
-        description: 'Normalized description',
-        scenario: 'Test scenario',
+        overview: 'Normalized overview',
+        narrative: 'Test scenario narrative',
       };
 
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(mockSeed);
@@ -125,11 +127,8 @@ describe('seeds', () => {
         id: 'complex-seed',
         title: 'Complex Seed',
         subtitle: 'Complex subtitle',
-        description: 'Complex description',
-        scenario: 'Complex scenario',
-        themeId: 'history',
-        significance: 'high',
-        publishState: 'published',
+        overview: 'Complex overview',
+        narrative: 'Complex narrative',
         extraProperty: 'extra value',
       };
 
@@ -139,11 +138,19 @@ describe('seeds', () => {
 
       expect(result.default).toEqual(complexSeed);
       expect(result.default).toHaveProperty('extraProperty');
-      expect(result.default.extraProperty).toBe('extra value');
+      expect((result.default as typeof complexSeed).extraProperty).toBe(
+        'extra value',
+      );
     });
 
     it('handles different file extensions', async () => {
-      const mockSeed = { id: 'json-seed', title: 'JSON Seed' };
+      const mockSeed = {
+        id: 'json-seed',
+        title: 'JSON Seed',
+        subtitle: 'JSON subtitle',
+        overview: 'JSON overview',
+        narrative: 'JSON narrative',
+      };
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(mockSeed);
 
       await loadSeedByFile('seed.json');
@@ -157,7 +164,13 @@ describe('seeds', () => {
     });
 
     it('handles files with path separators', async () => {
-      const mockSeed = { id: 'nested-seed', title: 'Nested Seed' };
+      const mockSeed = {
+        id: 'nested-seed',
+        title: 'Nested Seed',
+        subtitle: 'Nested subtitle',
+        overview: 'Nested overview',
+        narrative: 'Nested narrative',
+      };
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(mockSeed);
 
       await loadSeedByFile('nested/path/seed.ts');
@@ -204,7 +217,8 @@ describe('seeds', () => {
         id: 'interface-test',
         title: 'Interface Test',
         subtitle: 'Test subtitle',
-        description: 'Test description',
+        overview: 'Test overview',
+        narrative: 'Test narrative',
       };
 
       vi.mocked(DataPackage.loadSeedByFile).mockReturnValue(mockSeed);

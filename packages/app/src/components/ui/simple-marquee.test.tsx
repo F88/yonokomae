@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+import type { PropsWithChildren } from 'react';
 import {
   Marquee,
   MarqueeContent,
@@ -9,7 +10,10 @@ import {
 
 // Mock react-fast-marquee: expose received props as data-* attributes for assertions
 vi.mock('react-fast-marquee', () => ({
-  default: ({ children, ...props }: any) => {
+  default: ({
+    children,
+    ...props
+  }: PropsWithChildren<Record<string, unknown>>) => {
     const toKebab = (s: string) =>
       s.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
     const dataProps: Record<string, string> = {};
