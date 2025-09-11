@@ -127,6 +127,7 @@ export type BackgroundStrategy = (
 const LEGENDARY_IMAGES = [
   // Served from packages/app/public at the app base URL
   'showdown-on-the-great-river.png',
+  'crossroads-of-destiny.png',
 ] as const;
 
 function seededIndex(seed: string, mod: number): number {
@@ -178,7 +179,7 @@ const defaultSceneBackgroundStrategy: BackgroundStrategy = (battle) => {
   return {
     hasImage: false,
     sceneBgUrl: undefined,
-    opacityClass: 'opacity-30',
+    opacityClass: 'opacity-30 sm:opacity-40',
     blur: false,
     netaCardBackground: undefined,
     netaCardImage: undefined,
