@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { NetaView, type Props as NetaProps } from './Neta';
 import type { Neta } from '@yonokomae/types';
+import { describe, expect, it } from 'vitest';
+import { NetaCard, type Props as NetaProps } from './NetaCard';
 
-describe('NetaView', () => {
+describe('NetaCard', () => {
   const baseMockNeta: Neta = {
     title: 'Test Neta Title',
     subtitle: 'Test Subtitle',
@@ -13,7 +13,7 @@ describe('NetaView', () => {
   };
 
   it('renders neta with all basic information', () => {
-    render(<NetaView {...baseMockNeta} />);
+    render(<NetaCard {...baseMockNeta} />);
 
     expect(screen.getByText('Test Neta Title')).toBeInTheDocument();
     expect(screen.getByText('Test Subtitle')).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe('NetaView', () => {
   });
 
   it('renders image when imageUrl is provided', () => {
-    render(<NetaView {...baseMockNeta} />);
+    render(<NetaCard {...baseMockNeta} />);
 
     const image = screen.getByRole('img');
     expect(image).toBeInTheDocument();
@@ -31,20 +31,20 @@ describe('NetaView', () => {
   });
 
   it('does not render image when imageUrl is empty or missing', () => {
-    render(<NetaView {...baseMockNeta} imageUrl="" />);
+    render(<NetaCard {...baseMockNeta} imageUrl="" />);
 
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 
   it('does not render image when imageUrl is whitespace only', () => {
-    render(<NetaView {...baseMockNeta} imageUrl="   " />);
+    render(<NetaCard {...baseMockNeta} imageUrl="   " />);
 
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 
   it('applies fullHeight class when fullHeight is true', () => {
     const { container } = render(
-      <NetaView {...baseMockNeta} fullHeight={true} />,
+      <NetaCard {...baseMockNeta} fullHeight={true} />,
     );
 
     const card = container.querySelector('[data-slot="card"]');
@@ -53,7 +53,7 @@ describe('NetaView', () => {
 
   it('does not apply fullHeight class when fullHeight is false', () => {
     const { container } = render(
-      <NetaView {...baseMockNeta} fullHeight={false} />,
+      <NetaCard {...baseMockNeta} fullHeight={false} />,
     );
 
     const card = container.querySelector('[data-slot="card"]');
@@ -62,7 +62,7 @@ describe('NetaView', () => {
 
   it('applies crop aspect ratio when cropTopBanner is true', () => {
     render(
-      <NetaView
+      <NetaCard
         {...baseMockNeta}
         cropTopBanner={true}
         cropAspectRatio="16/9"
@@ -74,7 +74,7 @@ describe('NetaView', () => {
   });
 
   it('uses default aspect ratio when cropTopBanner is true but cropAspectRatio is not specified', () => {
-    render(<NetaView {...baseMockNeta} cropTopBanner={true} />);
+    render(<NetaCard {...baseMockNeta} cropTopBanner={true} />);
 
     const imageContainer = screen.getByRole('img').parentElement;
     expect(imageContainer).toHaveClass('aspect-[16/7]');
@@ -82,7 +82,7 @@ describe('NetaView', () => {
 
   it('applies correct focus positioning when cropFocusY is specified', () => {
     render(
-      <NetaView {...baseMockNeta} cropTopBanner={true} cropFocusY="top" />,
+      <NetaCard {...baseMockNeta} cropTopBanner={true} cropFocusY="top" />,
     );
 
     const image = screen.getByRole('img');
@@ -91,7 +91,7 @@ describe('NetaView', () => {
 
   it('applies correct focus positioning for percentage values', () => {
     render(
-      <NetaView {...baseMockNeta} cropTopBanner={true} cropFocusY="y-80" />,
+      <NetaCard {...baseMockNeta} cropTopBanner={true} cropFocusY="y-80" />,
     );
 
     const image = screen.getByRole('img');
@@ -99,7 +99,7 @@ describe('NetaView', () => {
   });
 
   it('uses center focus by default when cropTopBanner is true', () => {
-    render(<NetaView {...baseMockNeta} cropTopBanner={true} />);
+    render(<NetaCard {...baseMockNeta} cropTopBanner={true} />);
 
     const image = screen.getByRole('img');
     expect(image).toHaveClass('object-center');
@@ -107,7 +107,7 @@ describe('NetaView', () => {
 
   it('does not apply aspect ratio or focus classes when cropTopBanner is false', () => {
     render(
-      <NetaView
+      <NetaCard
         {...baseMockNeta}
         cropTopBanner={false}
         cropAspectRatio="16/9"
@@ -123,13 +123,13 @@ describe('NetaView', () => {
   });
 
   it('formats power number with thousands separators', () => {
-    render(<NetaView {...baseMockNeta} power={1234567} />);
+    render(<NetaCard {...baseMockNeta} power={1234567} />);
 
     expect(screen.getByText('Power: 1,234,567')).toBeInTheDocument();
   });
 
   it('displays power badge with emoji and correct styling', () => {
-    render(<NetaView {...baseMockNeta} />);
+    render(<NetaCard {...baseMockNeta} />);
 
     const powerBadge = screen.getByText('💥').parentElement;
     expect(powerBadge).toHaveClass('gap-1', 'px-3', 'py-1');
@@ -137,14 +137,14 @@ describe('NetaView', () => {
   });
 
   it('has proper card structure and responsive classes', () => {
-    const { container } = render(<NetaView {...baseMockNeta} />);
+    const { container } = render(<NetaCard {...baseMockNeta} />);
 
     const card = container.querySelector('[data-slot="card"]');
     expect(card).toHaveClass('w-full', 'overflow-hidden', 'pt-0', 'max-w-none');
   });
 
   it('has proper content layout classes', () => {
-    render(<NetaView {...baseMockNeta} />);
+    render(<NetaCard {...baseMockNeta} />);
 
     const content = screen
       .getByText('Test Neta Title')
@@ -157,6 +157,56 @@ describe('NetaView', () => {
       'flex',
       'flex-col',
     );
+  });
+
+  it('supports transparent card background when cardBackground is provided', () => {
+    const { container } = render(
+      <NetaCard {...baseMockNeta} cardBackground={{}} />,
+    );
+
+    const card = container.querySelector('[data-slot="card"]');
+    expect(card).toHaveClass('!bg-transparent');
+  });
+
+  it('renders optional decorative card background image when provided', () => {
+    render(
+      <NetaCard
+        {...baseMockNeta}
+        cardBackground={{ imageUrl: '/some/local/bg.png' }}
+      />,
+    );
+
+    const bg = screen.getByTestId('card-background-image');
+    expect(bg).toBeInTheDocument();
+    const img = bg.querySelector('img');
+    expect(img).toHaveAttribute('src', '/some/local/bg.png');
+    expect(img).toHaveAttribute('alt', '');
+    expect(img).toHaveClass('opacity-30');
+  });
+
+  it('applies custom opacity to background image via cardBackground.opacity', () => {
+    render(
+      <NetaCard
+        {...baseMockNeta}
+        cardBackground={{ imageUrl: '/bg.png', opacity: 0.62 }}
+      />,
+    );
+    const img = screen
+      .getByTestId('card-background-image')
+      .querySelector('img');
+    // nearest from steps to 62% is 60
+    expect(img).toHaveClass('opacity-60');
+  });
+
+  it('renders blur overlay when backdropBlur is true', () => {
+    render(
+      <NetaCard
+        {...baseMockNeta}
+        cardBackground={{ imageUrl: '/bg.png', backdropBlur: true }}
+      />,
+    );
+    const blur = screen.getByTestId('card-background-blur');
+    expect(blur).toBeInTheDocument();
   });
 
   describe('different aspect ratios', () => {
@@ -173,7 +223,7 @@ describe('NetaView', () => {
     testAspectRatios.forEach(({ ratio, expectedClass }) => {
       it(`applies correct class for aspect ratio ${ratio}`, () => {
         render(
-          <NetaView
+          <NetaCard
             {...baseMockNeta}
             cropTopBanner={true}
             cropAspectRatio={ratio}
@@ -202,7 +252,7 @@ describe('NetaView', () => {
     testFocusPositions.forEach(({ focus, expectedClass }) => {
       it(`applies correct class for focus position ${focus}`, () => {
         render(
-          <NetaView
+          <NetaCard
             {...baseMockNeta}
             cropTopBanner={true}
             cropFocusY={focus}

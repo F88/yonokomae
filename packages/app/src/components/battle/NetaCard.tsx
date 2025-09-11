@@ -2,12 +2,18 @@ import type { FC } from 'react';
 import type { Neta } from '@yonokomae/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import type { NetaCardBackground } from '@/lib/build-historical-scene-background';
 
 export type Props = Neta & {
   /**
    * When true, makes the card take full available height to match siblings.
    */
   fullHeight?: boolean;
+  /**
+   * Optional card background settings. When provided, the Card surface becomes transparent
+   * so that either the parent background or the provided background image can show through.
+   */
+  cardBackground?: NetaCardBackground | undefined;
   /**
    * When true, render the image inside a fixed banner-like aspect and crop centered.
    * This shows only a portion of the image (center area) similar to a header strip.
@@ -95,18 +101,45 @@ export type Props = Neta & {
     | 'y-100';
 };
 
-export const NetaView: FC<Props> = ({
+export const NetaCard: FC<Props> = ({
   imageUrl,
   title,
   subtitle,
   description,
   power,
   fullHeight = false,
+  cardBackground,
   cropTopBanner = false,
   cropFocusY,
   cropAspectRatio,
 }) => {
   const hasImage = typeof imageUrl === 'string' && imageUrl.trim() !== '';
+  const hasCardBackground =
+    typeof cardBackground !== 'undefined' && cardBackground !== null;
+  const cardBgUrlRaw = cardBackground?.imageUrl;
+  const hasCardBgImage =
+    typeof cardBgUrlRaw === 'string' && cardBgUrlRaw.trim() !== '';
+  const cardBgUrl = hasCardBgImage ? cardBgUrlRaw!.trim() : undefined;
+  const cardBgOpacity = Math.max(
+    0,
+    Math.min(1, cardBackground?.opacity ?? 0.3),
+  );
+  const toOpacityClass = (value: number): string => {
+    const steps = [0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] as const;
+    const pct = Math.round(value * 100);
+    let nearest: number = steps[0] ?? 0;
+    let minDiff = Math.abs(pct - nearest);
+    for (let i = 1; i < steps.length; i++) {
+      const s: number = steps[i] ?? nearest;
+      const diff = Math.abs(pct - s);
+      if (diff < minDiff) {
+        nearest = s;
+        minDiff = diff;
+      }
+    }
+    return `opacity-${nearest}`;
+  };
+  const cardBgOpacityClass = toOpacityClass(cardBgOpacity);
   const ratio = cropTopBanner ? (cropAspectRatio ?? '16/7') : undefined;
   let ratioClass = '';
   switch (ratio) {
@@ -306,11 +339,37 @@ export const NetaView: FC<Props> = ({
   return (
     <Card
       className={[
-        'w-full overflow-hidden pt-0',
+        'w-full overflow-hidden pt-0 relative',
         'max-w-none',
+        hasCardBackground ? '!bg-transparent' : '',
         fullHeight ? 'h-full' : '',
       ].join(' ')}
     >
+      {/* Optional decorative background image (inside the card) */}
+      {hasCardBgImage && (
+        <div
+          data-testid="card-background-image"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 overflow-hidden rounded-[inherit]"
+        >
+          <img
+            src={cardBgUrl}
+            alt=""
+            className={['h-full w-full object-cover', cardBgOpacityClass].join(
+              ' ',
+            )}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/0 to-background/20" />
+        </div>
+      )}
+      {/* Optional blur overlay to enhance readability over busy backgrounds */}
+      {hasCardBackground && cardBackground?.backdropBlur === true && (
+        <div
+          data-testid="card-background-blur"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 rounded-[inherit] backdrop-blur-sm"
+        />
+      )}
       {/* Image */}
       {hasImage && (
         <div className={['w-full overflow-hidden', ratioClass].join(' ')}>
@@ -350,3 +409,5 @@ export const NetaView: FC<Props> = ({
     </Card>
   );
 };
+
+// NetaCard is the canonical export. Legacy alias removed.
