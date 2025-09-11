@@ -108,7 +108,6 @@ export const HistoricalScene: FC<Props> = ({
       'ykw-icon-4.png',
       'ykw-icon-6.png',
       'ykw-icon-7.png',
-      'showdown-on-the-great-river.png',
     ];
     const pick = icons[Math.floor(Math.random() * icons.length)];
     return `${import.meta.env.BASE_URL}${pick}`;
