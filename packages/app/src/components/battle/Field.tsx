@@ -165,7 +165,7 @@ export const Field: FC<FieldProps> = ({
             <Placeholder />
           )}
         </div>
-        ;{/* KOMAE */}
+        {/* KOMAE */}
         <div
           data-testid="slot-komae"
           className="flex min-w-0 flex-1 flex-col items-stretch space-y-4"
@@ -190,7 +190,6 @@ export const Field: FC<FieldProps> = ({
             <Placeholder />
           )}
         </div>
-        ;
       </div>
     </div>
   );
