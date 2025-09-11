@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { HistoricalScene } from './HistoricalScene';
+import { fireEvent, render, screen } from '@testing-library/react';
 import type { Battle } from '@yonokomae/types';
+import { describe, expect, it } from 'vitest';
+import { HistoricalScene } from './HistoricalScene';
 
 const makeBattle = (overrides: Partial<Battle> = {}): Battle => ({
   id: 'b1',
@@ -65,6 +65,24 @@ describe('HistoricalScene', () => {
     const legendary = makeBattle({ significance: 'legendary' });
     render(<HistoricalScene battle={legendary} />);
     expect(screen.getByTestId('scene-background-image')).toBeInTheDocument();
+  });
+
+  it('fades scene background wrapper from opacity-100 to target class after load', () => {
+    const legendary = makeBattle({ significance: 'legendary' });
+    render(<HistoricalScene battle={legendary} />);
+    const img = screen.getByTestId(
+      'scene-background-image',
+    ) as HTMLImageElement;
+    const wrapper = img.parentElement as HTMLElement;
+    expect(wrapper).toBeTruthy();
+    // Initially fully opaque (before load)
+    expect(wrapper.className).toMatch(/opacity-100/);
+    // Simulate image load to trigger fade
+    fireEvent.load(img);
+    // After load, should carry target opacity class from strategy (default 'opacity-30')
+    expect(wrapper.className).toMatch(/opacity-30/);
+    // And includes transition class for smooth fade
+    expect(wrapper.className).toMatch(/transition-opacity/);
   });
 
   it('shows publish state chip when not published', () => {
