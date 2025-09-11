@@ -314,3 +314,45 @@ All data packages share common types from:
 - **News Seeds**: [docs/data/NEWS_SEEDS_EN.md](data/NEWS_SEEDS_EN.md)
 - **Development Overview**: `docs/DEVELOPMENT_EN.md`
 - (RFC document reference removed – consolidated into the Development Guide.)
+
+## Maintenance Utilities
+
+### split-long-strings.mjs
+
+Location: `scripts/split-long-strings.mjs`
+
+Purpose: Split long single-quoted Japanese string literals in battle seed
+files into shorter concatenated segments at sentence boundaries. This improves
+readability in diffs and reduces horizontal scrolling in reviews.
+
+Scope:
+
+- Targets files under `data/battle-seeds/src/battle` with extension `.ja.ts`.
+- Processes keys: `overview`, `scenario`, and `description` only.
+
+Behavior:
+
+- When a string exceeds an internal threshold (currently 100 chars), it is
+    split at Japanese/Latin punctuation (`。！？!?`) into trimmed segments, and
+    rewritten as concatenated literals, one per line, ending with a comma.
+- Already concatenated blocks are detected and left unchanged so the script is
+    idempotent.
+
+Usage:
+
+- From the repository root, run the script with Node:
+    - `node ./scripts/split-long-strings.mjs`
+- The script prints a summary: total files scanned and how many were modified.
+
+Safety and limitations:
+
+- Designed for simple single-quoted string literals, not template literals.
+- Multi-line or escaped quoting patterns beyond the conventional format are
+    intentionally unsupported.
+- Changes are deterministic; commit results after review.
+
+When to use:
+
+- Before submitting large content updates to battle seeds where long paragraphs
+    appear in `overview`, `scenario`, or `description`.
+- After bulk content imports to normalize formatting for reviewers.
