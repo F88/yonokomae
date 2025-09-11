@@ -128,6 +128,35 @@
   html.reduced-motion .motion-debug-badge {
     display: inline-flex;
   }
+  /* Tone utilities for Battle expression (non-intrusive) */
+  .tone-low {
+    box-shadow: 0 1px 0 0 hsl(0 0% 0% / 4%) inset;
+  }
+  .tone-medium {
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 0% / 6%) inset,
+      0 6px 12px -8px hsl(240 10% 50% / 10%);
+  }
+  .tone-high {
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 0% / 8%) inset,
+      0 10px 18px -10px hsl(260 90% 60% / 22%);
+  }
+  .state-draft {
+    outline: 1px dashed hsl(30 90% 60% / 0.35);
+    outline-offset: -2px;
+  }
+  .state-review {
+    outline: 1px dashed hsl(200 80% 60% / 0.35);
+    outline-offset: -2px;
+  }
+  .state-published {
+    outline: 1px solid hsl(140 60% 45% / 0.25);
+    outline-offset: -2px;
+  }
+  .state-archived {
+    filter: grayscale(0.1) contrast(0.98);
+  }
 }
 
 /* Legendary card styling: shimmering border with subtle sparkle overlay */
