@@ -61,6 +61,11 @@ data/battle-seeds/src/**/*.d.ts
 data/historical-evidence/src/**/*.d.ts
 data/news-seeds/src/**/*.d.ts
 
+# Keep source ambient declarations tracked
+!data/battle-seeds/src/env.d.ts
+!data/historical-evidence/src/env.d.ts
+!data/news-seeds/src/env.d.ts
+
 # Also ignore declaration and JS source maps left in src
 data/battle-seeds/src/**/*.d.ts.map
 data/historical-evidence/src/**/*.d.ts.map

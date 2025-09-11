@@ -26,7 +26,9 @@ const removeIfMatch = async (file) => {
       process.stdout.write(`[clean] removed ${file}\n`);
     } catch (err) {
       if (err && err.code !== 'ENOENT') {
-        process.stderr.write(`[clean][warn] failed to remove ${file}: ${err.message}\n`);
+        process.stderr.write(
+          `[clean][warn] failed to remove ${file}: ${err.message}\n`,
+        );
       }
     }
   }

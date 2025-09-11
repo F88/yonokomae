@@ -2,7 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'family-bonds-vs-state-protection',
-  publishState: 'draft',
+  publishState: 'published',
   themeId: 'community',
   significance: 'medium',
   title: 'だれが守る? 家族か国家か',

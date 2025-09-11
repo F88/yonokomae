@@ -2,7 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ny-vs-paris-ideology',
-  publishState: 'draft',
+  publishState: 'published',
   themeId: 'finance',
   significance: 'medium',
   title: '豊かさとは何か?',

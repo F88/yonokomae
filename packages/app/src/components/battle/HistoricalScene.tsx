@@ -167,11 +167,13 @@ export const HistoricalScene: FC<Props> = ({
         battle.significance === 'legendary' && 'legendary-card',
       )}
       aria-busy={isBusy}
-      style={{
-        // backgroundImage: "url('/showdown-on-the-great-river.png')",
-        // backgroundSize: 'cover',
-        // backgroundPosition: 'center',
-      }}
+      style={
+        {
+          // backgroundImage: "url('/showdown-on-the-great-river.png')",
+          // backgroundSize: 'cover',
+          // backgroundPosition: 'center',
+        }
+      }
     >
       <CardHeader className="text-center px-4 lg:px-6">
         <div className="mx-auto max-w-4xl space-y-5 sm:space-y-6">
