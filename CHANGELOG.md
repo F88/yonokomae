@@ -2,14 +2,41 @@
 
 ## Unreleased
 
+### Features
+
+- feat(components): add NetaCardSkelton component with background support and Storybook stories
+- feat(components): add HistoricalSceneSkelton component with reduced motion support
+- feat(components): enhance NetaCard with image merging logic and improved props structure
+- feat(ui): add dynamic background building for historical scenes
+- feat(tailwind): add safelist for opacity utility classes and extend opacity scale
+- feat(ui): integrate reduced motion support for loading animations
+- feat(storybook): add comprehensive stories for battle components
+
+### Refactoring
+
+- refactor(locales): update significance from 'low' to 'legendary' for historical templates
+- refactor(components): simplify icon selection and opacity handling in battle components
+- refactor(build): replace numeric opacity with Tailwind utility classes for consistency
+
+### Bug Fixes
+
 - chore(data): remove stale build artifacts under data/battle-seeds/src/battle/theme
   (`*.js`, `*.d.ts.map`)
 - fix(types): restore ambient import.meta.env declarations (env.d.ts) in data
   packages to fix tsc errors
 - chore(gitignore): tighten ignore rules for data/\*/src while allowing
   env.d.ts
+
+### Documentation
+
 - docs(data): document scripts/split-long-strings.mjs utility in Data
   Maintenance Guide and cross-link from battle seeds guide
+- docs(dev): update development guides with HistoricalScene background configuration details
+- docs: update README with latest architecture and component updates
+- docs: update contributing guides with Storybook test workflow
+
+### Miscellaneous
+
 - chore(scripts): remove obsolete cleanup script
 
 ## 1.2.0

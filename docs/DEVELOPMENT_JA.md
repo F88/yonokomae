@@ -503,6 +503,8 @@ iOS Safari でタップ時に意図しないモードが選択される事象を
 - `pnpm run test:unit` - ユニットテストを実行
 - `pnpm run test:storybook` - ブラウザで Storybook テストを実行
 - `pnpm run test:coverage` - カバレッジレポートを生成
+- `pnpm run storybook` - Storybook 開発サーバーを起動
+- `pnpm run build-storybook` - デプロイ用に静的 Storybook をビルド
 
 ## TypeScript ビルド構成
 
@@ -677,6 +679,19 @@ type Verdict = {
 ### バトルコンポーネント
 
 - **HistoricalScene**: ローディング状態とメタデータ表示を備えたメインバトル表示コンポーネント
+    - 設定可能なアスペクト比でクロップドバナーモードをサポート
+    - 重要度チップとテーマバッジを含む
+    - `HistoricalSceneSkelton` コンポーネントでローディングスケルトン状態を処理
+
+- **NetaCard**: バトル情報を表示するカードコンポーネント
+    - 不透明度制御付きの動的背景画像をサポート
+    - ローディング状態用に `NetaCardSkelton` を統合
+    - 適切なアクセシビリティ属性を備えたレスポンシブデザイン
+
+- **スケルトンコンポーネント**: 強化されたローディング状態コンポーネント
+    - `NetaCardSkelton`: 背景サポート付き NetaCard のローディングプレースホルダー
+    - `HistoricalSceneSkelton`: 減速モーションサポート付き HistoricalScene のローディング状態
+    - 両コンポーネントは shadcn/ui の Skeleton ベースコンポーネントと統合
 
 #### HistoricalScene の背景: 内部設定と伝播
 

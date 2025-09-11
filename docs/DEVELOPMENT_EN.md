@@ -586,6 +586,8 @@ We use Vitest with React Testing Library for component testing:
 - `pnpm run test:unit` - Run unit tests
 - `pnpm run test:storybook` - Run Storybook tests in browser
 - `pnpm run test:coverage` - Generate coverage report
+- `pnpm run storybook` - Start Storybook development server
+- `pnpm run build-storybook` - Build static Storybook for deployment
 
 ## TypeScript Build Layout
 
@@ -778,7 +780,17 @@ Action:
 - **HistoricalScene**: Main battle display component with loading states and metadata display
     - Supports cropped banner mode with configurable aspect ratios
     - Includes significance chips and theme badges
-    - Handles loading skeleton states
+    - Handles loading skeleton states with `HistoricalSceneSkelton` component
+
+- **NetaCard**: Card component for displaying battle information
+    - Supports dynamic background images with opacity control
+    - Integrates with `NetaCardSkelton` for loading states
+    - Responsive design with proper accessibility attributes
+
+- **Skeleton Components**: Enhanced loading state components
+    - `NetaCardSkelton`: Loading placeholder for NetaCard with background support
+    - `HistoricalSceneSkelton`: Loading state for HistoricalScene with reduced motion support
+    - Both components integrate with the Skeleton base component from shadcn/ui
 
 #### HistoricalScene background: internal configuration and propagation
 

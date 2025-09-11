@@ -52,6 +52,12 @@ yonokomae/
 - 回帰ガード付きシード可能シャッフルユーティリティ
 - バトルレポート生成の環境駆動ロギング
 - `--help` フラグ付き強化 ops CLI ツール
+- iOS/WebKit タッチモード選択補正 (座標近接マッチング)
+- 開発専用選択カウンター計測に依存する E2E テストの削除 (本番環境パリティ)
+- 強化されたスケルトンローディングコンポーネント (`NetaCardSkelton`、`HistoricalSceneSkelton`)
+- 歴史的シーンの動的背景構築
+- ローディングアニメーションの減速モーション対応
+- コンポーネント開発のための Storybook 統合
 
 ## データパッケージへのコントリビューション
 
@@ -133,7 +139,8 @@ Pull Request を作成すると、以下のチェックが自動実行されま�
 1. **Lint**: ESLint を使用してコードのスタイルとフォーマット問題をチェックします。
 2. **Typecheck**: 全パッケージの TypeScript 型を検証します。
 3. **Unit tests**: Vitest を使用してユニットテストスイートを実行します。
-4. **データパッケージ検証**: 全データパッケージが有効なスキーマと一意な ID を持つことを保証します:
+4. **Storybook テスト**: コンポーネントストーリーの視覚的一貫性を検証します。
+5. **データパッケージ検証**: 全データパッケージが有効なスキーマと一意な ID を持つことを保証します:
     - バトルシード検証（`@yonokomae/data-battle-seeds`）
     - 歴史的証拠検証（`@yonokomae/data-historical-evidence`）
     - ニュースシード検証（`@yonokomae/data-news-seeds`）
@@ -153,6 +160,9 @@ pnpm run typecheck
 
 # ユニットテスト実行
 pnpm run test:unit
+
+# Storybook テスト実行
+pnpm run test:storybook
 
 # 全テスト実行（データパッケージ検証を含む）
 pnpm test

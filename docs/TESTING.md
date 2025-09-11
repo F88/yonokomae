@@ -42,6 +42,13 @@ This guide summarizes how tests are organized and run in this project, covering 
 ### Storybook Tests
 
 - **Run Storybook tests:** `pnpm run test:storybook`
+- **Start Storybook dev server:** `pnpm run storybook`
+- **Build static Storybook:** `pnpm run build-storybook`
+
+Storybook is used for component development and visual testing. Key components with stories include:
+- `NetaCard` and `NetaCardSkelton` - Battle card components with loading states
+- `HistoricalScene` and `HistoricalSceneSkelton` - Battle scene components with backgrounds
+- UI components from shadcn/ui with custom variants
 
 ### End-to-End (E2E) Tests
 
