@@ -14,7 +14,7 @@ import { DebugInfo } from './components/DebugInfo';
 import { Header } from './components/Header';
 import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
-import type { Battle } from '@yonokomae/types';
+import type { Battle, PublishState } from '@yonokomae/types';
 import type { BattleReportMetrics } from '@yonokomae/types';
 import { playMode, type PlayMode } from './yk/play-mode';
 
@@ -45,7 +45,7 @@ function App() {
 
   // Active publishState filter (mirrors theme filter wiring). Undefined => all states.
   const [activePublishState, setActivePublishState] = useState<
-    'draft' | 'review' | 'published' | 'archived' | undefined
+    PublishState | undefined
   >(undefined);
 
   // Helper: safe media query checks for non-browser/test envs
@@ -308,7 +308,7 @@ function App() {
         | {
             battle: {
               themeId?: string;
-              publishState?: 'draft' | 'review' | 'published' | 'archived';
+              publishState?: PublishState;
             };
           }
         | undefined =
@@ -478,14 +478,7 @@ function App() {
                 onSelectedThemeIdChange={(id) => setActiveThemeId(id)}
                 selectedPublishState={activePublishState}
                 onSelectedPublishStateChange={(s) =>
-                  setActivePublishState(
-                    s as
-                      | 'draft'
-                      | 'review'
-                      | 'published'
-                      | 'archived'
-                      | undefined,
-                  )
+                  setActivePublishState(s as PublishState | undefined)
                 }
               />
             </div>

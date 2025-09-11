@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { BattleThemeId } from '@yonokomae/types';
+import { PUBLISH_STATES } from '@yonokomae/types';
 import { battleThemeCatalog } from '@yonokomae/catalog';
 
 /**
@@ -26,6 +27,9 @@ const themeIdValues = battleThemeCatalog.map(
   (t) => t.id,
 ) as unknown as readonly [BattleThemeId, ...BattleThemeId[]];
 export const BattleThemeIdSchema = z.enum(themeIdValues);
+
+// Canonical publish state schema derived from runtime constant
+export const PublishStateSchema = z.enum(PUBLISH_STATES);
 
 export const BattleSchema = z.object({
   /** Stable unique id for list keys and tracking */
@@ -60,9 +64,7 @@ export const BattleSchema = z.object({
   /** Optional status for UI flow control */
   status: z.enum(['loading', 'success', 'error']).optional(),
   /** Publishing lifecycle state (default: published) */
-  publishState: z
-    .enum(['draft', 'review', 'published', 'archived'])
-    .default('draft'),
+  publishState: PublishStateSchema.default('published'),
 });
 
 // Re-export types from z.infer for convenience

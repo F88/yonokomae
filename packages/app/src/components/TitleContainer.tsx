@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { PublishState } from '@yonokomae/types';
 
 /**
  * Debug Logging Strategy (TitleContainer & ModeOption)
@@ -632,9 +633,9 @@ export type TitleContainerProps = {
   /** Notify parent when the active theme filter changes (undefined => all). */
   onSelectedThemeIdChange?: (id: string | undefined) => void;
   /** Selected publishState (undefined => all states). Mirrors BattleFilter pass-through. */
-  selectedPublishState?: string;
+  selectedPublishState?: PublishState;
   /** Notify parent when the active publishState filter changes. */
-  onSelectedPublishStateChange?: (state: string | undefined) => void;
+  onSelectedPublishStateChange?: (state: PublishState | undefined) => void;
   /** Include description text in SR announcement (default false = srLabel only). */
   srIncludeDescription?: boolean;
 };
@@ -725,14 +726,14 @@ export function TitleContainer({
   // publishState filter pass-through (mirrors theme filtering pattern)
   // -------------------------------------------------------------------
   const [internalPublishState, setInternalPublishState] = useState<
-    string | undefined
+    PublishState | undefined
   >(undefined);
   const publishState =
     selectedPublishState !== undefined
       ? selectedPublishState
       : internalPublishState;
   const updatePublishState = useCallback(
-    (state: string | undefined) => {
+    (state: PublishState | undefined) => {
       if (selectedPublishState === undefined) {
         setInternalPublishState(state);
       }
@@ -745,7 +746,7 @@ export function TitleContainer({
   useEffect(() => {
     if (!publishState || !effectiveBattleSeedFile) return;
     const seed = battleSeedsByFile[effectiveBattleSeedFile] as
-      | { publishState?: string }
+      | { publishState?: PublishState }
       | undefined;
     const seedState = seed?.publishState ?? 'published';
     if (seedState !== publishState) {

@@ -94,6 +94,8 @@ export interface BattleNarrative {
   /** Free-form detailed description of the scenario */
   scenario: string;
 }
+/** Canonical publish lifecycle states for a Battle. */
+export type PublishState = 'draft' | 'review' | 'published' | 'archived';
 export interface Battle {
   /**
    * Stable unique id for list keys, caching, and tracking.
@@ -141,7 +143,7 @@ export interface Battle {
    *
    * Omitted field MUST be treated as `published` for backward compatibility.
    */
-  publishState: 'draft' | 'review' | 'published' | 'archived';
+  publishState: PublishState;
   /**
    * The main title of the battle scenario.
    *
