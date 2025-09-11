@@ -48,6 +48,20 @@ export type NetaCardBackground = {
 };
 
 /**
+ * Foreground image settings for `NetaCard` (optional alternative shape).
+ *
+ * Mirrors the minimal shape used for card backgrounds so callers can express
+ * foreground image controls in a consistent way if needed.
+ */
+export type NetaCardImage = {
+  imageUrl?: string;
+  /** Desired opacity in the range `[0..1]`. */
+  opacity?: number;
+  /** Apply a mild backdrop blur overlay for readability. */
+  backdropBlur?: boolean;
+};
+
+/**
  * Configuration for the `HistoricalScene` decorative background layer.
  *
  * The scene background is a single image layer rendered behind all card
@@ -73,7 +87,9 @@ export type HistoricalSceneBackground = {
   opacityClass: string;
   /** HistoricalScene overlay blur toggle */
   blur: boolean;
-  /** Background settings forwarded to Field -> NetaCard */
+  /** Optional foreground image settings forwarded to Field -> NetaCard */
+  netaCardImage?: NetaCardImage;
+  /** Optional: background settings forwarded to Field -> NetaCard */
   netaCardBackground?: NetaCardBackground;
 };
 
@@ -134,15 +150,27 @@ const defaultSceneBackgroundStrategy: BackgroundStrategy = (battle) => {
     const base = import.meta.env.BASE_URL ?? '/';
     const url = `${base}${picked.replace(/^\//, '')}`;
 
+    const netaCardImage: NetaCardImage = {
+      // imageUrl: `${base}/icon.png`,
+      // opacity: 0.0,
+      // opacity: 0.15,
+      opacity: 0.2,
+      // backdropBlur: true,
+    };
+
+    const netaCardBackground: NetaCardBackground = {
+      // imageUrl: url,
+      opacity: 0.2,
+      // backdropBlur: true,
+    };
+
     return {
       hasImage: true,
       sceneBgUrl: url,
-      opacityClass: 'opacity-30 sm:opacity-40',
+      opacityClass: 'opacity-30',
       blur: false,
-      // Make NetaCard surfaces transparent so the scene image shows through.
-      // Also hint that the foreground image should be displayed as a banner
-      // for a cohesive composition.
-      netaCardBackground: {},
+      netaCardImage: netaCardImage,
+      netaCardBackground: netaCardBackground,
     };
   }
 
@@ -150,9 +178,10 @@ const defaultSceneBackgroundStrategy: BackgroundStrategy = (battle) => {
   return {
     hasImage: false,
     sceneBgUrl: undefined,
-    opacityClass: 'opacity-30 sm:opacity-40',
+    opacityClass: 'opacity-30',
     blur: false,
     netaCardBackground: undefined,
+    netaCardImage: undefined,
   };
 };
 

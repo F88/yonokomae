@@ -270,6 +270,7 @@ export const HistoricalScene: FC<Props> = ({
           cropTopBanner={cropTopBanner}
           cropAspectRatio={cropAspectRatio}
           cropFocusY={cropFocusY}
+          netaCardImage={bg?.netaCardImage}
           netaCardBackground={bg?.netaCardBackground}
         />
       </CardContent>

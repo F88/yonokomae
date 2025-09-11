@@ -1,9 +1,21 @@
 import type { Props as NetaCardProps } from '@/components/battle/NetaCard';
 import { NetaCard } from '@/components/battle/NetaCard';
 import { NetaCardSkelton } from '@/components/battle/NetaCardSkelton';
+import type { NetaCardImage } from '@/lib/build-historical-scene-background';
+import { mergeNetaCardImage } from '@/lib/neta-card-image';
 import type { Neta } from '@yonokomae/types';
 import type { FC } from 'react';
 
+/**
+ * Battle field that renders a pair of Neta cards (Yono, Komae).
+ *
+ * Responsibilities:
+ * - Layout two `NetaCard` components side-by-side with consistent spacing.
+ * - Propagate app-level Reduced Motion to skeleton placeholders.
+ * - Apply optional top-cropped banner presentation for card images.
+ * - Merge a base `netaCardImage` with each Neta's own `imageUrl` via
+ *   `mergeNetaCardImage` so that per-Neta images take precedence.
+ */
 export type FieldProps = {
   yono?: Neta;
   komae?: Neta;
@@ -12,9 +24,24 @@ export type FieldProps = {
   /** When true, render images in cropped-top banner style. */
   cropTopBanner?: boolean;
   /**
+   * Optional base image configuration applied to both Yono and Komae.
+   *
+   * Merge rules (performed per card):
+   * - If the Neta has a non-empty `imageUrl`, it overrides `base.imageUrl`.
+   * - Otherwise, falls back to `base.imageUrl` (if provided).
+   * - Whitespace is trimmed on both inputs; empty strings are ignored.
+   * - Returns `undefined` to `NetaCard` when no usable image URL is present.
+   */
+  netaCardImage?: NetaCardProps['cardImage'];
+  /**
    * Pass-through background settings for each NetaCard.
    * When provided, each card surface becomes transparent and, if imageUrl is set,
    * a decorative image layer is drawn inside the card.
+   *
+   * Notes:
+   * - This does not alter the merge priority described in `netaCardImage`.
+   * - Reduced Motion is respected by the card implementation; this component
+   *   only forwards the flag to placeholders.
    */
   netaCardBackground?: NetaCardProps['cardBackground'];
   /**
@@ -75,6 +102,10 @@ export type FieldProps = {
     | 'y-100';
 };
 
+/**
+ * Renders the battle field with 2 columns. Uses `mergeNetaCardImage` to derive
+ * each card's `cardImage` from an optional base config and the Neta's image.
+ */
 export const Field: FC<FieldProps> = ({
   yono,
   komae,
@@ -82,8 +113,18 @@ export const Field: FC<FieldProps> = ({
   cropTopBanner = false,
   cropAspectRatio,
   cropFocusY,
+  netaCardImage,
   netaCardBackground,
 }) => {
+  // Use shared util for testability
+  /**
+   * Delegate to `mergeNetaCardImage` so behavior stays consistent and tested.
+   */
+  const mergeCardImage = (
+    base: NetaCardImage | undefined,
+    url: string | undefined | null,
+  ): NetaCardImage | undefined => mergeNetaCardImage(base, url);
+
   // Loading placeholder that mirrors NetaCard background behavior
   const Placeholder: FC = () => (
     <NetaCardSkelton
@@ -111,7 +152,9 @@ export const Field: FC<FieldProps> = ({
               cropTopBanner={cropTopBanner}
               cropFocusY={cropFocusY}
               cropAspectRatio={cropAspectRatio}
+              cardImage={mergeCardImage(netaCardImage, yono.imageUrl)}
               cardBackground={netaCardBackground}
+              imageUrl=""
             />
           ) : (
             <Placeholder />
@@ -129,6 +172,7 @@ export const Field: FC<FieldProps> = ({
               cropTopBanner={cropTopBanner}
               cropFocusY={cropFocusY}
               cropAspectRatio={cropAspectRatio}
+              cardImage={mergeCardImage(netaCardImage, komae.imageUrl)}
               cardBackground={netaCardBackground}
             />
           ) : (
