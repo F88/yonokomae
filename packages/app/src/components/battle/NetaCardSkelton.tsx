@@ -277,9 +277,10 @@ export const NetaCardSkelton: FC<NetaCardSkeltonProps> = ({
               animated={!reducedMotion}
             />
           </div>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-full" animated={!reducedMotion} />
-            <Skeleton className="h-4 w-3/4" animated={!reducedMotion} />
+          <div className="space-y-2 text-center ">
+            <Skeleton className="mx-auto h-5 w-4/5" animated={!reducedMotion} />
+            <Skeleton className="mx-auto h-5 w-4/5" animated={!reducedMotion} />
+            <Skeleton className="mx-auto h-5 w-3/5" animated={!reducedMotion} />
           </div>
           <div className="mt-auto flex justify-center">
             <Skeleton className="h-6 w-28 rounded" animated={!reducedMotion} />

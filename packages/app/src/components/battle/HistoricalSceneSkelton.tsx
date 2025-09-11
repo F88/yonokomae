@@ -64,6 +64,7 @@ export const HistoricalSceneSkelton: FC<HistoricalSceneSkeltonProps> = ({
         {/* Overview placeholder */}
         <div className="mx-auto w-full space-y-3 text-left sm:text-center">
           <Skeleton className="mx-auto h-4 w-4/5" animated={!reducedMotion} />
+          <Skeleton className="mx-auto h-4 w-4/5" animated={!reducedMotion} />
         </div>
 
         <Separator />
@@ -73,6 +74,15 @@ export const HistoricalSceneSkelton: FC<HistoricalSceneSkeltonProps> = ({
           <div className="flex flex-wrap items-baseline justify-center gap-x-3 gap-y-2 py-2">
             <Skeleton className="h-10 w-10 rounded" animated={!reducedMotion} />
             <Skeleton className="h-8 w-3/5" animated={!reducedMotion} />
+          </div>
+          <div className="text-center my-4">
+            <Skeleton className="mx-auto h-5 w-3/5" animated={!reducedMotion} />
+          </div>
+          <div className="text-center">
+            <Skeleton className="mx-auto h-5 w-4/5" animated={!reducedMotion} />
+          </div>
+          <div className="text-center">
+            <Skeleton className="mx-auto h-5 w-4/5" animated={!reducedMotion} />
           </div>
           <div className="text-center">
             <Skeleton className="mx-auto h-5 w-3/5" animated={!reducedMotion} />
