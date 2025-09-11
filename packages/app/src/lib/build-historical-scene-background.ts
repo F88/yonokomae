@@ -14,10 +14,17 @@
  *   from URL presence, to keep tests and behavior unambiguous.
  * - Allow scene background and per-card background to be toggled
  *   independently.
+ * - Prefer class-based styling instructions (e.g. `opacity-10`) over numeric
+ *   values to avoid Tailwind JIT rounding/purging pitfalls.
  *
  * Reduced Motion (RM): Callers should skip invoking the builder when RM is
  * active (e.g. `const bg = rm ? null : buildHistoricalSceneBackground(...)`).
  * This keeps decorative layers and shimmer effects disabled consistently.
+ *
+ * Tailwind notes:
+ * - When emitting dynamic classes (e.g. `opacity-10`, `aspect-[16/7]`), make
+ *   sure your Tailwind config safelists the patterns used by strategies so
+ *   that classes are generated in production.
  */
 import type { Battle } from '@yonokomae/types';
 
@@ -35,11 +42,14 @@ export type NetaCardBackground = {
    */
   imageUrl?: string;
   /**
-   * Desired opacity for the card background image, expressed as a number in
-   * the range `[0..1]`. Downstream renderers may clamp and map this to
-   * Tailwind utility classes (e.g., `opacity-30`).
+   * Optional Tailwind opacity utility class (e.g., `opacity-20`).
+   *
+   * Rationale: We intentionally do not carry numeric opacity here. The
+   * strategy should decide the exact class string so that the UI layer can
+   * apply it directly without mapping or rounding. This avoids Tailwind JIT
+   * step rounding and class purging issues.
    */
-  opacity?: number;
+  opacityClass?: string;
   /**
    * Enables a mild backdrop blur on top of the image layer to improve text
    * legibility against busy images. When `true`, a small blur is applied.
@@ -55,8 +65,14 @@ export type NetaCardBackground = {
  */
 export type NetaCardImage = {
   imageUrl?: string;
-  /** Desired opacity in the range `[0..1]`. */
-  opacity?: number;
+  /**
+   * Optional Tailwind opacity utility class (e.g., `opacity-10`).
+   *
+   * Rationale: Numeric opacity was removed to keep rendering deterministic
+   * and to align with Tailwind's utility-first approach. Strategies should
+   * provide a ready-to-use class string, and renderers should prefer it.
+   */
+  opacityClass?: string;
   /** Apply a mild backdrop blur overlay for readability. */
   backdropBlur?: boolean;
 };
@@ -123,6 +139,12 @@ export type BackgroundStrategy = (
  * 将来拡張:
  * - 画像候補の追加やテーマ別分岐、コンテキスト(viewport 等)によるゲーティング
  * - resolveAsset の導入
+ *
+ * スタイリングに関する注意:
+ * - 透過度などは numeric 値ではなく Tailwind の utility class をこの戦略から
+ *   直接返す(opacityClass)ことで、JIT の丸めやパージ問題を回避します。
+ * - 本ファイルの型は numeric opacity を持ちません。必要な表示は
+ *   `opacityClass` に確定値(例: 'opacity-10')を設定してください。
  */
 const LEGENDARY_IMAGES = [
   // Served from packages/app/public at the app base URL
@@ -153,15 +175,14 @@ const defaultSceneBackgroundStrategy: BackgroundStrategy = (battle) => {
 
     const netaCardImage: NetaCardImage = {
       // imageUrl: `${base}/icon.png`,
-      // opacity: 0.0,
-      // opacity: 0.15,
-      opacity: 0.2,
+      opacityClass: 'opacity-20',
       // backdropBlur: true,
     };
 
     const netaCardBackground: NetaCardBackground = {
       // imageUrl: url,
-      opacity: 0.2,
+      // imageUrl: 'ykw-icon-4.png',
+      opacityClass: 'opacity-20',
       // backdropBlur: true,
     };
 
