@@ -274,6 +274,7 @@ All data packages share common types from:
 3. **Independent Testing**: Each package can be tested in isolation
 4. **Bilingual Support**: English as source of truth, Japanese translations
 5. **Static Loading**: All data is bundled at build time (no dynamic imports)
+6. **Component Integration**: Data packages integrate seamlessly with UI components like NetaCard and HistoricalScene
 
 ## Troubleshooting
 

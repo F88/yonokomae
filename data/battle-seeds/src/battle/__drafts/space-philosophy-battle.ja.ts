@@ -4,7 +4,7 @@ const battle = {
   id: 'battle_space_philosophy',
   publishState: 'draft',
   themeId: 'development',
-  significance: 'low',
+  significance: 'legendary',
   title: '都市の熟成 vs. 都市の刷新のバトル',
   subtitle: '既存の自然と共生か、大規模開発による変革か',
   narrative: {

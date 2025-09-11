@@ -136,4 +136,11 @@ describe('Skeleton', () => {
     expect(skeleton).toHaveAttribute('aria-live', 'polite');
     expect(skeleton).toHaveAttribute('role', 'status');
   });
+
+  it('disables animation when animated=false', () => {
+    render(<Skeleton data-testid="s" animated={false} />);
+    const el = screen.getByTestId('s');
+    expect(el).toHaveClass('animate-none');
+    expect(el).not.toHaveClass('animate-pulse');
+  });
 });

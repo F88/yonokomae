@@ -2,6 +2,11 @@
 export default {
   darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  safelist: [
+    {
+      pattern: /^(opacity)-(?:[0-9]{1,2}|100)$/,
+    },
+  ],
   theme: {
     container: {
       center: true,
@@ -11,6 +16,12 @@ export default {
       },
     },
     extend: {
+      opacity: Object.fromEntries(
+        Array.from({ length: 101 }, (_, i) => [
+          String(i),
+          (i / 100).toString(),
+        ]),
+      ),
       // Remove custom fontSize definitions to use Tailwind's defaults which are already in rem
       // This ensures better OS/browser font size setting compatibility
       borderRadius: {

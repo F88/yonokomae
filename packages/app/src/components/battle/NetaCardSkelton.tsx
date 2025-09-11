@@ -1,27 +1,18 @@
 import type { FC } from 'react';
-import type { Neta } from '@yonokomae/types';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import type { NetaCardBackground } from '@/lib/build-historical-scene-background';
 
-export type Props = Neta & {
-  /**
-   * When true, makes the card take full available height to match siblings.
-   */
+export type NetaCardSkeltonProps = {
+  /** Match NetaCard prop to keep heights aligned within Field. */
   fullHeight?: boolean;
-  /**
-   * When true, render the image inside a fixed banner-like aspect and crop centered.
-   * This shows only a portion of the image (center area) similar to a header strip.
-   */
+  /** App-level Reduced Motion flag to stop shimmer animations. */
+  reducedMotion?: boolean;
+  /** Apply the same decorative background behavior as NetaCard. */
+  cardBackground?: NetaCardBackground | undefined;
+  /** When true, render a banner-like image area placeholder. */
   cropTopBanner?: boolean;
-  /**
-   * Optional banner aspect ratio (W/H) used only when `cropTopBanner` is true.
-   * - Format: 'W/H' (e.g. '16/7' means width:height = 16:7)
-   * - Visual guide: smaller H = taller banner (shows more vertical area)
-   *   - 16/5 (tallest) → 16/6 → 16/7 (default) → 16/8 → 16/9 → 16/10 → 16/11 → 16/12 (slimmest)
-   * - Supported values are safe-listed to match Tailwind's arbitrary aspect classes.
-   * - Default: '16/7' (balanced height)
-   * - Ignored when `cropTopBanner` is false.
-   */
+  /** Optional banner aspect ratio (W/H) for the placeholder when `cropTopBanner` is true. */
   cropAspectRatio?:
     | '16/1'
     | '16/2'
@@ -70,43 +61,24 @@ export type Props = Neta & {
     | '32/29'
     | '32/30'
     | '32/31';
-  /**
-   * Optional vertical focal point for the cropped banner when `cropTopBanner` is true.
-   * Controls which vertical area of the image is prioritized inside the fixed aspect.
-   * - Presets: 'top' | 'center' | 'bottom'
-   * - Percent buckets (from top): 'y-0' | 'y-10' | ... | 'y-100' (10% steps)
-   *   - Example: 'y-80' ≈ focus around 4/5 from top.
-   * Default is 'center'. Ignored when `cropTopBanner` is false.
-   */
-  cropFocusY?:
-    | 'top'
-    | 'center'
-    | 'bottom'
-    | 'y-0'
-    | 'y-10'
-    | 'y-20'
-    | 'y-30'
-    | 'y-40'
-    | 'y-50'
-    | 'y-60'
-    | 'y-70'
-    | 'y-80'
-    | 'y-90'
-    | 'y-100';
 };
 
-export const NetaView: FC<Props> = ({
-  imageUrl,
-  title,
-  subtitle,
-  description,
-  power,
+// numeric opacity has been removed in favor of Tailwind class strings
+
+export const NetaCardSkelton: FC<NetaCardSkeltonProps> = ({
   fullHeight = false,
+  reducedMotion = false,
+  cardBackground,
   cropTopBanner = false,
-  cropFocusY,
   cropAspectRatio,
 }) => {
-  const hasImage = typeof imageUrl === 'string' && imageUrl.trim() !== '';
+  const hasCardBackground =
+    typeof cardBackground !== 'undefined' && cardBackground !== null;
+  const cardBgUrlRaw = cardBackground?.imageUrl;
+  const hasCardBgImage =
+    typeof cardBgUrlRaw === 'string' && cardBgUrlRaw.trim() !== '';
+  const cardBgUrl = hasCardBgImage ? cardBgUrlRaw!.trim() : undefined;
+  const cardBgOpacityClass = cardBackground?.opacityClass ?? 'opacity-30';
   const ratio = cropTopBanner ? (cropAspectRatio ?? '16/7') : undefined;
   let ratioClass = '';
   switch (ratio) {
@@ -254,96 +226,64 @@ export const NetaView: FC<Props> = ({
     default:
       ratioClass = '';
   }
-  // Determine vertical focal point class for object-position
-  const focus = cropTopBanner ? (cropFocusY ?? 'center') : undefined;
-  let focusClass = '';
-  switch (focus) {
-    case 'top':
-      focusClass = 'object-top';
-      break;
-    case 'center':
-      focusClass = 'object-center';
-      break;
-    case 'bottom':
-      focusClass = 'object-bottom';
-      break;
-    case 'y-0':
-      focusClass = 'object-[50%_0%]';
-      break;
-    case 'y-10':
-      focusClass = 'object-[50%_10%]';
-      break;
-    case 'y-20':
-      focusClass = 'object-[50%_20%]';
-      break;
-    case 'y-30':
-      focusClass = 'object-[50%_30%]';
-      break;
-    case 'y-40':
-      focusClass = 'object-[50%_40%]';
-      break;
-    case 'y-50':
-      focusClass = 'object-[50%_50%]';
-      break;
-    case 'y-60':
-      focusClass = 'object-[50%_60%]';
-      break;
-    case 'y-70':
-      focusClass = 'object-[50%_70%]';
-      break;
-    case 'y-80':
-      focusClass = 'object-[50%_80%]';
-      break;
-    case 'y-90':
-      focusClass = 'object-[50%_90%]';
-      break;
-    case 'y-100':
-      focusClass = 'object-[50%_100%]';
-      break;
-    default:
-      focusClass = '';
-  }
+
   return (
     <Card
+      data-testid="placeholder"
       className={[
-        'w-full overflow-hidden pt-0',
+        'w-full overflow-hidden pt-0 relative',
         'max-w-none',
+        hasCardBackground ? '!bg-transparent' : '',
         fullHeight ? 'h-full' : '',
       ].join(' ')}
     >
-      {/* Image */}
-      {hasImage && (
-        <div className={['w-full overflow-hidden', ratioClass].join(' ')}>
+      {/* Optional decorative background image (inside the card) */}
+      {hasCardBgImage && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 overflow-hidden rounded-[inherit]"
+        >
           <img
-            src={imageUrl}
-            alt={title}
-            className={[
-              'h-full w-full object-cover transition-transform hover:scale-105',
-              cropTopBanner ? focusClass : '',
-            ].join(' ')}
+            src={cardBgUrl}
+            alt=""
+            className={['h-full w-full object-cover', cardBgOpacityClass].join(
+              ' ',
+            )}
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/0 to-background/20" />
         </div>
       )}
-      {/* Content */}
+      {/* Optional blur overlay to enhance readability over busy backgrounds */}
+      {hasCardBackground && cardBackground?.backdropBlur === true && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 rounded-[inherit] backdrop-blur-sm"
+        />
+      )}
+
+      {/* Image area placeholder (optional banner-like) */}
+      {cropTopBanner && (
+        <div className={['w-full overflow-hidden', ratioClass].join(' ')}>
+          <Skeleton className="h-full w-full" animated={!reducedMotion} />
+        </div>
+      )}
+
       <CardContent className="px-2 pt-2 pb-0 flex-1 flex flex-col">
         <div className="flex h-full min-w-0 flex-col gap-3">
           <div className="text-center">
-            <h3 className="text-xl font-bold">{title}</h3>
-            <p className="text-sm text-muted-foreground italic">{subtitle}</p>
+            <Skeleton className="mx-auto h-5 w-2/3" animated={!reducedMotion} />
+            <Skeleton
+              className="mx-auto mt-2 h-4 w-1/2"
+              animated={!reducedMotion}
+            />
           </div>
-
-          <p className="text-sm text-center text-muted-foreground break-words">
-            {description}
-          </p>
-
-          {/* Power */}
-          <div className="mt-auto flex justify-center ">
-            <Badge variant="secondary" className="gap-1 px-3 py-1">
-              <span className="text-lg">💥</span>
-              <span className="font-bold">
-                Power: {new Intl.NumberFormat(undefined).format(power)}
-              </span>
-            </Badge>
+          <div className="space-y-2 text-center ">
+            <Skeleton className="mx-auto h-5 w-4/5" animated={!reducedMotion} />
+            <Skeleton className="mx-auto h-5 w-4/5" animated={!reducedMotion} />
+            <Skeleton className="mx-auto h-5 w-3/5" animated={!reducedMotion} />
+          </div>
+          <div className="mt-auto flex justify-center">
+            <Skeleton className="h-6 w-28 rounded" animated={!reducedMotion} />
           </div>
         </div>
       </CardContent>

@@ -1,13 +1,49 @@
-import type { FC } from 'react';
+import type { Props as NetaCardProps } from '@/components/battle/NetaCard';
+import { NetaCard } from '@/components/battle/NetaCard';
+import { NetaCardSkelton } from '@/components/battle/NetaCardSkelton';
+import type { NetaCardImage } from '@/lib/build-historical-scene-background';
+import { mergeNetaCardImage } from '@/lib/neta-card-image';
 import type { Neta } from '@yonokomae/types';
-import { NetaView } from '@/components/battle/Neta';
-import { Skeleton } from '@/components/ui/skeleton';
+import type { FC } from 'react';
 
+/**
+ * Battle field that renders a pair of Neta cards (Yono, Komae).
+ *
+ * Responsibilities:
+ * - Layout two `NetaCard` components side-by-side with consistent spacing.
+ * - Propagate app-level Reduced Motion to skeleton placeholders.
+ * - Apply optional top-cropped banner presentation for card images.
+ * - Merge a base `netaCardImage` with each Neta's own `imageUrl` via
+ *   `mergeNetaCardImage` so that per-Neta images take precedence.
+ */
 export type FieldProps = {
   yono?: Neta;
   komae?: Neta;
+  /** App-level Reduced Motion flag propagated to placeholders. */
+  reducedMotion?: boolean;
   /** When true, render images in cropped-top banner style. */
   cropTopBanner?: boolean;
+  /**
+   * Optional base image configuration applied to both Yono and Komae.
+   *
+   * Merge rules (performed per card):
+   * - If the Neta has a non-empty `imageUrl`, it overrides `base.imageUrl`.
+   * - Otherwise, falls back to `base.imageUrl` (if provided).
+   * - Whitespace is trimmed on both inputs; empty strings are ignored.
+   * - Returns `undefined` to `NetaCard` when no usable image URL is present.
+   */
+  netaCardImage?: NetaCardProps['cardImage'];
+  /**
+   * Pass-through background settings for each NetaCard.
+   * When provided, each card surface becomes transparent and, if imageUrl is set,
+   * a decorative image layer is drawn inside the card.
+   *
+   * Notes:
+   * - This does not alter the merge priority described in `netaCardImage`.
+   * - Reduced Motion is respected by the card implementation; this component
+   *   only forwards the flag to placeholders.
+   */
+  netaCardBackground?: NetaCardProps['cardBackground'];
   /**
    * Optional banner aspect ratio (W/H) used only when `cropTopBanner` is true.
    * Format: 'W/H' (e.g. '16/7'). Default is '16/7'.
@@ -47,7 +83,7 @@ export type FieldProps = {
     | '32/31';
   /**
    * Optional vertical focal point for the cropped banner when `cropTopBanner` is true.
-   * See NetaView Props `cropFocusY` for accepted values.
+   * See NetaCard Props `cropFocusY` for accepted values.
    */
   cropFocusY?:
     | 'top'
@@ -66,34 +102,58 @@ export type FieldProps = {
     | 'y-100';
 };
 
+/**
+ * Renders the battle field with 2 columns. Uses `mergeNetaCardImage` to derive
+ * each card's `cardImage` from an optional base config and the Neta's image.
+ */
 export const Field: FC<FieldProps> = ({
   yono,
   komae,
+  reducedMotion = false,
   cropTopBanner = false,
   cropAspectRatio,
   cropFocusY,
+  netaCardImage,
+  netaCardBackground,
 }) => {
-  // Loading placeholder using shadcn/ui Skeleton
+  // Use shared util for testability
+  /**
+   * Delegate to `mergeNetaCardImage` so behavior stays consistent and tested.
+   */
+  const mergeCardImage = (
+    base: NetaCardImage | undefined,
+    url: string | undefined | null,
+  ): NetaCardImage | undefined => mergeNetaCardImage(base, url);
+
+  // Loading placeholder that mirrors NetaCard background behavior
   const Placeholder: FC = () => (
-    <div
-      data-testid="placeholder"
-      className="flex h-full flex-1 flex-col items-stretch rounded-lg border bg-card p-6"
-    >
-      <div className="w-full space-y-4">
-        <div className="text-center">
-          <Skeleton className="mx-auto h-6 w-32" />
-          <Skeleton className="mx-auto mt-2 h-4 w-24" />
-        </div>
-        <div className="aspect-square w-full overflow-hidden rounded-lg">
-          <Skeleton className="h-full w-full" />
-        </div>
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-3/4" />
-        </div>
-      </div>
-    </div>
+    <NetaCardSkelton
+      fullHeight
+      reducedMotion={reducedMotion}
+      cardBackground={netaCardBackground}
+      cropTopBanner={cropTopBanner}
+      cropAspectRatio={cropAspectRatio}
+    />
   );
+
+  // Helper to render a single Neta card or its placeholder
+  const renderNetaCard = (neta: Neta | undefined) => {
+    if (!neta) {
+      return <Placeholder />;
+    }
+    const { imageUrl, ...netaProps } = neta;
+    return (
+      <NetaCard
+        {...netaProps}
+        fullHeight
+        cropTopBanner={cropTopBanner}
+        cropFocusY={cropFocusY}
+        cropAspectRatio={cropAspectRatio}
+        cardImage={mergeCardImage(netaCardImage, imageUrl)}
+        cardBackground={netaCardBackground}
+      />
+    );
+  };
 
   return (
     <div className="w-full space-y-8">
@@ -104,34 +164,14 @@ export const Field: FC<FieldProps> = ({
           data-testid="slot-yono"
           className="flex min-w-0 flex-1 flex-col items-stretch space-y-4"
         >
-          {yono ? (
-            <NetaView
-              {...yono}
-              fullHeight
-              cropTopBanner={cropTopBanner}
-              cropFocusY={cropFocusY}
-              cropAspectRatio={cropAspectRatio}
-            />
-          ) : (
-            <Placeholder />
-          )}
+          {renderNetaCard(yono)}
         </div>
         {/* KOMAE */}
         <div
           data-testid="slot-komae"
           className="flex min-w-0 flex-1 flex-col items-stretch space-y-4"
         >
-          {komae ? (
-            <NetaView
-              {...komae}
-              fullHeight
-              cropTopBanner={cropTopBanner}
-              cropFocusY={cropFocusY}
-              cropAspectRatio={cropAspectRatio}
-            />
-          ) : (
-            <Placeholder />
-          )}
+          {renderNetaCard(komae)}
         </div>
       </div>
     </div>

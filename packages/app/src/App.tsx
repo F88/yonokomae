@@ -1,22 +1,44 @@
+/**
+ * App layout and stacking order (z-index)
+ *
+ * Layering rules:
+ * - Header (sticky top) and Controller footer (sticky bottom) are always on top: z-50.
+ * - Main content (BattleContainer, HistoricalScene, cards) must not exceed z-40;
+ *   prefer z-0..z-10 inside content. Do not override z-50 in leaf components.
+ * - Decorative layers inside content should use negative z (e.g., -z-10) and be
+ *   clipped by their card/container (rounded-[inherit], overflow-hidden) so they
+ *   never escape into global stacking.
+ * - Global overlays (dialogs/modals/tooltips) should render via a portal/root
+ *   overlay layer and may use high z (e.g., z-[9999]). Avoid raising content z-index.
+ * - Avoid creating unintended stacking contexts (e.g., transform, filter,
+ *   opacity<1, position with z, will-change) on ancestors of Header/Controller.
+ *
+ * Rationale: prevents ScenarioCard/backgrounds or other content from blocking
+ * controller/header interactions and keeps click targets reliable across pages.
+ */
 import { BattleContainer } from '@/components/battle/BattleContainer';
 import { Controller } from '@/components/Controller';
 import { Intro } from '@/components/Intro';
 import { TheStartOfTheWar } from '@/components/TheStartOfTheWar';
 import { useGenerateReport } from '@/hooks/use-generate-report';
+import { usePrefersReducedMotion } from '@/hooks/use-prefers-reduced-motion';
 import { isEditable } from '@/lib/dom-utils';
 import { uid } from '@/lib/id';
 import { scrollByY, scrollToY } from '@/lib/reduced-motion';
 import { Placeholders } from '@/yk/placeholder';
-import { isRenderableBattle } from './lib/battle-guards';
 import { RepositoryProvider } from '@/yk/repo/core/RepositoryProvider';
+import type {
+  Battle,
+  BattleReportMetrics,
+  PublishState,
+} from '@yonokomae/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BattleMetrics } from './components/BattleMetrics';
 import { DebugInfo } from './components/DebugInfo';
 import { Header } from './components/Header';
 import { TitleContainer } from './components/TitleContainer';
 import UserVoicesMarquee from './components/UserVoicesMarquee';
-import type { Battle, PublishState } from '@yonokomae/types';
-import type { BattleReportMetrics } from '@yonokomae/types';
+import { isRenderableBattle } from './lib/battle-guards';
 import { playMode, type PlayMode } from './yk/play-mode';
 
 function App() {
@@ -48,6 +70,10 @@ function App() {
   const [activePublishState, setActivePublishState] = useState<
     PublishState | undefined
   >(undefined);
+
+  // Reduced Motion preference (single source of truth for the app).
+  // Always derive from the hook so header toggle updates propagate immediately.
+  const prefersRM = usePrefersReducedMotion();
 
   // Helper: safe media query checks for non-browser/test envs
   const supportsMatchMedia =
@@ -499,6 +525,7 @@ function App() {
                       <BattleContainer
                         battle={battle}
                         mode={mode}
+                        reducedMotion={prefersRM}
                         // showMetaData
                       />
                     </div>
@@ -509,9 +536,9 @@ function App() {
           )}
         </div>
 
-        {/* Fixed Controller */}
+        {/* Fixed Controller — keep on top alongside Header (z-50) */}
         {mode && (
-          <footer className="sticky bottom-0 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <footer className="sticky bottom-0 z-50 mt-auto border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container py-4">
               <Controller
                 onGenerateReport={handleGenerateReport}

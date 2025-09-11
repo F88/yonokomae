@@ -5,7 +5,7 @@ export const jaPack: DemoLocalePack = {
     {
       id: 'template-ja-1',
       themeId: 'history',
-      significance: 'low',
+      significance: 'legendary',
       title: '橋上ごっこバトル',
       subtitle: '拍手はカモメだけ',
       overview:
@@ -156,7 +156,7 @@ export const jaPack: DemoLocalePack = {
     {
       id: 'template-ja-7',
       themeId: 'history',
-      significance: 'low',
+      significance: 'legendary',
       title: '丘上烽火演習',
       subtitle: '光は速く、メモはさらに速い',
       overview: '連なる信号が、風と気まぐれにタイミング勝負を挑む。',

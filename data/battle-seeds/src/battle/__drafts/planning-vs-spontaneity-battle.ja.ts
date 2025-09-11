@@ -4,7 +4,7 @@ const battle = {
   id: 'battle_planning_vs_spontaneity',
   publishState: 'draft',
   themeId: 'development',
-  significance: 'low',
+  significance: 'legendary',
   title: '計画された都市 vs. 自然な発展のバトル',
   subtitle: '開発主導のまちづくりか、市民参加の熟成か',
   narrative: {

@@ -93,6 +93,7 @@ yonokomae/
 
 - **Type Safety**: Shared TypeScript definitions (`@yonokomae/types`) and Zod validation schemas (`@yonokomae/schema`)
 - **Data Maintenance**: Dedicated workflow for data contributors with comprehensive validation
+- **Component Architecture**: Modular battle components with skeleton loading states
 
 ### Application Features
 
@@ -104,18 +105,22 @@ yonokomae/
 - publishState-aware seed lifecycle (draft/review/archived surfaced via chips)
 - Robust loading and error states
     - Async judgement with simulated latency
-    - Shadcn skeleton placeholders on the battle field
+    - Enhanced skeleton components (`NetaCardSkelton`, `HistoricalSceneSkelton`) with background support
     - Loading states with aria-busy for accessibility
     - Custom error classes for battle seed and news reporter repositories
+    - Reduced motion support for loading animations
 - Modern UI stack
-    - React 19 + Vite 7 + TypeScript, Tailwind CSS v4, shadcn/ui (New York)
+    - React 19 + Vite 7 + TypeScript 5.9, Tailwind CSS v4, shadcn/ui (New York)
     - Dark mode toggle via class-based theme
     - Responsive design with breakpoint-aware layouts
     - Font size control with keyboard shortcuts (Alt+Plus/Minus)
+    - Enhanced opacity utilities with Tailwind safelist configuration
 - Battle theming and significance levels
     - 8 theme categories (history, culture, community, etc.)
     - 4 significance levels (low, medium, high, legendary)
     - Visual indicators with chips and badges
+    - Dynamic background building for historical scenes
+    - Enhanced `NetaCard` component with image merging logic
 - Repository-level battle filtering
     - `BattleFilter` component feeds `generateReport({ filter })`
     - Currently supports narrowing by `themeId`
@@ -260,6 +265,7 @@ Full details, troubleshooting matrix, and manual workflow: see [Deployment Guide
 - ✅ **pnpm Monorepo**: Clean separation of concerns with independent data packages
 - ✅ **Type Safety**: Unified type system with `@yonokomae/types` and `@yonokomae/schema`
 - ✅ **Data Package System**: Independent validation and testing for each data domain
+- ✅ **Component Testing**: Comprehensive Storybook stories for battle components
 
 #### Game Features
 
@@ -284,6 +290,7 @@ Full details, troubleshooting matrix, and manual workflow: see [Deployment Guide
 - ✅ Central Vitest workspace configuration for project management
 - ✅ Accessibility testing with axe-core/playwright
 - ✅ Seedable shuffle utilities with regression guards
+- ✅ Storybook integration for UI component development
 
 ### In Progress
 
@@ -304,6 +311,9 @@ Full details, troubleshooting matrix, and manual workflow: see [Deployment Guide
 - **Testing enhancements**
     - Optional visual regression for core components
     - Enhanced data package integration testing
+- **Performance optimizations**
+    - Lazy loading and code splitting improvements
+    - Background image optimization for battle scenes
 
 ## Project notes
 

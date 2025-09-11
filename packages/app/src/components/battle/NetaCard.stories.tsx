@@ -1,23 +1,25 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import { NetaView } from './Neta';
 import { faker } from '@faker-js/faker';
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { NetaCard } from './NetaCard';
+import './NetaCard.stories.css';
 
-const meta: Meta<typeof NetaView> = {
-  title: 'Battle/NetaView',
-  component: NetaView,
+const meta: Meta<typeof NetaCard> = {
+  title: 'Battle/NetaCard',
+  component: NetaCard,
   parameters: { layout: 'centered' },
 };
 export default meta;
 
-type Story = StoryObj<typeof NetaView>;
+type Story = StoryObj<typeof NetaCard>;
 
 const baseArgs = {
-  imageUrl: '/YONO-SYMBOL.png',
   title: 'Sample Neta',
   subtitle: 'Exhibit A',
   description:
     'A demonstration card showcasing the visual layout and power badge.',
   power: 70,
+  cardImage: { imageUrl: '/YONO-SYMBOL.png' },
 };
 
 export const Default: Story = {
@@ -42,6 +44,96 @@ export const FullHeight: Story = {
     ...baseArgs,
     fullHeight: true,
   },
+};
+
+// Background image inside the card (cardBackground)
+export const WithBackgroundWithHeaderImage: Story = {
+  args: {
+    ...baseArgs,
+    // Keep header image and show cardBackground together
+    cardBackground: {
+      imageUrl: '/showdown-on-the-great-river.png',
+      // uses default opacity (0.3)
+    },
+  },
+};
+
+export const WithBackgroundWithNoHeaderImage: Story = {
+  args: {
+    ...baseArgs,
+    // Hide top image to focus on cardBackground
+    cardImage: undefined,
+    cardBackground: {
+      imageUrl: '/showdown-on-the-great-river.png',
+      // uses default opacity (0.3)
+    },
+  },
+};
+
+export const BackgroundOpacity10: Story = {
+  args: {
+    ...baseArgs,
+    cardBackground: {
+      imageUrl: '/showdown-on-the-great-river.png',
+      opacityClass: 'opacity-10',
+    },
+  },
+};
+
+export const BackgroundOpacity80: Story = {
+  args: {
+    ...baseArgs,
+    cardImage: undefined,
+    cardBackground: {
+      imageUrl: '/showdown-on-the-great-river.png',
+      opacityClass: 'opacity-80',
+    },
+  },
+};
+
+export const BackgroundWithBlur: Story = {
+  args: {
+    ...baseArgs,
+    cardImage: undefined,
+    cardBackground: {
+      imageUrl: '/showdown-on-the-great-river.png',
+      opacityClass: 'opacity-40',
+      backdropBlur: true,
+    },
+  },
+};
+
+// Transparent card over a parent background (no image inside the card)
+export const TransparentOverParent: Story = {
+  args: {
+    ...baseArgs,
+    cardImage: undefined,
+    cardBackground: {},
+  },
+  decorators: [
+    (Story: React.ComponentType) => (
+      <div className="story-frame story-bg-gradient">
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export const TransparentOverParentWithBlur: Story = {
+  args: {
+    ...baseArgs,
+    cardImage: undefined,
+    cardBackground: {
+      backdropBlur: true,
+    },
+  },
+  decorators: [
+    (Story: React.ComponentType) => (
+      <div className="story-frame story-bg-composite">
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 // Center-focused variants

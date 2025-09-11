@@ -54,6 +54,10 @@ Key recent architectural additions:
 - Enhanced ops CLI tools with `--help` flags
 - iOS/WebKit touch mode selection correction (coordinate-nearest matching)
 - Removal of E2E specs depending on dev-only selection counter instrumentation (production parity)
+- Enhanced skeleton loading components (`NetaCardSkelton`, `HistoricalSceneSkelton`)
+- Dynamic background building for historical scenes
+- Reduced motion support for loading animations
+- Storybook integration for component development
 
 ## Contributing to Data Packages
 
@@ -134,7 +138,8 @@ When you create a Pull Request, the following checks are automatically run:
 1. **Lint**: Checks the code for style and formatting issues using ESLint.
 2. **Typecheck**: Verifies the TypeScript types across all packages.
 3. **Unit tests**: Runs the unit test suite using Vitest.
-4. **Data package validation**: Ensures that all data packages have valid schemas and unique IDs:
+4. **Storybook tests**: Validates component stories for visual consistency.
+5. **Data package validation**: Ensures that all data packages have valid schemas and unique IDs:
     - Battle seeds validation (`@yonokomae/data-battle-seeds`)
     - Historical evidence validation (`@yonokomae/data-historical-evidence`)
     - News seeds validation (`@yonokomae/data-news-seeds`)
@@ -154,6 +159,9 @@ pnpm run typecheck
 
 # Run unit tests
 pnpm run test:unit
+
+# Run Storybook tests
+pnpm run test:storybook
 
 # Run all tests (includes data package validation)
 pnpm test

@@ -503,6 +503,8 @@ iOS Safari でタップ時に意図しないモードが選択される事象を
 - `pnpm run test:unit` - ユニットテストを実行
 - `pnpm run test:storybook` - ブラウザで Storybook テストを実行
 - `pnpm run test:coverage` - カバレッジレポートを生成
+- `pnpm run storybook` - Storybook 開発サーバーを起動
+- `pnpm run build-storybook` - デプロイ用に静的 Storybook をビルド
 
 ## TypeScript ビルド構成
 
@@ -677,6 +679,73 @@ type Verdict = {
 ### バトルコンポーネント
 
 - **HistoricalScene**: ローディング状態とメタデータ表示を備えたメインバトル表示コンポーネント
+    - 設定可能なアスペクト比でクロップドバナーモードをサポート
+    - 重要度チップとテーマバッジを含む
+    - `HistoricalSceneSkelton` コンポーネントでローディングスケルトン状態を処理
+
+- **NetaCard**: バトル情報を表示するカードコンポーネント
+    - 不透明度制御付きの動的背景画像をサポート
+    - ローディング状態用に `NetaCardSkelton` を統合
+    - 適切なアクセシビリティ属性を備えたレスポンシブデザイン
+
+- **スケルトンコンポーネント**: 強化されたローディング状態コンポーネント
+    - `NetaCardSkelton`: 背景サポート付き NetaCard のローディングプレースホルダー
+    - `HistoricalSceneSkelton`: 減速モーションサポート付き HistoricalScene のローディング状態
+    - 両コンポーネントは shadcn/ui の Skeleton ベースコンポーネントと統合
+
+#### HistoricalScene の背景: 内部設定と伝播
+
+HistoricalScene は、公開プロップではなく内部的な装飾用背景画像レイヤーを定義します。これはカード内容の背面に描画され、カード表面のスタイルは維持されます。
+
+内部形 (コンポーネント API の一部ではない):
+
+- `sceneBackground: { imageUrl?: string; opacity?: number; backdropBlur?: boolean } | undefined`
+    - `imageUrl` が非空文字列のとき、背面に背景画像レイヤーを描画します。
+        - `opacity` を省略すると、モバイル約0.30、`sm+`約0.40のユーティリティクラスが既定になります。
+        - `backdropBlur === true` のときのみブラーを描画します。
+    - `imageUrl` が未指定/空のとき、装飾用背景レイヤーは描画しません。
+
+下位コンポーネントへの伝播:
+
+- HistoricalScene は内部の背景設定を `netaCardBackground` として Field に渡し、Field は NetaCard に `cardBackground` として引き渡します。
+- マッピング規則 (現在の実装):
+    - `imageUrl`: そのまま渡す。
+    - `opacity`: そのまま渡す。NetaCard 側で `[0..1]` にクランプし、ユーティリティクラスの段階にスナップ。
+    - `backdropBlur`: 内部の `sceneBackground` が存在し `backdropBlur` 未指定のとき、可読性向上のため HistoricalScene は既定で `true` を NetaCard に渡します。指定があればその値を使用。
+
+図 (背景のフロー):
+
+```mermaid
+flowchart LR
+    HS["HistoricalScene (internal sceneBackground)"]
+    F["Field netaCardBackground"]
+    NC["NetaCard cardBackground"]
+
+    HS -->|maps to| F
+    F -->|passthrough| NC
+
+    subgraph Decorative_Layer_HistoricalScene
+        HSbg["Image layer behind content; renders only if sceneBackground.imageUrl; Opacity default 0.30 mobile / 0.40 sm+; Blur only when backdropBlur===true"]
+    end
+
+    HS -.-> HSbg
+```
+
+使用例:
+
+```tsx
+<HistoricalScene
+    battle={battle}
+    cropTopBanner
+    cropAspectRatio="16/7"
+    cropFocusY="center"
+/>
+```
+
+テスト補助:
+
+- 内部的に有効な場合、HistoricalScene の背景画像要素は `data-testid="scene-background-image"`、ぼかしオーバーレイは `data-testid="scene-background-blur"` を付与します。
+- NetaCard は `cardBackground` に基づいて背景描画を行い、追加の test id は付与しません。
     - 設定可能なアスペクト比でクロップドバナーモードをサポート
     - 重要度チップとテーマバッジを含む
     - ローディングスケルトン状態を処理
