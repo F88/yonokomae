@@ -126,37 +126,11 @@ export const NetaCard: FC<Props> = ({
   const hasCardBgImage =
     typeof cardBgUrlRaw === 'string' && cardBgUrlRaw.trim() !== '';
   const cardBgUrl = hasCardBgImage ? cardBgUrlRaw!.trim() : undefined;
-  const cardBgOpacity = Math.max(
-    0,
-    Math.min(1, cardBackground?.opacity ?? 0.3),
-  );
-  const toOpacityClass = (value: number): string => {
-    const steps = [0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100] as const;
-    const pct = Math.round(value * 100);
-    let nearest: number = steps[0] ?? 0;
-    let minDiff = Math.abs(pct - nearest);
-    for (let i = 1; i < steps.length; i++) {
-      const s: number = steps[i] ?? nearest;
-      const diff = Math.abs(pct - s);
-      if (diff < minDiff) {
-        nearest = s;
-        minDiff = diff;
-      }
-    }
-    return `opacity-${nearest}`;
-  };
-  const cardBgOpacityClass = toOpacityClass(cardBgOpacity);
+  const cardBgOpacityClass = cardBackground?.opacityClass ?? 'opacity-30';
   // Foreground (main) image opacity/blur from cardImage, with fallback to background-derived reduction.
-  const explicitFgOpacity =
-    typeof cardImage?.opacity === 'number' && !Number.isNaN(cardImage.opacity)
-      ? Math.max(0, Math.min(1, cardImage.opacity))
-      : undefined;
-  const shouldAdjustForeground =
-    explicitFgOpacity !== undefined || hasCardBackground;
-  const derivedFgOpacity = Math.max(0, Math.min(1, 1 - 1 * cardBgOpacity));
-  const fgOpacity = explicitFgOpacity ?? derivedFgOpacity;
+  const shouldAdjustForeground = hasCardBackground || !!cardImage?.opacityClass;
   const fgOpacityClass = shouldAdjustForeground
-    ? toOpacityClass(fgOpacity)
+    ? (cardImage?.opacityClass ?? 'opacity-100')
     : '';
   const ratio = cropTopBanner ? (cropAspectRatio ?? '16/7') : undefined;
   let ratioClass = '';
@@ -424,7 +398,14 @@ export const NetaCard: FC<Props> = ({
 
           {/* Power */}
           <div className="mt-auto flex justify-center ">
-            <Badge variant="secondary" className="gap-1 px-3 py-1">
+            <Badge
+              variant="secondary"
+              className={[
+                'gap-1 px-3 py-1',
+                // 'opacity-100',
+                'opacity-80',
+              ].join(' ')}
+            >
               <span className="text-lg">💥</span>
               <span className="font-bold">
                 Power: {new Intl.NumberFormat(undefined).format(power)}

@@ -104,11 +104,7 @@ export const HistoricalScene: FC<Props> = ({
   }, [reducedMotion, battle]);
   // Pick one of three icons at mount to avoid re-randomizing on each render
   const randomIconSrc = useMemo(() => {
-    const icons = [
-      'ykw-icon-4.png',
-      'ykw-icon-6.png',
-      'ykw-icon-7.png',
-    ];
+    const icons = ['ykw-icon-4.png', 'ykw-icon-6.png', 'ykw-icon-7.png'];
     const pick = icons[Math.floor(Math.random() * icons.length)];
     return `${import.meta.env.BASE_URL}${pick}`;
   }, []);
