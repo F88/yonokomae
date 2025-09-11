@@ -136,6 +136,25 @@ export const Field: FC<FieldProps> = ({
     />
   );
 
+  // Helper to render a single Neta card or its placeholder
+  const renderNetaCard = (neta: Neta | undefined) => {
+    if (!neta) {
+      return <Placeholder />;
+    }
+    const { imageUrl, ...netaProps } = neta;
+    return (
+      <NetaCard
+        {...netaProps}
+        fullHeight
+        cropTopBanner={cropTopBanner}
+        cropFocusY={cropFocusY}
+        cropAspectRatio={cropAspectRatio}
+        cardImage={mergeCardImage(netaCardImage, imageUrl)}
+        cardBackground={netaCardBackground}
+      />
+    );
+  };
+
   return (
     <div className="w-full space-y-8">
       {/* Full-width band; stretch cards to edges so side strips are hidden */}
@@ -145,50 +164,14 @@ export const Field: FC<FieldProps> = ({
           data-testid="slot-yono"
           className="flex min-w-0 flex-1 flex-col items-stretch space-y-4"
         >
-          {yono ? (
-            (() => {
-              const { imageUrl: _omitYonoImage, ...yonoProps } = yono;
-              void _omitYonoImage;
-              return (
-                <NetaCard
-                  {...yonoProps}
-                  fullHeight
-                  cropTopBanner={cropTopBanner}
-                  cropFocusY={cropFocusY}
-                  cropAspectRatio={cropAspectRatio}
-                  cardImage={mergeCardImage(netaCardImage, yono.imageUrl)}
-                  cardBackground={netaCardBackground}
-                />
-              );
-            })()
-          ) : (
-            <Placeholder />
-          )}
+          {renderNetaCard(yono)}
         </div>
         {/* KOMAE */}
         <div
           data-testid="slot-komae"
           className="flex min-w-0 flex-1 flex-col items-stretch space-y-4"
         >
-          {komae ? (
-            (() => {
-              const { imageUrl: _omitKomaeImage, ...komaeProps } = komae;
-              void _omitKomaeImage;
-              return (
-                <NetaCard
-                  {...komaeProps}
-                  fullHeight
-                  cropTopBanner={cropTopBanner}
-                  cropFocusY={cropFocusY}
-                  cropAspectRatio={cropAspectRatio}
-                  cardImage={mergeCardImage(netaCardImage, komae.imageUrl)}
-                  cardBackground={netaCardBackground}
-                />
-              );
-            })()
-          ) : (
-            <Placeholder />
-          )}
+          {renderNetaCard(komae)}
         </div>
       </div>
     </div>
