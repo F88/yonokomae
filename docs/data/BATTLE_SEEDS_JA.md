@@ -197,6 +197,13 @@ pnpm --filter @yonokomae/data-battle-seeds run generate:battles
 | id 重複           | テスト失敗 / 生成失敗  | リネーム（全体検索）            |
 | narrative 過度    | 翻訳/検証困難          | overview 簡潔 / 詳細は scenario |
 
+## 執筆補助
+
+日本語の `overview`、`scenario`、`description` が長文になる場合は、
+`node scripts/split-long-strings.mjs` の実行を検討してください。文の区切りで
+単一引用符文字列を分割し、連結リテラルに整形してレビューしやすい差分に
+します。詳細は Data Maintenance Guide を参照してください。
+
 ## アプリでの利用例
 
 ```ts

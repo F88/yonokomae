@@ -64,6 +64,10 @@ If you're contributing data (battles, historical scenarios, or news samples), pl
 - **Historical Evidence**: [docs/data/HISTORICAL_EVIDENCE_SEEDS_EN.md](docs/data/HISTORICAL_EVIDENCE_SEEDS_EN.md)
 - **News Seeds**: [docs/data/NEWS_SEEDS_EN.md](docs/data/NEWS_SEEDS_EN.md)
 
+Formatting tip: When editing long Japanese paragraphs in battle seeds, run
+`node scripts/split-long-strings.mjs` to auto-split single-quoted strings at
+sentence boundaries. See the Data Maintenance Guide for details.
+
 ### Data Contribution Workflow
 
 1. **Navigate to the appropriate data package**: `cd data/{package-name}/`

@@ -62,6 +62,11 @@ yonokomae/
 - **歴史的証拠**: [docs/data/HISTORICAL_EVIDENCE_SEEDS_JA.md](docs/data/HISTORICAL_EVIDENCE_SEEDS_JA.md)
 - **ニュースシード**: [docs/data/NEWS_SEEDS_JA.md](docs/data/NEWS_SEEDS_JA.md)
 
+整形のヒント: バトルシード内の日本語の長文を編集する際は、
+`node scripts/split-long-strings.mjs` を実行すると、文単位で単一引用符
+文字列を分割してレビューしやすい差分に整形します。詳細は
+Data Maintenance Guide を参照してください。
+
 ### データコントリビューションワークフロー
 
 1. **適切なデータパッケージに移動**: `cd data/{package-name}/`
