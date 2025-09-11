@@ -36,6 +36,7 @@ describe('buildHistoricalSceneBackground', () => {
     expect(bg.opacityClass).toBe('opacity-30 sm:opacity-40');
     expect(bg.blur).toBe(false);
     expect(bg.netaCardBackground).toBeUndefined();
+    expect(bg.netaCardImage).toBeUndefined();
   });
 
   it('is resilient to undefined battle', () => {
@@ -66,5 +67,8 @@ describe('buildHistoricalSceneBackground', () => {
     // and hint banner behavior.
     expect(bg.netaCardBackground).toBeDefined();
     expect(typeof bg.netaCardBackground).toBe('object');
+    // Also exposes card image tuning for foreground
+    expect(bg.netaCardImage).toBeDefined();
+    expect(bg.netaCardImage?.opacityClass).toBeDefined();
   });
 });

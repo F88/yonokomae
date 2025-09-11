@@ -221,4 +221,41 @@ describe('NetaCard', () => {
       });
     });
   });
+
+  it('applies foreground opacity class from cardImage when provided', () => {
+    render(
+      <NetaCard
+        {...baseProps}
+        cardImage={{
+          imageUrl: baseProps.cardImage!.imageUrl,
+          opacityClass: 'opacity-80',
+        }}
+      />,
+    );
+    const image = screen.getByTestId('card-image');
+    expect(image).toHaveClass('opacity-80');
+  });
+
+  it('applies foreground backdrop blur when requested', () => {
+    render(
+      <NetaCard
+        {...baseProps}
+        cardImage={{
+          imageUrl: baseProps.cardImage!.imageUrl,
+          backdropBlur: true,
+        }}
+      />,
+    );
+    const container = screen.getByTestId('card-image')
+      .parentElement as HTMLElement;
+    expect(container.querySelector('.backdrop-blur-sm')).toBeTruthy();
+  });
+
+  it('defaults foreground opacity to 100 when background present without explicit opacity', () => {
+    render(
+      <NetaCard {...baseProps} cardBackground={{ imageUrl: '/bg.png' }} />,
+    );
+    const image = screen.getByTestId('card-image');
+    expect(image).toHaveClass('opacity-100');
+  });
 });
