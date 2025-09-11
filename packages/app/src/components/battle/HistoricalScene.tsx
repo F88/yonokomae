@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { battleThemeCatalog } from '@yonokomae/catalog';
 import type { Battle } from '@yonokomae/types';
 import type { FC } from 'react';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { SignificanceChip } from '../ui/SignificanceChip';
 import { HistoricalSceneSkelton } from './HistoricalSceneSkelton';
 import { MetaData } from './MetaData';
@@ -96,12 +96,40 @@ export const HistoricalScene: FC<Props> = ({
   isLoading = false,
   reducedMotion = false,
 }) => {
+  // Background image fade-out state (time-based). Foreground remains crisp.
+  const [bgLoaded, setBgLoaded] = useState(false);
+  const [bgFadeOut, setBgFadeOut] = useState(false);
+  const bgImgRef = useRef<HTMLImageElement | null>(null);
+
   // Internal scene background (originates here; not a public prop)
   // Default: no decorative background image layer.
   // Stabilize with useMemo keyed by battle.id and RM flag.
   const bg = useMemo(() => {
     return reducedMotion ? null : buildHistoricalSceneBackground(battle);
   }, [reducedMotion, battle]);
+
+  // Reset fade state when the background source or battle changes
+  useEffect(() => {
+    setBgLoaded(false);
+    setBgFadeOut(false);
+  }, [battle?.id, bg?.sceneBgUrl]);
+
+  // After background image loads, animate wrapper opacity from 100 to target
+  useEffect(() => {
+    if (!bg?.hasImage) return;
+    if (!bgLoaded) return;
+    // No delay: begin dimming immediately after load; duration handled by CSS
+    setBgFadeOut(true);
+  }, [bg?.hasImage, bgLoaded]);
+
+  // Ensure cached images also trigger the loaded state
+  useEffect(() => {
+    if (!bg?.hasImage) return;
+    const el = bgImgRef.current;
+    if (el && el.complete) {
+      setBgLoaded(true);
+    }
+  }, [bg?.hasImage, bg?.sceneBgUrl]);
 
   // Pick one of three icons at mount to avoid re-randomizing on each render
   // const randomIconSrc = useMemo(() => {
@@ -146,15 +174,22 @@ export const HistoricalScene: FC<Props> = ({
       {bg?.hasImage && bg.sceneBgUrl && (
         <div
           aria-hidden="true"
-          className={['absolute inset-0 z-0', bg.opacityClass].join(' ')}
+          className={cn(
+            'absolute inset-0 z-0 transition-opacity ease-in-out duration-[3000ms]',
+            bgFadeOut ? bg.opacityClass : 'opacity-100',
+          )}
         >
           <img
+            ref={bgImgRef}
             src={bg.sceneBgUrl}
             alt=""
-            className="h-full w-full object-cover object-center select-none pointer-events-none"
+            className={cn(
+              'h-full w-full object-cover object-center select-none pointer-events-none',
+            )}
             loading="lazy"
             decoding="async"
             draggable={false}
+            onLoad={() => setBgLoaded(true)}
             data-testid="scene-background-image"
           />
           {/* Optional blur overlay to enhance readability over busy backgrounds */}
