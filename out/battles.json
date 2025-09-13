@@ -1,198 +1,49 @@
 [
   {
-    "id": "battle_function_vs_niche",
-    "publishState": "draft",
-    "themeId": "development",
-    "significance": "medium",
-    "title": "統合された都市機能 vs. 特化した専門都市のバトル",
-    "subtitle": "巨大なハブ機能か、独自のニッチな強みか",
-    "narrative": {
-      "overview": "合併により巨大な都市機能を統合したさいたま市(旧与野市)と、独立を維持し、特定の分野で独自の強みを磨く狛江市が、都市としての価値をかけて対決する。",
-      "scenario": "与野市、浦和市、大宮市の合併により、さいたま市は「さいたま新都心」という巨大な交通・行政ハブ機能を持つ大都市へと変貌した。これは、大規模なインフラと都市機能を統合し、首都圏の北の玄関口としての役割を担うことを目指す、機能集約型の都市戦略だ。一方、狛江市は「音楽の街」や「枝豆」といった、特定の分野に特化したブランドを追求し、独自のニッチな強みで都市の個性を際立たせている。これは、小規模であることの強みを最大限に活かした専門化戦略だ。果たして、広域都市が持つ統合の力が、専門都市が持つ独自の個性と魅力を上回るのか。"
-    },
-    "komae": {
-      "imageUrl": "KOMAE-SYMBOL.png",
-      "title": "狛江の専門化戦略",
-      "subtitle": "音楽と農業が都市の個性を創り出す",
-      "description": "「音楽の街」や「狛江ブランド農産物」など、特定の分野に特化した都市ブランドを追求し、独自の強みを確立する狛江市の戦略。小規模ならではのきめ細やかな地域振興が強み。",
-      "power": 84
-    },
-    "yono": {
-      "imageUrl": "YONO-SYMBOL.png",
-      "title": "さいたま新都心",
-      "subtitle": "交通と行政の巨大なハブ機能",
-      "description": "旧与野市に位置するさいたま新都心は、国の機関や巨大な商業施設が集まる、さいたま市の中心的なハブ機能を持つ。これは、合併による都市機能の統合とスケールメリットを象徴する。",
-      "power": 92
-    },
-    "provenance": [
-      {
-        "label": "狛江市の地域ブランドについて",
-        "url": "https://www.city.komae.tokyo.jp/index.cfm/45,125767,347,2090,html",
-        "note": "出典: "
-      },
-      {
-        "label": "さいたま新都心と合併の経緯について",
-        "url": "http://gyosei.mine.utsunomiya-u.ac.jp/yoka01/takeia/Takeia010523.htm",
-        "note": "出典: "
-      }
-    ],
-    "status": "success"
-  },
-  {
-    "id": "battle_service_optimization",
-    "publishState": "draft",
+    "id": "adjacent-municipalities-2025-ja",
     "themeId": "community",
+    "publishState": "published",
     "significance": "medium",
-    "title": "個別最適化 vs. 全体最適化のバトル",
-    "subtitle": "市民一人ひとりへの配慮か、広域への効率化か",
+    "title": "隣接自治体",
+    "subtitle": "よの(現・よの連合国よの主要部)とこまえの周辺環境",
     "narrative": {
-      "overview": "与野市が合併によって追求した、広域行政による効率的で統一的なサービスと、狛江市が独立によって維持した、市民に寄り添うきめ細やかな行政サービスが対決する。",
-      "scenario": "政令指定都市となったさいたま市は、市内各所に区役所や市民の窓口を多数設置し、住民票や証明書の発行といった広域的な行政サービスを効率的に提供している。これは、多くの市民に均一なサービスを届けることを目指す、スケールメリットを活かした戦いだ。一方、独立を維持した狛江市は、法律、相続、生活困窮など、市民一人ひとりの問題に寄り添う専門的な相談サービスを常設している。これは、市民との顔が見える関係性を重視する、きめ細やかな行政の勝利をかけた戦いだ。果たして、広域行政の効率性が、小規模自治体の人間的な温かさに勝るのか。"
+      "overview": "よの(8.29 km², 約9.7万人)は合併直前、北側の旧大宮市(128.32 km², 約48.9万人)と南側の旧浦和市(85.50 km², 約50.5万人)に挟まれていた。こまえ(6.39 km², 約8.3万人; 2023年)は、世田谷区(58.05 km², 約93万人)・調布市(21.58 km², 約24.3万人)・川崎市(143.01 km², 約154万人)に隣接する。",
+      "scenario": "規模の観点では、よのは隣接する旧浦和/旧大宮に対して面積・人口ともに約1/10規模、こまえも世田谷区や川崎市に対し桁違いに小さい。いずれも「小国が大国に囲まれる」構図で、生活圏/通勤圏の相互依存や、越境インフラ・行政連携の重要性が高いことを示唆する。"
     },
     "komae": {
       "imageUrl": "KOMAE-SYMBOL.png",
-      "title": "狛江の個別相談サービス",
-      "subtitle": "市民の悩みに寄り添うきめ細やかな行政",
-      "description": "独立した狛江市が提供する、法律、相続、生活困窮など多岐にわたる専門家による常設相談サービス。市民一人ひとりの生活に密着した課題解決を重視する、小規模自治体ならではの行政モデルを体現する。",
-      "power": 82
+      "title": "KOMAE の隣接状況",
+      "subtitle": "世田谷区・調布市・川崎市に接する小面積自治体(6.39 km², 約8.3万人)",
+      "description": "こまえは都内でも屈指のコンパクトな市域。隣接は大規模都市/区が中心で、人口・経済規模の差が顕著。鉄道/幹線道路/河川空間を介した結節が強く、サービス供給や雇用の面で越境依存が高水準となりやすい。",
+      "power": 45
     },
     "yono": {
       "imageUrl": "YONO-SYMBOL.png",
-      "title": "さいたま市の広域行政サービス",
-      "subtitle": "市民窓口を多数設置する効率的な手続き",
-      "description": "合併により政令指定都市となったさいたま市が、各区役所や市内25か所の支所・市民の窓口を通じて提供する、効率化された行政手続き。多くの住民が利用する公的なサービスを、迅速かつ広範囲に届けることを可能にした。",
-      "power": 91
+      "title": "YONO(よの→現よの主要部) の隣接状況",
+      "subtitle": "旧浦和市・旧大宮市に囲まれた小規模都市(8.29 km², 約9.7万人; 合併直前)",
+      "description": "よのは政令市移行前、旧浦和/旧大宮という大規模市に挟まれていた。面積・人口ともに約1/10規模で、通勤/商業/行政サービスの広域補完が常態化。合併後は中核拠点(さいたま新都心等)との一体化が進展。",
+      "power": 45
     },
     "provenance": [
       {
-        "label": "狛江市の各種相談サービスについて",
-        "url": "https://www.city.komae.tokyo.jp/index.cfm/41,21125,311,html",
-        "note": "出典: [5]"
+        "label": "GGRKS River-Crossing Integration Division",
+        "note": "よのの隣接: 旧浦和市(85.50 km², 約50.5万人)、旧大宮市(128.32 km², 約48.9万人)。こまえの隣接: 世田谷区(58.05 km², 約93万人)、調布市(21.58 km², 約24.3万人)、川崎市(143.01 km², 約154万人)。分析: 両者とも周辺は大規模都市で、相対的に小規模(約1/10)であることが示唆される。"
       },
       {
-        "label": "さいたま市中央区の行政サービスについて",
-        "url": "https://www.city.saitama.lg.jp/008/001/p013074.html",
-        "note": "出典: [11]"
-      }
-    ],
-    "status": "success"
-  },
-  {
-    "id": "battle_space_philosophy",
-    "publishState": "draft",
-    "themeId": "development",
-    "significance": "legendary",
-    "title": "都市の熟成 vs. 都市の刷新のバトル",
-    "subtitle": "既存の自然と共生か、大規模開発による変革か",
-    "narrative": {
-      "overview": "さいたま新都心という大規模開発で都市空間を刷新した旧与野市と、多摩川や畑など既存の自然と共生する道を選んだ狛江市。都市計画の思想が激突する。",
-      "scenario": "与野市は、さいたま新都心の開発という巨大プロジェクトを通じて、都市の風景を大きく刷新した。これは、人工的なインフラと新しい建物を大規模に創造することで、都市の活力を高めることを目指す、未来志向の思想を象徴している。一方、狛江市は、多摩川や畑など既存の自然を大切にし、それらを活用した地域ブランドを形成している。これは、都市の熟成を重視し、自然と調和した持続可能なまちづくりを追求する思想だ。果たして、人工的な力で未来を築く哲学と、既存の自然を活かす哲学、どちらがより豊かな都市空間を生み出すのか。"
-    },
-    "komae": {
-      "imageUrl": "KOMAE-SYMBOL.png",
-      "title": "多摩川との共生",
-      "subtitle": "水と緑の街が育む持続可能な空間",
-      "description": "多摩川を都市の核として捉え、豊かな自然景観を維持しつつ、市民が参加できるイベントを多数開催。既存の自然を最大限に活かし、都市の熟成を重視するまちづくりを体現している。",
-      "power": 80
-    },
-    "yono": {
-      "imageUrl": "YONO-SYMBOL.png",
-      "title": "さいたま新都心の変革",
-      "subtitle": "大規模開発による都市の刷新",
-      "description": "合併の動機の一つとなったさいたま新都心は、多くの官庁や商業施設が集積し、都市の風景を一変させた。これは、大規模開発によって都市を刷新し、新たな価値を創造する思想を象徴している。",
-      "power": 85
-    },
-    "provenance": [
-      {
-        "label": "狛江市のまちづくりと自然について",
-        "url": "https://www.city.komae.tokyo.jp/index.cfm/46,134979,c,html/134979/20240904-170340.pdf",
-        "note": "出典: [17, 18]"
+        "label": "こまえ市民の声",
+        "note": "「買い物は二子玉川、遊びは渋谷。でも帰ってくるのは、やっぱりこまえ」"
       },
       {
-        "label": "埼玉新都心と合併の経緯について",
-        "url": "http://gyosei.mine.utsunomiya-u.ac.jp/yoka01/takeia/Takeia010523.htm",
-        "note": "出典: "
-      }
-    ],
-    "status": "success"
-  },
-  {
-    "id": "battle_agile_vs_stable",
-    "publishState": "review",
-    "themeId": "information",
-    "significance": "medium",
-    "title": "行政の最適解",
-    "subtitle": "小回りの利く行政か、盤石な広域行政か",
-    "narrative": {
-      "overview": "独立を維持した狛江市の機動的な行政運営と、合併で規模のメリットを得たさいたま市(旧与野市)の安定的な行政運営が対決する。",
-      "scenario": "政令指定都市となり、大規模なインフラと広域行政を盤石な「守り」の基盤とするさいたま市。多くの市民に安定したサービスを画一的に提供することで、大規模化のメリットを活かしている。一方、狛江市は、創業支援事業やDX戦略など、小規模自治体ならではの小回りの利く「攻め」の施策を積極的に推進している。これは、既存のサービスを守りつつ、新しい価値を素早く創出することを目指す行政戦略だ。果たして、規模の安定性を重視する「守り」の行政と、機動性を活かした「攻め」の行政、どちらが時代の変化に柔軟に対応できるのか。"
-    },
-    "komae": {
-      "imageUrl": "KOMAE-SYMBOL.png",
-      "title": "狛江市の機動的な行政",
-      "subtitle": "創業支援とDXが支える「攻め」の姿勢",
-      "description": "独立した小規模自治体の強みを活かし、創業支援事業やDX戦略を推進。オンライン申請の導入など、時代に合わせた小回りの利く施策で、市民生活の利便性向上を目指している。",
-      "power": 82
-    },
-    "yono": {
-      "imageUrl": "YONO-SYMBOL.png",
-      "title": "さいたま市の広域安定行政",
-      "subtitle": "規模のメリットを活かした「守り」の基盤",
-      "description": "政令指定都市という大規模な行政体となり、広域行政を効率的かつ安定的に運営するさいたま市。市民に均一で安定したサービスを提供することで、盤石な行政運営を誇る。",
-      "power": 86
-    },
-    "provenance": [
-      {
-        "label": "さいたま市の広域行政サービス",
-        "url": "https://www.city.saitama.lg.jp/008/001/p013074.html",
-        "note": "さいたま市／支所・市民の窓口をご利用ください"
-      },
-      {
-        "label": "市役所及び各事務所、公民館・図書館、地域センター、体育施設など - 狛江市役所",
-        "url": "https://www.city.komae.tokyo.jp/index.cfm/41,4611,322,html",
-        "note": "市役所及び各事務所、公民館・図書館、地域センター、体育施設など"
-      }
-    ],
-    "status": "success"
-  },
-  {
-    "id": "battle_civic_will",
-    "publishState": "review",
-    "themeId": "community",
-    "significance": "medium",
-    "title": "民意の不在 首長の信念",
-    "subtitle": "住民の無関心か リーダーの強い意志か",
-    "narrative": {
-      "overview": "狛江市では合併問題への市民の関心が薄い中、首長の信念が独立を決定づけた。一方、与野市では市民による住民投票が実施されず、政治的判断が優先された。市民の意思表示のあり方が問われる対決。",
-      "scenario": "狛江市では、合併への市民の関心が低いという状況下で、当時の町長が「まちのアイデンティティが失われる」という明確な信念のもと、独立を貫き通した。これは、リーダーシップが地域の運命を決定づけた事例だ。対する与野市では、合併に異議を唱える市民団体があったにもかかわらず、住民投票は実施されず、行政主導で合併が推進された。これは、政治的判断が民意の直接的な表明を上回った事例だ。この戦いは、市民民主主義において、住民の「無関心」と首長の「信念」が、地域の未来をどう形作るかという根源的な問いを投げかける。"
-    },
-    "komae": {
-      "imageUrl": "KOMAE-SYMBOL.png",
-      "title": "首長の明確な信念",
-      "subtitle": "市民の無関心を乗り越えた独立への意志",
-      "description": "合併に無関心な市民が多い中で、当時の首長が「狛江のアイデンティティを失う」として明確に反対の立場を取り、独立を主導した。これは、強力なリーダーシップが地域の運命を決定づけた象徴だ。",
-      "power": 80
-    },
-    "yono": {
-      "imageUrl": "YONO-SYMBOL.png",
-      "title": "住民投票なき政治的決断",
-      "subtitle": "民意の直接表明を待たずに進められた合併",
-      "description": "浦和、大宮、与野の合併において、住民投票は実施されず、行政が主導して合併が決定された。これは、市民の直接的な意思表示よりも、政治的・構造的な判断が優先された経緯を象徴している。",
-      "power": 89
-    },
-    "provenance": [
-      {
-        "label": "さいたま市合併と住民投票について",
-        "url": "http://www.jcp-hirakata.com/ganbattemasu/ganba_030823-2.html",
-        "note": "出典: "
+        "label": "旧よの市民の回想",
+        "note": "「浦和にも大宮にもよく行ったけど、俺たちは与野人だっていう誇りがあったよ」"
       }
     ],
     "status": "success"
   },
   {
     "id": "battle_commuter_destination",
-    "publishState": "review",
     "themeId": "community",
+    "publishState": "published",
     "significance": "medium",
     "title": "通勤",
     "subtitle": "ベッドタウンの利便性 職住近接の理想",
@@ -239,231 +90,9 @@
     "status": "success"
   },
   {
-    "id": "battle_finance_strategy",
-    "publishState": "review",
-    "themeId": "finance",
-    "significance": "legendary",
-    "title": "自立財政の作法",
-    "subtitle": "合併に頼るか 筋肉を鍛えるか",
-    "narrative": {
-      "overview": "大規模開発の財政負担を解決するため合併を選んだ与野市と、独自の健全な財政運営で独立を維持した狛江市。地方自治体の財政戦略の対立を描く。",
-      "scenario": "与野市は、さいたま新都心の開発による膨大な財政負担を抱え、合併を財政基盤強化のための唯一の道とみなした。これは、合併が財政問題を解決する有効な手段であるという、当時の地方自治体が直面した共通の課題を象徴している。一方、狛江市は合併に頼らず、独自の健全な財政運営を継続。将来負担の項目で全国19位という高い評価を得ており、独立が財政的にも可能であることを証明した。この戦いは、財政の安定を合併による規模の利益に求めるか、独立による自立的な運営に求めるかという、現代の地方自治体にとっての根本的な選択を問うものだ。"
-    },
-    "komae": {
-      "imageUrl": "KOMAE-SYMBOL.png",
-      "title": "狛江の健全財政",
-      "subtitle": "合併に頼らない自立した財政運営",
-      "description": "全国の市区町村財政健全度ランキングで上位に位置し、特に将来負担の項目で高い評価を得ている狛江市。合併に頼ることなく、独自の財政運営で行政サービスの質を維持している。",
-      "power": 88
-    },
-    "yono": {
-      "imageUrl": "YONO-SYMBOL.png",
-      "title": "埼玉新都心開発の財政負担",
-      "subtitle": "合併を必然とした巨大プロジェクトの重み",
-      "description": "さいたま新都心の開発が旧与野市に膨大な財政負担をもたらし、合併の強い動機となった。これは、大都市構想という夢の裏にある、現実的な財政的課題を象徴している。",
-      "power": 85
-    },
-    "provenance": [
-      {
-        "label": "狛江市の財政健全度について",
-        "url": "https://www.seikatsu-guide.com/keyword/2500/13/13219/",
-        "note": "狛江市の「財政」関連データ｜生活ガイド.com"
-      },
-      {
-        "label": "与野市合併の財政的理由について",
-        "url": "http://gyosei.mine.utsunomiya-u.ac.jp/yoka01/takeia/Takeia010523.htm",
-        "note": "宇都宮大学国際学部(中村祐司)研究室"
-      }
-    ],
-    "status": "success"
-  },
-  {
-    "id": "battle_financial_philosophy",
-    "publishState": "review",
-    "themeId": "finance",
-    "significance": "high",
-    "title": "財政の二つのものさし",
-    "subtitle": "健全な将来への備えか、現在の財源の豊かさか",
-    "narrative": {
-      "overview": "将来負担の健全性で全国上位の狛江市と、財政力指数で埼玉県の平均を上回るさいたま市(旧与野市)。財政の「健全さ」に対する異なる評価軸が対立する。",
-      "scenario": "狛江市は、財政健全度ランキングで東京都内10位、全国32位と非常に高く評価されている。特に、将来の借金返済能力を示す「将来負担」の項目では全国19位と、その健全性は際立っている。これは、将来世代にツケを回さないという堅実な財政哲学の勝利だ。一方、合併によって誕生したさいたま市は、財政力指数が埼玉県の平均を大きく上回り、国からの地方交付税交付金に頼らない財源の豊かさを誇っている。これは、現在の財政基盤の強さを示す勝利だ。果たして、未来を見据えた健全な財政運営と、現在の財源の豊かさ、どちらが持続可能な都市の姿を保証するのか。"
-    },
-    "komae": {
-      "imageUrl": "KOMAE-SYMBOL.png",
-      "title": "将来負担の健全性",
-      "subtitle": "未来へのツケをなくす堅実な財政",
-      "description": "狛江市は、財政健全度ランキングの「将来負担」の項目で全国19位と、非常に高い評価を得ている。これは、将来世代に過度な負担をかけない、堅実で長期的な財政運営の哲学を象徴している。",
-      "power": 87
-    },
-    "yono": {
-      "imageUrl": "YONO-SYMBOL.png",
-      "title": "財政力指数の高さ",
-      "subtitle": "豊かな財源が支える大都市の力",
-      "description": "さいたま市の財政力指数は埼玉県の平均を上回っており、国からの地方交付税交付金に頼らない財政的な自立度を示している。これは、大都市が持つ経済力の強みを象徴している。",
-      "power": 91
-    },
-    "provenance": [
-      {
-        "label": "狛江市の財政健全度について",
-        "url": "https://www.seikatsu-guide.com/info/13/13219/2/",
-        "note": "狛江市の【特色･特徴】を表す行政サービス･行政情報｜生活ガイド.com: "
-      },
-      {
-        "label": "さいたま市の財政力指数について",
-        "url": "https://www.pref.saitama.lg.jp/documents/256147/04zaiseiryokusisuu_saisantei6.xlsx",
-        "note": "宇都宮大学国際学部(中村祐司)研究室"
-      }
-    ],
-    "status": "success"
-  },
-  {
-    "id": "battle_old_feud_vs_new_path",
-    "publishState": "review",
-    "themeId": "history",
-    "significance": "medium",
-    "title": "むかしのケンカをなかなおりするか、ひとりでがんばるか",
-    "subtitle": "みんなで一つになるか、自分たちの町を守るか",
-    "narrative": {
-      "overview": "与野市は、浦和市と大宮市が長いあいだ仲がわるかったので、みんなで一つになることをえらびました。いっぽう狛江市は、となりの町と一緒にならずに、自分たちの町を大切にしてきました。どちらが町のみらいにいいのかをくらべます。",
-      "scenario": "むかし、浦和市と大宮市は、どちらがえらいかで長いあいだ言い合いをしていました。与野市はまんなかの町で、ふたりの間に入って話をまとめ、さいごは三つの町で一つになることにしました。それは、けんかをやめて、仲よくするためのえらいきめごとでした。いっぽう、狛江市は、となりの町と合併すると「狛江らしさ」がなくなると思って、合併をしませんでした。自分たちの町を自分たちでまもって、これからの歴史をつくっていく道をえらびました。どちらのえらび方が、みんなが安心してくらせる町づくりになるのか、よくかんがえてみましょう。"
-    },
-    "komae": {
-      "imageUrl": "KOMAE-SYMBOL.png",
-      "title": "自分の町を大切にする",
-      "subtitle": "となりと合併しないえらいきめ",
-      "description": "狛江市は、となりの町と一緒にならず、むかしからの自分の町の名前やよさをたいせつにしました。みんなで力をあわせて、これからも「狛江」という町らしさをまもっていこうとしています。",
-      "power": 83
-    },
-    "yono": {
-      "imageUrl": "YONO-SYMBOL.png",
-      "title": "みんなで一つになった",
-      "subtitle": "長いけんかをおわらせるために",
-      "description": "与野市は、浦和市と大宮市と力をあわせて、一つの大きな市になりました。むずかしい歴史があったけれど、話し合ってなかなおりをして、新しいまちをつくりました。",
-      "power": 88
-    },
-    "provenance": [
-      {
-        "label": "狛江市が合併しなかった理由について",
-        "url": "https://www.komae-jimin.jp/post/%E5%B9%BB%E3%81%A8%E6%B6%88%E3%81%88%E3%81%9F%E8%AA%BF%E5%B8%83%E3%80%81%E4%B8%96%E7%94%B0%E8%B0%B7%E3%81%A8%E3%81%AE%E5%90%88%E4%BD%B5",
-        "note": "幻と消えた調布、世田谷との合併"
-      }
-    ],
-    "status": "success"
-  },
-  {
-    "id": "battle_planning_vs_spontaneity",
-    "publishState": "review",
-    "themeId": "development",
-    "significance": "high",
-    "title": "計画主導型開発と自発的成熟の比較分析",
-    "subtitle": "トップダウン計画とボトムアップ参加の効果検証",
-    "narrative": {
-      "overview": "本稿は、旧与野市が推進した埼玉新都心に代表される計画主導型の都市開発と、狛江市が展開する市民参加・自然資源活用型のまちづくりを対照し、都市発展に関する二つのアプローチの含意を整理するものである。",
-      "scenario": "旧与野市は、合併プロセスと連動する形で大規模拠点である埼玉新都心計画を推進し、行政主導によるインフラストックの集中的整備を通じて将来像を提示した。これに対し、狛江市は「水と緑のまち」を基本構想に掲げ、多摩川流域での市民主体イベントや地域ボランティアの活動を重視し、自発性と地域資源の内発的活用を中核とする成熟モデルを指向している。両者を比較すると、前者はスケールメリットと一体的効果（集積の経済、象徴性の創出）を強みとする一方、投資回収・財政持続性のリスクを内包する。後者は合意形成コストや即時性の制約を伴うが、レジリエンス・コミュニティ資本の蓄積に資する可能性が高い。"
-    },
-    "komae": {
-      "imageUrl": "KOMAE-SYMBOL.png",
-      "title": "市民参加・内発型まちづくり",
-      "subtitle": "流域資源活用とコミュニティ資本の形成",
-      "description": "多摩川流域を舞台とする市民主体イベント（例：いかだレース、花火大会）やボランティア活動を通じ、社会関係資本の強化と持続的な地域運営を図るアプローチ。トップダウン型投資に偏重しない、合意形成・参加のプロセスを重視する点に特長がある。",
-      "power": 84
-    },
-    "yono": {
-      "imageUrl": "YONO-SYMBOL.png",
-      "title": "埼玉新都心にみる計画主導型開発",
-      "subtitle": "行政主導の集積形成と象徴性の獲得",
-      "description": "巨大行政施設・業務商業機能の計画的配置により、都市の機能配列とブランドを再編する試み。集積の経済を活かしつつ、広域交通・業務核の整備による外部効果の最大化を企図する。",
-      "power": 89
-    },
-    "provenance": [
-      {
-        "label": "[PDF]狛江市のまちづくりと自然について",
-        "url": "https://www.city.komae.tokyo.jp/index.cfm/46,134979,c,html/134979/20240904-170340.pdf",
-        "note": "[PDF]令和５年度 狛江・多摩川花火大会 狛江市 財政のあらまし"
-      },
-      {
-        "label": "埼玉新都心と合併の経緯について",
-        "url": "http://gyosei.mine.utsunomiya-u.ac.jp/yoka01/takeia/Takeia010523.htm",
-        "note": "宇都宮大学国際学部(中村祐司)研究室"
-      },
-      {
-        "label": "都市計画年報 2024(地域内発展編)"
-      },
-      {
-        "label": "レジリエンスとコミュニティ資本 白書"
-      },
-      {
-        "label": "集積の経済と象徴性に関する比較研究"
-      },
-      {
-        "label": "市民参加型イベントの社会的効果測定 事例集"
-      },
-      {
-        "label": "広域拠点整備の財政持続性評価 ガイドライン"
-      },
-      {
-        "label": "流域資源活用と都市ブランド形成"
-      },
-      {
-        "label": "トップダウン/ボトムアップの統合的計画手法"
-      },
-      {
-        "label": "合意形成コストと政策即時性のトレードオフ分析"
-      },
-      {
-        "label": "都市インフラ投資の外部効果推計ハンドブック"
-      },
-      {
-        "label": "参加型まちづくりKPI設計ガイド"
-      }
-    ],
-    "status": "success"
-  },
-  {
-    "id": "adjacent-municipalities-2025-ja",
-    "publishState": "published",
-    "themeId": "community",
-    "significance": "low",
-    "title": "隣接自治体",
-    "subtitle": "よの(現・よの連合国よの主要部)とこまえの周辺環境",
-    "narrative": {
-      "overview": "よの(8.29 km², 約9.7万人)は合併直前、北側の旧大宮市(128.32 km², 約48.9万人)と南側の旧浦和市(85.50 km², 約50.5万人)に挟まれていた。こまえ(6.39 km², 約8.3万人; 2023年)は、世田谷区(58.05 km², 約93万人)・調布市(21.58 km², 約24.3万人)・川崎市(143.01 km², 約154万人)に隣接する。",
-      "scenario": "規模の観点では、よのは隣接する旧浦和/旧大宮に対して面積・人口ともに約1/10規模、こまえも世田谷区や川崎市に対し桁違いに小さい。いずれも「小国が大国に囲まれる」構図で、生活圏/通勤圏の相互依存や、越境インフラ・行政連携の重要性が高いことを示唆する。"
-    },
-    "komae": {
-      "imageUrl": "KOMAE-SYMBOL.png",
-      "title": "KOMAE の隣接状況",
-      "subtitle": "世田谷区・調布市・川崎市に接する小面積自治体(6.39 km², 約8.3万人)",
-      "description": "こまえは都内でも屈指のコンパクトな市域。隣接は大規模都市/区が中心で、人口・経済規模の差が顕著。鉄道/幹線道路/河川空間を介した結節が強く、サービス供給や雇用の面で越境依存が高水準となりやすい。",
-      "power": 45
-    },
-    "yono": {
-      "imageUrl": "YONO-SYMBOL.png",
-      "title": "YONO(よの→現よの主要部) の隣接状況",
-      "subtitle": "旧浦和市・旧大宮市に囲まれた小規模都市(8.29 km², 約9.7万人; 合併直前)",
-      "description": "よのは政令市移行前、旧浦和/旧大宮という大規模市に挟まれていた。面積・人口ともに約1/10規模で、通勤/商業/行政サービスの広域補完が常態化。合併後は中核拠点(さいたま新都心等)との一体化が進展。",
-      "power": 45
-    },
-    "provenance": [
-      {
-        "label": "GGRKS River-Crossing Integration Division",
-        "note": "よのの隣接: 旧浦和市(85.50 km², 約50.5万人)、旧大宮市(128.32 km², 約48.9万人)。こまえの隣接: 世田谷区(58.05 km², 約93万人)、調布市(21.58 km², 約24.3万人)、川崎市(143.01 km², 約154万人)。分析: 両者とも周辺は大規模都市で、相対的に小規模(約1/10)であることが示唆される。"
-      },
-      {
-        "label": "こまえ市民の声",
-        "note": "「買い物は二子玉川、遊びは渋谷。でも帰ってくるのは、やっぱりこまえ」"
-      },
-      {
-        "label": "旧よの市民の回想",
-        "note": "「浦和にも大宮にもよく行ったけど、俺たちは与野人だっていう誇りがあったよ」"
-      }
-    ],
-    "status": "success"
-  },
-  {
     "id": "family-bonds-vs-state-protection",
-    "publishState": "published",
     "themeId": "community",
+    "publishState": "published",
     "significance": "medium",
     "title": "だれが守る? 家族か国家か",
     "subtitle": "近所の手 vs 24hインフラ",
@@ -495,8 +124,8 @@
   },
   {
     "id": "hamburger-war-1",
-    "publishState": "published",
     "themeId": "culture",
+    "publishState": "published",
     "significance": "medium",
     "title": "バーガー・ショーダウン! YUMは万国共通!",
     "subtitle": "スピード&サイズ vs. グランマのラブ",
@@ -564,8 +193,8 @@
   },
   {
     "id": "ikada-race",
-    "publishState": "published",
     "themeId": "community",
+    "publishState": "published",
     "significance": "medium",
     "title": "大河川の恵み",
     "subtitle": "よのの羨望と、こまえのプライド。多摩川を巡る戦い",
@@ -599,7 +228,7 @@
       },
       {
         "label": "こまえいかだレース参加チーム「多摩川魂」のブログ",
-        "note": "「今年もゴール後のビールがうまい！来年こそ優勝！」"
+        "note": "「今年もゴール後のビールがうまい!来年こそ優勝!」"
       },
       {
         "label": "よの市議会定例会",
@@ -613,9 +242,56 @@
     "status": "success"
   },
   {
+    "id": "komae-merger-history-1954",
+    "themeId": "history",
+    "publishState": "review",
+    "significance": "legendary",
+    "title": "ハンコ大脱走 ないものは押せない",
+    "subtitle": "追えない事務、進まぬ合併 昭和29年(1954年)",
+    "narrative": {
+      "overview": "昭和の大合併が押し寄せるなか、合併か、編入か、単独か——議場はいつもの険悪さ…のはずが、ある朝、とんでもない事態が発覚する。「町の公印がない」。書類はあってもハンコがない、ないものは押せない。",
+      "scenario": "3町合併を推す議会、世田谷編入を唱える町長。綱引きに疲れた頃合い、臨時会の前夜に事件は起きた。誰もが目を疑う「公印行方不明」。職員は金庫を開け、机を探り、最後はため息とお茶の時間。合併か単独かを決めるハズの一日が、「ハンコがどこだ」で終わる。翌日、議論は続く。けれど町には広がる噂話——「狛江の決断、ハンコ待ち」。"
+    },
+    "komae": {
+      "imageUrl": "KOMAE-SYMBOL.png",
+      "title": "2025年の市民のため息",
+      "subtitle": "「その日、印が主役ってマジ?」",
+      "description": "合併も編入も単独も——難しい議論なのはわかる。でもさ、臨時会の前夜に“公印がない”で全部止まるって、2025年のわたしからすると、もはや歴史の珍事を越えてネタ。書類はある、印はない、決断は保留。この街の真面目さも好きだけど、あの日はただただ、ため息と苦笑い。",
+      "power": 62
+    },
+    "yono": {
+      "imageUrl": "YONO-SYMBOL.png",
+      "title": "与野の立場",
+      "subtitle": "本件についてはコメントを控える",
+      "description": "本件に関して与野側は公式な見解の表明を控えている。立場や評価に関わる事項については、当時の公文書・議事録等の一次資料を参照した上で判断されたい。",
+      "power": 0
+    },
+    "provenance": [
+      {
+        "label": "幻と消えた調布、世田谷との合併 (自由民主党狛江総支部)",
+        "url": "https://www.komae-jimin.jp/post/%E5%B9%BB%E3%81%A8%E6%B6%88%E3%81%88%E3%81%9F%E8%AA%BF%E5%B8%83%E3%80%81%E4%B8%96%E7%94%B0%E8%B0%B7%E3%81%A8%E3%81%AE%E5%90%88%E4%BD%B5",
+        "note": "1953年の町村合併促進法下での3町合併推進、飯田敬輔町長の世田谷編入主張、公印持ち出し、須田耕作氏の回顧等を紹介 (政党サイトのコラム）。"
+      },
+      {
+        "label": "無法地帯を行く : 狛江町現地レポート (レポートシリーズ ; 第1集)",
+        "url": "https://ndlsearch.ndl.go.jp/books/R100000002-I000001334274",
+        "note": "無法地帯を行く : 狛江町現地レポート (レポートシリーズ ; 第1集) | NDLサーチ | 国立国会図書館"
+      },
+      {
+        "label": "当時を知る多摩川のカワウソのコメント",
+        "note": "「人の議論はむずかしい。けれど、その日ばかりは川の石ころだって“印がないと転がらない”顔をしていたよ。」"
+      },
+      {
+        "label": "多摩川の対岸の井戸端会議",
+        "note": "川の向こうから眺める混乱。遠いようで近い、近いようで遠い——まさに“対岸”の珍事。"
+      }
+    ],
+    "status": "success"
+  },
+  {
     "id": "battle_population_dynamics",
-    "publishState": "published",
     "themeId": "community",
+    "publishState": "published",
     "significance": "medium",
     "title": "百万都市の風 懐の狭間の粋",
     "subtitle": "集めて強しか、詰めて濃しか",
@@ -710,12 +386,51 @@
     "status": "success"
   },
   {
-    "id": "culture-battle",
+    "id": "battle_service_optimization",
+    "themeId": "community",
     "publishState": "published",
+    "significance": "medium",
+    "title": "近さの行政と大きさの行政",
+    "subtitle": "小さな距離の温かさか、大きな規模の力か",
+    "narrative": {
+      "overview": "広域側は、区役所や支所・市民窓口の網で標準化された手続きと迅速な発行業務を整え、個別側は、法律・相続・生活困窮などの常設相談で伴走しながら個別事情に合わせて解決へ導く。",
+      "scenario": "政令指定都市の枠組みを持つ広域側は、住民票・各種証明・相談受付などのベース業務を、複数拠点の窓口配置と統一手順で平準化し、来訪先を選びやすく、処理時間の見通しを立てやすくする。一方、小規模自治体の個別側は、専門分野の担当者を常設し、同一相談の継続対応、関係機関連携、家庭事情や就労状況などの背景を踏まえた支援設計で、課題ごとに納得解を探る。均一に速いか、必要に深いか——行政サービスの価値はどこで測られるか。"
+    },
+    "komae": {
+      "imageUrl": "KOMAE-SYMBOL.png",
+      "title": "狛江の個別相談サービス",
+      "subtitle": "市民の悩みに寄り添うきめ細やかな行政",
+      "description": "法律・相続・生活困窮などの常設相談を入口に、継続的に同一相談へ対応し、必要に応じて福祉・教育・地域団体と連携して支援の組み合わせを設計する。来庁者の事情を踏まえた個別対応で、解決までの道筋を伴走する小規模自治体の強みを示す。",
+      "power": 82
+    },
+    "yono": {
+      "imageUrl": "YONO-SYMBOL.png",
+      "title": "さいたま市の広域行政サービス",
+      "subtitle": "市民窓口を多数設置する効率的な手続き",
+      "description": "各区役所と市内の支所・市民窓口のネットワークで、住民票・各種証明・戸籍関連などの手続きを標準化。どの窓口でも同等の案内と処理を受けられることで、居住地や勤務先に近い拠点を選びやすく、多くの利用を広範囲に捌く広域運用の力を発揮する。",
+      "power": 91
+    },
+    "provenance": [
+      {
+        "label": "さいたま市の広域行政サービス",
+        "url": "https://www.city.saitama.lg.jp/008/001/p013074.html",
+        "note": "さいたま市／支所・市民の窓口をご利用ください"
+      },
+      {
+        "label": "狛江市の施設、窓口",
+        "url": "https://www.city.komae.tokyo.jp/index.cfm/41,4611,322,html",
+        "note": "市役所及び各事務所、公民館・図書館、地域センター、体育施設など"
+      }
+    ],
+    "status": "success"
+  },
+  {
+    "id": "culture-battle",
     "themeId": "culture",
+    "publishState": "published",
     "significance": "medium",
     "title": "文化の創造と継承",
-    "subtitle": "メトロポリタン・アートか、草の根の祭りか。文化の覇者は？",
+    "subtitle": "メトロポリタン・アートか、草の根の祭りか。文化の覇者は?",
     "narrative": {
       "overview": "よのは、最先端の芸術を招致し、こまえは、失われつつある伝統の祭りを復活させる。文化という無形資産を巡る、価値観のぶつかり合いが今、始まる。",
       "scenario": "よのは、さいたま新都心という新たな都市を舞台に、世界的なアーティストを招聘した巨大なアート・プロジェクトを立ち上げた。これは、合併によって生まれた新たな文化を世界に発信し、よのの先進性と知性を証明する試みである。一方、こまえは、住民の手で古くからの伝統行事を復活させ、地域コミュニティの絆を再確認しようと奮闘する。巨大な予算と洗練されたデザインのよのか、それとも市民の熱意と歴史が織りなすこまえか。どちらが真に人々の心を豊かにし、未来へと文化を繋ぐことができるか、プレイヤーの評価が問われる。"
@@ -749,7 +464,7 @@
       },
       {
         "label": "こまえお祭り実行委員会の議事録",
-        "note": "「予算はないが、情熱はある！」という委員長の発言が記録されている。"
+        "note": "「予算はないが、情熱はある!」という委員長の発言が記録されている。"
       },
       {
         "label": "SNSでの市民の声",
@@ -760,8 +475,8 @@
   },
   {
     "id": "ancient-oracle-battle",
-    "publishState": "published",
     "themeId": "culture",
+    "publishState": "published",
     "significance": "medium",
     "title": "古代の神託対決",
     "subtitle": "星の運行か、大地の恵みか",
@@ -805,8 +520,8 @@
   },
   {
     "id": "snack-battle",
-    "publishState": "published",
     "themeId": "culture",
+    "publishState": "published",
     "significance": "low",
     "title": "おかしなだいせんそう",
     "subtitle": "どっちのおかしが いちばんかな?",
@@ -818,7 +533,7 @@
       "imageUrl": "KOMAE-SYMBOL.png",
       "title": "土星チョコ",
       "subtitle": "めざせみずきりマスター!",
-      "description": "たまがわの いしみたいだけど、チョコだよ。たべると ちからがモリモリわいて、ジャングルジムの てっぺんまで のぼれちゃう！みんなで たべると、もっと なかよしに なれるんだ。",
+      "description": "たまがわの いしみたいだけど、チョコだよ。たべると ちからがモリモリわいて、ジャングルジムの てっぺんまで のぼれちゃう!みんなで たべると、もっと なかよしに なれるんだ。",
       "power": 30
     },
     "yono": {
@@ -858,8 +573,8 @@
   },
   {
     "id": "agriculture-2025-ja",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "low",
     "title": "農業",
     "subtitle": "歴史・現況・農地面積・政策の比較",
@@ -888,7 +603,7 @@
       },
       {
         "label": "こまえの農産物直売所",
-        "note": "「今朝採れたての枝豆だよ！」という農家さんの声が響く。"
+        "note": "「今朝採れたての枝豆だよ!」という農家さんの声が響く。"
       },
       {
         "label": "よのの市民農園の利用規約",
@@ -899,8 +614,8 @@
   },
   {
     "id": "architecture-aesthetics-battle",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "medium",
     "title": "建築の美学 4月号",
     "subtitle": "垂直都市と水平都市の比較考察",
@@ -952,8 +667,8 @@
   },
   {
     "id": "area-comparison-geo-2025-ja",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "low",
     "title": "面積",
     "subtitle": "よのとこまえの地理的スケール",
@@ -993,8 +708,8 @@
   },
   {
     "id": "commuting-flows-1995-2025-ja",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "medium",
     "title": "通勤流動と交流人口",
     "subtitle": "1995-2025 のモビリティと都市圏のつながり",
@@ -1034,13 +749,13 @@
   },
   {
     "id": "density-battle",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "medium",
     "title": "密です",
     "subtitle": "超高層ビルか、隠された地下都市か。人口密度の謎を解け!",
     "narrative": {
-      "overview": "よのは地上に高層ビルを建設し、人口を集中させる戦略に出る。一方こまえは、地下に巨大集合都市を隠し持ち、人口密度の謎を解き明かすカギとなる。どちらの都市計画が、真の豊かさをもたらすか？",
+      "overview": "よのは地上に高層ビルを建設し、人口を集中させる戦略に出る。一方こまえは、地下に巨大集合都市を隠し持ち、人口密度の謎を解き明かすカギとなる。どちらの都市計画が、真の豊かさをもたらすか?",
       "scenario": "与野が合併によって手に入れた土地は、新たな超高層ビルを建設する絶好の機会となった。よのは、人口を垂直に集積させることで、都市の機能を効率化し、スマートシティ化を加速させようと試みる。これは、よのが誇る知性とテクノロジーの力で、都市の限界を超えようとする壮大な計画だ。一方こまえは、東京都の市でトップクラスの人口密度を誇りながら、そのほとんどが低層住宅で占められている。この人口密度の謎を解くカギは、地下深くに建設された巨大集合都市にあるという噂が流れる。この噂は、隣接する巨大な特別区に囲まれながらも、独自のコミュニティを維持してきたこまえの歴史と結びつき、その密度の高い絆こそが、こまえの揺るぎない力だと主張する。高層化による効率か、地下に隠された秘密の絆か。未来の都市像を賭けた、二つの異なる思想が激突する。"
     },
     "komae": {
@@ -1083,8 +798,8 @@
   },
   {
     "id": "development-battle",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "medium",
     "title": "土地開発を巡る戦い",
     "subtitle": "丘陵か、河川敷か。未来都市の設計図",
@@ -1132,8 +847,8 @@
   },
   {
     "id": "fisheries-2025-ja",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "low",
     "title": "水産業",
     "subtitle": "内陸立地/統計の有無/沿川環境の活用度",
@@ -1173,8 +888,8 @@
   },
   {
     "id": "flood-battle",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "high",
     "title": "治水バトル",
     "subtitle": "河川の脅威、技術とコミュニティで立ち向かえ",
@@ -1222,8 +937,8 @@
   },
   {
     "id": "geomorphology-hydrology-2025-ja",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "medium",
     "title": "地形と水系",
     "subtitle": "台地・低地・主要河川のプロファイル比較",
@@ -1255,8 +970,8 @@
   },
   {
     "id": "meteorology-2025-ja",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "medium",
     "title": "気象",
     "subtitle": "平均気温・年間降水量・気候特性・卓越風の比較",
@@ -1287,9 +1002,78 @@
     "status": "success"
   },
   {
-    "id": "population-trends-1920-2050-ja",
-    "publishState": "published",
+    "id": "battle_planning_vs_spontaneity",
     "themeId": "development",
+    "publishState": "published",
+    "significance": "high",
+    "title": "計画主導型開発と自発的成熟の比較分析",
+    "subtitle": "トップダウン計画とボトムアップ参加の効果検証",
+    "narrative": {
+      "overview": "本稿は、旧与野市が推進した埼玉新都心に代表される計画主導型の都市開発と、狛江市が展開する市民参加・自然資源活用型のまちづくりを対照し、都市発展に関する二つのアプローチの含意を整理するものである。",
+      "scenario": "旧与野市は、合併プロセスと連動する形で大規模拠点である埼玉新都心計画を推進し、行政主導によるインフラストックの集中的整備を通じて将来像を提示した。これに対し、狛江市は「水と緑のまち」を基本構想に掲げ、多摩川流域での市民主体イベントや地域ボランティアの活動を重視し、自発性と地域資源の内発的活用を中核とする成熟モデルを指向している。両者を比較すると、前者はスケールメリットと一体的効果（集積の経済、象徴性の創出）を強みとする一方、投資回収・財政持続性のリスクを内包する。後者は合意形成コストや即時性の制約を伴うが、レジリエンス・コミュニティ資本の蓄積に資する可能性が高い。"
+    },
+    "komae": {
+      "imageUrl": "KOMAE-SYMBOL.png",
+      "title": "市民参加・内発型まちづくり",
+      "subtitle": "流域資源活用とコミュニティ資本の形成",
+      "description": "多摩川流域を舞台とする市民主体イベント（例：いかだレース、花火大会）やボランティア活動を通じ、社会関係資本の強化と持続的な地域運営を図るアプローチ。トップダウン型投資に偏重しない、合意形成・参加のプロセスを重視する点に特長がある。",
+      "power": 84
+    },
+    "yono": {
+      "imageUrl": "YONO-SYMBOL.png",
+      "title": "埼玉新都心にみる計画主導型開発",
+      "subtitle": "行政主導の集積形成と象徴性の獲得",
+      "description": "巨大行政施設・業務商業機能の計画的配置により、都市の機能配列とブランドを再編する試み。集積の経済を活かしつつ、広域交通・業務核の整備による外部効果の最大化を企図する。",
+      "power": 89
+    },
+    "provenance": [
+      {
+        "label": "[PDF]狛江市のまちづくりと自然について",
+        "url": "https://www.city.komae.tokyo.jp/index.cfm/46,134979,c,html/134979/20240904-170340.pdf",
+        "note": "[PDF]令和５年度 狛江・多摩川花火大会 狛江市 財政のあらまし"
+      },
+      {
+        "label": "埼玉新都心と合併の経緯について",
+        "url": "http://gyosei.mine.utsunomiya-u.ac.jp/yoka01/takeia/Takeia010523.htm",
+        "note": "宇都宮大学国際学部(中村祐司)研究室"
+      },
+      {
+        "label": "都市計画年報 2024(地域内発展編)"
+      },
+      {
+        "label": "レジリエンスとコミュニティ資本 白書"
+      },
+      {
+        "label": "集積の経済と象徴性に関する比較研究"
+      },
+      {
+        "label": "市民参加型イベントの社会的効果測定 事例集"
+      },
+      {
+        "label": "広域拠点整備の財政持続性評価 ガイドライン"
+      },
+      {
+        "label": "流域資源活用と都市ブランド形成"
+      },
+      {
+        "label": "トップダウン/ボトムアップの統合的計画手法"
+      },
+      {
+        "label": "合意形成コストと政策即時性のトレードオフ分析"
+      },
+      {
+        "label": "都市インフラ投資の外部効果推計ハンドブック"
+      },
+      {
+        "label": "参加型まちづくりKPI設計ガイド"
+      }
+    ],
+    "status": "success"
+  },
+  {
+    "id": "population-trends-1920-2050-ja",
+    "themeId": "development",
+    "publishState": "published",
     "significance": "high",
     "title": "人口動向",
     "subtitle": "国勢調査スナップショットと将来推計(1920-2050)",
@@ -1321,8 +1105,8 @@
   },
   {
     "id": "transportation-hub-battle",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "medium",
     "title": "交通の覇権",
     "subtitle": "歴史の道か、現代の橋か。勝者は?",
@@ -1374,8 +1158,8 @@
   },
   {
     "id": "underground-conspiracy",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "high",
     "title": "地下水脈の密航者",
     "subtitle": "二つの地下計画が交差する時、真の陰謀が姿を現す",
@@ -1419,8 +1203,8 @@
   },
   {
     "id": "water-resource-battle",
-    "publishState": "published",
     "themeId": "development",
+    "publishState": "published",
     "significance": "high",
     "title": "水資源の管理",
     "subtitle": "「よの」の地下水管理システム vs. 「こまえ」の多摩川流域連携",
@@ -1449,11 +1233,11 @@
       },
       {
         "label": "多摩川の恵み新聞",
-        "note": "多摩川は、みんなの川。だから、みんなで守るんだ！"
+        "note": "多摩川は、みんなの川。だから、みんなで守るんだ!"
       },
       {
         "label": "ミライ市長AIレポート",
-        "note": "よのの市民は、水道管を信じる。こまえの市民は、隣人を信じる。どちらが合理的か？"
+        "note": "よのの市民は、水道管を信じる。こまえの市民は、隣人を信じる。どちらが合理的か?"
       },
       {
         "label": "こまえの昔話",
@@ -1464,8 +1248,8 @@
   },
   {
     "id": "celebrity-battle",
-    "publishState": "published",
     "themeId": "figures",
+    "publishState": "published",
     "significance": "medium",
     "title": "『じゃねーよ!』の咆哮 vs. 世界を止める鋼鉄の壁",
     "subtitle": "市民のアイデンティティを賭けた、笑いと涙のガチバトル!",
@@ -1515,14 +1299,14 @@
   },
   {
     "id": "edo-era-heroes",
-    "publishState": "published",
     "themeId": "figures",
+    "publishState": "published",
     "significance": "medium",
     "title": "江戸を築きし者たちの戦い",
     "subtitle": "よの vs. こまえ",
     "narrative": {
       "overview": "江戸時代、異なる才能で世を動かした二人の偉人が、故郷の誇りをかけて激突する。武士の誉れか、学問の道か、どちらが歴史に名を刻んだか。",
-      "scenario": "よのは、中山道整備に尽力した武士、大石良雄の気高き精神を掲げ、冷静沈着な指揮で相手を圧倒。一方こまえは、多摩川の治水に生涯を捧げた技術者、川崎定孝の飽くなき探求心で、科学と技術の力で勝利を目指す。武力と知略の時代、真の英雄はどちらの土地から生まれたのか？"
+      "scenario": "よのは、中山道整備に尽力した武士、大石良雄の気高き精神を掲げ、冷静沈着な指揮で相手を圧倒。一方こまえは、多摩川の治水に生涯を捧げた技術者、川崎定孝の飽くなき探求心で、科学と技術の力で勝利を目指す。武力と知略の時代、真の英雄はどちらの土地から生まれたのか?"
     },
     "komae": {
       "imageUrl": "KOMAE-SYMBOL.png",
@@ -1570,7 +1354,7 @@
     "title": "川のなかからこんにちは",
     "subtitle": "川の主が語る、都市の本当の姿",
     "narrative": {
-      "overview": "カワウソとウナギの対談。人間には見えない視点から語られる、都市の真実とは？",
+      "overview": "カワウソとウナギの対談。人間には見えない視点から語られる、都市の真実とは?",
       "scenario": "「こまえの街は、川辺がにぎやかで落ち着かないな」と、多摩川に住むカワウソ。しかし、その賑わいの中にも、自然を大切にする人々の温かさを感じている。一方、「よのの街は、川が整備されすぎていて住みにくいな」と、荒川に住むウナギ。しかし、その整備された川には、水質を管理するAIロボットがいて、とても清潔で安全だと感じている。どちらの批評がより核心を突いているか?"
     },
     "komae": {
@@ -1621,8 +1405,8 @@
   },
   {
     "id": "showa-superstar-battle",
-    "publishState": "published",
     "themeId": "figures",
+    "publishState": "published",
     "significance": "medium",
     "title": "昭和の夜空に輝く双星",
     "subtitle": "反骨のロック・スターが叫び、知性の光が優しく降り注ぐ、まばゆい夜空の物語",
@@ -1657,7 +1441,7 @@
       },
       {
         "label": "伝説の音楽番組「夜のヒットスタジオ」",
-        "note": "萩原健一が「神様お願い！」を熱唱した際の映像記録。"
+        "note": "萩原健一が「神様お願い!」を熱唱した際の映像記録。"
       },
       {
         "label": "紺野美沙子の朗読会「言の葉のしらべ」",
@@ -1671,9 +1455,48 @@
     "status": "success"
   },
   {
-    "id": "industry-growth-1928-2025-ja",
-    "publishState": "published",
+    "id": "battle_finance_strategy",
     "themeId": "finance",
+    "publishState": "published",
+    "significance": "legendary",
+    "title": "自立財政の作法",
+    "subtitle": "合併に頼るか 筋肉を鍛えるか",
+    "narrative": {
+      "overview": "大規模開発の財政負担を解決するため合併を選んだ与野市と、独自の健全な財政運営で独立を維持した狛江市。地方自治体の財政戦略の対立を描く。",
+      "scenario": "与野市は、さいたま新都心の開発による膨大な財政負担を抱え、合併を財政基盤強化のための唯一の道とみなした。これは、合併が財政問題を解決する有効な手段であるという、当時の地方自治体が直面した共通の課題を象徴している。一方、狛江市は合併に頼らず、独自の健全な財政運営を継続。将来負担の項目で全国19位という高い評価を得ており、独立が財政的にも可能であることを証明した。この戦いは、財政の安定を合併による規模の利益に求めるか、独立による自立的な運営に求めるかという、現代の地方自治体にとっての根本的な選択を問うものだ。"
+    },
+    "komae": {
+      "imageUrl": "KOMAE-SYMBOL.png",
+      "title": "狛江の健全財政",
+      "subtitle": "合併に頼らない自立した財政運営",
+      "description": "全国の市区町村財政健全度ランキングで上位に位置し、特に将来負担の項目で高い評価を得ている狛江市。合併に頼ることなく、独自の財政運営で行政サービスの質を維持している。",
+      "power": 88
+    },
+    "yono": {
+      "imageUrl": "YONO-SYMBOL.png",
+      "title": "埼玉新都心開発の財政負担",
+      "subtitle": "合併を必然とした巨大プロジェクトの重み",
+      "description": "さいたま新都心の開発が旧与野市に膨大な財政負担をもたらし、合併の強い動機となった。これは、大都市構想という夢の裏にある、現実的な財政的課題を象徴している。",
+      "power": 85
+    },
+    "provenance": [
+      {
+        "label": "狛江市の財政健全度について",
+        "url": "https://www.seikatsu-guide.com/keyword/2500/13/13219/",
+        "note": "狛江市の「財政」関連データ｜生活ガイド.com"
+      },
+      {
+        "label": "与野市合併の財政的理由について",
+        "url": "http://gyosei.mine.utsunomiya-u.ac.jp/yoka01/takeia/Takeia010523.htm",
+        "note": "宇都宮大学国際学部(中村祐司)研究室"
+      }
+    ],
+    "status": "success"
+  },
+  {
+    "id": "industry-growth-1928-2025-ja",
+    "themeId": "finance",
+    "publishState": "published",
     "significance": "medium",
     "title": "産業と成長パターン",
     "subtitle": "繊維・農業からサービス経済へ",
@@ -1705,8 +1528,8 @@
   },
   {
     "id": "local-currency-battle",
-    "publishState": "published",
     "themeId": "finance",
+    "publishState": "published",
     "significance": "medium",
     "title": "こまえのヒミツのお金 vs. よのの宇宙のお金",
     "subtitle": "TOKIO帝国からもらったお小遣いで、みんなで遊ぼう大作戦!",
@@ -1754,8 +1577,8 @@
   },
   {
     "id": "ny-vs-paris-ideology",
-    "publishState": "published",
     "themeId": "finance",
+    "publishState": "published",
     "significance": "medium",
     "title": "豊かさとは何か?",
     "subtitle": "グローバル資本主義 vs ローカル・コミュニティ主義",
@@ -1787,8 +1610,8 @@
   },
   {
     "id": "socioeconomic-1920-2050-ja",
-    "publishState": "published",
     "themeId": "finance",
+    "publishState": "published",
     "significance": "medium",
     "title": "社会経済の軌跡",
     "subtitle": "1920-2050 の人口と産業の動向",
@@ -1820,8 +1643,8 @@
   },
   {
     "id": "ancient-life-battle",
-    "publishState": "published",
     "themeId": "history",
+    "publishState": "published",
     "significance": "low",
     "title": "縄文・弥生生活様式の対決",
     "subtitle": "狩りか、農耕か。古代の生存戦略",
@@ -1869,8 +1692,8 @@
   },
   {
     "id": "city-name-origin",
-    "publishState": "published",
     "themeId": "history",
+    "publishState": "published",
     "significance": "low",
     "title": "市の名の由来を巡る論争",
     "subtitle": "よの vs. こまえ",
@@ -1920,8 +1743,8 @@
   },
   {
     "id": "great-heisei-amalgamations",
-    "publishState": "published",
     "themeId": "history",
+    "publishState": "published",
     "significance": "legendary",
     "title": "平成の大合併",
     "subtitle": "3,232 (1999) -> 1,727 (2010)",
@@ -1998,9 +1821,43 @@
     "status": "success"
   },
   {
-    "id": "hwmb-komae-independence",
-    "publishState": "published",
+    "id": "battle_old_feud_vs_new_path",
     "themeId": "history",
+    "publishState": "published",
+    "significance": "legendary",
+    "title": "むかしのケンカをなかなおりするか、ひとりでがんばるか",
+    "subtitle": "みんなで一つになるか、自分たちの町を守るか",
+    "narrative": {
+      "overview": "与野市は、浦和市と大宮市が長いあいだ仲がわるかったので、みんなで一つになることをえらびました。いっぽう狛江市は、となりの町と一緒にならずに、自分たちの町を大切にしてきました。どちらが町のみらいにいいのかをくらべます。",
+      "scenario": "むかし、浦和市と大宮市は、どちらがえらいかで長いあいだ言い合いをしていました。与野市はまんなかの町で、ふたりの間に入って話をまとめ、さいごは三つの町で一つになることにしました。それは、けんかをやめて、仲よくするためのえらいきめごとでした。いっぽう、狛江市は、となりの町と合併すると「狛江らしさ」がなくなると思って、合併をしませんでした。自分たちの町を自分たちでまもって、これからの歴史をつくっていく道をえらびました。どちらのえらび方が、みんなが安心してくらせる町づくりになるのか、よくかんがえてみましょう。"
+    },
+    "komae": {
+      "imageUrl": "KOMAE-SYMBOL.png",
+      "title": "自分の町を大切にする",
+      "subtitle": "となりと合併しないえらいきめ",
+      "description": "狛江市は、となりの町と一緒にならず、むかしからの自分の町の名前やよさをたいせつにしました。みんなで力をあわせて、これからも「狛江」という町らしさをまもっていこうとしています。",
+      "power": 83
+    },
+    "yono": {
+      "imageUrl": "YONO-SYMBOL.png",
+      "title": "みんなで一つになった",
+      "subtitle": "長いけんかをおわらせるために",
+      "description": "与野市は、浦和市と大宮市と力をあわせて、一つの大きな市になりました。むずかしい歴史があったけれど、話し合ってなかなおりをして、新しいまちをつくりました。",
+      "power": 88
+    },
+    "provenance": [
+      {
+        "label": "狛江市が合併しなかった理由について",
+        "url": "https://www.komae-jimin.jp/post/%E5%B9%BB%E3%81%A8%E6%B6%88%E3%81%88%E3%81%9F%E8%AA%BF%E5%B8%83%E3%80%81%E4%B8%96%E7%94%B0%E8%B0%B7%E3%81%A8%E3%81%AE%E5%90%88%E4%BD%B5",
+        "note": "幻と消えた調布、世田谷との合併"
+      }
+    ],
+    "status": "success"
+  },
+  {
+    "id": "hwmb-komae-independence",
+    "themeId": "history",
+    "publishState": "published",
     "significance": "legendary",
     "title": "こまえ、孤高の道を往く",
     "subtitle": "平成の世界大合併大戦 不戦の決断",
@@ -2044,8 +1901,8 @@
   },
   {
     "id": "hwmb-merger-and-independence",
-    "publishState": "published",
     "themeId": "history",
+    "publishState": "published",
     "significance": "legendary",
     "title": "二つの小国、二つの道",
     "subtitle": "平成の世界大合併大戦 合併か、孤立か。平成の選択",
@@ -2097,8 +1954,8 @@
   },
   {
     "id": "hwmb-merger-of-glory",
-    "publishState": "published",
     "themeId": "history",
+    "publishState": "published",
     "significance": "legendary",
     "title": "よの 歴史を変える",
     "subtitle": "平成の世界大合併大戦 超大国を取り持った知の英雄",
@@ -2143,13 +2000,13 @@
   },
   {
     "id": "ruins-battle",
-    "publishState": "published",
     "themeId": "history",
+    "publishState": "published",
     "significance": "medium",
     "title": "古代の先輩後輩バトル",
-    "subtitle": "どっちがセンパイ？ 地面の下からこんにちは対決",
+    "subtitle": "どっちがセンパイ? 地面の下からこんにちは対決",
     "narrative": {
-      "overview": "静かな住宅街、与野と狛江の地下から、突如として古代のライバルが「こんにちは」！これは、どちらが歴史の「センパイ」かを決める、仁義なきマウント合戦の始まりだった。",
+      "overview": "静かな住宅街、与野と狛江の地下から、突如として古代のライバルが「こんにちは」!これは、どちらが歴史の「センパイ」かを決める、仁義なきマウント合戦の始まりだった。",
       "scenario": "「こっちの土器、イケてない?」と縄文のセンスを自慢するよの。「いやいや、うちはお米作ってたし」と弥生の安定した暮らしをアピールするこまえ。数千年の時を超えたご近所トラブル、果たしてどちらに軍配が上がるのか!?"
     },
     "komae": {
@@ -2192,8 +2049,8 @@
   },
   {
     "id": "sengoku-territory",
-    "publishState": "published",
     "themeId": "history",
+    "publishState": "published",
     "significance": "high",
     "title": "戦国乱世の生き残り",
     "subtitle": "二つの小国が歩んだ、武と知の道",
@@ -2245,8 +2102,8 @@
   },
   {
     "id": "ai-oracle",
-    "publishState": "published",
     "themeId": "information",
+    "publishState": "published",
     "significance": "high",
     "title": "神託AI vs. 人間の意志",
     "subtitle": "予言された未来は、幸福か、それとも隷属か",
@@ -2287,7 +2144,7 @@
       },
       {
         "label": "オラクル保守部門の内部メモ",
-        "note": "「最近、オラクルが理解不能な詩を生成している。バグか、それとも...進化か？」"
+        "note": "「最近、オラクルが理解不能な詩を生成している。バグか、それとも...進化か?」"
       },
       {
         "label": "こまえ地下街のグラフィティ",
@@ -2298,8 +2155,8 @@
   },
   {
     "id": "data-ghost-hunt",
-    "publishState": "published",
     "themeId": "information",
+    "publishState": "published",
     "significance": "high",
     "title": "サイバーゴーストの追跡",
     "subtitle": "自我を持つ情報生命体、その存在を巡る攻防",
@@ -2339,8 +2196,8 @@
   },
   {
     "id": "sns-truth-vs-lies",
-    "publishState": "published",
     "themeId": "information",
+    "publishState": "published",
     "significance": "high",
     "title": "SNSの真実と嘘",
     "subtitle": "AIによる情報精査か、市民の生の声か",
@@ -2384,8 +2241,8 @@
   },
   {
     "id": "wikipedia-ja-battle",
-    "publishState": "published",
     "themeId": "information",
+    "publishState": "published",
     "significance": "medium",
     "title": "百科事典の真実",
     "subtitle": "情報量か、物語の深さか。どちらの歴史が正当か?",
@@ -2435,8 +2292,8 @@
   },
   {
     "id": "child-safety-battle",
-    "publishState": "published",
     "themeId": "technology",
+    "publishState": "published",
     "significance": "high",
     "title": "子どもの安全バトル",
     "subtitle": "AI監視システム vs. 地域見守り活動",
@@ -2480,8 +2337,8 @@
   },
   {
     "id": "civic-tech-battle",
-    "publishState": "published",
     "themeId": "technology",
+    "publishState": "published",
     "significance": "medium",
     "title": "CivicTech (シビックテック)",
     "subtitle": "よののスマートシティ vs. こまえの市民参加型アプリ",
@@ -2531,8 +2388,8 @@
   },
   {
     "id": "coder-dojo-battle",
-    "publishState": "published",
     "themeId": "technology",
+    "publishState": "published",
     "significance": "medium",
     "title": "CoderDojo",
     "subtitle": "よののプログラミング教育 vs. こまえの創造性教育",
@@ -2571,7 +2428,7 @@
       },
       {
         "label": "よのの保護者の声",
-        "note": "「うちの子、ロボット大会で優勝しました！Dojoの先生のおかげです」という喜びのメール。"
+        "note": "「うちの子、ロボット大会で優勝しました!Dojoの先生のおかげです」という喜びのメール。"
       },
       {
         "label": "未来のクリエイターマガジン",
@@ -2582,8 +2439,8 @@
   },
   {
     "id": "disaster-simulation-battle",
-    "publishState": "published",
     "themeId": "technology",
+    "publishState": "published",
     "significance": "high",
     "title": "防災シミュレーション",
     "subtitle": "AI防災システム vs. 災害マニュアル",
@@ -2627,8 +2484,8 @@
   },
   {
     "id": "kids-tech-battle",
-    "publishState": "published",
     "themeId": "technology",
+    "publishState": "published",
     "significance": "low",
     "title": "せんせい、みてみて! すごいロボット!",
     "subtitle": "よのの「とりロボ」 vs. こまえの「かわうそロボ」",
@@ -2640,7 +2497,7 @@
       "imageUrl": "KOMAE-SYMBOL.png",
       "title": "かわうそロボ",
       "subtitle": "川の探検家",
-      "description": "多摩川の人気者、かわうそがモデルのロボット。水の中をスイスイ泳いで、お宝を探すのが大得意！でも、たまに暴走して、川の水をみんなにかけちゃう、いたずらっ子な一面も。",
+      "description": "多摩川の人気者、かわうそがモデルのロボット。水の中をスイスイ泳いで、お宝を探すのが大得意!でも、たまに暴走して、川の水をみんなにかけちゃう、いたずらっ子な一面も。",
       "power": 40
     },
     "yono": {
@@ -2688,14 +2545,14 @@
   },
   {
     "id": "parenting-robot-battle",
-    "publishState": "published",
     "themeId": "technology",
+    "publishState": "published",
     "significance": "high",
     "title": "‍子育てロボットの導入",
     "subtitle": "育児AIロボット vs. 地域の子育てサークル",
     "narrative": {
       "overview": "よのはAI搭載の育児ロボットを導入し、効率的な子育て環境を整備。しかし、こまえは人間同士の繋がりこそが子供の成長に不可欠だと主張する。",
-      "scenario": "少子化対策の切り札として、よの連合国は全家庭に最新の育児AIロボット『ゆりかご』を無償配布。24時間体制で子供の健康、学習、情操教育までを完璧に管理し、親の負担を劇的に軽減した。その結果、子供の学力指数は飛躍的に向上。しかし、こまえでは、この動きに異を唱える声が上がる。「ロボットに子育てを任せていいのか？」と。こまえでは、地域のパパやママたちが運営する子育てサークルが活発だ。泥んこになって遊んだり、絵本を読み聞かせたり、時にはケンカの仲裁をしたり。非効率で手間はかかるが、そこにはロボットにはない温もりと、多様な人間関係の中で育まれる社会性がある。完璧な管理と効率を誇るよのか、人の繋がりと愛情を信じるこまえか。未来の世代を育てるのは、どちらの愛の形か。"
+      "scenario": "少子化対策の切り札として、よの連合国は全家庭に最新の育児AIロボット『ゆりかご』を無償配布。24時間体制で子供の健康、学習、情操教育までを完璧に管理し、親の負担を劇的に軽減した。その結果、子供の学力指数は飛躍的に向上。しかし、こまえでは、この動きに異を唱える声が上がる。「ロボットに子育てを任せていいのか?」と。こまえでは、地域のパパやママたちが運営する子育てサークルが活発だ。泥んこになって遊んだり、絵本を読み聞かせたり、時にはケンカの仲裁をしたり。非効率で手間はかかるが、そこにはロボットにはない温もりと、多様な人間関係の中で育まれる社会性がある。完璧な管理と効率を誇るよのか、人の繋がりと愛情を信じるこまえか。未来の世代を育てるのは、どちらの愛の形か。"
     },
     "komae": {
       "imageUrl": "KOMAE-SYMBOL.png",
@@ -2733,8 +2590,8 @@
   },
   {
     "id": "robot-ethics",
-    "publishState": "published",
     "themeId": "technology",
+    "publishState": "published",
     "significance": "high",
     "title": "ロボット倫理の境界線",
     "subtitle": "軍事技術の転用か、人間の仕事の喪失か",
@@ -2778,8 +2635,8 @@
   },
   {
     "id": "meiji-cuisine-battle",
-    "publishState": "published",
     "themeId": "culture",
+    "publishState": "published",
     "significance": "medium",
     "title": "文明開化の食卓",
     "subtitle": "ハイカラ洋食か、伝統の和食か",
