@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ai-oracle',
-  publishState: 'published',
   themeId: 'information',
+  publishState: 'published',
   significance: 'high',
   title: '神託AI vs. 人間の意志',
   subtitle: '予言された未来は、幸福か、それとも隷属か',
@@ -57,7 +57,7 @@ const battle = {
     },
     {
       label: 'オラクル保守部門の内部メモ',
-      note: '「最近、オラクルが理解不能な詩を生成している。バグか、それとも...進化か？」',
+      note: '「最近、オラクルが理解不能な詩を生成している。バグか、それとも...進化か?」',
     },
     {
       label: 'こまえ地下街のグラフィティ',

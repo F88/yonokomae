@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'kids-tech-battle',
-  publishState: 'published',
   themeId: 'technology',
+  publishState: 'published',
   significance: 'low',
   title: 'せんせい、みてみて! すごいロボット!',
   subtitle: 'よのの「とりロボ」 vs. こまえの「かわうそロボ」',
@@ -26,7 +26,7 @@ const battle = {
     subtitle: '川の探検家',
     description:
       '多摩川の人気者、かわうそがモデルのロボット。' +
-      '水の中をスイスイ泳いで、お宝を探すのが大得意！' +
+      '水の中をスイスイ泳いで、お宝を探すのが大得意!' +
       'でも、たまに暴走して、川の水をみんなにかけちゃう、いたずらっ子な一面も。',
     power: 40,
   },

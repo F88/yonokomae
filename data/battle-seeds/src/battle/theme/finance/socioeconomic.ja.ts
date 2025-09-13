@@ -1,10 +1,9 @@
 import type { Battle } from '@yonokomae/types';
 
-// Yono vs Komae: socio-economic trajectories (Japanese version)
 const battle = {
   id: 'socioeconomic-1920-2050-ja',
-  publishState: 'published',
   themeId: 'finance',
+  publishState: 'published',
   significance: 'medium',
   title: '社会経済の軌跡',
   subtitle: '1920-2050 の人口と産業の動向',

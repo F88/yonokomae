@@ -1,10 +1,9 @@
 import type { Battle } from '@yonokomae/types';
 
-// Yono (former Yono-shi; present Saitama-shi Chuo-ku core) vs Komae: adjacent municipalities comparison (Japanese)
 const battle = {
   id: 'hwmb-merger-and-independence',
-  publishState: 'published',
   themeId: 'history',
+  publishState: 'published',
   significance: 'legendary',
   title: '二つの小国、二つの道',
   subtitle: '平成の世界大合併大戦 合併か、孤立か。平成の選択',

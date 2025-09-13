@@ -1,10 +1,9 @@
 import type { Battle } from '@yonokomae/types';
 
-// Yono (Saitama-shi Chuo-ku) vs Komae: agriculture comparison (Japanese)
 const battle = {
   id: 'agriculture-2025-ja',
-  publishState: 'published',
   themeId: 'development',
+  publishState: 'published',
   significance: 'low',
   title: '農業',
   subtitle: '歴史・現況・農地面積・政策の比較',
@@ -48,7 +47,7 @@ const battle = {
     },
     {
       label: 'こまえの農産物直売所',
-      note: '「今朝採れたての枝豆だよ！」という農家さんの声が響く。',
+      note: '「今朝採れたての枝豆だよ!」という農家さんの声が響く。',
     },
     {
       label: 'よのの市民農園の利用規約',

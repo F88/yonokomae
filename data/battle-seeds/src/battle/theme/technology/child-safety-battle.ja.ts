@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'child-safety-battle',
-  publishState: 'published',
   themeId: 'technology',
+  publishState: 'published',
   significance: 'high',
   title: '子どもの安全バトル',
   subtitle: 'AI監視システム vs. 地域見守り活動',

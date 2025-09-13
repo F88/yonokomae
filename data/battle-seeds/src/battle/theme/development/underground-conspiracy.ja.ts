@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'underground-conspiracy',
-  publishState: 'published',
   themeId: 'development',
+  publishState: 'published',
   significance: 'high',
   title: '地下水脈の密航者',
   subtitle: '二つの地下計画が交差する時、真の陰謀が姿を現す',

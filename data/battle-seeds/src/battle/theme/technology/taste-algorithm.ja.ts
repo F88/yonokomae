@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'meiji-cuisine-battle',
-  publishState: 'published',
   themeId: 'culture',
+  publishState: 'published',
   significance: 'medium',
   title: '文明開化の食卓',
   subtitle: 'ハイカラ洋食か、伝統の和食か',

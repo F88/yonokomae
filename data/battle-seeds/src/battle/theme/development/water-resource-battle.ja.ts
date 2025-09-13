@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'water-resource-battle',
-  publishState: 'published',
   themeId: 'development',
+  publishState: 'published',
   significance: 'high',
   title: '水資源の管理',
   subtitle: '「よの」の地下水管理システム vs. 「こまえ」の多摩川流域連携',
@@ -48,11 +48,11 @@ const battle = {
     },
     {
       label: '多摩川の恵み新聞',
-      note: '多摩川は、みんなの川。だから、みんなで守るんだ！',
+      note: '多摩川は、みんなの川。だから、みんなで守るんだ!',
     },
     {
       label: 'ミライ市長AIレポート',
-      note: 'よのの市民は、水道管を信じる。こまえの市民は、隣人を信じる。どちらが合理的か？',
+      note: 'よのの市民は、水道管を信じる。こまえの市民は、隣人を信じる。どちらが合理的か?',
     },
     {
       label: 'こまえの昔話',

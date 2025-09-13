@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'wikipedia-ja-battle',
-  publishState: 'published',
   themeId: 'information',
+  publishState: 'published',
   significance: 'medium',
   title: '百科事典の真実',
   subtitle: '情報量か、物語の深さか。どちらの歴史が正当か?',

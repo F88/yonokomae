@@ -2,11 +2,11 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'culture-battle',
-  publishState: 'published',
   themeId: 'culture',
+  publishState: 'published',
   significance: 'medium',
   title: '文化の創造と継承',
-  subtitle: 'メトロポリタン・アートか、草の根の祭りか。文化の覇者は？',
+  subtitle: 'メトロポリタン・アートか、草の根の祭りか。文化の覇者は?',
   narrative: {
     overview:
       'よのは、最先端の芸術を招致し、こまえは、失われつつある伝統の祭りを復活させる。' +
@@ -51,7 +51,7 @@ const battle = {
     },
     {
       label: 'こまえお祭り実行委員会の議事録',
-      note: '「予算はないが、情熱はある！」という委員長の発言が記録されている。',
+      note: '「予算はないが、情熱はある!」という委員長の発言が記録されている。',
     },
     {
       label: 'SNSでの市民の声',

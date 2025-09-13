@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ancient-oracle-battle',
-  publishState: 'published',
   themeId: 'culture',
+  publishState: 'published',
   significance: 'medium',
   title: '古代の神託対決',
   subtitle: '星の運行か、大地の恵みか',

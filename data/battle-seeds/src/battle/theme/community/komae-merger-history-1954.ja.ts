@@ -20,7 +20,7 @@ const battle = {
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
     title: '2025年の市民のため息',
-    subtitle: '「その日、印が主役ってマジ？」',
+    subtitle: '「その日、印が主役ってマジ?」',
     description:
       '合併も編入も単独も——難しい議論なのはわかる。でもさ、臨時会の前夜に“公印がない”で全部止まるって、' +
       '2025年のわたしからすると、もはや歴史の珍事を越えてネタ。書類はある、印はない、決断は保留。' +

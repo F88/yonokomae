@@ -1,10 +1,9 @@
 import type { Battle } from '@yonokomae/types';
 
-// Yono (Saitama-shi Chuo-ku) vs Komae: geomorphology and hydrology comparison (Japanese)
 const battle = {
   id: 'geomorphology-hydrology-2025-ja',
-  publishState: 'published',
   themeId: 'development',
+  publishState: 'published',
   significance: 'medium',
   title: '地形と水系',
   subtitle: '台地・低地・主要河川のプロファイル比較',

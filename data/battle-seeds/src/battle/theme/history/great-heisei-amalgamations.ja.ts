@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'great-heisei-amalgamations',
-  publishState: 'published',
   themeId: 'history',
+  publishState: 'published',
   significance: 'legendary',
   title: '平成の大合併',
   subtitle: '3,232 (1999) -> 1,727 (2010)',

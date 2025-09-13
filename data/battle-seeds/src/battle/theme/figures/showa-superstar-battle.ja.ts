@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'showa-superstar-battle',
-  publishState: 'published',
   themeId: 'figures',
+  publishState: 'published',
   significance: 'medium',
   title: '昭和の夜空に輝く双星',
   subtitle:
@@ -53,7 +53,7 @@ const battle = {
     },
     {
       label: '伝説の音楽番組「夜のヒットスタジオ」',
-      note: '萩原健一が「神様お願い！」を熱唱した際の映像記録。',
+      note: '萩原健一が「神様お願い!」を熱唱した際の映像記録。',
     },
     {
       label: '紺野美沙子の朗読会「言の葉のしらべ」',

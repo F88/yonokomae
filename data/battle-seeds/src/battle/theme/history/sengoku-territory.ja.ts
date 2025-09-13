@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'sengoku-territory',
-  publishState: 'published',
   themeId: 'history',
+  publishState: 'published',
   significance: 'high',
   title: '戦国乱世の生き残り',
   subtitle: '二つの小国が歩んだ、武と知の道',

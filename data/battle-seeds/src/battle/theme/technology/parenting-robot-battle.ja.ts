@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'parenting-robot-battle',
-  publishState: 'published',
   themeId: 'technology',
+  publishState: 'published',
   significance: 'high',
   title: '‍子育てロボットの導入',
   subtitle: '育児AIロボット vs. 地域の子育てサークル',
@@ -16,8 +16,7 @@ const battle = {
       '24時間体制で子供の健康、学習、情操教育までを完璧に管理し、親の負担を劇的に軽減した。' +
       'その結果、子供の学力指数は飛躍的に向上。' +
       'しかし、こまえでは、この動きに異を唱える声が上がる。' +
-      '「ロボットに子育てを任せていいのか？' +
-      '」と。' +
+      '「ロボットに子育てを任せていいのか?」と。' +
       'こまえでは、地域のパパやママたちが運営する子育てサークルが活発だ。' +
       '泥んこになって遊んだり、絵本を読み聞かせたり、時にはケンカの仲裁をしたり。' +
       '非効率で手間はかかるが、そこにはロボットにはない温もりと、多様な人間関係の中で育まれる社会性がある。' +

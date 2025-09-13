@@ -2,21 +2,20 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ruins-battle',
-  publishState: 'published',
   themeId: 'history',
+  publishState: 'published',
   significance: 'medium',
   title: '古代の先輩後輩バトル',
-  subtitle: 'どっちがセンパイ？ 地面の下からこんにちは対決',
+  subtitle: 'どっちがセンパイ? 地面の下からこんにちは対決',
   narrative: {
     overview:
-      '静かな住宅街、与野と狛江の地下から、突如として古代のライバルが「こんにちは」！' +
+      '静かな住宅街、与野と狛江の地下から、突如として古代のライバルが「こんにちは」!' +
       'これは、どちらが歴史の「センパイ」かを決める、仁義なきマウント合戦の始まりだった。',
     scenario:
       '「こっちの土器、イケてない?' +
       '」と縄文のセンスを自慢するよの。' +
       '「いやいや、うちはお米作ってたし」と弥生の安定した暮らしをアピールするこまえ。' +
-      '数千年の時を超えたご近所トラブル、果たしてどちらに軍配が上がるのか!' +
-      '?',
+      '数千年の時を超えたご近所トラブル、果たしてどちらに軍配が上がるのか!?',
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,

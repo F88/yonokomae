@@ -1,10 +1,9 @@
 import type { Battle } from '@yonokomae/types';
 
-// Yono (Saitama-shi Chuo-ku) vs Komae: fisheries comparison (Japanese)
 const battle = {
   id: 'fisheries-2025-ja',
-  publishState: 'published',
   themeId: 'development',
+  publishState: 'published',
   significance: 'low',
   title: '水産業',
   subtitle: '内陸立地/統計の有無/沿川環境の活用度',

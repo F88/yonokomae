@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'edo-era-heroes',
-  publishState: 'published',
   themeId: 'figures',
+  publishState: 'published',
   significance: 'medium',
   title: '江戸を築きし者たちの戦い',
   subtitle: 'よの vs. こまえ',
@@ -14,7 +14,7 @@ const battle = {
     scenario:
       'よのは、中山道整備に尽力した武士、大石良雄の気高き精神を掲げ、冷静沈着な指揮で相手を圧倒。' +
       '一方こまえは、多摩川の治水に生涯を捧げた技術者、川崎定孝の飽くなき探求心で、科学と技術の力で勝利を目指す。' +
-      '武力と知略の時代、真の英雄はどちらの土地から生まれたのか？',
+      '武力と知略の時代、真の英雄はどちらの土地から生まれたのか?',
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,

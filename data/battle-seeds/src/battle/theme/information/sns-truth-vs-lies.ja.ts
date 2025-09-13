@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'sns-truth-vs-lies',
-  publishState: 'published',
   themeId: 'information',
+  publishState: 'published',
   significance: 'high',
   title: 'SNSの真実と嘘',
   subtitle: 'AIによる情報精査か、市民の生の声か',

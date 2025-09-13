@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'coder-dojo-battle',
-  publishState: 'published',
   themeId: 'technology',
+  publishState: 'published',
   significance: 'medium',
   title: 'CoderDojo',
   subtitle: 'よののプログラミング教育 vs. こまえの創造性教育',
@@ -56,7 +56,7 @@ const battle = {
     },
     {
       label: 'よのの保護者の声',
-      note: '「うちの子、ロボット大会で優勝しました！Dojoの先生のおかげです」という喜びのメール。',
+      note: '「うちの子、ロボット大会で優勝しました!Dojoの先生のおかげです」という喜びのメール。',
     },
     {
       label: '未来のクリエイターマガジン',

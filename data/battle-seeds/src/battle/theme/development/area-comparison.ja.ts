@@ -1,10 +1,9 @@
 import type { Battle } from '@yonokomae/types';
 
-// Yono (Saitama-shi Chuo-ku) vs Komae: area size comparison (Japanese)
 const battle = {
   id: 'area-comparison-geo-2025-ja',
-  publishState: 'published',
   themeId: 'development',
+  publishState: 'published',
   significance: 'low',
   title: '面積',
   subtitle: 'よのとこまえの地理的スケール',

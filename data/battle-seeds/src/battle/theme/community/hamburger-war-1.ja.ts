@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'hamburger-war-1',
-  publishState: 'published',
   themeId: 'culture',
+  publishState: 'published',
   significance: 'medium',
   title: 'バーガー・ショーダウン! YUMは万国共通!',
   subtitle: 'スピード&サイズ vs. グランマのラブ',

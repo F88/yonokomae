@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ny-vs-paris-ideology',
-  publishState: 'published',
   themeId: 'finance',
+  publishState: 'published',
   significance: 'medium',
   title: '豊かさとは何か?',
   subtitle: 'グローバル資本主義 vs ローカル・コミュニティ主義',

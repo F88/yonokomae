@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ikada-race',
-  publishState: 'published',
   themeId: 'community',
+  publishState: 'published',
   significance: 'medium',
   title: '大河川の恵み',
   subtitle: 'よのの羨望と、こまえのプライド。多摩川を巡る戦い',
@@ -49,7 +49,7 @@ const battle = {
     },
     {
       label: 'こまえいかだレース参加チーム「多摩川魂」のブログ',
-      note: '「今年もゴール後のビールがうまい！来年こそ優勝！」',
+      note: '「今年もゴール後のビールがうまい!来年こそ優勝!」',
     },
     {
       label: 'よの市議会定例会',

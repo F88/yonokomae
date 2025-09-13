@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'local-currency-battle',
-  publishState: 'published',
   themeId: 'finance',
+  publishState: 'published',
   significance: 'medium',
   title: 'こまえのヒミツのお金 vs. よのの宇宙のお金',
   subtitle: 'TOKIO帝国からもらったお小遣いで、みんなで遊ぼう大作戦!',

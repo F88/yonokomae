@@ -1,10 +1,9 @@
 import type { Battle } from '@yonokomae/types';
 
-// Yono vs Komae: industry and growth (Japanese version)
 const battle = {
   id: 'industry-growth-1928-2025-ja',
-  publishState: 'published',
   themeId: 'finance',
+  publishState: 'published',
   significance: 'medium',
   title: '産業と成長パターン',
   subtitle: '繊維・農業からサービス経済へ',

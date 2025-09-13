@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'celebrity-battle',
-  publishState: 'published',
   themeId: 'figures',
+  publishState: 'published',
   significance: 'medium',
   title: '『じゃねーよ!』の咆哮 vs. 世界を止める鋼鉄の壁',
   subtitle: '市民のアイデンティティを賭けた、笑いと涙のガチバトル!',

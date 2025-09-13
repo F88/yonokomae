@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_population_dynamics',
-  publishState: 'published',
   themeId: 'community',
+  publishState: 'published',
   significance: 'medium',
   title: '百万都市の風 懐の狭間の粋',
   subtitle: '集めて強しか、詰めて濃しか',

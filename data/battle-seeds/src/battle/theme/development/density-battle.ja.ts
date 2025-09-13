@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'density-battle',
-  publishState: 'published',
   themeId: 'development',
+  publishState: 'published',
   significance: 'medium',
   title: '密です',
   subtitle: '超高層ビルか、隠された地下都市か。人口密度の謎を解け!',
@@ -11,7 +11,7 @@ const battle = {
     overview:
       'よのは地上に高層ビルを建設し、人口を集中させる戦略に出る。' +
       '一方こまえは、地下に巨大集合都市を隠し持ち、人口密度の謎を解き明かすカギとなる。' +
-      'どちらの都市計画が、真の豊かさをもたらすか？',
+      'どちらの都市計画が、真の豊かさをもたらすか?',
     scenario:
       '与野が合併によって手に入れた土地は、新たな超高層ビルを建設する絶好の機会となった。' +
       'よのは、人口を垂直に集積させることで、都市の機能を効率化し、スマートシティ化を加速させようと試みる。' +

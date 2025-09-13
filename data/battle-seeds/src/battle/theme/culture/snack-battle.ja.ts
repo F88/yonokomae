@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'snack-battle',
-  publishState: 'published',
   themeId: 'culture',
+  publishState: 'published',
   significance: 'low',
   title: 'おかしなだいせんそう',
   subtitle: 'どっちのおかしが いちばんかな?',
@@ -31,7 +31,7 @@ const battle = {
     subtitle: 'めざせみずきりマスター!',
     description:
       'たまがわの いしみたいだけど、チョコだよ。' +
-      'たべると ちからがモリモリわいて、ジャングルジムの てっぺんまで のぼれちゃう！' +
+      'たべると ちからがモリモリわいて、ジャングルジムの てっぺんまで のぼれちゃう!' +
       'みんなで たべると、もっと なかよしに なれるんだ。',
     power: 30,
   },

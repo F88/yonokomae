@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'civic-tech-battle',
-  publishState: 'published',
   themeId: 'technology',
+  publishState: 'published',
   significance: 'medium',
   title: 'CivicTech (シビックテック)',
   subtitle: 'よののスマートシティ vs. こまえの市民参加型アプリ',
