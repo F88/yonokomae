@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_commuter_destination',
-  publishState: 'review',
   themeId: 'community',
+  publishState: 'published',
   significance: 'medium',
   title: '通勤',
   subtitle: 'ベッドタウンの利便性 職住近接の理想',

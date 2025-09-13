@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_planning_vs_spontaneity',
-  publishState: 'review',
   themeId: 'development',
+  publishState: 'published',
   significance: 'high',
   title: '計画主導型開発と自発的成熟の比較分析',
   subtitle: 'トップダウン計画とボトムアップ参加の効果検証',

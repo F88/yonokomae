@@ -2,9 +2,9 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_old_feud_vs_new_path',
-  publishState: 'review',
   themeId: 'history',
-  significance: 'medium',
+  publishState: 'published',
+  significance: 'legendary',
   title: 'むかしのケンカをなかなおりするか、ひとりでがんばるか',
   subtitle: 'みんなで一つになるか、自分たちの町を守るか',
   narrative: {

@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_finance_strategy',
-  publishState: 'review',
   themeId: 'finance',
+  publishState: 'published',
   significance: 'legendary',
   title: '自立財政の作法',
   subtitle: '合併に頼るか 筋肉を鍛えるか',
