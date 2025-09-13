@@ -2,17 +2,15 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_service_optimization',
-  publishState: 'draft',
   themeId: 'community',
+  publishState: 'review',
   significance: 'medium',
   title: '個別最適化 vs. 全体最適化のバトル',
   subtitle: '市民一人ひとりへの配慮か、広域への効率化か',
   narrative: {
     overview:
-      '与野市が合併によって追求した、' +
-      '広域行政による効率的で統一的なサービスと、' +
-      '狛江市が独立によって維持した、' +
-      '市民に寄り添うきめ細やかな行政サービスが対決する。',
+      '与野市が合併によって追求した、広域行政による効率的で統一的なサービスと、' +
+      '狛江市が独立によって維持した、市民に寄り添うきめ細やかな行政サービス。',
     scenario:
       '政令指定都市となったさいたま市は、市内各所に区役所や市民の窓口を多数設置し、住民票や証明書の発行といった広域的な行政サービスを効率的に提供している。' +
       'これは、多くの市民に均一なサービスを届けることを目指す、スケールメリットを活かした戦いだ。' +
@@ -40,14 +38,15 @@ const battle = {
   },
   provenance: [
     {
-      label: '狛江市の各種相談サービスについて',
-      url: 'https://www.city.komae.tokyo.jp/index.cfm/41,21125,311,html',
-      note: '出典: [5]',
+      label: 'さいたま市の広域行政サービス',
+      url: 'https://www.city.saitama.lg.jp/008/001/p013074.html',
+      note: 'さいたま市／支所・市民の窓口をご利用ください',
     },
     {
-      label: 'さいたま市中央区の行政サービスについて',
-      url: 'https://www.city.saitama.lg.jp/008/001/p013074.html',
-      note: '出典: [11]',
+      label:
+        '市役所及び各事務所、公民館・図書館、地域センター、体育施設など - 狛江市役所',
+      url: 'https://www.city.komae.tokyo.jp/index.cfm/41,4611,322,html',
+      note: '市役所及び各事務所、公民館・図書館、地域センター、体育施設など',
     },
   ],
   status: 'success',

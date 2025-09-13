@@ -3,9 +3,9 @@ import type { Battle } from '@yonokomae/types';
 // Yono (former Yono-shi; present Saitama-shi Chuo-ku core) vs Komae: adjacent municipalities comparison (Japanese)
 const battle = {
   id: 'adjacent-municipalities-2025-ja',
-  publishState: 'published',
   themeId: 'community',
-  significance: 'low',
+  publishState: 'published',
+  significance: 'medium',
   title: '隣接自治体',
   subtitle: 'よの(現・よの連合国よの主要部)とこまえの周辺環境',
   narrative: {
