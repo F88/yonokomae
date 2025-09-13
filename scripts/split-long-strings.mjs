@@ -58,7 +58,12 @@ function collectFiles(dir, out = []) {
 function splitIntoSegments(text) {
   const breakers = new Set([
     // '、',
-    '。', '！', '？', '!', '?']);
+    '。',
+    '！',
+    '？',
+    '!',
+    '?',
+  ]);
   const segments = [];
   let buf = '';
   for (let i = 0; i < text.length; i += 1) {
