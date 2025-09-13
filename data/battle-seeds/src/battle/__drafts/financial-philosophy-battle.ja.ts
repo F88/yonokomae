@@ -2,10 +2,10 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_financial_philosophy',
-  publishState: 'draft',
+  publishState: 'review',
   themeId: 'finance',
   significance: 'high',
-  title: '将来負担 vs. 財政力指数のバトル',
+  title: '財政の二つのものさし',
   subtitle: '健全な将来への備えか、現在の財源の豊かさか',
   narrative: {
     overview:
@@ -41,12 +41,12 @@ const battle = {
     {
       label: '狛江市の財政健全度について',
       url: 'https://www.seikatsu-guide.com/info/13/13219/2/',
-      note: '出典: ',
+      note: '狛江市の【特色･特徴】を表す行政サービス･行政情報｜生活ガイド.com: ',
     },
     {
       label: 'さいたま市の財政力指数について',
       url: 'https://www.pref.saitama.lg.jp/documents/256147/04zaiseiryokusisuu_saisantei6.xlsx',
-      note: '出典: ',
+      note: '宇都宮大学国際学部(中村祐司)研究室',
     },
   ],
   status: 'success',

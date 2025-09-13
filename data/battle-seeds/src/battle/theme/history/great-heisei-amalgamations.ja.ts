@@ -39,6 +39,16 @@ const battle = {
   },
   provenance: [
     {
+      label: '与野市 - Wikipedia',
+      url: 'https://ja.wikipedia.org/wiki/%E4%B8%8E%E9%87%8E%E5%B8%82',
+      note: '',
+    },
+    {
+      label: '狛江市 - Wikipedia',
+      url: 'https://ja.wikipedia.org/wiki/%E7%8B%9B%E6%B1%9F%E5%B8%82',
+      note: '',
+    },
+    {
       label: '日本の市町村の廃置分合 - Wikipedia',
       url: 'https://ja.wikipedia.org/wiki/%E6%97%A5%E6%9C%AC%E3%81%AE%E5%B8%82%E7%94%BA%E6%9D%91%E3%81%AE%E5%BB%83%E7%BD%AE%E5%88%86%E5%90%88#%E5%B9%B3%E6%88%90%E3%81%AE%E5%A4%A7%E5%90%88%E4%BD%B5',
       note: '平成の大合併',

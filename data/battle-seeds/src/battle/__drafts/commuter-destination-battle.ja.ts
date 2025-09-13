@@ -2,11 +2,11 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_commuter_destination',
-  publishState: 'draft',
+  publishState: 'review',
   themeId: 'community',
-  significance: 'low',
-  title: '東京への通勤 vs. 市内への通勤のバトル',
-  subtitle: 'ベッドタウンの利便性か、職住近接の理想か',
+  significance: 'medium',
+  title: '通勤',
+  subtitle: 'ベッドタウンの利便性 職住近接の理想',
   narrative: {
     overview:
       '東京都心への通勤者が多数を占める狛江市と、旧与野市域から大宮や浦和といった新市の中心部への通勤が主流となったさいたま市(旧与野市)。' +
@@ -38,9 +38,24 @@ const battle = {
   },
   provenance: [
     {
-      label: '狛江市の都市概要と立地について',
+      label: '狛江市',
       url: 'https://tama120.metro.tokyo.lg.jp/introduction/komaeshi.php',
-      note: '出典: [18]',
+      note: '狛江市 | 市町村紹介 | 多摩の魅力発信プロジェクト',
+    },
+    {
+      label: 'さいたま市の都市概況と歴史について',
+      url: 'https://zzfo.zhengzhou.gov.cn/yhcs/2342739.jhtml',
+      note: '日本埼玉市 - 郑州市人民政府外事办公室',
+    },
+    {
+      label: '埼玉県さいたま市',
+      url: 'https://www.sumai1.com/useful/townranking/town_11100/',
+      note: '埼玉県さいたま市｜自治体別住みよさランキング｜三菱ＵＦＪ不動産販売「住まい１」',
+    },
+    {
+      label: '狛江市',
+      url: 'https://www.sumai1.com/useful/townranking/town_13219/',
+      note: '東京都狛江市｜自治体別住みよさランキング｜三菱ＵＦＪ不動産販売「住まい１」',
     },
   ],
   status: 'success',

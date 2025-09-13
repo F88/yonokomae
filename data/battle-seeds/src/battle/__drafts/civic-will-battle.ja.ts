@@ -2,11 +2,11 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_civic_will',
-  publishState: 'draft',
+  publishState: 'review',
   themeId: 'community',
   significance: 'medium',
-  title: '民意の不在 vs. 首長の信念のバトル',
-  subtitle: '住民の無関心か、リーダーの強い意志か',
+  title: '民意の不在 首長の信念',
+  subtitle: '住民の無関心か リーダーの強い意志か',
   narrative: {
     overview:
       '狛江市では合併問題への市民の関心が薄い中、首長の信念が独立を決定づけた。' +

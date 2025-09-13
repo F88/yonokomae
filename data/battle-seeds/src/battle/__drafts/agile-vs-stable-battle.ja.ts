@@ -2,10 +2,10 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_agile_vs_stable',
-  publishState: 'draft',
+  publishState: 'review',
   themeId: 'information',
-  significance: 'low',
-  title: '攻めの機動力 vs. 守りの安定感のバトル',
+  significance: 'medium',
+  title: '行政の最適解',
   subtitle: '小回りの利く行政か、盤石な広域行政か',
   narrative: {
     overview:
@@ -38,9 +38,15 @@ const battle = {
   },
   provenance: [
     {
-      label: 'さいたま市の広域行政サービスについて',
+      label: 'さいたま市の広域行政サービス',
       url: 'https://www.city.saitama.lg.jp/008/001/p013074.html',
-      note: '出典: [11]',
+      note: 'さいたま市／支所・市民の窓口をご利用ください',
+    },
+    {
+      label:
+        '市役所及び各事務所、公民館・図書館、地域センター、体育施設など - 狛江市役所',
+      url: 'https://www.city.komae.tokyo.jp/index.cfm/41,4611,322,html',
+      note: '市役所及び各事務所、公民館・図書館、地域センター、体育施設など',
     },
   ],
   status: 'success',
