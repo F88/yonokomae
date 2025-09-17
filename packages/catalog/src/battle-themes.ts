@@ -37,17 +37,7 @@ export const battleThemeCatalog = [
     includedElements:
       'SNS, digital divide, public referendums, citizen movements, local events, volunteerism, mutual aid, local ties',
   },
-  {
-    id: 'information',
-    name: 'Information',
-    icon: '📡',
-    subThemes:
-      'Information Control & Censorship vs. Journalism Seeking the Truth',
-    description:
-      'Freedom of information versus control, manipulation, and security.',
-    includedElements:
-      'Fake news, cyber attacks, AI-driven information manipulation, propaganda, freedom of the press, whistleblowing, hackers, cryptography',
-  },
+
   {
     id: 'development',
     name: 'Development',
@@ -71,6 +61,27 @@ export const battleThemeCatalog = [
       'Public works, infrastructure, taxes, debt, economic growth, investment, distribution, financial institutions, employment',
   },
   {
+    id: 'figures',
+    name: 'Figures',
+    icon: '🦸',
+    subThemes: "AI Mayor's Data Politics vs. Charismatic Human Leadership",
+    description:
+      'Leadership dynamics between algorithmic governance and human charisma.',
+    includedElements:
+      'Notable figures (in-game heroes), leaders, bureaucrats, citizens, AI, robots, speeches, elections, public opinion',
+  },
+  {
+    id: 'information',
+    name: 'Information',
+    icon: '📡',
+    subThemes:
+      'Information Control & Censorship vs. Journalism Seeking the Truth',
+    description:
+      'Freedom of information versus control, manipulation, and security.',
+    includedElements:
+      'Fake news, cyber attacks, AI-driven information manipulation, propaganda, freedom of the press, whistleblowing, hackers, cryptography',
+  },
+  {
     id: 'technology',
     name: 'Technology',
     icon: '🤖',
@@ -80,16 +91,6 @@ export const battleThemeCatalog = [
       'Dual-use innovations: from defense origins to civic applications.',
     includedElements:
       'Robotics, AI, drones, cybernetics, medical technology, security, new materials, energy, communication technology',
-  },
-  {
-    id: 'figures',
-    name: 'Figures',
-    icon: '🦸',
-    subThemes: "AI Mayor's Data Politics vs. Charismatic Human Leadership",
-    description:
-      'Leadership dynamics between algorithmic governance and human charisma.',
-    includedElements:
-      'Notable figures (in-game heroes), leaders, bureaucrats, citizens, AI, robots, speeches, elections, public opinion',
   },
 ] as const satisfies readonly BattleTheme[];
 
