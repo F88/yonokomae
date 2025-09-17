@@ -2,7 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'socioeconomic-1920-2050-ja',
-  themeId: 'finance',
+  themeId: 'economy',
   publishState: 'published',
   significance: 'medium',
   title: '社会経済の軌跡',
@@ -20,7 +20,7 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'KOMAE',
+    title: '郊外都市',
     subtitle: '農村的基盤から郊外都市へ',
     description:
       '人口: 1920 5,595 -> 1970 50,000 -> 2000 78,000 -> 2020 82,000 -> 2050 45,000(推計)。1970に市制施行。2015-2020の人口増減率は+5.6%。産業(2020の就業): 第1次296、第2次5,045、第3次26,818。鉄道: 駅2、路線1。昭和期の経済は農業・養蚕が中心。',
@@ -28,7 +28,7 @@ const battle = {
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'YONO',
+    title: '新都心',
     subtitle: 'サービス業優位の都市成長',
     description:
       '人口: 1920 10,750 -> 1945 19,000 -> 1970 71,000 -> 1980 81,000 -> 2000 97,000 -> 2020 103,000 -> 2050 104,000(推計)。' +

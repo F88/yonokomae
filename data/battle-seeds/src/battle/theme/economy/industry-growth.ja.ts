@@ -2,7 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'industry-growth-1928-2025-ja',
-  themeId: 'finance',
+  themeId: 'economy',
   publishState: 'published',
   significance: 'medium',
   title: '産業と成長パターン',
@@ -20,7 +20,7 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'KOMAEの産業',
+    title: 'こまえ',
     subtitle: '畑からサービスへ',
     description:
       '昭和期の農業・養蚕の基盤。2020の就業: 第1次296、第2次5,045、第3次26,818。2015-2020の人口増減+5.6%(東京都内で高水準)。鉄道: 駅2、路線1。1955-1975の高度成長期に急増し、1970に市制施行。',
@@ -28,7 +28,7 @@ const battle = {
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'YONOの産業',
+    title: 'よの',
     subtitle: '都市サービスの集中',
     description:
       '1928の繊維工業拡大。' +

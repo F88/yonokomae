@@ -6,7 +6,7 @@ const battle = {
   publishState: 'published',
   significance: 'high',
   title: '治水バトル',
-  subtitle: '河川の脅威、技術とコミュニティで立ち向かえ',
+  subtitle: '河川の脅威 技術とコミュニティで立ち向かえ',
   narrative: {
     overview:
       '与野が大規模な治水インフラを構築する一方、こまえは過去の災害の教訓から住民の絆を武器に挑む。' +

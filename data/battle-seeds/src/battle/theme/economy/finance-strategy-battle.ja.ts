@@ -2,7 +2,7 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'battle_finance_strategy',
-  themeId: 'finance',
+  themeId: 'economy',
   publishState: 'published',
   significance: 'legendary',
   title: '自立財政の作法',
@@ -20,7 +20,7 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: '狛江の健全財政',
+    title: '健全財政',
     subtitle: '合併に頼らない自立した財政運営',
     description:
       '全国の市区町村財政健全度ランキングで上位に位置し、特に将来負担の項目で高い評価を得ている狛江市。' +
@@ -29,7 +29,7 @@ const battle = {
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: '埼玉新都心開発の財政負担',
+    title: '新都心開発の財政負担',
     subtitle: '合併を必然とした巨大プロジェクトの重み',
     description:
       'さいたま新都心の開発が旧与野市に膨大な財政負担をもたらし、合併の強い動機となった。' +

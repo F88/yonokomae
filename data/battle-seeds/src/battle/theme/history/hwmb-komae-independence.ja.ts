@@ -5,7 +5,7 @@ const battle = {
   themeId: 'history',
   publishState: 'published',
   significance: 'legendary',
-  title: 'こまえ、孤高の道を往く',
+  title: 'こまえ 孤高の道を往く',
   subtitle: '平成の世界大合併大戦 不戦の決断',
   narrative: {
     overview:

@@ -68,11 +68,11 @@ export interface BattleTheme {
 export type BattleThemeId =
   | 'history'
   | 'culture'
-  | 'figures'
   | 'community'
-  | 'information'
   | 'development'
-  | 'finance'
+  | 'economy'
+  | 'figures'
+  | 'information'
   | 'technology';
 /**
  * Represents a single battle scenario between two {@link Neta} entities.

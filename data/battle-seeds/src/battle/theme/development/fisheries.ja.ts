@@ -20,7 +20,7 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'KOMAE の水産業',
+    title: '多摩川',
     subtitle: '内陸/海なし/多摩川沿い/統計対象外',
     description:
       '地理的には内陸で海に面さない。多摩川に面するが、漁業・養殖業は大規模には展開されていない。' +
@@ -29,7 +29,7 @@ const battle = {
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'YONO の水産業',
+    title: '荒川',
     subtitle: '内陸/海なし/荒川近接/統計対象外',
     description:
       '地理的には内陸で海に面さない。西側を荒川が流れるが、漁業・養殖業は主要産業ではない。' +

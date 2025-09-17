@@ -5,8 +5,8 @@ const battle = {
   themeId: 'community',
   publishState: 'published',
   significance: 'medium',
-  title: '近さの行政と大きさの行政',
-  subtitle: '小さな距離の温かさか、大きな規模の力か',
+  title: '近さの行政 大きさの行政',
+  subtitle: '小さな距離の温かさか 大きな規模の力か',
   narrative: {
     overview:
       '広域側は、区役所や支所・市民窓口の網で標準化された手続きと迅速な発行業務を整え、' +

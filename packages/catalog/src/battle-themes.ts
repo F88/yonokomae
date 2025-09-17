@@ -28,7 +28,8 @@ export const battleThemeCatalog = [
   {
     id: 'community',
     name: 'Community',
-    icon: '🤝',
+    // icon: '🤝',
+    icon: '🏘️',
     subThemes:
       'Integration of Online Communities vs. Maintenance of Real-World Bonds',
     description:
@@ -59,8 +60,8 @@ export const battleThemeCatalog = [
       'Smart cities, traffic congestion, underground development, urban farms, water resource management, urban landscape, city planning, environmental conservation',
   },
   {
-    id: 'finance',
-    name: 'Finance',
+    id: 'economy',
+    name: 'Economy',
     icon: '📈',
     subThemes:
       'Attraction of Large-Scale Investors vs. Promotion of Local Currency',

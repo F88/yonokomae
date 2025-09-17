@@ -3,7 +3,7 @@ import type { Battle } from '@yonokomae/types';
 const battle = {
   id: 'komae-merger-history-1954',
   themeId: 'history',
-  publishState: 'review',
+  publishState: 'published',
   significance: 'legendary',
   title: 'ハンコ大脱走 ないものは押せない',
   subtitle: '追えない事務、進まぬ合併 昭和29年(1954年)',
@@ -19,7 +19,7 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: '2025年の市民のため息',
+    title: '市民のため息',
     subtitle: '「その日、印が主役ってマジ?」',
     description:
       '合併も編入も単独も——難しい議論なのはわかる。でもさ、臨時会の前夜に“公印がない”で全部止まるって、' +

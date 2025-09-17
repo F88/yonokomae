@@ -20,7 +20,7 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ',
+    title: '伝統行事',
     subtitle: '草の根の伝統行事',
     description:
       '失われつつある祭りを復活させ、市民の参加を促す。' +
@@ -29,7 +29,7 @@ const battle = {
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'よの',
+    title: '巨大アート・プロジェクト',
     subtitle: 'メトロポリタン・アート',
     description:
       '合併によって誕生した新たな文化を、世界へと発信するため、巨額の予算を投じたアート・プロジェクトを立ち上げる。' +

@@ -6,7 +6,7 @@ const battle = {
   publishState: 'published',
   significance: 'medium',
   title: '百万都市の風 懐の狭間の粋',
-  subtitle: '集めて強しか、詰めて濃しか',
+  subtitle: '集めて強しか 詰めて濃しか',
   narrative: {
     overview:
       'さてもお立ち会い。浦和・大宮・与野が手を組み、どどんと生まれたは百万都市のさいたま。' +
@@ -27,7 +27,7 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: '小器に凝る、狛江の粋',
+    title: '小器に凝る 狛江の粋',
     subtitle: '小さくして濃し、顔の見える間合い',
     description:
       '面積は小さくとも、中身はぎっしり狛江節。家々近く、声かけ合えば、助け三日月、絆は満月。' +
@@ -41,7 +41,7 @@ const battle = {
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: '百万の旗、政令市の陣',
+    title: '百万の旗 政令市の陣',
     subtitle: '寄せては砦、集めては力',
     description:
       '浦和・大宮・与野、三つ巴を一つに束ね、百万の衆を擁する大城下。' +

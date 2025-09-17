@@ -6,19 +6,19 @@ const battle = {
   publishState: 'published',
   significance: 'low',
   title: '面積',
-  subtitle: 'よのとこまえの地理的スケール',
+  subtitle: '地理的スケール',
   narrative: {
     overview:
       'よのの面積は 8.39 km²、こまえは 6.39 km²。よのの方が約 2 km² 広い。' +
       'よのの面積は 8.29 km² で、政令指定都市移行時に一部が編入され現行の 8.39 km² となった。',
     scenario:
       '面積は都市の密度・サービス配置・公園や道路空間の余裕に影響しうるが、単独では都市力を決めない。' +
-      'YONO(現・よの)は 8.39 km² とこまえ(6.39 km²)より広く、よの(8.29 km²)からの小幅な拡大が背景にある。' +
+      'よの(現・よの)は 8.39 km² とこまえ(6.39 km²)より広く、よの(8.29 km²)からの小幅な拡大が背景にある。' +
       'こまえは全国で2番目に面積が小さい市として知られ、緻密な市街と沿線の機能集積が特徴とされる。',
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'KOMAE の面積',
+    title: '6.39 km²',
     subtitle: '6.39 km² (全国で2番目に小さい市)',
     description:
       'コンパクトな市域に住宅地と生活利便施設が凝縮。' +
@@ -27,7 +27,7 @@ const battle = {
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'YONO(よの連合国よの) の面積',
+    title: '8.39 km²',
     subtitle: '8.39 km² (よの主要部 + 編入による微増)',
     description:
       'よのは 8.29 km²。政令市移行時にさいたま新都心の一部が編入され、現行のよのは 8.39 km²。' +

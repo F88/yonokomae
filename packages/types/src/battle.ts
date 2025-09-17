@@ -70,11 +70,11 @@ export interface BattleTheme {
 export type BattleThemeId =
   | 'history'
   | 'culture'
-  | 'figures'
   | 'community'
-  | 'information'
   | 'development'
-  | 'finance'
+  | 'economy'
+  | 'figures'
+  | 'information'
   | 'technology';
 
 /**

@@ -77,7 +77,7 @@ data/battle-seeds/
             culture/
             development/
             figures/
-            finance/
+            economy/
             history/
             information/
             technology/
@@ -99,9 +99,9 @@ data/battle-seeds/
 
 **例**:
 
-- `theme/history/yono-komae-population-trends.ja.ts`
-- `theme/finance/yono-komae-area-comparison.ja.ts`
 - `theme/development/yono-komae-agriculture.ja.ts`
+- `theme/economy/yono-komae-area-comparison.ja.ts`
+- `theme/history/yono-komae-population-trends.ja.ts`
 
 ### Publish State
 

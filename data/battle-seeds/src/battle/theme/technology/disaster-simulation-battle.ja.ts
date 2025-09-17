@@ -26,7 +26,7 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'こまえ市民の防災マニュアル',
+    title: '市民の防災マニュアル',
     subtitle: '多摩川水害の教訓から生まれた知恵',
     description:
       '過去の多摩川水害の経験を元に、住民たちが手作りで更新を続ける防災マニュアル。' +

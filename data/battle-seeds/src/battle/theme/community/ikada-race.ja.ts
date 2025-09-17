@@ -6,7 +6,7 @@ const battle = {
   publishState: 'published',
   significance: 'medium',
   title: '大河川の恵み',
-  subtitle: 'よのの羨望と、こまえのプライド。多摩川を巡る戦い',
+  subtitle: 'よのの羨望 こまえのプライド',
   narrative: {
     overview:
       '大河川を持たないよのは、多摩川という自然の恵みを持つこまえに激しい羨望を抱く。' +

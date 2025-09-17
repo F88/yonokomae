@@ -6,7 +6,7 @@ const battle = {
   publishState: 'published',
   significance: 'medium',
   title: '古代の神託対決',
-  subtitle: '星の運行か、大地の恵みか',
+  subtitle: '星の運行か 大地の恵みか',
   narrative: {
     overview:
       '紀元前、よのは天文学から発展した疑似AIによる神託で民を導く。' +

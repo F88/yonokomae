@@ -6,7 +6,7 @@ const battle = {
   publishState: 'published',
   significance: 'medium',
   title: 'だれが守る? 家族か国家か',
-  subtitle: '近所の手 vs 24hインフラ',
+  subtitle: '近所の助け合い vs 24hインフラ',
   narrative: {
     overview:
       'ブラジル人家族は「こまえ」の住民同士の強い絆に感動。' +

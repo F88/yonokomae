@@ -19,7 +19,7 @@ This guide explains how to maintain and update battle seed data in the `data/bat
 
 ## Overview
 
-Battle seeds are data-driven battles comparing aspects such as population, area, demographics, infrastructure, finance, culture, and development indicators between Yono and Komae. Each battle presents factual data in a playful competitive format while preserving provenance.
+Battle seeds are data-driven battles comparing aspects such as population, area, demographics, infrastructure, economy, culture, and development indicators between Yono and Komae. Each battle presents factual data in a playful competitive format while preserving provenance.
 
 ## Updated Package Layout (Themed + Drafts + Generated)
 
@@ -33,8 +33,8 @@ data/battle-seeds/
         community/
         culture/
         development/
+        economy/
         figures/
-        finance/
         history/
         information/
         technology/
