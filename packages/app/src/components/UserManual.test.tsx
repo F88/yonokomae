@@ -305,11 +305,13 @@ describe('UserManual', () => {
 
     it('should have proper heading hierarchy', () => {
       const h2 = screen.getByRole('heading', { level: 2 });
-      const h3 = screen.getByRole('heading', { level: 3 });
+      const h3s = screen.getAllByRole('heading', { level: 3 });
       const h4s = screen.getAllByRole('heading', { level: 4 });
 
       expect(h2).toHaveTextContent('取扱説明書');
-      expect(h3).toHaveTextContent('活用例');
+      // There are two h3 sections: 個人の感想 and 活用例
+      const h3Texts = h3s.map((el) => el.textContent);
+      expect(h3Texts).toEqual(expect.arrayContaining(['個人の感想', '活用例']));
       expect(h4s).toHaveLength(2);
     });
 
