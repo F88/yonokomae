@@ -57,7 +57,7 @@ function collectFiles(dir, out = []) {
  */
 function splitIntoSegments(text) {
   const breakers = new Set([
-    // '、',
+    // '、' (Japanese comma) is intentionally excluded to avoid splitting at every phrase, which would result in overly short or unnatural segments.
     '。',
     '！',
     '？',
