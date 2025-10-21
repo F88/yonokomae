@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.3.0
 
 ### Features
 
@@ -22,6 +22,7 @@
 - refactor(components): simplify icon selection and opacity handling in battle components
 - refactor(build): replace numeric opacity with Tailwind utility classes for consistency
 - refactor(data): improve narrative formatting with split-long-strings utility
+- refactor(ui): improve User Manual intro typography (center alignment, ~70ch line length, relaxed line-height, and paragraph spacing); update tests to reflect heading hierarchy
 
 ### Bug Fixes
 
