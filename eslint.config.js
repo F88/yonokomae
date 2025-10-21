@@ -13,15 +13,24 @@ export default tseslint.config(
     globalIgnores(['dist']),
     {
       files: ['**/*.{ts,tsx}'],
-      extends: [
-        js.configs.recommended,
-        tseslint.configs.recommended,
-        reactHooks.configs['recommended-latest'],
-        reactRefresh.configs.vite,
-      ],
+      extends: [js.configs.recommended, tseslint.configs.recommended],
       languageOptions: {
         ecmaVersion: 2020,
         globals: globals.browser,
+      },
+      plugins: {
+        'react-hooks': reactHooks,
+        'react-refresh': reactRefresh,
+      },
+      rules: {
+        // React Hooks rules
+        'react-hooks/rules-of-hooks': 'error',
+        'react-hooks/exhaustive-deps': 'warn',
+        // React Refresh rule to avoid invalid exports
+        'react-refresh/only-export-components': [
+          'warn',
+          { allowConstantExport: true },
+        ],
       },
     },
     // Test files: relax a few strict TypeScript rules that are noisy in tests
