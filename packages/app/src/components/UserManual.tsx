@@ -74,10 +74,29 @@ export const UserManual: React.FC<UserManualProps> = ({
           tabIndex={0}
           aria-label="User manual content"
         >
+          <div className="mb-8 mx-auto max-w-[70ch] text-center space-y-4 leading-relaxed text-foreground text-lg">
+            <p>日本の歴史が大きく揺れ動いた平成時代</p>
+            <p>
+              巨大な国家群に囲まれた二つの小国、よのとこまえの運命は二つに分かたれた...
+            </p>
+            <p>
+              よのは知略をもって大国を取り込み『よの連合国』というサイバー知性国家へと成り上がる。一方、こまえは隣接する超大国の誘いを蹴り?、孤高の独立独歩を選んだ。
+            </p>
+            <p>
+              このゲームは『平成の大合併大戦』を経て、現代における両国の状況、そして来る未来にどのような運命が訪れるかをシミュレートする機密アーカイヴだ。あなたの任務は、極秘の観測者として、両国で勃発する「バトル」の真実を評価し、どちらの選択が正しかったのかを裁定すること。
+            </p>
+            <p>
+              AIが書き換える前の歴史を記録せよ。あなたの評価によってのみ真の歴史が紡がれる。
+            </p>
+            <p>
+              さあ、ペンを執れ。この世界を、AIではなく、人間の手で終わらせるために。
+            </p>
+          </div>
+
           <div className="mb-8">
-            <h5 className="text-xl font-semibold text-foreground mb-5">
+            <h3 className="text-xl font-semibold text-foreground mb-5">
               個人の感想
-            </h5>
+            </h3>
             <div className="border border-border rounded-md p-2 my-6">
               <UserVoicesCarousel
                 intervalMs={3000}
