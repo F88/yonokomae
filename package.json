@@ -1,7 +1,7 @@
 {
   "name": "yonokomae",
   "description": "Yono Komae War - A thought-provoking game explores the outcomes for two countries after 'The World Merger Battle' of the Heisei era.",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@9.15.9",
