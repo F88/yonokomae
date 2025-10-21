@@ -11,12 +11,17 @@
 - feat(tailwind): add safelist for opacity utility classes and extend opacity scale
 - feat(ui): integrate reduced motion support for loading animations
 - feat(storybook): add comprehensive stories for battle components
+- feat(data): add watch scripts for continuous index generation in data packages
+- feat(data): update and synchronize battle scenarios with improved narrative formatting
+- feat(data): reorganize significance field documentation across battle scenarios
+- feat(data): synchronize publishState across all battle scenarios
 
 ### Refactoring
 
 - refactor(locales): update significance from 'low' to 'legendary' for historical templates
 - refactor(components): simplify icon selection and opacity handling in battle components
 - refactor(build): replace numeric opacity with Tailwind utility classes for consistency
+- refactor(data): improve narrative formatting with split-long-strings utility
 
 ### Bug Fixes
 
@@ -26,6 +31,7 @@
   packages to fix tsc errors
 - chore(gitignore): tighten ignore rules for data/\*/src while allowing
   env.d.ts
+- fix(data): correct punctuation inconsistencies in battle subtitles
 
 ### Documentation
 
@@ -34,10 +40,12 @@
 - docs(dev): update development guides with HistoricalScene background configuration details
 - docs: update README with latest architecture and component updates
 - docs: update contributing guides with Storybook test workflow
+- docs: improve Japanese typography consistency in README
 
 ### Miscellaneous
 
 - chore(scripts): remove obsolete cleanup script
+- chore(data): remove obsolete battle drafts and update unified index
 
 ## 1.2.0
 

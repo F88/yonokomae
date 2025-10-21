@@ -17,6 +17,9 @@
     "generate:battles": "tsx scripts/generate-battle-index.ts",
     "generate:drafts": "tsx scripts/generate-battle-index.ts",
     "postbuild": "tsx scripts/generate-all-battles-json.ts",
+    "_watch:tsc": "tsc -w --preserveWatchOutput",
+    "_watch:gen": "tsx scripts/watch-generate-battle-index.ts",
+    "watch": "node ./scripts/dev-watch.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "clean": "rm -rf dist"
@@ -26,6 +29,8 @@
     "@yonokomae/types": "workspace:*"
   },
   "devDependencies": {
-    "vite": "^7.1.4"
+    "vite": "^7.1.4",
+    "chokidar": "^3.6.0",
+    "execa": "^9.3.0"
   }
 }

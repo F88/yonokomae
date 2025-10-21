@@ -3,8 +3,8 @@ import type { Battle } from '@yonokomae/types';
 // Sample news seed #2
 const data: Battle = {
   id: 'battle-news-2',
-  publishState: 'published',
   themeId: 'community',
+  publishState: 'published',
   significance: 'low',
   title: '夕方のアップデート: コミュニティのハイライト',
   subtitle: 'イベント、プロジェクト、フィードバック',

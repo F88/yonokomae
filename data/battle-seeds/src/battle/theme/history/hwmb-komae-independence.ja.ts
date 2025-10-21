@@ -1,12 +1,11 @@
 import type { Battle } from '@yonokomae/types';
 
-// Yono (former Yono-shi; present Saitama-shi Chuo-ku core) vs Komae: adjacent municipalities comparison (Japanese)
 const battle = {
   id: 'hwmb-komae-independence',
-  publishState: 'published',
   themeId: 'history',
+  publishState: 'published',
   significance: 'legendary',
-  title: 'こまえ、孤高の道を往く',
+  title: 'こまえ 孤高の道を往く',
   subtitle: '平成の世界大合併大戦 不戦の決断',
   narrative: {
     overview:
@@ -22,7 +21,10 @@ const battle = {
     title: 'こまえ',
     subtitle: '孤高の強者',
     description:
-      '数々の合併の誘いを蹴り、独立を守り抜いた稀代の英雄。単独で生き抜く強固な意志は、何物にも代えがたい「力」となった。',
+      '数々の合併の誘いを蹴り、' +
+      '独立を守り抜いた稀代の英雄。' +
+      '単独で生き抜く強固な意志は、' +
+      '何物にも代えがたい「力」となった。',
     power: 100,
   },
   yono: {
@@ -30,7 +32,8 @@ const battle = {
     title: 'よの',
     subtitle: '大国と手を組んだ英雄',
     description:
-      '武力ではない方法で天下を統一し、さいたま市を誕生させた伝説の存在。ただし、こまえに比べると単独で生きていくという道を選べなかったという点で、若干の弱さも垣間見える。',
+      '武力ではない方法で天下を統一し、さいたま市を誕生させた伝説の存在。' +
+      'ただし、こまえに比べると単独で生きていくという道を選べなかったという点で、若干の弱さも垣間見える。',
     power: 100,
   },
   provenance: [

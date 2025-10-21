@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ny-vs-paris-ideology',
+  themeId: 'economy',
   publishState: 'published',
-  themeId: 'finance',
   significance: 'medium',
   title: '豊かさとは何か?',
   subtitle: 'グローバル資本主義 vs ローカル・コミュニティ主義',
@@ -22,7 +22,11 @@ const battle = {
     title: 'ローカル・テロワール',
     subtitle: '地域に根ざす食と暮らし',
     description:
-      '朝市の香り、生産者の顔、受け継がれるレシピ。小さな経済圏が生む安心と風味は、時間をかけて熟成される豊かさ。',
+      '朝市の香り、' +
+      '生産者の顔、' +
+      '受け継がれるレシピ。' +
+      '小さな経済圏が生む安心と風味は、' +
+      '時間をかけて熟成される豊かさ。',
     power: 86,
   },
   yono: {
@@ -30,7 +34,11 @@ const battle = {
     title: 'グローバル・キャピタル',
     subtitle: '資本が拓く成長と機会',
     description:
-      '多様な投資、厚い資本市場、俊敏なイノベーション。規模の経済とネットワーク効果で、新しい価値を次々に社会実装する。',
+      '多様な投資、' +
+      '厚い資本市場、' +
+      '俊敏なイノベーション。' +
+      '規模の経済とネットワーク効果で、' +
+      '新しい価値を次々に社会実装する。',
     power: 86,
   },
   provenance: [

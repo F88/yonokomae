@@ -24,9 +24,9 @@ export const TechnologyOutline: Story = {
   },
 };
 
-export const FinanceNoName: Story = {
+export const EconomyNoName: Story = {
   args: {
-    themeId: 'finance',
+    themeId: 'economy',
     showName: false,
   },
 };

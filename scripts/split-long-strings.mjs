@@ -35,7 +35,8 @@ const ROOT = path.resolve(process.cwd(), 'data/battle-seeds/src/battle');
 /** File extension to target. */
 const TARGET_EXT = '.ja.ts';
 /** Maximum string length threshold before splitting. */
-const MAX_LEN = 100; // threshold for splitting
+// const MAX_LEN = 100; // threshold for splitting
+const MAX_LEN = 50; // threshold for splitting
 
 /** Recursively collect files under dir matching .ja.ts */
 function collectFiles(dir, out = []) {
@@ -55,7 +56,14 @@ function collectFiles(dir, out = []) {
  * @returns {string[]} A list of trimmed segments.
  */
 function splitIntoSegments(text) {
-  const breakers = new Set(['。', '！', '？', '!', '?']);
+  const breakers = new Set([
+    // '、' (Japanese comma) is intentionally excluded to avoid splitting at every phrase, which would result in overly short or unnatural segments.
+    '。',
+    '！',
+    '？',
+    '!',
+    '?',
+  ]);
   const segments = [];
   let buf = '';
   for (let i = 0; i < text.length; i += 1) {

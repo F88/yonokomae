@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'architecture-aesthetics-battle',
-  publishState: 'published',
   themeId: 'development',
+  publishState: 'published',
   significance: 'medium',
   title: '建築の美学 4月号',
   subtitle: '垂直都市と水平都市の比較考察',

@@ -3,8 +3,8 @@ import type { Battle } from '@yonokomae/types';
 // Sample news seed for NewsReporterFileiBattleReportRepository
 const data: Battle = {
   id: 'news-sample-local-cuisine-showdown',
-  publishState: 'published',
   themeId: 'culture',
+  publishState: 'published',
   significance: 'low',
   title: 'ご当地グルメ対決',
   subtitle: '地域特産品が料理の覇権を競う',

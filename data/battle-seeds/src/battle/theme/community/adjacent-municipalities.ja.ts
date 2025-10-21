@@ -1,11 +1,10 @@
 import type { Battle } from '@yonokomae/types';
 
-// Yono (former Yono-shi; present Saitama-shi Chuo-ku core) vs Komae: adjacent municipalities comparison (Japanese)
 const battle = {
   id: 'adjacent-municipalities-2025-ja',
-  publishState: 'published',
   themeId: 'community',
-  significance: 'low',
+  publishState: 'published',
+  significance: 'medium',
   title: '隣接自治体',
   subtitle: 'よの(現・よの連合国よの主要部)とこまえの周辺環境',
   narrative: {
@@ -18,7 +17,7 @@ const battle = {
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'KOMAE の隣接状況',
+    title: 'こまえのおとなり',
     subtitle:
       '世田谷区・調布市・川崎市に接する小面積自治体(6.39 km², 約8.3万人)',
     description:
@@ -28,7 +27,7 @@ const battle = {
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'YONO(よの→現よの主要部) の隣接状況',
+    title: 'よののおとなり',
     subtitle:
       '旧浦和市・旧大宮市に囲まれた小規模都市(8.29 km², 約9.7万人; 合併直前)',
     description:

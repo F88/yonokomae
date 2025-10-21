@@ -2,11 +2,11 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'family-bonds-vs-state-protection',
-  publishState: 'published',
   themeId: 'community',
+  publishState: 'published',
   significance: 'medium',
   title: 'だれが守る? 家族か国家か',
-  subtitle: '近所の手 vs 24hインフラ',
+  subtitle: '近所の助け合い vs 24hインフラ',
   narrative: {
     overview:
       'ブラジル人家族は「こまえ」の住民同士の強い絆に感動。' +
@@ -22,7 +22,9 @@ const battle = {
     title: 'コミュニティ・ファミリー',
     subtitle: '助け合いは最強のセーフティ',
     description:
-      'ご近所の目配り、温かい声かけ、世代で継ぐ支え合い。顔の見えるつながりが毎日の安心を作る。制度に頼らずとも、誰かがそばにいる。',
+      'ご近所の目配り、温かい声かけ、世代で継ぐ支え合い。' +
+      '顔の見えるつながりが毎日の安心を作る。' +
+      '制度に頼らずとも、誰かがそばにいる。',
     power: 82,
   },
   yono: {
@@ -30,7 +32,13 @@ const battle = {
     title: 'パブリック・プロテクション',
     subtitle: '制度で守る公平な安心',
     description:
-      '福祉、医療、教育、防犯まで、切れ目なくつながる公共サービス。ルールとデータに支えられた安全で、公平な保護が行き渡る。',
+      '福祉、' +
+      '医療、' +
+      '教育、' +
+      '防犯まで、' +
+      '切れ目なくつながる公共サービス。' +
+      'ルールとデータに支えられた安全で、' +
+      '公平な保護が行き渡る。',
     power: 82,
   },
   provenance: [

@@ -70,11 +70,11 @@ export interface BattleTheme {
 export type BattleThemeId =
   | 'history'
   | 'culture'
-  | 'figures'
   | 'community'
-  | 'information'
   | 'development'
-  | 'finance'
+  | 'economy'
+  | 'figures'
+  | 'information'
   | 'technology';
 
 /**
@@ -120,6 +120,7 @@ export interface Battle {
    * - Prefer URL-safe strings (no spaces) like `battle_2025_09_04_001`.
    */
   id: string;
+
   /**
    * The theme id (catalog key) of the battle scenario.
    *
@@ -127,22 +128,7 @@ export interface Battle {
    * subThemes, description, includedElements) at render time.
    */
   themeId: BattleThemeId;
-  /**
-   * The historical significance or rank of the battle.
-   *
-   * Can be used to sort, highlight, or filter scenarios based on their impact.
-   *
-   * Levels:
-   * - 'low' — Everyday skirmishes with only minor strategic impact.
-   *   Example: "Debate over waste disposal methods"
-   * - 'medium' — Conflicts that cause a moderate impact on both sides.
-   *   Example: "Budget showdown over the local festival"
-   * - 'high' — Major turning points that could reshape the balance of power.
-   *   Example: "Battle to prevent population outflow by improving public services"
-   * - 'legendary' — The most consequential battles that define the overall story.
-   *   Example: "The final showdown over merger (or independence) between Yono and Komae"
-   */
-  significance: 'low' | 'medium' | 'high' | 'legendary';
+
   /**
    * Publishing lifecycle state of this battle data.
    *
@@ -160,6 +146,24 @@ export interface Battle {
    * Omitted field MUST be treated as `published` for backward compatibility.
    */
   publishState: PublishState;
+
+  /**
+   * The historical significance or rank of the battle.
+   *
+   * Can be used to sort, highlight, or filter scenarios based on their impact.
+   *
+   * Levels:
+   * - 'low' — Everyday skirmishes with only minor strategic impact.
+   *   Example: "Debate over waste disposal methods"
+   * - 'medium' — Conflicts that cause a moderate impact on both sides.
+   *   Example: "Budget showdown over the local festival"
+   * - 'high' — Major turning points that could reshape the balance of power.
+   *   Example: "Battle to prevent population outflow by improving public services"
+   * - 'legendary' — The most consequential battles that define the overall story.
+   *   Example: "The final showdown over merger (or independence) between Yono and Komae"
+   */
+  significance: 'low' | 'medium' | 'high' | 'legendary';
+
   /**
    * The main title of the battle scenario.
    *

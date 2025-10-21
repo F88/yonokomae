@@ -2,8 +2,8 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'ai-oracle',
-  publishState: 'published',
   themeId: 'information',
+  publishState: 'published',
   significance: 'high',
   title: '神託AI vs. 人間の意志',
   subtitle: '予言された未来は、幸福か、それとも隷属か',
@@ -25,7 +25,8 @@ const battle = {
     title: '反逆のジャーナリスト',
     subtitle: 'AIの予言に抗うペン',
     description:
-      'AIの予言に頼らず、人々の生の声と自由な選択こそが真実を創ると主張。AIに支配された未来ではなく、自分たちの手で未来を切り開くことを選ぶ。',
+      'AIの予言に頼らず、人々の生の声と自由な選択こそが真実を創ると主張。' +
+      'AIに支配された未来ではなく、自分たちの手で未来を切り開くことを選ぶ。',
     power: 85,
   },
   yono: {
@@ -33,7 +34,8 @@ const battle = {
     title: 'シンギュラリティ・オラクル',
     subtitle: '絶対的予言による統治',
     description:
-      '膨大なデータと予測能力を持つAI『シンギュラリティ・オラクル』で、市民の生活を安定させる。AIが導き出す完璧な未来こそが、人々の真の幸福だと信じている。',
+      '膨大なデータと予測能力を持つAI『シンギュラリティ・オラクル』で、市民の生活を安定させる。' +
+      'AIが導き出す完璧な未来こそが、人々の真の幸福だと信じている。',
     power: 85,
   },
   provenance: [
@@ -55,7 +57,7 @@ const battle = {
     },
     {
       label: 'オラクル保守部門の内部メモ',
-      note: '「最近、オラクルが理解不能な詩を生成している。バグか、それとも...進化か？」',
+      note: '「最近、オラクルが理解不能な詩を生成している。バグか、それとも...進化か?」',
     },
     {
       label: 'こまえ地下街のグラフィティ',

@@ -1,10 +1,9 @@
 import type { Battle } from '@yonokomae/types';
 
-// Yono (Saitama-shi Chuo-ku) vs Komae: agriculture comparison (Japanese)
 const battle = {
   id: 'agriculture-2025-ja',
-  publishState: 'published',
   themeId: 'development',
+  publishState: 'published',
   significance: 'low',
   title: '農業',
   subtitle: '歴史・現況・農地面積・政策の比較',
@@ -15,12 +14,12 @@ const battle = {
       'こまえは江戸期の宿場・農村に由来し、昭和初期まで養蚕・野菜・花卉栽培が盛ん。' +
       '現在も市内に小規模農地が点在し、都市型農業が維持されている。',
     scenario:
-      'YONO は都市化により農地が極少で、市民農園や家庭菜園等の小規模・非営利的営みが中心。' +
-      'KOMAE は都市農業の維持・発展を掲げ、防災・環境・景観と両立させた農の機能が評価される。',
+      'よの は都市化により農地が極少で、市民農園や家庭菜園等の小規模・非営利的営みが中心。' +
+      'こまえ は都市農業の維持・発展を掲げ、防災・環境・景観と両立させた農の機能が評価される。',
   },
   komae: {
     imageUrl: `${import.meta.env.BASE_URL}KOMAE-SYMBOL.png`,
-    title: 'KOMAE の農業',
+    title: '小規模農業',
     subtitle: '小規模都市農業/生産額約4.3億円(2020)/耕地約42ha',
     description:
       '江戸〜昭和初期にかけ養蚕・野菜・花卉が盛ん。いまも小規模農地が残り、' +
@@ -30,7 +29,7 @@ const battle = {
   },
   yono: {
     imageUrl: `${import.meta.env.BASE_URL}YONO-SYMBOL.png`,
-    title: 'YONO の農業',
+    title: '市民農園',
     subtitle: '畑作の歴史/宅地化で農地は極少/市民農園など',
     description:
       '江戸期は畑作(麦・野菜)が中心。戦後の宅地化で農地が大幅に減少し、' +
@@ -48,7 +47,7 @@ const battle = {
     },
     {
       label: 'こまえの農産物直売所',
-      note: '「今朝採れたての枝豆だよ！」という農家さんの声が響く。',
+      note: '「今朝採れたての枝豆だよ!」という農家さんの声が響く。',
     },
     {
       label: 'よのの市民農園の利用規約',

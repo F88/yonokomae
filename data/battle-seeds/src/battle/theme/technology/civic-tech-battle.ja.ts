@@ -2,14 +2,16 @@ import type { Battle } from '@yonokomae/types';
 
 const battle = {
   id: 'civic-tech-battle',
-  publishState: 'published',
   themeId: 'technology',
+  publishState: 'published',
   significance: 'medium',
   title: 'CivicTech (シビックテック)',
   subtitle: 'よののスマートシティ vs. こまえの市民参加型アプリ',
   narrative: {
     overview:
-      'よのはAIとセンサーを駆使したスマートシティで市民生活を効率化する。一方こまえは、市民が自ら課題を解決する参加型アプリで対抗。どちらのCivicTechが市民の幸福度を高めるか。',
+      'よのはAIとセンサーを駆使したスマートシティで市民生活を効率化する。' +
+      '一方こまえは、市民が自ら課題を解決する参加型アプリで対抗。' +
+      'どちらのCivicTechが市民の幸福度を高めるか。',
     scenario:
       'よのは、AIによる都市管理システムを導入し、交通の最適化やエネルギー消費の効率化を試みる。' +
       'その背後には、「シビックテックさいたま」という行政と連携したハブの存在がある。' +

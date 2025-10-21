@@ -33,8 +33,8 @@ data/battle-seeds/
         community/
         culture/
         development/
+        economy/
         figures/
-        finance/
         history/
         information/
         technology/
