@@ -2,9 +2,11 @@
 
 [![CI](https://github.com/F88/yonokomae/actions/workflows/ci.yml/badge.svg)](https://github.com/F88/yonokomae/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/F88/yonokomae/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/F88/yonokomae/actions/workflows/github-code-scanning/codeql)
+[![codecov](https://codecov.io/gh/F88/yonokomae/graph/badge.svg?token=8BC900V3O3)](https://codecov.io/gh/F88/yonokomae)
 
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/F88/yonokomae)
-[![codecov](https://codecov.io/gh/F88/yonokomae/graph/badge.svg?token=8BC900V3O3)](https://codecov.io/gh/F88/yonokomae)
+[![View Code Wiki](https://www.gstatic.com/_/boq-sdlc-agents-ui/_/r/YUi5dj2UWvE.svg)](https://codewiki.google/github.com/f88/yonokomae)
+
 
 Yono Komae War
 
